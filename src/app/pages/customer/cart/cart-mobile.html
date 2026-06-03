@@ -1,0 +1,105 @@
+<div class="space-y-6 text-left text-stone-900 pt-18 pb-36">
+
+  <!-- Fixed Back Button Header (Mobile Only) -->
+  <div class="fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200 px-4 h-14 flex items-center justify-between shadow-sm">
+    <a
+      routerLink="/catalog"
+      class="flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100 border border-stone-200 text-stone-600 hover:bg-stone-200 transition-colors cursor-pointer"
+      aria-label="Kembali"
+    >
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+    </a>
+    <span class="text-xs font-extrabold text-stone-900 tracking-wide uppercase">Keranjang Belanja</span>
+    <div class="w-9"></div>
+  </div>
+
+  @if (parent().cartItems().length === 0) {
+    <app-empty-state
+      title="Keranjang Belanja Kosong"
+      message="Anda belum menambahkan buku apa pun. Mari temukan bacaan seru di katalog kami!"
+      icon="cart"
+      actionText="Mulai Belanja Buku"
+      actionLink="/catalog"
+    ></app-empty-state>
+  } @else {
+    <!-- List of Items -->
+    <div class="space-y-3.5">
+      @for (item of parent().cartItems(); track item.id) {
+        <div class="flex gap-3 rounded-xl border border-stone-200 bg-white p-3.5 relative overflow-hidden shadow-sm">
+          
+          <!-- Cover Image -->
+          <a [routerLink]="['/book', item.id]" class="h-16 w-12 rounded bg-stone-100 overflow-hidden shrink-0 border border-stone-200 shadow-sm cursor-pointer block">
+            <img [src]="item.coverImage" [alt]="item.title" class="h-full w-full object-cover" />
+          </a>
+
+          <!-- Meta Info -->
+          <div class="flex-1 min-w-0 text-left space-y-0.5 relative pr-8">
+            <!-- Remove Action (Top Right of Card for mobile) -->
+            <button 
+              (click)="parent().onRemoveItem(item.id, item.title)"
+              class="absolute top-0 right-0 p-1 text-stone-400 active:text-red-500 transition-colors cursor-pointer"
+              title="Hapus buku"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+
+            <a [routerLink]="['/book', item.id]" class="font-bold text-stone-900 active:text-amber-600 text-xs leading-tight tracking-tight line-clamp-1 truncate block cursor-pointer">
+              {{ item.title }}
+            </a>
+            <p class="text-[9px] text-stone-400 uppercase tracking-widest font-semibold">{{ item.author }}</p>
+            
+            <div class="flex items-center justify-between pt-2">
+              <!-- Unit Price -->
+              <span class="text-xs font-extrabold text-amber-650">{{ item.price | currencyRupiah }}</span>
+
+              <!-- Stepper (Right aligned on Mobile) -->
+              <div class="flex items-center rounded-full bg-stone-55 border border-stone-200 p-0.5 scale-90 origin-right">
+                <button 
+                  type="button"
+                  (click)="parent().decrementQty(item.id, item.quantity)"
+                  class="flex h-6 w-6 items-center justify-center rounded-full text-stone-500 active:bg-stone-200 active:text-stone-900 transition-colors cursor-pointer"
+                >
+                  -
+                </button>
+                <span class="w-6 text-center text-xs font-bold text-stone-900">{{ item.quantity }}</span>
+                <button 
+                  type="button"
+                  (click)="parent().incrementQty(item.id, item.quantity, item.stock)"
+                  class="flex h-6 w-6 items-center justify-center rounded-full text-stone-500 active:bg-stone-200 active:text-stone-900 transition-colors cursor-pointer"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      }
+    </div>
+
+    <!-- Sticky Bottom checkout bar for mobile -->
+    <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 border-t border-stone-200 p-4 shadow-2xl animate-slide-in pb-safe-bottom">
+      <div class="space-y-3">
+        <!-- Brief summary values -->
+        <div class="flex items-center justify-between text-[11px] text-stone-500 font-medium px-1">
+          <span>Total: {{ parent().totalCount() }} buku ({{ parent().totalWeight() / 1000 | number:'1.1-2' }} kg)</span>
+          <span class="text-stone-950 font-bold">Subtotal: <strong class="text-amber-600 text-sm font-extrabold">{{ parent().subtotal() | currencyRupiah }}</strong></span>
+        </div>
+
+        <app-button
+          variant="primary"
+          size="sm"
+          [fullWidth]="true"
+          routerLink="/account/checkout"
+        >
+          Lanjut ke Checkout
+        </app-button>
+      </div>
+    </div>
+  }
+
+</div>

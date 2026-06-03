@@ -1,0 +1,60 @@
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[280px] h-15 px-3 bg-white/90 backdrop-blur-md border border-stone-200 rounded-full flex items-center justify-between shadow-xl z-50 md:hidden transition-all duration-300">
+
+  <!-- Home -->
+  <a
+    routerLink="/"
+    [routerLinkActiveOptions]="{exact: true}"
+    routerLinkActive="!text-amber-500 bg-amber-500/10 scale-105"
+    aria-label="Beranda"
+    class="relative flex h-11 w-11 items-center justify-center rounded-full text-stone-400 hover:text-stone-600 transition-all duration-200 cursor-pointer"
+  >
+    <i class="bx bxs-home text-2xl leading-none"></i>
+  </a>
+
+  <!-- Katalog -->
+  <a
+    routerLink="/catalog"
+    routerLinkActive="!text-amber-500 bg-amber-500/10 scale-105"
+    aria-label="Katalog"
+    class="relative flex h-11 w-11 items-center justify-center rounded-full text-stone-400 hover:text-stone-600 transition-all duration-200 cursor-pointer"
+  >
+    <i class="bx bxs-book-open text-2xl leading-none"></i>
+  </a>
+
+  <!-- Keranjang -->
+  <a
+    routerLink="/account/cart"
+    routerLinkActive="!text-amber-500 bg-amber-500/10 scale-105"
+    aria-label="Keranjang"
+    class="relative flex h-11 w-11 items-center justify-center rounded-full text-stone-400 hover:text-stone-600 transition-all duration-200 cursor-pointer"
+  >
+    <i class="bx bxs-cart text-2xl leading-none"></i>
+    @if (cartItemsCount() > 0) {
+      <span class="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-amber-500 text-white text-[8px] font-bold flex items-center justify-center shadow-md animate-pulse">
+        {{ cartItemsCount() }}
+      </span>
+    }
+  </a>
+
+  <!-- Akun / Login -->
+  @if (isLoggedIn()) {
+    <a
+      routerLink="/account/profile"
+      routerLinkActive="!text-amber-500 bg-amber-500/10 scale-105"
+      aria-label="Profil"
+      class="relative flex h-11 w-11 items-center justify-center rounded-full text-stone-400 hover:text-stone-700 transition-all duration-200 cursor-pointer"
+    >
+      <i class="bx bxs-user text-2xl leading-none"></i>
+    </a>
+  } @else {
+    <a
+      routerLink="/login"
+      routerLinkActive="!text-amber-500 bg-amber-500/10 scale-105"
+      aria-label="Masuk"
+      class="relative flex h-11 w-11 items-center justify-center rounded-full text-stone-400 hover:text-stone-700 transition-all duration-200 cursor-pointer"
+    >
+      <i class="bx bxs-user text-2xl leading-none"></i>
+    </a>
+  }
+
+</div>

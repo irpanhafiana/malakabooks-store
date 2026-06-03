@@ -1,0 +1,171 @@
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 space-y-8 text-stone-900 animate-fade-in">
+ 
+  <!-- Top header title and Search bar -->
+  <div class="flex flex-row items-center justify-between gap-6 pb-6 border-b border-stone-200">
+    <div class="space-y-1 text-left">
+      <h1 class="text-3xl font-extrabold text-stone-900 tracking-tight">Katalog Buku</h1>
+      <p class="text-xs sm:text-sm text-stone-500">Temukan koleksi buku fisik premium terlengkap kami.</p>
+    </div>
+    
+    <!-- Search bar component -->
+    <div class="w-96">
+      <app-search-bar 
+        placeholder="Cari berdasarkan judul atau penulis..."
+        (search)="parent().onSearch($event)"
+      ></app-search-bar>
+    </div>
+  </div>
+
+  <!-- Layout: Filter Panel left and Catalog List right -->
+  <div class="grid grid-cols-4 gap-8">
+  
+    <!-- Filter Sidebar Panel -->
+    <aside class="col-span-1 space-y-6">
+      <div class="rounded-2xl border border-stone-200 bg-white p-5 space-y-6 shadow-sm">
+        <div class="flex items-center justify-between pb-3 border-b border-stone-100">
+          <h3 class="text-sm font-bold text-stone-900 uppercase tracking-wider">Filter Pencarian</h3>
+          <button (click)="parent().resetFilters()" class="text-xs font-bold text-amber-600 hover:text-amber-500 cursor-pointer">Reset</button>
+        </div>
+
+        <!-- Categories filter -->
+        <div class="space-y-3">
+          <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block">Kategori</label>
+          <div class="space-y-2">
+            <button
+              (click)="parent().onCategorySelect('all')"
+              [ngClass]="{
+                'bg-amber-600 text-white border-amber-600': parent().selectedCategory() === 'all',
+                'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100': parent().selectedCategory() !== 'all'
+              }"
+              class="w-full text-left px-3 py-2.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer"
+            >
+              Semua Kategori
+            </button>
+            @for (cat of parent().categories(); track cat.id) {
+              <button
+                (click)="parent().onCategorySelect(cat.id)"
+                [ngClass]="{
+                  'bg-amber-600 text-white border-amber-600': parent().selectedCategory() === cat.id,
+                  'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100': parent().selectedCategory() !== cat.id
+                }"
+                class="w-full text-left px-3 py-2.5 text-xs font-semibold rounded-xl border transition-all truncate cursor-pointer"
+              >
+                {{ cat.name }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Price filter -->
+        <div class="space-y-3">
+          <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block">Rentang Harga</label>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="space-y-1 text-left">
+              <span class="text-[10px] text-stone-500 block">Min (Rp)</span>
+              <input 
+                type="number" 
+                [(ngModel)]="parent().minPrice" 
+                (change)="parent().onFilterChange()"
+                class="w-full text-xs rounded-xl bg-white border border-stone-200 px-3 py-2 text-stone-900 placeholder-stone-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                placeholder="0"
+              />
+            </div>
+            <div class="space-y-1 text-left">
+              <span class="text-[10px] text-stone-500 block">Max (Rp)</span>
+              <input 
+                type="number" 
+                [(ngModel)]="parent().maxPrice" 
+                (change)="parent().onFilterChange()"
+                class="w-full text-xs rounded-xl bg-white border border-stone-200 px-3 py-2 text-stone-900 placeholder-stone-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                placeholder="500000"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating filter -->
+        <div class="space-y-3">
+          <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block">Rating Minimum</label>
+          <div class="space-y-2">
+            @for (stars of [5, 4, 3, 2, 1]; track stars) {
+              <button
+                (click)="parent().onRatingSelect(stars)"
+                [ngClass]="{
+                  'bg-amber-600/10 text-amber-500 border-amber-600/30': parent().minRating() === stars,
+                  'border-stone-200 hover:bg-stone-50 text-stone-600': parent().minRating() !== stars
+                }"
+                class="w-full flex items-center justify-between border px-3 py-2 rounded-xl transition-all cursor-pointer"
+              >
+                <div class="flex items-center gap-1">
+                  @for (star of [1,2,3,4,5]; track star) {
+                    <svg 
+                      [ngClass]="star <= stars ? 'text-amber-400' : 'text-stone-300'"
+                      class="h-3.5 w-3.5 fill-current" 
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  }
+                </div>
+                <span class="text-[10px] font-semibold tracking-wider">Ke atas</span>
+              </button>
+            }
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Right Side: Catalog List -->
+    <main class="col-span-3 space-y-8">
+    
+      <!-- Top Sort & Count header bar -->
+      <div class="flex items-center justify-between bg-white border border-stone-200 rounded-2xl px-5 py-3 select-none shadow-sm">
+        <span class="text-xs text-stone-500 font-medium">Menampilkan <strong class="text-stone-900">{{ parent().totalItems() }}</strong> Buku ditemukan</span>
+        
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-stone-500">Urutkan:</span>
+          <select 
+            [(ngModel)]="parent().sortBy"
+            (change)="parent().onFilterChange()"
+            class="bg-white border border-stone-200 rounded-xl px-3 py-1.5 text-xs text-stone-900 focus:outline-none focus:border-amber-500 transition-colors cursor-pointer"
+          >
+            <option value="latest">Rilisan Terbaru</option>
+            <option value="price-asc">Harga Terendah</option>
+            <option value="price-desc">Harga Tertinggi</option>
+            <option value="rating-desc">Rating Tertinggi</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Catalog Book Grid -->
+      @if (parent().isLoading()) {
+        <app-loading-spinner type="skeleton" [count]="6" layout="grid"></app-loading-spinner>
+      } @else if (parent().paginatedBooks().length === 0) {
+        <!-- Empty State -->
+        <app-empty-state
+          title="Buku Tidak Ditemukan"
+          message="Maaf, tidak ada buku yang cocok dengan kata kunci pencarian atau kombinasi filter Anda saat ini."
+          icon="search"
+          actionText="Reset Semua Filter"
+          (actionClick)="parent().resetFilters()"
+        ></app-empty-state>
+      } @else {
+        <!-- Grid list of books -->
+        <div class="grid grid-cols-3 gap-6">
+          @for (book of parent().paginatedBooks(); track book.id) {
+            <app-book-card [book]="book"></app-book-card>
+          }
+        </div>
+
+        <!-- Pagination controls -->
+        <app-pagination 
+          [currentPage]="parent().currentPage()" 
+          [totalPages]="parent().totalPages()" 
+          (pageChange)="parent().onPageChange($event)"
+        ></app-pagination>
+      }
+
+    </main>
+  </div>
+</div>

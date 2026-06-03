@@ -1,0 +1,5 @@
+@if (viewport.isDesktop()) {
+  <app-checkout-desktop [parent]="this"></app-checkout-desktop>
+} @else {
+  <app-checkout-mobile [parent]="this"></app-checkout-mobile>
+}

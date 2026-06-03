@@ -1,0 +1,205 @@
+<div class="space-y-8 text-left animate-fade-in text-stone-900">
+  
+  <!-- Header -->
+  <div class="flex items-center justify-between pb-4 border-b border-stone-200">
+    <div class="space-y-1">
+      <h2 class="text-xl font-bold text-stone-900 tracking-wide">Alamat Pengiriman (Desktop View)</h2>
+      <p class="text-xs text-stone-500">Kelola daftar alamat pengiriman Anda untuk mempermudah proses checkout belanja.</p>
+    </div>
+    
+    <!-- Toggle add form button -->
+    @if (!parent().showForm()) {
+      <app-button
+        variant="primary"
+        size="sm"
+        (click)="parent().openAddForm()"
+      >
+        Tambah Alamat Baru
+      </app-button>
+    }
+  </div>
+
+  <!-- Add/Edit Address Form -->
+  @if (parent().showForm()) {
+    <div class="rounded-2xl border border-stone-200 bg-white p-6 space-y-4 animate-fade-in shadow-sm">
+      <h3 class="text-sm font-bold text-stone-900 uppercase tracking-wider pb-2 border-b border-stone-100 select-none">
+        {{ parent().isEditing() ? 'Edit Alamat Pengiriman' : 'Tambah Alamat Baru' }}
+      </h3>
+
+      <form (submit)="parent().onSaveAddress()" class="grid grid-cols-2 gap-4">
+        
+        <!-- Label Alamat -->
+        <div class="col-span-2">
+          <app-form-input
+            id="label-desktop"
+            label="Label Alamat"
+            [(ngModel)]="parent().label"
+            name="label"
+            placeholder="Contoh: Rumah Utama, Kost, Kantor, dll"
+            [required]="true"
+          ></app-form-input>
+        </div>
+
+        <!-- Recipient Name -->
+        <app-form-input
+          id="recipientName-desktop"
+          label="Nama Penerima"
+          [(ngModel)]="parent().recipientName"
+          name="recipientName"
+          placeholder="Budi Santoso"
+          [required]="true"
+        ></app-form-input>
+
+        <!-- Phone Number -->
+        <app-form-input
+          id="phone-desktop"
+          label="Nomor Telepon"
+          type="tel"
+          [(ngModel)]="parent().phone"
+          name="phone"
+          placeholder="081234567890"
+          [required]="true"
+        ></app-form-input>
+
+        <!-- Street Address -->
+        <div class="col-span-2">
+          <app-form-input
+            id="street-desktop"
+            label="Alamat Lengkap"
+            type="textarea"
+            [rows]="2"
+            [(ngModel)]="parent().street"
+            name="street"
+            placeholder="Nama jalan, nomor rumah, RT/RW, kelurahan/kecamatan..."
+            [required]="true"
+          ></app-form-input>
+        </div>
+
+        <!-- City -->
+        <app-form-input
+          id="city-desktop"
+          label="Kota / Kabupaten"
+          [(ngModel)]="parent().city"
+          name="city"
+          placeholder="Jakarta Pusat"
+          [required]="true"
+        ></app-form-input>
+
+        <!-- Province -->
+        <app-form-input
+          id="province-desktop"
+          label="Provinsi"
+          [(ngModel)]="parent().province"
+          name="province"
+          placeholder="DKI Jakarta"
+          [required]="true"
+        ></app-form-input>
+
+        <!-- Postal Code -->
+        <app-form-input
+          id="postalCode-desktop"
+          label="Kode Pos"
+          [(ngModel)]="parent().postalCode"
+          name="postalCode"
+          placeholder="10410"
+          [required]="true"
+        ></app-form-input>
+
+        <!-- Set as default checkbox -->
+        <div class="flex items-center gap-2 pt-5 select-none text-left">
+          <input 
+            type="checkbox" 
+            [(ngModel)]="parent().isDefault" 
+            name="isDefault"
+            id="isDefault-desktop"
+            class="rounded bg-white border-stone-200 text-amber-600 focus:ring-0 cursor-pointer" 
+          />
+          <label for="isDefault-desktop" class="text-xs text-stone-550 cursor-pointer">Jadikan Alamat Utama</label>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="col-span-2 flex items-center justify-end gap-3 pt-3 border-t border-stone-150">
+          <app-button
+            variant="secondary"
+            size="sm"
+            type="button"
+            (click)="parent().closeForm()"
+          >
+            Batal
+          </app-button>
+          <app-button
+            variant="primary"
+            size="sm"
+            type="submit"
+          >
+            {{ parent().isEditing() ? 'Simpan Alamat' : 'Tambah Alamat' }}
+          </app-button>
+        </div>
+
+      </form>
+    </div>
+  }
+
+  <!-- Address Cards List Grid (2 Columns on Desktop) -->
+  <div class="grid grid-cols-2 gap-6">
+    @for (addr of parent().addresses(); track addr.id) {
+      <div 
+        [ngClass]="{
+          'border-amber-500/50 bg-amber-500/5': addr.isDefault,
+          'border-stone-200 bg-white': !addr.isDefault
+        }"
+        class="rounded-2xl border p-5 flex flex-col justify-between gap-4 shadow-sm hover:border-stone-300 transition-colors"
+      >
+        <!-- Card Head: Label and Default Badge -->
+        <div class="flex items-start justify-between">
+          <h4 class="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-2">
+            {{ addr.label }}
+            @if (addr.isDefault) {
+              <app-badge type="warning" size="xs">Utama</app-badge>
+            }
+          </h4>
+
+          <!-- Steer buttons -->
+          <div class="flex items-center gap-2">
+            <button 
+              (click)="parent().onEditClick(addr)"
+              class="text-[10px] font-bold text-stone-500 hover:text-amber-500 transition-colors cursor-pointer"
+            >
+              Edit
+            </button>
+            @if (!addr.isDefault) {
+              <span class="text-stone-300 select-none">|</span>
+              <button 
+                (click)="parent().onDeleteAddress(addr.id)"
+                class="text-[10px] font-bold text-red-500 hover:text-red-400 transition-colors cursor-pointer"
+              >
+                Hapus
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Card Content: recipient and detailed address text -->
+        <div class="space-y-1 text-xs text-left">
+          <p class="font-bold text-stone-800">{{ addr.recipientName }}</p>
+          <p class="text-stone-500 font-medium">{{ addr.phone }}</p>
+          <p class="text-stone-600 leading-relaxed font-light mt-2">{{ addr.street }}</p>
+          <p class="text-stone-600 font-light">{{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</p>
+        </div>
+
+        <!-- Card Footer: set default CTA button -->
+        @if (!addr.isDefault) {
+          <div class="pt-2 border-t border-stone-150">
+            <button
+              (click)="parent().onSetDefault(addr.id)"
+              class="text-[10px] font-bold text-amber-600 hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              Jadikan Alamat Utama
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+</div>

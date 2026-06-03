@@ -1,0 +1,107 @@
+<div class="grid grid-cols-12 min-h-[calc(100vh-16rem)] text-stone-900 animate-fade-in bg-stone-50">
+  
+  <!-- Left Side: Editorial Art & Quotes -->
+  <div class="col-span-7 relative overflow-hidden bg-stone-950 flex flex-col justify-between p-16 select-none">
+    <!-- Ambient glow lights -->
+    <div class="absolute top-0 left-0 h-[400px] w-[400px] rounded-full bg-gradient-to-tr from-amber-600/15 to-emerald-600/15 blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 h-[300px] w-[300px] rounded-full bg-gradient-to-tr from-amber-600/5 to-emerald-600/5 blur-[90px] pointer-events-none"></div>
+    
+    <!-- Logo/Brand -->
+    <div class="relative z-10 flex items-center gap-3">
+      <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-600 text-white font-extrabold text-lg shadow-md">M</span>
+      <span class="text-md font-bold tracking-tight text-white">Malaka Books</span>
+    </div>
+
+    <!-- Center Quote -->
+    <div class="relative z-10 max-w-lg space-y-6 text-left my-auto">
+      <p class="text-3xl font-light leading-relaxed text-stone-300 italic">
+        "Buku adalah pesawat, kereta api, dan jalan. Mereka adalah tujuan, dan perjalanan. Mereka adalah rumah."
+      </p>
+      <div class="space-y-1">
+        <h4 class="text-sm font-bold text-amber-500 uppercase tracking-widest">— Anna Quindlen</h4>
+        <p class="text-xs text-stone-500">Koleksi Buku Fisik Pilihan Terbaik</p>
+      </div>
+    </div>
+
+    <!-- Footer of left side -->
+    <div class="relative z-10 text-xs text-stone-500">
+      &copy; 2026 Malaka Books. Toko Buku Premium Terbaik Anda.
+    </div>
+  </div>
+
+  <!-- Right Side: Login Form -->
+  <div class="col-span-5 flex items-center justify-center p-16 bg-white relative">
+    <div class="w-full max-w-md space-y-8 text-left">
+      
+      <!-- Header -->
+      <div class="space-y-2">
+        <h2 class="text-3xl font-extrabold text-stone-900 tracking-tight">Selamat Datang Kembali</h2>
+        <p class="text-sm text-stone-500">Silakan masuk menggunakan akun terdaftar Anda.</p>
+      </div>
+
+      <!-- Form content -->
+      <form (submit)="parent().onSubmit()" class="space-y-5">
+        
+        <!-- Email -->
+        <app-form-input
+          id="email-desktop"
+          label="Alamat Email"
+          type="email"
+          [(ngModel)]="parent().email"
+          name="email"
+          [required]="true"
+          placeholder="budi@gmail.com atau admin@malakabooks.com"
+        ></app-form-input>
+
+        <!-- Password -->
+        <app-form-input
+          id="password-desktop"
+          label="Kata Sandi"
+          type="password"
+          [(ngModel)]="parent().password"
+          name="password"
+          [required]="true"
+          placeholder="••••••••"
+        ></app-form-input>
+
+        <!-- Remember me / simulated forgot -->
+        <div class="flex items-center justify-between text-xs text-stone-500 pt-1">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="parent().rememberMe" 
+              name="rememberMe"
+              class="rounded bg-white border-stone-200 text-amber-600 focus:ring-0 cursor-pointer" 
+            />
+            Ingat saya
+          </label>
+          <span class="text-stone-500 hover:text-amber-500 cursor-help" title="Gunakan budi@gmail.com / password123 atau admin@malakabooks.com / admin123">Bantuan Akun?</span>
+        </div>
+
+        <!-- Submit CTA -->
+        <div class="pt-2">
+          <button
+            type="submit"
+            [disabled]="parent().isLoading()"
+            class="w-full flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 py-3 text-sm font-bold text-white shadow-xl shadow-amber-900/10 active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
+          >
+            @if (parent().isLoading()) {
+              <span>Memverifikasi...</span>
+            } @else {
+              <span>Masuk Akun</span>
+            }
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Register Link footer -->
+      <div class="pt-6 border-t border-stone-100 text-xs text-stone-500 text-center">
+        Belum memiliki akun? 
+        <a routerLink="/register" class="font-bold text-amber-600 hover:underline cursor-pointer">Daftar Sekarang</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>

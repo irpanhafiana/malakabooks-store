@@ -1,0 +1,85 @@
+<div class="space-y-1.5 w-full text-left">
+  <!-- Label -->
+  @if (label) {
+    <label
+      [for]="id"
+      class="text-[10px] font-bold text-stone-500 uppercase tracking-widest block select-none"
+    >
+      {{ label }}
+      @if (required) {
+        <span class="text-red-500">*</span>
+      }
+    </label>
+  }
+
+  <!-- Fields Wrapper -->
+  <div class="relative w-full">
+
+    <!-- Textarea type -->
+    @if (type === 'textarea') {
+      <textarea
+        [id]="id"
+        [ngModel]="value"
+        (ngModelChange)="onModelChange($event)"
+        [placeholder]="placeholder"
+        [required]="required"
+        [rows]="rows"
+        [disabled]="disabled"
+        [ngClass]="{
+          'border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500': error,
+          'border-stone-200 focus:border-amber-600': !error
+        }"
+        class="w-full rounded-xl bg-white border px-3.5 py-2 text-xs text-stone-900 placeholder-stone-400 focus:outline-none transition-colors leading-relaxed disabled:opacity-60 disabled:bg-stone-50 disabled:cursor-not-allowed"
+      ></textarea>
+    }
+
+    <!-- Select type -->
+    @else if (type === 'select') {
+      <select
+        [id]="id"
+        [ngModel]="value"
+        (ngModelChange)="onModelChange($event)"
+        [required]="required"
+        [disabled]="disabled"
+        [ngClass]="{
+          'border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500': error,
+          'border-stone-200 focus:border-amber-600': !error
+        }"
+        class="w-full rounded-xl bg-white border px-3.5 py-2 text-xs text-stone-900 focus:outline-none transition-colors disabled:opacity-60 disabled:bg-stone-50 disabled:cursor-not-allowed"
+      >
+        @if (placeholder) {
+          <option value="" disabled selected>{{ placeholder }}</option>
+        }
+        @for (opt of options; track opt.value) {
+          <option [value]="opt.value">{{ opt.label }}</option>
+        }
+      </select>
+    }
+
+    <!-- Regular inputs -->
+    @else {
+      <input
+        [id]="id"
+        [type]="type"
+        [ngModel]="value"
+        (ngModelChange)="onModelChange($event)"
+        [placeholder]="placeholder"
+        [required]="required"
+        [disabled]="disabled"
+        [ngClass]="{
+          'border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500': error,
+          'border-stone-200 focus:border-amber-600': !error
+        }"
+        class="w-full rounded-xl bg-white border px-3.5 py-2 text-xs text-stone-900 placeholder-stone-400 focus:outline-none transition-colors disabled:opacity-60 disabled:bg-stone-50 disabled:cursor-not-allowed"
+      />
+    }
+
+  </div>
+
+  <!-- Error helper text -->
+  @if (error) {
+    <p class="text-[10px] text-red-500 font-medium animate-fade-in pl-1">
+      {{ error }}
+    </p>
+  }
+</div>

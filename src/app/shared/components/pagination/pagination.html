@@ -1,0 +1,42 @@
+@if (totalPages > 1) {
+  <div class="flex items-center justify-center gap-1.5 py-4">
+    <!-- Previous Page Button -->
+    <button
+      type="button"
+      (click)="changePage(currentPage - 1)"
+      [disabled]="currentPage === 1"
+      class="flex h-9 w-9 items-center justify-center rounded-xl border border-stone-200 bg-white text-stone-500 hover:bg-stone-100 hover:text-stone-900 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Numbered Page Buttons -->
+    @for (page of pagesArray(); track page) {
+      <button
+        type="button"
+        (click)="changePage(page)"
+        [ngClass]="{
+          'bg-amber-600 text-white font-bold border-amber-600 shadow-lg shadow-amber-500/20': page === currentPage,
+          'bg-white text-stone-600 border-stone-200 hover:bg-stone-100 hover:text-stone-900': page !== currentPage
+        }"
+        class="flex h-9 w-9 items-center justify-center rounded-xl border text-sm font-medium transition-all duration-200"
+      >
+        {{ page }}
+      </button>
+    }
+
+    <!-- Next Page Button -->
+    <button
+      type="button"
+      (click)="changePage(currentPage + 1)"
+      [disabled]="currentPage === totalPages"
+      class="flex h-9 w-9 items-center justify-center rounded-xl border border-stone-200 bg-white text-stone-500 hover:bg-stone-100 hover:text-stone-900 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+}

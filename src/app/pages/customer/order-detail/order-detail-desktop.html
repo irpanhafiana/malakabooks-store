@@ -1,0 +1,209 @@
+<div class="space-y-8 text-left animate-fade-in text-stone-900">
+  
+  <!-- Back Link -->
+  <div>
+    <a routerLink="/account/orders" class="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1.5 w-max cursor-pointer">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Kembali ke Riwayat Pesanan
+    </a>
+  </div>
+
+  @if (parent().isLoading()) {
+    <app-loading-spinner type="spinner" message="Memuat detail pesanan..."></app-loading-spinner>
+  } @else if (!parent().order()) {
+    <div class="rounded-3xl border border-stone-200 bg-white p-12 text-center max-w-sm mx-auto shadow-sm">
+      <h3 class="text-xs font-bold text-stone-900 mb-1">Pesanan Tidak Ditemukan</h3>
+      <p class="text-[11px] text-stone-500">
+        Detail transaksi pesanan tidak valid atau Anda tidak memiliki akses.
+      </p>
+    </div>
+  } @else {
+    @if (parent().order(); as ord) {
+      <!-- Order Metadata -->
+      <div class="flex items-center justify-between gap-4 pb-4 border-b border-stone-200">
+        <div class="space-y-1">
+          <h3 class="text-lg font-bold text-stone-900">ID Transaksi: {{ ord.id }} (Desktop View)</h3>
+          <p class="text-xs text-stone-500">Dibuat pada {{ ord.createdAt | date:'dd MMMM yyyy HH:mm' }} WIB</p>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <span 
+            [ngClass]="{
+              'bg-orange-500/10 border-orange-500/20 text-orange-500': ord.status === 'pending',
+              'bg-sky-500/10 border-sky-500/20 text-sky-500': ord.status === 'processing',
+              'bg-indigo-500/10 border-indigo-500/20 text-indigo-500': ord.status === 'shipped',
+              'bg-emerald-500/10 border-emerald-500/20 text-emerald-500': ord.status === 'delivered',
+              'bg-stone-500/10 border-stone-500/20 text-stone-500': ord.status === 'cancelled'
+            }"
+            class="rounded border px-3 py-1 text-[10px] font-extrabold tracking-wider uppercase"
+          >
+            {{ parent().getStatusText(ord.status) }}
+          </span>
+
+          <!-- Cancel Button if pending/processing -->
+          @if (ord.status === 'pending' || ord.status === 'processing') {
+            <button
+              (click)="parent().onCancelOrder(ord.id)"
+              class="rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1 text-[10px] font-extrabold tracking-wider uppercase transition-colors cursor-pointer"
+            >
+              Batalkan
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Tracking visual timeline (Desktop: Horizontal) -->
+      @if (ord.status !== 'cancelled') {
+        <div class="rounded-2xl border border-stone-200 bg-white p-6 flex flex-row items-center justify-between gap-6 relative overflow-hidden shadow-sm">
+          <div class="absolute inset-0 bg-stone-900/5 -z-10"></div>
+          
+          <!-- Step items -->
+          @for (step of parent().timelineSteps; track step.status; let i = $index) {
+            <div class="flex items-center gap-4 relative">
+              <!-- Badge dot -->
+              <div 
+                [ngClass]="{
+                  'bg-amber-600 border-amber-600 text-white shadow-md': parent().isStepActive(ord.status, step.status),
+                  'bg-stone-50 border-stone-200 text-stone-400': !parent().isStepActive(ord.status, step.status)
+                }"
+                class="h-9 w-9 rounded-full border-2 flex items-center justify-center font-bold text-xs shrink-0"
+              >
+                {{ i + 1 }}
+              </div>
+
+              <!-- Text metadata -->
+              <div class="text-left">
+                <p 
+                  [ngClass]="{ 'text-stone-900 font-bold': parent().isStepActive(ord.status, step.status), 'text-stone-400': !parent().isStepActive(ord.status, step.status) }"
+                  class="text-xs font-semibold"
+                >
+                  {{ step.label }}
+                </p>
+                <p class="text-[10px] text-stone-500">{{ step.description }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Grid: Items (Left) and Delivery Alamat / Price (Right) -->
+      <div class="grid grid-cols-12 gap-8 items-start">
+        
+        <!-- Items summary lists (Left) -->
+        <div class="col-span-8 space-y-4">
+          <h4 class="text-xs font-bold text-stone-400 uppercase tracking-widest pb-1">Daftar Buku Yang Dipesan</h4>
+          
+          <div class="space-y-3">
+            @for (item of ord.items; track item.bookId) {
+              <div class="flex items-center gap-4 rounded-2xl border border-stone-200 bg-white p-4 shadow-sm">
+                
+                <!-- Cover -->
+                <a [routerLink]="['/book', item.bookId]" class="h-16 w-12 rounded bg-stone-100 overflow-hidden shrink-0 border border-stone-200 shadow-sm cursor-pointer block">
+                  <img [src]="parent().getBookCover(item.bookId)" [alt]="item.title" class="h-full w-full object-cover" />
+                </a>
+
+                <!-- Details -->
+                <div class="flex-1 min-w-0 text-left space-y-1">
+                  <a [routerLink]="['/book', item.bookId]" class="font-bold text-stone-900 hover:text-amber-600 text-sm truncate block leading-tight line-clamp-1 cursor-pointer">
+                    {{ item.title }}
+                  </a>
+                  <p class="text-[10px] text-stone-500">{{ item.quantity }} eksemplar x {{ item.price | currencyRupiah }}</p>
+                </div>
+
+                <div class="flex flex-col items-end gap-2 shrink-0">
+                  <!-- Total unit cost -->
+                  <span class="text-xs font-bold text-amber-600">{{ item.price * item.quantity | currencyRupiah }}</span>
+                  
+                  <!-- Write review contextual CTA -->
+                  @if (ord.status === 'delivered' && !parent().hasReviewed(item.bookId, ord.id)) {
+                    <a 
+                      [routerLink]="['/account/reviews/write', ord.id, item.bookId]"
+                      class="rounded-lg bg-amber-600/10 border border-amber-500/20 hover:bg-amber-600 hover:text-white text-[9px] font-bold text-amber-600 px-2.5 py-1 transition-colors cursor-pointer"
+                    >
+                      Tulis Ulasan
+                    </a>
+                  } @else if (ord.status === 'delivered' && parent().hasReviewed(item.bookId, ord.id)) {
+                    <span class="text-[9px] text-stone-450 italic">Sudah Diulas</span>
+                  }
+                </div>
+
+              </div>
+            }
+          </div>
+
+          <!-- Notes -->
+          @if (ord.note) {
+            <div class="rounded-2xl border border-stone-200 bg-white p-4 space-y-2 text-left shadow-sm">
+              <h5 class="text-[10px] font-bold text-stone-500 uppercase tracking-widest">Catatan Pembelian</h5>
+              <p class="text-xs text-stone-600 leading-normal font-light">"{{ ord.note }}"</p>
+            </div>
+          }
+        </div>
+
+        <!-- Alamat & Price details (Right) -->
+        <div class="col-span-4 space-y-6">
+          
+          <!-- Address Card -->
+          <div class="rounded-2xl border border-stone-200 bg-white p-5 space-y-3 shadow-sm">
+            <h4 class="text-xs font-bold text-stone-500 pb-2 border-b border-stone-100 uppercase tracking-widest">
+              Alamat Pengiriman
+            </h4>
+            
+            @if (parent().address(); as addr) {
+              <div class="text-xs text-left space-y-1.5">
+                <p class="font-bold text-stone-850">{{ addr.recipientName }}</p>
+                <p class="text-stone-500 font-medium">{{ addr.phone }}</p>
+                <p class="text-stone-600 font-light leading-relaxed pt-1.5">{{ addr.street }}</p>
+                <p class="text-stone-600 font-light">{{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</p>
+              </div>
+            } @else {
+              <span class="text-xs text-stone-500 italic">Memuat alamat pengiriman...</span>
+            }
+          </div>
+
+          <!-- Payment billing Summary -->
+          <div class="rounded-2xl border border-stone-200 bg-white p-5 space-y-4 shadow-sm">
+            <h4 class="text-xs font-bold text-stone-500 pb-2 border-b border-stone-100 uppercase tracking-widest">
+              Detail Rincian Biaya
+            </h4>
+
+            <div class="space-y-3 text-xs text-left">
+              <div class="flex items-center justify-between text-stone-500">
+                <span>Subtotal Buku</span>
+                <span class="text-stone-900 font-bold">{{ parent().orderSubtotal() | currencyRupiah }}</span>
+              </div>
+              <div class="flex items-center justify-between text-stone-500">
+                <span>Biaya Pengiriman</span>
+                <span class="text-stone-900 font-bold">{{ parent().orderShipping() | currencyRupiah }}</span>
+              </div>
+              
+              <hr class="border-stone-200" />
+
+              <div class="flex items-center justify-between text-xs pt-1">
+                <span class="text-stone-700 font-bold">Total Pembayaran</span>
+                <span class="text-amber-600 font-extrabold text-sm">{{ ord.totalPrice | currencyRupiah }}</span>
+              </div>
+            </div>
+
+            <!-- Complaint Action Button -->
+            @if (ord.status === 'delivered' || ord.status === 'shipped') {
+              <div class="pt-2 border-t border-stone-150">
+                <a
+                  routerLink="/account/complaints"
+                  class="w-full flex items-center justify-center rounded-xl bg-stone-50 border border-stone-200 hover:bg-stone-100 py-2.5 text-[10px] font-extrabold text-stone-605 hover:text-stone-900 transition-colors cursor-pointer"
+                >
+                  Ajukan Komplain Layanan
+                </a>
+              </div>
+            }
+          </div>
+
+        </div>
+
+      </div>
+    @}
+  }
+
+</div>

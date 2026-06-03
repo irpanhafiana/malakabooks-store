@@ -1,0 +1,240 @@
+<div class="mx-auto max-w-7xl px-4 pt-18 pb-32 space-y-8 text-stone-900">
+
+  <!-- Fixed Back Button Header (Mobile Only) -->
+  <div class="fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200 px-4 h-14 flex items-center justify-between shadow-sm">
+    <a
+      routerLink="/catalog"
+      class="flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100 border border-stone-200 text-stone-600 hover:bg-stone-200 transition-colors cursor-pointer"
+      aria-label="Kembali"
+    >
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+    </a>
+    <span class="text-xs font-extrabold text-stone-900 tracking-wide uppercase">Detail Buku</span>
+    <div class="w-9"></div>
+  </div>
+
+  @if (parent().isLoading()) {
+    <app-loading-spinner type="spinner" message="Memuat informasi buku..."></app-loading-spinner>
+  } @else if (!parent().book()) {
+    <!-- Error State -->
+    <div class="rounded-2xl border border-stone-200 bg-white p-8 text-center max-w-xs mx-auto shadow-sm">
+      <h3 class="text-sm font-bold text-stone-900 mb-1">Buku Tidak Ditemukan</h3>
+      <p class="text-xs text-stone-500 leading-normal">
+        Maaf, detail informasi buku yang Anda cari tidak dapat ditemukan.
+      </p>
+    </div>
+  } @else {
+    <!-- Layout Grid: Book Cover Image and metadata -->
+    <div class="flex flex-col gap-6 items-center">
+    
+      <!-- Column Left: Book Cover Image -->
+      <div class="w-48 flex justify-center">
+        <div class="relative group w-full">
+          <div class="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-amber-600 to-emerald-600 opacity-15 blur-xl"></div>
+          <img 
+            [src]="parent().book()?.coverImage" 
+            [alt]="parent().book()?.title" 
+            class="relative rounded-xl border border-stone-200 w-full object-cover shadow-xl aspect-[3/4]"
+          />
+        </div>
+      </div>
+
+      <!-- Column Right: Metadata -->
+      <div class="w-full text-center space-y-4">
+        <div class="space-y-2">
+          <!-- Category and author -->
+          <div class="flex items-center justify-center gap-2">
+            <app-badge type="info" size="xs">{{ parent().categoryName() }}</app-badge>
+            <span class="text-xs text-stone-500">Karya <strong class="text-stone-700 font-bold">{{ parent().book()?.author }}</strong></span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-2xl font-extrabold text-stone-900 tracking-tight leading-snug">
+            {{ parent().book()?.title }}
+          </h1>
+
+          <!-- Stars rating summary -->
+          <div class="flex items-center justify-center gap-2">
+            <app-star-rating [rating]="parent().book()?.averageRating || 0" size="xs"></app-star-rating>
+            <span class="text-xs text-stone-600 font-bold">
+              {{ parent().book()?.averageRating | number:'1.1-1' }} / 5.0 ({{ parent().reviews().length }} Ulasan)
+            </span>
+          </div>
+
+          <!-- Price tag -->
+          <div class="text-2xl font-extrabold text-amber-600">
+            {{ parent().book()?.price | currencyRupiah }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr class="border-stone-200" />
+
+    <!-- Book Detailed information (Synopsis, specs, ulasan) -->
+    <div class="space-y-4">
+      
+      <!-- Tab selectors -->
+      <div class="flex border-b border-stone-200 overflow-x-auto gap-2">
+        <button 
+          (click)="parent().activeTab.set('sinopsis')"
+          [ngClass]="parent().activeTab() === 'sinopsis' ? 'border-amber-600 text-amber-500 font-bold' : 'border-transparent text-stone-500'"
+          class="border-b-2 py-2.5 px-1 text-xs uppercase tracking-wider font-bold transition-all whitespace-nowrap cursor-pointer"
+        >
+          Sinopsis
+        </button>
+        <button 
+          (click)="parent().activeTab.set('spesifikasi')"
+          [ngClass]="parent().activeTab() === 'spesifikasi' ? 'border-amber-600 text-amber-500 font-bold' : 'border-transparent text-stone-500'"
+          class="border-b-2 py-2.5 px-1 text-xs uppercase tracking-wider font-bold transition-all whitespace-nowrap cursor-pointer"
+        >
+          Spesifikasi
+        </button>
+        <button 
+          (click)="parent().activeTab.set('ulasan')"
+          [ngClass]="parent().activeTab() === 'ulasan' ? 'border-amber-600 text-amber-500 font-bold' : 'border-transparent text-stone-500'"
+          class="border-b-2 py-2.5 px-1 text-xs uppercase tracking-wider font-bold transition-all whitespace-nowrap cursor-pointer"
+        >
+          Ulasan ({{ parent().reviews().length }})
+        </button>
+      </div>
+
+      <!-- Tab Content Panel -->
+      <div class="rounded-xl border border-stone-200 bg-white p-5 min-h-[8rem] text-left shadow-sm transition-colors">
+      
+        <!-- Tab: Synopsis -->
+        @if (parent().activeTab() === 'sinopsis') {
+          <div class="space-y-3">
+            <h3 class="text-sm font-bold text-stone-900 tracking-wide">Sinopsis</h3>
+            <p class="text-xs text-stone-700 leading-relaxed font-light whitespace-pre-line">
+              {{ parent().book()?.description }}
+            </p>
+          </div>
+        }
+
+        <!-- Tab: Specs -->
+        @if (parent().activeTab() === 'spesifikasi') {
+          <div class="space-y-2.5 text-xs">
+            <div class="flex justify-between border-b border-stone-100 pb-1.5">
+              <span class="text-stone-500">ISBN</span>
+              <span class="text-stone-900 font-bold">{{ parent().book()?.isbn }}</span>
+            </div>
+            <div class="flex justify-between border-b border-stone-100 pb-1.5">
+              <span class="text-stone-500">Penerbit</span>
+              <span class="text-stone-900 font-bold">{{ parent().book()?.publisher }}</span>
+            </div>
+            <div class="flex justify-between border-b border-stone-100 pb-1.5">
+              <span class="text-stone-500">Tahun Terbit</span>
+              <span class="text-stone-900 font-bold">{{ parent().book()?.publishedYear }}</span>
+            </div>
+            <div class="flex justify-between border-b border-stone-100 pb-1.5">
+              <span class="text-stone-500">Jumlah Halaman</span>
+              <span class="text-stone-900 font-bold">{{ parent().book()?.pages }} Halaman</span>
+            </div>
+            <div class="flex justify-between border-b border-stone-100 pb-1.5">
+              <span class="text-stone-500">Berat Buku</span>
+              <span class="text-stone-900 font-bold">{{ parent().book()?.weight }} gram</span>
+            </div>
+          </div>
+        }
+
+        <!-- Tab: Reviews -->
+        @if (parent().activeTab() === 'ulasan') {
+          <div class="space-y-4">
+            <h3 class="text-sm font-bold text-stone-900 tracking-wide">Ulasan Pembeli</h3>
+            
+            @if (parent().reviews().length === 0) {
+              <div class="text-center py-4 text-xs text-stone-500 italic">
+                Belum ada ulasan untuk buku ini.
+              </div>
+            } @else {
+              <div class="divide-y divide-stone-200 space-y-4">
+                @for (rev of parent().reviews(); track rev.id) {
+                  <div class="pt-4 first:pt-0 space-y-1">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-1.5">
+                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-stone-100 font-bold text-[9px] text-stone-600 uppercase border border-stone-200">
+                          {{ rev.userId.substring(0, 2) }}
+                        </span>
+                        <span class="text-xs font-semibold text-stone-855">User Terverifikasi</span>
+                      </div>
+                      <span class="text-[9px] text-stone-500">{{ rev.createdAt | date:'dd MMM yyyy' }}</span>
+                    </div>
+                    
+                    <app-star-rating [rating]="rev.rating" size="xs"></app-star-rating>
+                    
+                    <p class="text-xs text-stone-700 leading-normal font-light">
+                      {{ rev.comment }}
+                    </p>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+    </div>
+
+    <!-- Related Books Recommendations Section -->
+    <section class="space-y-4">
+      <div class="border-b border-stone-200 pb-3">
+        <h2 class="text-lg font-bold tracking-tight text-stone-900 text-left">Buku Terkait</h2>
+      </div>
+
+      @if (parent().relatedBooks().length === 0) {
+        <div class="text-left text-xs text-stone-500 italic">Tidak ada buku rekomendasi terkait saat ini.</div>
+      } @else {
+        <div class="grid grid-cols-2 gap-4">
+          @for (rel of parent().relatedBooks(); track rel.id) {
+            <app-book-card [book]="rel"></app-book-card>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Sticky Bottom Purchase Bar (Mobile Only) -->
+    @if ((parent().book()?.stock || 0) > 0) {
+      <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 border-t border-stone-200 p-4 flex items-center justify-between shadow-2xl select-none animate-slide-in pb-safe-bottom">
+        <div class="flex flex-col text-left">
+          <span class="text-[9px] text-stone-500 font-bold uppercase tracking-wider">Subtotal</span>
+          <span class="text-sm font-bold text-amber-600 leading-tight">
+            {{ (parent().book()?.price || 0) * parent().qty() | currencyRupiah }}
+          </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Stepper -->
+          <div class="flex items-center rounded-full bg-stone-50 border border-stone-200 p-0.5">
+            <button 
+              type="button" 
+              (click)="parent().decrementQty()" 
+              [disabled]="parent().qty() <= 1"
+              class="flex h-7 w-7 items-center justify-center rounded-full text-stone-500 hover:text-stone-900 transition-colors disabled:opacity-20 cursor-pointer"
+            >
+              -
+            </button>
+            <span class="w-6 text-center text-xs font-bold text-stone-900">{{ parent().qty() }}</span>
+            <button 
+              type="button" 
+              (click)="parent().incrementQty()" 
+              [disabled]="parent().qty() >= (parent().book()?.stock || 1)"
+              class="flex h-7 w-7 items-center justify-center rounded-full text-stone-500 hover:text-stone-900 transition-colors disabled:opacity-20 cursor-pointer"
+            >
+              +
+            </button>
+          </div>
+
+          <app-button variant="primary" size="sm" (click)="parent().onAddToCart()">
+            Beli
+          </app-button>
+        </div>
+      </div>
+    }
+
+  }
+
+</div>

@@ -1,0 +1,73 @@
+<!-- Navbar -->
+@if (!viewport.isMobile() || !isBookDetailPage()) {
+  <app-header mode="public"></app-header>
+}
+
+<!-- Main Content Area -->
+<main class="min-h-[calc(100vh-16rem)] bg-stone-50 text-stone-900 pb-20 md:pb-0">
+  <div [class.route-anim-container]="!isBookDetailPage()">
+    <router-outlet />
+  </div>
+</main>
+
+<!-- Bottom Navigation for Mobile -->
+@if (viewport.isMobile() && !isBookDetailPage()) {
+  <app-bottom-navigation></app-bottom-navigation>
+}
+
+<!-- Footer -->
+@if (viewport.isDesktop()) {
+  <footer class="border-t border-stone-200 bg-stone-100 py-12 text-stone-500">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+        <!-- Brand & Description -->
+        <div class="flex flex-col gap-4">
+          <div class="flex items-center gap-2">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-600 text-white font-bold text-sm">M</span>
+            <span class="text-md font-bold tracking-tight text-stone-900">Malaka Books</span>
+          </div>
+          <p class="text-sm text-stone-500 leading-relaxed">
+            Toko Buku Fisik Online Premium dengan pilihan literatur sastra, sains, bisnis, pengembangan diri, dan komik pilihan terbaik untuk menemani petualangan intelektual Anda.
+          </p>
+        </div>
+
+        <!-- Quick Navigation -->
+        <div class="flex flex-col gap-3">
+          <h4 class="text-xs font-bold text-stone-700 tracking-wider uppercase">Menu Utama</h4>
+          <a routerLink="/" class="text-sm hover:text-amber-500 transition-colors cursor-pointer">Beranda</a>
+          <a routerLink="/catalog" class="text-sm hover:text-amber-500 transition-colors cursor-pointer">Katalog Buku</a>
+          <a routerLink="/account/cart" class="text-sm hover:text-amber-500 transition-colors cursor-pointer">Keranjang Belanja</a>
+        </div>
+
+        <!-- Categories Links -->
+        <div class="flex flex-col gap-3">
+          <h4 class="text-xs font-bold text-stone-700 tracking-wider uppercase">Kategori Terpopuler</h4>
+          <a routerLink="/catalog" [queryParams]="{category: 'cat-1'}" class="text-sm hover:text-amber-500 transition-colors cursor-pointer">Fiksi & Sastra</a>
+          <a routerLink="/catalog" [queryParams]="{category: 'cat-2'}" class="text-sm hover:text-amber-500 transition-colors cursor-pointer">Non-Fiksi</a>
+          <a routerLink="/catalog" [queryParams]="{category: 'cat-6'}" class="text-sm hover:text-amber-500 transition-colors cursor-pointer">Pengembangan Diri</a>
+          <a routerLink="/catalog" [queryParams]="{category: 'cat-5'}" class="text-sm hover:text-amber-500 transition-colors cursor-pointer">Bisnis & Finansial</a>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="flex flex-col gap-3">
+          <h4 class="text-xs font-bold text-stone-700 tracking-wider uppercase">Hubungi Kami</h4>
+          <p class="text-sm leading-relaxed text-stone-500">
+            Jl. Malaka Raya No. 101, Roa Malaka, Jakarta Barat, 11230.
+          </p>
+          <p class="text-sm text-stone-500">
+            Email: support@malakabooks.com <br/>
+            Telepon: (021) 5678-4321
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Copyright & Disclaimer -->
+      <div class="mt-12 border-t border-stone-200 pt-6 text-center text-xs text-stone-550 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>&copy; 2026 Malaka Books Store. Hak Cipta Dilindungi Undang-Undang.</p>
+        <p class="text-stone-500 italic font-medium">Frontend Angular 21 &amp; Tailwind v4 MVP Demo</p>
+      </div>
+    </div>
+  </footer>
+}

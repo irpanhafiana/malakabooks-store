@@ -1,0 +1,5 @@
+@if (viewport.isDesktop()) {
+  <app-orders-desktop [parent]="this"></app-orders-desktop>
+} @else {
+  <app-orders-mobile [parent]="this"></app-orders-mobile>
+}

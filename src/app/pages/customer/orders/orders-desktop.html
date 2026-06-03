@@ -1,0 +1,83 @@
+<div class="space-y-8 text-left animate-fade-in text-stone-900">
+  
+  <!-- Header -->
+  <div class="pb-4 border-b border-stone-200">
+    <h2 class="text-xl font-bold text-stone-900 tracking-wide">Pesanan Saya (Desktop View)</h2>
+    <p class="text-xs text-stone-500">Pantau status transaksi pembelian buku Anda secara berkala.</p>
+  </div>
+
+  <!-- Filters (Status Tabs) -->
+  <div class="flex border-b border-stone-200 gap-6">
+    @for (tab of parent().statusTabs; track tab.status) {
+      <button
+        (click)="parent().onFilterSelect(tab.status)"
+        [ngClass]="{
+          'border-amber-600 text-amber-600 font-bold': parent().activeStatus() === tab.status,
+          'border-transparent text-stone-500 hover:text-stone-900': parent().activeStatus() !== tab.status
+        }"
+        class="border-b-2 py-3 px-1 text-sm uppercase tracking-wider font-bold transition-all whitespace-nowrap focus:outline-none cursor-pointer"
+      >
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  @if (parent().isLoading()) {
+    <app-loading-spinner type="spinner" message="Memuat daftar transaksi pesanan..."></app-loading-spinner>
+  } @else if (parent().filteredOrders().length === 0) {
+    <app-empty-state
+      title="Pesanan Kosong"
+      message="Tidak ada transaksi pesanan yang sesuai dengan filter status yang Anda pilih saat ini."
+      icon="orders"
+      actionText="Belanja Buku Sekarang"
+      actionLink="/catalog"
+    ></app-empty-state>
+  } @else {
+    <!-- Orders List Stack -->
+    <div class="space-y-4">
+      @for (ord of parent().filteredOrders(); track ord.id) {
+        <div class="rounded-2xl border border-stone-200 bg-white p-5 flex items-center justify-between gap-4 hover:bg-stone-50 hover:border-stone-300 transition-colors shadow-sm animate-fade-in">
+          
+          <!-- Left Column: metadata details -->
+          <div class="text-left space-y-2 flex-1 min-w-0">
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-bold text-stone-750">{{ ord.id }}</span>
+              <span class="text-[10px] text-stone-400">{{ ord.createdAt | date:'dd MMM yyyy HH:mm' }}</span>
+            </div>
+
+            <!-- Books items summaries -->
+            <div class="text-xs text-stone-500">
+              <p class="font-bold text-stone-900 truncate max-w-md">
+                {{ ord.items[0].title }}
+                @if (ord.items.length > 1) {
+                  <span class="text-[10px] text-stone-400 font-medium"> dan {{ ord.items.length - 1 }} buku lainnya</span>
+                }
+              </p>
+              <p class="text-[10px] text-stone-500 mt-0.5 font-medium">Total belanja: {{ ord.totalPrice | currencyRupiah }}</p>
+            </div>
+          </div>
+
+          <!-- Right Column: Status badges and detail CTA -->
+          <div class="flex items-center gap-4 shrink-0">
+            <app-badge 
+              [type]="ord.status === 'delivered' ? 'success' : (ord.status === 'cancelled' ? 'danger' : (ord.status === 'pending' ? 'warning' : 'info'))"
+              size="sm"
+            >
+              {{ parent().getStatusText(ord.status) }}
+            </app-badge>
+
+            <!-- Action Button -->
+            <a 
+              [routerLink]="['/account/orders', ord.id]"
+              class="rounded-xl border border-stone-200 bg-stone-50 hover:bg-stone-100 px-4 py-2 text-xs font-bold text-stone-650 hover:text-stone-900 transition-all shadow-md cursor-pointer"
+            >
+              Detail Pesanan
+            </a>
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>
