@@ -1,5 +1,4 @@
 using MalakaBooks.IRepository;
-using MalakaBooks.Mediator.Common;
 using MalakaBooks.ViewModel;
 using MediatR;
 
@@ -10,13 +9,21 @@ public class UpdateUserProfileHandler(IUserRepository userRepository) : IRequest
     public async Task<UserResponse?> Handle(UpdateUserProfileCommand request, CancellationToken cancellationToken)
     {
         var entity = await userRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (entity is null)
-        {
-            return null;
-        }
+        if (entity is null) return null;
 
-        entity.UpdateFrom(request.Request);
+        entity.Name = request.Request.Name;
+        entity.Phone = request.Request.Phone;
+        entity.Avatar = request.Request.Avatar;
+
         await userRepository.UpdateAsync(request.Id, entity, cancellationToken);
-        return entity.ToResponse();
+
+        return new UserResponse
+        {
+            Id = entity.Id ?? string.Empty,
+            Name = entity.Name,
+            Phone = entity.Phone,
+            Avatar = entity.Avatar,
+            CreatedAt = entity.CreatedAt
+        };
     }
 }
