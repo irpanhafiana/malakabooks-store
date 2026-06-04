@@ -18,6 +18,15 @@ public class UserRepository : IUserRepository
     public async Task<UserEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<UserEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
+        await _collection.Find(_ => true).ToListAsync(cancellationToken);
+
+    public async Task<UserEntity> CreateAsync(UserEntity user, CancellationToken cancellationToken = default)
+    {
+        await _collection.InsertOneAsync(user, cancellationToken: cancellationToken);
+        return user;
+    }
+
     public async Task<bool> UpdateAsync(string id, UserEntity user, CancellationToken cancellationToken = default)
     {
         user.Id = id;
