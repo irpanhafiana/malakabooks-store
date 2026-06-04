@@ -1,0 +1,9 @@
+{
+  "CorsSetting": {
+    "PolicyName": "DefaultCors",
+    "AllowedOrigins": [
+      "https://malakabooks.example.com"
+    ],
+    "AllowCredentials": true
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "Is4Setting": {
+    "Authority": "https://identity.malakabooks.example.com",
+    "RequireHttpsMetadata": true,
+    "SwaggerClientId": "malakabooks-swagger",
+    "SwaggerClientSecret": "replace-in-production",
+    "ApiName": "malakabooks.api"
+  }
+}

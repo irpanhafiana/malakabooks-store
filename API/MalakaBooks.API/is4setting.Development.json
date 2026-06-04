@@ -1,0 +1,9 @@
+{
+  "Is4Setting": {
+    "Authority": "https://localhost:5001",
+    "RequireHttpsMetadata": false,
+    "SwaggerClientId": "malakabooks-swagger",
+    "SwaggerClientSecret": "change-me-swagger-secret",
+    "ApiName": "malakabooks.api"
+  }
+}
