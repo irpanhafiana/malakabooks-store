@@ -1,0 +1,9 @@
+{
+  "CorsSetting": {
+    "PolicyName": "DefaultCors",
+    "AllowedOrigins": [
+      "http://localhost:4200"
+    ],
+    "AllowCredentials": true
+  }
+}

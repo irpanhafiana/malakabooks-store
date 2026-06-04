@@ -1,0 +1,6 @@
+{
+  "EasyCaching": {
+    "Provider": "InMemory",
+    "DefaultExpirationMinutes": 30
+  }
+}
