@@ -7,11 +7,12 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { DrawerComponent } from '../../../shared/ui/drawer/drawer.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
+import { MasonryGridComponent } from '../../../shared/ui/masonry-grid/masonry-grid.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [ProductCardComponent, SkeletonComponent, IconComponent, DrawerComponent, EmptyStateComponent],
+  imports: [ProductCardComponent, SkeletonComponent, IconComponent, DrawerComponent, EmptyStateComponent, MasonryGridComponent],
   template: `
     <div class="flex flex-col gap-5 animate-fade-in pb-12">
       <!-- Title & Search Meta header -->
@@ -74,16 +75,16 @@ import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.
             (actionClick)="resetAllFilters()"
           ></app-empty-state>
         } @else {
-          <div class="grid grid-cols-2 gap-4">
-            @for (prod of productStore.filteredProducts(); track prod.id) {
+          <app-masonry-grid [items]="productStore.filteredProducts()">
+            <ng-template let-prod>
               <app-product-card
                 [product]="prod"
                 [isInWishlist]="userStore.isWishlisted(prod.id)"
                 (addToCart)="cartStore.addItem($event)"
                 (toggleWishlist)="userStore.toggleWishlist($event)"
               ></app-product-card>
-            }
-          </div>
+            </ng-template>
+          </app-masonry-grid>
         }
       </div>
 

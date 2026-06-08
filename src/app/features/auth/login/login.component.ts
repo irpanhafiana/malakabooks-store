@@ -16,11 +16,11 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
 
       <form [formGroup]="loginForm" (submit)="onSubmit()" class="flex flex-col gap-4">
         <app-input
-          label="Email Address"
-          type="email"
-          placeholder="e.g. customer@example.com"
+          label="Username"
+          type="text"
+          placeholder="e.g. customer@malakabooks.local"
           icon="user"
-          [control]="emailControl"
+          [control]="usernameControl"
         ></app-input>
 
         <div class="flex flex-col gap-1.5">
@@ -30,7 +30,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
           </div>
           <app-input
             type="password"
-            placeholder="e.g. password"
+            placeholder="e.g. ChangeMe123!"
             icon="cog"
             [control]="passwordControl"
           ></app-input>
@@ -52,8 +52,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
       <div class="mt-6 border-t border-slate-100 pt-4 text-center">
         <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Demo Credentials:</span>
         <div class="flex flex-col gap-1 mt-2 text-[10px] text-slate-500 font-medium">
-          <p>Customer: <code class="bg-slate-50 px-1.5 py-0.5 rounded text-primary-600">customer&#64;example.com</code> / password</p>
-          <p>Admin: <code class="bg-slate-50 px-1.5 py-0.5 rounded text-primary-600">admin&#64;example.com</code> / password</p>
+          <p>Username: <code class="bg-slate-50 px-1.5 py-0.5 rounded text-primary-600">customer&#64;malakabooks.local</code> / ChangeMe123!</p>
         </div>
       </div>
     </div>
@@ -65,11 +64,11 @@ export class LoginComponent {
 
   isLoading = signal<boolean>(false);
 
-  emailControl = new FormControl('', [Validators.required, Validators.email]);
+  usernameControl = new FormControl('', [Validators.required]);
   passwordControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
 
   loginForm = new FormGroup({
-    email: this.emailControl,
+    username: this.usernameControl,
     password: this.passwordControl
   });
 
@@ -77,10 +76,10 @@ export class LoginComponent {
     if (this.loginForm.invalid) return;
 
     this.isLoading.set(true);
-    const email = this.emailControl.value || '';
+    const username = this.usernameControl.value || '';
     const password = this.passwordControl.value || '';
 
-    const success = await this.authStore.login(email, password);
+    const success = await this.authStore.login(username, password);
     this.isLoading.set(false);
 
     if (success) {

@@ -4,11 +4,12 @@ import { UserStore } from '../../store/user.store';
 import { CartStore } from '../../store/cart.store';
 import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
 import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
+import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 
 @Component({
   selector: 'app-wishlist',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, EmptyStateComponent],
+  imports: [RouterLink, ProductCardComponent, EmptyStateComponent, MasonryGridComponent],
   template: `
     <div class="animate-fade-in pb-12">
       <h1 class="font-display font-extrabold text-slate-800 text-base mb-4">My Wishlist</h1>
@@ -22,16 +23,16 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.com
           routerLink="/product"
         ></app-empty-state>
       } @else {
-        <div class="grid grid-cols-2 gap-4">
-          @for (item of userStore.wishlist(); track item.product.id) {
+        <app-masonry-grid [items]="userStore.wishlist()">
+          <ng-template let-item>
             <app-product-card
               [product]="item.product"
               [isInWishlist]="true"
               (addToCart)="cartStore.addItem($event)"
               (toggleWishlist)="userStore.toggleWishlist($event)"
             ></app-product-card>
-          }
-        </div>
+          </ng-template>
+        </app-masonry-grid>
       }
     </div>
   `

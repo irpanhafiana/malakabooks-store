@@ -10,7 +10,7 @@ import { PriceComponent } from '../price/price.component';
   imports: [IconComponent, PriceComponent],
   template: `
     @let prod = product();
-    <div class="group relative bg-white border border-slate-100 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-200/60 transition-all duration-200 flex flex-col justify-between h-full">
+    <div class="group relative bg-white border border-slate-100 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-200/60 transition-all duration-200 flex flex-col justify-between h-auto w-full">
       <!-- Wishlist Heart Overlay button (Perfect circle wrapper) -->
       <button
         type="button"
@@ -41,7 +41,7 @@ import { PriceComponent } from '../price/price.component';
         <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">{{ prod.categoryName }}</span>
         
         <!-- Title -->
-        <h3 class="text-sm font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 transition-colors h-10">{{ prod.name }}</h3>
+        <h3 class="text-sm font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 transition-colors">{{ prod.name }}</h3>
         
         <!-- Ratings -->
         <div class="flex items-center gap-1 mb-2">

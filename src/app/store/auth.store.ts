@@ -42,27 +42,50 @@ export class AuthStore {
     }
   }
 
-  async login(email: string, password: string): Promise<boolean> {
+  private decodeToken(token: string): any {
     try {
-      const users = await this.apiService.getUsers();
-      // Check for user inside seed data database
-      const user = users.find(u => u.email === email.trim().toLowerCase());
-      if (user && password === 'password') {
-        const mockToken = `mock-jwt-token-for-${user.id}-${Date.now()}`;
-        const userWithToken = { ...user, token: mockToken };
-        
-        // Save to active session storage
-        localStorage.setItem('malakabooks_session_user', JSON.stringify(userWithToken));
-        localStorage.setItem('malakabooks_session_token', mockToken);
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+      const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(atob(payload));
+    } catch (e) {
+      return null;
+    }
+  }
 
-        this.state.set({ user: userWithToken, token: mockToken });
-        this.toastService.success(`Welcome back, ${user.name}!`);
+  async login(username: string, password: string): Promise<boolean> {
+    try {
+      const token = await this.apiService.loginAndGetToken(username, password);
+      if (token) {
+        const decoded = this.decodeToken(token);
+        // IdentityServer4 sub claim menyimpan UserId
+        const userId = decoded?.sub || decoded?.nameid;
+        
+        if (!userId) {
+          this.toastService.error('Token tidak valid: User ID tidak ditemukan.');
+          return false;
+        }
+
+        const user = await this.apiService.getUserById(userId);
+        if (!user) {
+          this.toastService.error('Profil user gagal dimuat dari server.');
+          return false;
+        }
+
+        const userWithToken = { ...user, token };
+        
+        // Simpan sesi aktif ke localStorage
+        localStorage.setItem('malakabooks_session_user', JSON.stringify(userWithToken));
+        localStorage.setItem('malakabooks_session_token', token);
+
+        this.state.set({ user: userWithToken, token });
+        this.toastService.success(`Selamat datang kembali, ${user.name}!`);
         return true;
       }
-      this.toastService.error('Invalid email or password. (Use "password" for credentials)');
+      this.toastService.error('Email atau password salah.');
       return false;
     } catch (err) {
-      this.toastService.error('Authentication error. Please try again.');
+      this.toastService.error('Terjadi kesalahan autentikasi. Silakan coba lagi.');
       return false;
     }
   }
@@ -71,46 +94,25 @@ export class AuthStore {
     localStorage.removeItem('malakabooks_session_user');
     localStorage.removeItem('malakabooks_session_token');
     this.state.set({ user: null, token: null });
-    this.toastService.info('You have logged out.');
+    this.toastService.info('Anda telah keluar.');
   }
 
   async register(name: string, email: string): Promise<boolean> {
-    try {
-      const users = await this.apiService.getUsers();
-      const exists = users.some(u => u.email === email.trim().toLowerCase());
-      if (exists) {
-        this.toastService.error('An account with this email already exists.');
-        return false;
-      }
-
-      const newUser: User = {
-        id: `user-${Date.now()}`,
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        role: 'customer',
-        joinedAt: new Date().toISOString(),
-        addresses: []
-      };
-
-      await this.apiService.saveUser(newUser);
-      return this.login(newUser.email, 'password');
-    } catch (err) {
-      this.toastService.error('Registration failed.');
-      return false;
-    }
+    this.toastService.warning('Pendaftaran akun baru harus melalui Identity Server portal. Silakan hubungi admin atau gunakan akun terdaftar (e.g. customer@malakabooks.local).');
+    return false;
   }
 
   async updateProfile(updatedUser: User): Promise<boolean> {
     try {
       const savedUser = await this.apiService.saveUser(updatedUser);
-      const mockToken = this.token() || '';
-      const userWithToken = { ...savedUser, token: mockToken };
+      const activeToken = this.token() || '';
+      const userWithToken = { ...savedUser, token: activeToken };
       localStorage.setItem('malakabooks_session_user', JSON.stringify(userWithToken));
       this.state.update(s => ({ ...s, user: userWithToken }));
-      this.toastService.success('Profile updated successfully!');
+      this.toastService.success('Profil berhasil diperbarui!');
       return true;
     } catch (err) {
-      this.toastService.error('Failed to update profile.');
+      this.toastService.error('Gagal memperbarui profil.');
       return false;
     }
   }

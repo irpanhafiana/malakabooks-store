@@ -15,6 +15,7 @@ import { IconComponent } from '../icon/icon.component';
           [(ngModel)]="searchQuery"
           name="query"
           [placeholder]="placeholder()"
+          [autofocus]="autofocus()"
           class="w-full border border-slate-100 bg-slate-50/70 focus:bg-white rounded-2xl py-2.5 pl-11 pr-16 text-sm placeholder-slate-400 text-slate-800 transition-all duration-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10"
         />
         <!-- Left search glass icon -->
@@ -37,6 +38,7 @@ import { IconComponent } from '../icon/icon.component';
 export class SearchBarComponent implements OnInit {
   readonly placeholder = input<string>('Search books, stationery...');
   readonly initialValue = input<string>('', { alias: 'value' });
+  readonly autofocus = input<boolean>(false);
   readonly search = output<string>();
 
   searchQuery = '';

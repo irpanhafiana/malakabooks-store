@@ -6,11 +6,12 @@ import { UserStore } from '../../store/user.store';
 import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
+import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent],
+  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent],
   template: `
     <div class="flex flex-col gap-8 animate-fade-in pb-12">
       
@@ -72,16 +73,16 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
             <app-skeleton type="card" [count]="2"></app-skeleton>
           </div>
         } @else {
-          <div class="grid grid-cols-2 gap-4">
-            @for (prod of productStore.featuredProducts(); track prod.id) {
+          <app-masonry-grid [items]="productStore.featuredProducts()">
+            <ng-template let-prod>
               <app-product-card
                 [product]="prod"
                 [isInWishlist]="userStore.isWishlisted(prod.id)"
                 (addToCart)="cartStore.addItem($event)"
                 (toggleWishlist)="userStore.toggleWishlist($event)"
               ></app-product-card>
-            }
-          </div>
+            </ng-template>
+          </app-masonry-grid>
         }
       </section>
       

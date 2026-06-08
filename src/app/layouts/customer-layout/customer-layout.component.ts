@@ -21,111 +21,100 @@ import { ProductDetailComponent } from '../../features/product/product-detail/pr
         
         <!-- Mobile-style Header -->
         <header class="sticky top-0 z-40 bg-white border-b border-slate-100 shadow-xs px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
-          <!-- Left: Brand Logo -->
-          <a routerLink="/" (click)="resetFilters()" class="flex items-center gap-1.5 text-slate-800 font-display font-extrabold text-sm select-none">
-            <span class="px-1.5 py-0.5 rounded-md bg-primary-600 text-white text-[10px]">MB</span>
-            <span class="text-xs tracking-tight">malaka</span>
-          </a>
-
-          <!-- Center: Search Input -->
-          <div class="flex-grow max-w-[200px]">
-            <app-search-bar [placeholder]="'Search books...'" [value]="productStore.searchQuery()" (search)="onSearch($event)"></app-search-bar>
-          </div>
-
-          <!-- Right: Cart & Profile Icons -->
-          <div class="flex items-center gap-1">
-            <!-- Cart Icon -->
-            <a routerLink="/cart" class="p-1.5 rounded-lg text-slate-500 hover:text-primary-600 relative cursor-pointer">
-              <i class="bx bx-cart text-lg"></i>
-              @if (cartStore.itemsCount() > 0) {
-                <span class="absolute -top-0.5 -right-0.5 h-3.5 min-w-3.5 px-0.5 rounded-full bg-primary-600 text-white text-[8px] font-bold flex items-center justify-center leading-none">
-                  {{ cartStore.itemsCount() }}
-                </span>
-              }
+          @if (isSearchActive()) {
+            <!-- Active Search Header -->
+            <div class="flex items-center gap-2 w-full animate-fade-in">
+              <button
+                type="button"
+                (click)="isSearchActive.set(false)"
+                class="p-1 rounded-lg text-slate-500 hover:text-slate-700 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent"
+              >
+                <i class="bx bx-left-arrow-alt text-xl"></i>
+              </button>
+              <div class="flex-grow">
+                <app-search-bar [placeholder]="'Search books...'" [value]="productStore.searchQuery()" [autofocus]="true" (search)="onSearch($event)"></app-search-bar>
+              </div>
+            </div>
+          } @else {
+            <!-- Left: Brand Logo -->
+            <a routerLink="/" (click)="resetFilters()" class="flex items-center gap-1.5 text-slate-800 font-display font-extrabold text-sm select-none">
+              <span class="px-1.5 py-0.5 rounded-md bg-primary-600 text-white text-[10px]">MB</span>
+              <span class="text-xs tracking-tight">malaka</span>
             </a>
 
-            <!-- Profile / Settings / Admin Link -->
-            @if (authStore.isLoggedIn()) {
-              <div class="relative group">
-                <button type="button" class="h-6 w-6 rounded-full bg-primary-50 text-primary-700 font-bold font-display flex items-center justify-center border border-primary-100 text-[9px] cursor-pointer">
-                  {{ authStore.currentUser()?.name?.substring(0, 2)?.toUpperCase() }}
-                </button>
-                
-                <!-- Simple hover menu for profile/logout/admin -->
-                <div class="absolute right-0 mt-1 w-36 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 hidden group-hover:block z-50 text-[10px] font-semibold text-slate-700">
-                  @if (authStore.isAdmin()) {
-                    <a routerLink="/admin" class="flex items-center gap-1.5 px-3 py-1.5 hover:bg-slate-50">
-                      <i class="bx bx-shield"></i> Admin Panel
-                    </a>
-                  }
-                  <a routerLink="/profile" class="flex items-center gap-1.5 px-3 py-1.5 hover:bg-slate-50">
-                    <i class="bx bx-user"></i> My Profile
-                  </a>
-                  <a routerLink="/order-history" class="flex items-center gap-1.5 px-3 py-1.5 hover:bg-slate-50">
-                    <i class="bx bx-receipt"></i> Orders
-                  </a>
-                  <hr class="border-slate-100 my-1"/>
-                  <button (click)="authStore.logout()" class="w-full flex items-center gap-1.5 px-3 py-1.5 hover:bg-slate-50 text-rose-600 text-left cursor-pointer font-bold">
-                    <i class="bx bx-log-out"></i> Sign Out
-                  </button>
-                </div>
-              </div>
-            } @else {
-              <a routerLink="/auth/login" class="text-[9px] font-bold text-primary-600 px-2 py-1 bg-primary-50 rounded-lg whitespace-nowrap">
-                Sign In
-              </a>
-            }
-          </div>
+            <!-- Right: Search Icon -->
+            <button
+              type="button"
+              (click)="isSearchActive.set(true)"
+              class="p-1.5 rounded-lg text-slate-500 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent"
+            >
+              <i class="bx bx-search text-lg"></i>
+            </button>
+          }
         </header>
 
         <!-- Scrollable Contents Area -->
-        <main class="flex-grow overflow-y-auto px-4 py-4 pb-20 no-scrollbar bg-white">
+        <main class="flex-grow overflow-y-auto px-4 py-4 pb-24 no-scrollbar bg-white">
           <router-outlet></router-outlet>
         </main>
 
-        <!-- Pinned Bottom Navigation Menu -->
-        <nav class="absolute bottom-0 left-0 right-0 z-[45] bg-white/95 backdrop-blur-md border-t border-slate-100 shadow-lg flex justify-around py-2 shrink-0">
+        <!-- Pinned Bottom Navigation Menu (Floating, rounded, padded margins) -->
+        <nav class="absolute bottom-4 left-4 right-4 z-[45] bg-white/95 backdrop-blur-md border border-slate-100 shadow-lg rounded-2xl flex justify-around py-1.5 shrink-0 px-2">
           <a
             routerLink="/"
             [routerLinkActiveOptions]="{exact: true}"
-            routerLinkActive="text-primary-600"
+            routerLinkActive="text-primary-600 bg-primary-50 font-bold"
             (click)="resetFilters()"
-            class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-600 transition-colors py-1 px-3 cursor-pointer"
+            class="flex flex-col items-center justify-center text-slate-400 hover:text-primary-600 transition-all py-1.5 px-3 rounded-xl cursor-pointer"
           >
             <i class="bx bx-home text-lg"></i>
-            <span class="text-[9px] font-bold mt-1">Home</span>
+            <span class="text-[9px] mt-0.5">Home</span>
           </a>
 
           <a
             routerLink="/wishlist"
-            routerLinkActive="text-primary-600"
-            class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-600 transition-colors py-1 px-3 relative cursor-pointer"
+            routerLinkActive="text-primary-600 bg-primary-50 font-bold"
+            class="flex flex-col items-center justify-center text-slate-400 hover:text-primary-600 transition-all py-1.5 px-3 rounded-xl relative cursor-pointer"
           >
             <i class="bx bx-heart text-lg"></i>
             @if (userStore.wishlistCount() > 0) {
-              <span class="absolute top-1 right-2.5 h-3.5 min-w-3.5 px-0.5 rounded-full bg-rose-500 text-white text-[8px] font-bold flex items-center justify-center leading-none">
+              <span class="absolute top-1 right-2 h-3.5 min-w-3.5 px-0.5 rounded-full bg-rose-500 text-white text-[8px] font-bold flex items-center justify-center leading-none">
                 {{ userStore.wishlistCount() }}
               </span>
             }
-            <span class="text-[9px] font-bold mt-1">Wishlist</span>
+            <span class="text-[9px] mt-0.5">Wishlist</span>
+          </a>
+
+          <a
+            routerLink="/cart"
+            routerLinkActive="text-primary-600 bg-primary-50 font-bold"
+            class="flex flex-col items-center justify-center text-slate-400 hover:text-primary-600 transition-all py-1.5 px-3 rounded-xl relative cursor-pointer"
+          >
+            <i class="bx bx-cart text-lg"></i>
+            @if (cartStore.itemsCount() > 0) {
+              <span class="absolute top-1 right-2 h-3.5 min-w-3.5 px-0.5 rounded-full bg-primary-600 text-white text-[8px] font-bold flex items-center justify-center leading-none">
+                {{ cartStore.itemsCount() }}
+              </span>
+            }
+            <span class="text-[9px] mt-0.5">Cart</span>
           </a>
 
           <a
             routerLink="/order-history"
-            routerLinkActive="text-primary-600"
-            class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-600 transition-colors py-1 px-3 cursor-pointer"
+            routerLinkActive="text-primary-600 bg-primary-50 font-bold"
+            class="flex flex-col items-center justify-center text-slate-400 hover:text-primary-600 transition-all py-1.5 px-3 rounded-xl cursor-pointer"
           >
             <i class="bx bx-receipt text-lg"></i>
-            <span class="text-[9px] font-bold mt-1">Orders</span>
+            <span class="text-[9px] mt-0.5">Orders</span>
           </a>
 
           <a
             routerLink="/profile"
-            routerLinkActive="text-primary-600"
-            class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-600 transition-colors py-1 px-3 cursor-pointer"
+            routerLinkActive="text-primary-600 bg-primary-50 font-bold"
+            class="flex flex-col items-center justify-center text-slate-400 hover:text-primary-600 transition-all py-1.5 px-3 rounded-xl cursor-pointer"
           >
             <i class="bx bx-user text-lg"></i>
-            <span class="text-[9px] font-bold mt-1">Profile</span>
+            <span class="text-[9px] mt-0.5">Profile</span>
           </a>
         </nav>
 
@@ -216,6 +205,7 @@ export class CustomerLayoutComponent {
   isDetailOpen = signal<boolean>(false);
   isDetailAnimating = signal<boolean>(false);
   selectedDetailId = signal<string | null>(null);
+  isSearchActive = signal<boolean>(false);
 
   constructor() {
     effect(() => {
@@ -242,6 +232,7 @@ export class CustomerLayoutComponent {
 
   onSearch(query: string) {
     this.productStore.setSearchQuery(query);
+    this.isSearchActive.set(false);
     this.router.navigate(['/product']);
   }
 
