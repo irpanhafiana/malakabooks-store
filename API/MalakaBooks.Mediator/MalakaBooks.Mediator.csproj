@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\MalakaBooks.Entity\MalakaBooks.Entity.csproj" />
+    <ProjectReference Include="..\MalakaBooks.IDataValidator\MalakaBooks.IDataValidator.csproj" />
     <ProjectReference Include="..\MalakaBooks.IRepository\MalakaBooks.IRepository.csproj" />
     <ProjectReference Include="..\MalakaBooks.ViewModel\MalakaBooks.ViewModel.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="11.1.0" />
+    <PackageReference Include="MediatR" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>

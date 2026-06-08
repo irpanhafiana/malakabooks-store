@@ -1,7 +1,28 @@
 {
   "AppSetting": {
     "ApplicationName": "MalakaBooks API",
-    "Description": "MalakaBooks bookstore backend API"
+    "Description": "MalakaBooks bookstore backend API",
+    "IdempotentExpiredHours": {
+      "GET": 2,
+      "POST": 1,
+      "DELETE": 1,
+      "PUT": 1,
+      "DEFAULT": 1
+    },
+    "ImageSetting": {
+      "AllowedExtensions": [
+        ".png",
+        ".jpg",
+        ".jpeg"
+      ],
+      "MaximumFileSize": 6291456
+    },
+    "RateLimiterSetting": {
+      "Limit": 1000,
+      "ResetMinute": 1,
+      "QueueLimit": 2,
+      "AutoReplenish": true
+    }
   },
   "Logging": {
     "LogLevel": {
