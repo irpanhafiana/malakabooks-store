@@ -18,6 +18,9 @@ public class OrderRepository : IOrderRepository
     public async Task<OrderEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<OrderEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
+        await _collection.Find(_ => true).ToListAsync(cancellationToken);
+
     public async Task<IReadOnlyCollection<OrderEntity>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.UserId == userId).ToListAsync(cancellationToken);
 
