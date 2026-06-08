@@ -1,16 +1,16 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { Router, CanActivateFn } from '@angular/router';
+import { AuthStore } from '../../store/auth.store';
 
-export const adminGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+export const adminGuard: CanActivateFn = () => {
+  const authStore = inject(AuthStore);
   const router = inject(Router);
 
-  if (authService.isLoggedIn() && authService.isAdmin()) {
+  if (authStore.isLoggedIn() && authStore.isAdmin()) {
     return true;
   }
 
-  // Redirect to home page
+  // Redirect unauthorized users to customer homepage
   router.navigate(['/']);
   return false;
 };

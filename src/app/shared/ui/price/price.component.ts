@@ -1,0 +1,31 @@
+import { Component, input, computed } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+
+@Component({
+  selector: 'app-price',
+  standalone: true,
+  imports: [CurrencyPipe],
+  template: `
+    <span [class]="priceClass()">
+      {{ value() | currency: currencyCode() : 'symbol' : '1.2-2' }}
+    </span>
+  `
+})
+export class PriceComponent {
+  readonly value = input.required<number>();
+  readonly currencyCode = input<string>('USD');
+  readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
+  readonly bold = input<boolean>(true);
+  readonly customClass = input<string>('', { alias: 'class' });
+
+  readonly priceClass = computed(() => {
+    const fontSizes = {
+      sm: 'text-xs',
+      md: 'text-sm',
+      lg: 'text-base md:text-lg',
+      xl: 'text-lg md:text-xl font-extrabold'
+    };
+    const fontWeight = this.bold() ? 'font-bold font-display text-slate-900' : 'text-slate-600';
+    return `${fontSizes[this.size()]} ${fontWeight} ${this.customClass()}`;
+  });
+}

@@ -1,0 +1,30 @@
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-auth-layout',
+  standalone: true,
+  imports: [RouterOutlet, RouterLink],
+  template: `
+    <div class="min-h-screen bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      <!-- Decorative background blur elements -->
+      <div class="absolute -top-40 -left-40 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-accent-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="sm:mx-auto sm:w-full sm:max-w-md text-center z-10">
+        <!-- Logo -->
+        <a routerLink="/" class="inline-flex items-center gap-2.5 text-white font-display font-extrabold text-2xl tracking-tight hover:opacity-90 transition-all select-none">
+          <span class="px-3 py-1.5 rounded-xl bg-gradient-to-tr from-primary-500 to-primary-600 shadow-lg shadow-primary-600/20">MB</span>
+          malakabooks
+        </a>
+      </div>
+
+      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0 z-10 animate-fade-in">
+        <div class="bg-white/95 backdrop-blur-md py-8 px-6 shadow-2xl border border-slate-100/55 rounded-3xl sm:px-10">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  `
+})
+export class AuthLayoutComponent {}

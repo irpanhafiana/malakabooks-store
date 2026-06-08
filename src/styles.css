@@ -1,123 +1,102 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Fraunces', Georgia, serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
 
-  /* Primary Navy */
-  --color-primary: #083358;
-  --color-primary-light: #0e4a7a;
-  --color-primary-dark: #062744;
+  /* Custom Color Tokens - Bukalapak Red & Kitabisa Cyan inspired, polished for SaaS */
+  --color-primary-50: #fff1f2;
+  --color-primary-100: #ffe4e6;
+  --color-primary-200: #fecdd3;
+  --color-primary-300: #fda4af;
+  --color-primary-400: #fb7185;
+  --color-primary-500: #f43f5e;
+  --color-primary-600: #e11d48; /* Crimson/Rose */
+  --color-primary-700: #be123c;
+  --color-primary-800: #9f1239;
+  --color-primary-900: #881337;
+  --color-primary-950: #4c0519;
 
-  /* Accent Red (mapped to amber scale for convenience) */
-  --color-amber-300: #FF9999;
-  --color-amber-400: #FF6B6B;
-  --color-amber-500: #FC3C3C;
-  --color-amber-600: #E83535;
-  --color-amber-700: #D42F2F;
-  --color-amber-800: #B82828;
-  --color-amber-900: #7a1f1f;
+  --color-accent-50: #ecfeff;
+  --color-accent-100: #cffafe;
+  --color-accent-500: #06b6d4; /* Kitabisa Cyan */
+  --color-accent-600: #0891b2;
+  --color-accent-700: #0e7490;
 
-  /* Navy remaps */
-  --color-emerald-600: #0e4a7a;
-  --color-indigo-500: #083358;
-
-  /* Red scale */
-  --color-red-400: #FF6B6B;
-  --color-red-300: #FF9999;
-
-  --animate-slide-in: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-shrink-width: shrink linear forwards;
-  --animate-slide-down: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-fade-in: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateY(-20px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-  @keyframes shrink {
-    from { width: 100%; }
-    to { width: 0%; }
-  }
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+  --animate-fade-in: fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-up: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-down: slide-down 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-scale-in: scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Utilities */
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Base styles */
+@keyframes slide-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slide-down {
+  from { transform: translateY(-16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Custom Utilities and Reset Styles */
 body {
   font-family: var(--font-sans);
-  @apply bg-stone-50 text-stone-900;
+  background-color: #f8fafc; /* Slate 50 */
+  color: #0f172a; /* Slate 900 */
+  -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif);
-}
-
-/* Custom scrollbar */
+/* Custom Scrollbar for Sleek Feel */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F6F6F6;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D4D4D4;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #A3A3A3;
+  background: #94a3b8;
 }
 
-/* Custom route transition animation */
-.route-anim-container {
-  animation: fadeInRoute 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Hide scrollbar for clean carousel/mobile lists */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-@keyframes fadeInRoute {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }

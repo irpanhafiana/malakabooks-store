@@ -1,0 +1,268 @@
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { DatePipe, CurrencyPipe, UpperCasePipe } from '@angular/common';
+import { ApiService } from '../../../core/services/api.service';
+import { DashboardMetrics, Order } from '../../../core/models';
+import { PriceComponent } from '../../../shared/ui/price/price.component';
+import { IconComponent } from '../../../shared/ui/icon/icon.component';
+import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
+
+@Component({
+  selector: 'app-admin-dashboard',
+  standalone: true,
+  imports: [RouterLink, PriceComponent, IconComponent, BadgeComponent, DatePipe, CurrencyPipe, UpperCasePipe],
+  template: `
+    <div class="animate-fade-in flex flex-col gap-6">
+      
+      <!-- Metrics Grid -->
+      @if (metrics(); as data) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <!-- Metric Card: Revenue -->
+          <div class="bg-white border border-slate-200/60 p-5 rounded-2xl shadow-xs flex items-center justify-between">
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Revenue</span>
+              <app-price [value]="data.totalRevenue" size="xl" class="text-slate-800"></app-price>
+              <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
+                <app-icon name="plus" size="10"></app-icon>
+                {{ data.revenueGrowth }}% this month
+              </span>
+            </div>
+            <div class="p-3.5 bg-primary-50 rounded-2xl text-primary-600">
+              <app-icon name="credit-card" size="24"></app-icon>
+            </div>
+          </div>
+
+          <!-- Metric Card: Orders -->
+          <div class="bg-white border border-slate-200/60 p-5 rounded-2xl shadow-xs flex items-center justify-between">
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Orders</span>
+              <strong class="font-display font-extrabold text-xl text-slate-800">{{ data.totalOrders }}</strong>
+              <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
+                <app-icon name="plus" size="10"></app-icon>
+                {{ data.ordersGrowth }}% this month
+              </span>
+            </div>
+            <div class="p-3.5 bg-sky-50 rounded-2xl text-sky-600">
+              <app-icon name="shopping-bag" size="24"></app-icon>
+            </div>
+          </div>
+
+          <!-- Metric Card: Customers -->
+          <div class="bg-white border border-slate-200/60 p-5 rounded-2xl shadow-xs flex items-center justify-between">
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Customers</span>
+              <strong class="font-display font-extrabold text-xl text-slate-800">{{ data.totalCustomers }}</strong>
+              <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
+                <app-icon name="plus" size="10"></app-icon>
+                {{ data.customersGrowth }}% this month
+              </span>
+            </div>
+            <div class="p-3.5 bg-indigo-50 rounded-2xl text-indigo-600">
+              <app-icon name="users" size="24"></app-icon>
+            </div>
+          </div>
+
+          <!-- Metric Card: Conversion -->
+          <div class="bg-white border border-slate-200/60 p-5 rounded-2xl shadow-xs flex items-center justify-between">
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Conversion Rate</span>
+              <strong class="font-display font-extrabold text-xl text-slate-800">{{ data.conversionRate }}%</strong>
+              <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
+                <app-icon name="plus" size="10"></app-icon>
+                {{ data.conversionGrowth }}% this month
+              </span>
+            </div>
+            <div class="p-3.5 bg-emerald-50 rounded-2xl text-emerald-600">
+              <app-icon name="bar-chart" size="24"></app-icon>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Grid (SVG Based) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- SVG Line Chart (Left, 2/3 width) -->
+          <div class="lg:col-span-2 bg-white border border-slate-200/60 p-5 rounded-2xl shadow-xs flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-display font-bold text-slate-800 text-sm">Sales Activity</h3>
+                <p class="text-[10px] text-slate-400 mt-0.5">Total simulated revenues over the past 7 days</p>
+              </div>
+            </div>
+
+            <!-- Native Responsive SVG Line Chart -->
+            <div class="w-full h-56 pt-2">
+              <svg viewBox="0 0 500 200" class="w-full h-full overflow-visible">
+                <!-- Grid lines -->
+                <line x1="0" y1="50" x2="500" y2="50" stroke="#f1f5f9" stroke-width="1" />
+                <line x1="0" y1="100" x2="500" y2="100" stroke="#f1f5f9" stroke-width="1" />
+                <line x1="0" y1="150" x2="500" y2="150" stroke="#f1f5f9" stroke-width="1" />
+                
+                <!-- Area gradient fill -->
+                <defs>
+                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#e11d48" stop-opacity="0.2" />
+                    <stop offset="100%" stop-color="#e11d48" stop-opacity="0.0" />
+                  </linearGradient>
+                </defs>
+                <path [attr.d]="svgAreaPath()" fill="url(#chartGrad)" />
+
+                <!-- Line path -->
+                <path [attr.d]="svgLinePath()" fill="none" stroke="#e11d48" stroke-width="3" stroke-linecap="round" />
+
+                <!-- Dots on points -->
+                @for (pt of chartPoints(); track $index) {
+                  <circle [attr.cx]="pt.x" [attr.cy]="pt.y" r="5" fill="#ffffff" stroke="#e11d48" stroke-width="2.5" />
+                }
+              </svg>
+            </div>
+
+            <!-- Chart labels -->
+            <div class="flex justify-between text-[10px] text-slate-400 font-bold px-1 mt-1">
+              @for (item of data.salesHistory; track $index) {
+                <span>{{ item.date }}</span>
+              }
+            </div>
+          </div>
+
+          <!-- Category Breakdown Bar list (Right, 1/3 width) -->
+          <div class="bg-white border border-slate-200/60 p-5 rounded-2xl shadow-xs flex flex-col gap-4">
+            <div>
+              <h3 class="font-display font-bold text-slate-800 text-sm">Product Sales Share</h3>
+              <p class="text-[10px] text-slate-400 mt-0.5">Top performing product categories</p>
+            </div>
+            
+            <div class="flex flex-col gap-4 mt-2">
+              @for (catShare of data.categorySales; track catShare.category) {
+                <div class="flex flex-col gap-1.5 text-xs">
+                  <div class="flex justify-between font-semibold">
+                    <span class="text-slate-600">{{ catShare.category }}</span>
+                    <span class="text-slate-800">{{ catShare.amount | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+                  </div>
+                  <!-- Percentage bar -->
+                  <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-primary-500 to-rose-600 rounded-full"
+                         [style.width.%]="categoryPercentage(catShare.amount)"></div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="bg-white border border-slate-200/60 rounded-2xl shadow-xs overflow-hidden">
+          <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+            <h3 class="font-display font-bold text-slate-800 text-sm">Recent Order Logs</h3>
+            <a routerLink="/admin/orders" class="text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors">Manage All</a>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-left text-xs text-slate-600">
+              <thead class="bg-slate-50/70 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                <tr>
+                  <th class="px-5 py-3">Order ID</th>
+                  <th class="px-5 py-3">Customer</th>
+                  <th class="px-5 py-3">Date</th>
+                  <th class="px-5 py-3">Status</th>
+                  <th class="px-5 py-3 text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 bg-white">
+                @for (order of recentOrders(); track order.id) {
+                  <tr class="hover:bg-slate-50/40">
+                    <td class="px-5 py-4 font-bold text-slate-800">#{{ order.id }}</td>
+                    <td class="px-5 py-4">
+                      <div class="flex flex-col">
+                        <span class="font-semibold text-slate-800">{{ order.userName }}</span>
+                        <span class="text-[10px] text-slate-400">{{ order.userEmail }}</span>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4">{{ order.orderDate | date: 'mediumDate' }}</td>
+                    <td class="px-5 py-4">
+                      <app-badge [variant]="statusVariant(order.status)">
+                        {{ order.status | uppercase }}
+                      </app-badge>
+                    </td>
+                    <td class="px-5 py-4 text-right font-bold text-slate-800">
+                      {{ order.total | currency }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    </div>
+  `
+})
+export class AdminDashboardComponent implements OnInit {
+  private readonly apiService = inject(ApiService);
+
+  metrics = signal<DashboardMetrics | null>(null);
+  recentOrders = signal<Order[]>([]);
+
+  // Computes chart spacing coordinates
+  chartPoints = computed(() => {
+    const data = this.metrics();
+    if (!data || data.salesHistory.length === 0) return [];
+    
+    const width = 500;
+    const height = 200;
+    const padding = 15;
+    
+    const xSpacing = (width - padding * 2) / (data.salesHistory.length - 1);
+    const yMax = Math.max(...data.salesHistory.map(s => s.amount)) || 100;
+    const graphHeight = height - padding * 2;
+
+    return data.salesHistory.map((s, idx) => ({
+      x: padding + idx * xSpacing,
+      y: height - padding - (s.amount / yMax) * graphHeight
+    }));
+  });
+
+  // Polyline coordinates for standard line
+  svgLinePath = computed(() => {
+    const pts = this.chartPoints();
+    if (pts.length === 0) return '';
+    return `M ${pts.map(p => `${p.x} ${p.y}`).join(' L ')}`;
+  });
+
+  // Polyline coordinates closed for gradient fill area
+  svgAreaPath = computed(() => {
+    const pts = this.chartPoints();
+    if (pts.length === 0) return '';
+    const first = pts[0];
+    const last = pts[pts.length - 1];
+    return `M ${first.x} 185 L ${pts.map(p => `${p.x} ${p.y}`).join(' L ')} L ${last.x} 185 Z`;
+  });
+
+  ngOnInit() {
+    this.loadData();
+  }
+
+  async loadData() {
+    try {
+      const data = await this.apiService.getDashboardMetrics();
+      this.metrics.set(data);
+      
+      const orders = await this.apiService.getOrders();
+      this.recentOrders.set(orders.slice(0, 4));
+    } catch (e) {}
+  }
+
+  categoryPercentage(amount: number): number {
+    const data = this.metrics();
+    if (!data) return 0;
+    const total = data.categorySales.reduce((sum, c) => sum + c.amount, 0);
+    return total > 0 ? (amount / total) * 100 : 0;
+  }
+
+  statusVariant(status: string): any {
+    if (status === 'completed') return 'success';
+    if (status === 'shipped') return 'accent';
+    if (status === 'processing') return 'info';
+    if (status === 'pending') return 'warning';
+    return 'danger';
+  }
+}

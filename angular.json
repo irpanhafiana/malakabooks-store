@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "malaka-books-store-fe": {
+    "malakabooks": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -56,10 +56,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "malaka-books-store-fe:build:production"
+              "buildTarget": "malakabooks:build:production"
             },
             "development": {
-              "buildTarget": "malaka-books-store-fe:build:development"
+              "buildTarget": "malakabooks:build:development"
             }
           },
           "defaultConfiguration": "development"

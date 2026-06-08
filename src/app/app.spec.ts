@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { describe, beforeEach, it, expect } from 'vitest';
 import { App } from './app';
 
 describe('App', () => {
@@ -15,12 +14,10 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render core layout elements', async () => {
+  it('should render title', async () => {
     const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('app-toast')).toBeTruthy();
-    expect(compiled.querySelector('router-outlet')).toBeTruthy();
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, malakabooks');
   });
 });
