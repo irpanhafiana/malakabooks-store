@@ -1,0 +1,18 @@
+{
+  "TokenSetting": {
+    "Audience": "malakabooks.api",
+    "Scope": "malakabooks.api",
+    "ClientCredentials": {
+      "ClientId": "malakabooks-client",
+      "ClientSecret": "replace-in-production",
+      "TokenEndpoint": "https://identity.malakabooks.example.com/connect/token"
+    },
+    "Password": {
+      "ClientId": "malakabooks-password-client",
+      "ClientSecret": "replace-in-production",
+      "Username": "customer@malakabooks.example.com",
+      "Password": "replace-in-production",
+      "TokenEndpoint": "https://identity.malakabooks.example.com/connect/token"
+    }
+  }
+}

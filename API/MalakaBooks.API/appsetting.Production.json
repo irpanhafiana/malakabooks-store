@@ -1,0 +1,13 @@
+{
+  "AppSetting": {
+    "ApplicationName": "MalakaBooks API",
+    "Description": "MalakaBooks bookstore backend API"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
