@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
 import { InputComponent } from '../../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
@@ -9,10 +9,17 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, InputComponent, ButtonComponent],
+
   template: `
     <div>
       <h2 class="text-xl font-display font-extrabold text-slate-800 tracking-tight text-center mb-1">Sign in to your account</h2>
       <p class="text-slate-500 text-xs text-center mb-6">Or <a routerLink="/auth/register" class="text-primary-600 hover:text-primary-700 font-semibold transition-colors">create a new account</a></p>
+
+      @if (sessionMessage()) {
+        <div class="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 font-semibold text-center">
+          {{ sessionMessage() }}
+        </div>
+      }
 
       <form [formGroup]="loginForm" (submit)="onSubmit()" class="flex flex-col gap-4">
         <app-input
@@ -58,11 +65,22 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
     </div>
   `
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   isLoading = signal<boolean>(false);
+  sessionMessage = signal<string>('');
+
+  ngOnInit() {
+    const reason = this.route.snapshot.queryParamMap.get('reason');
+    if (reason === 'session_expired') {
+      this.sessionMessage.set('Sesi Anda telah berakhir. Silakan masuk kembali.');
+    } else if (reason === 'unauthorized') {
+      this.sessionMessage.set('Anda tidak memiliki akses. Silakan masuk kembali.');
+    }
+  }
 
   usernameControl = new FormControl('', [Validators.required]);
   passwordControl = new FormControl('', [Validators.required, Validators.minLength(6)]);

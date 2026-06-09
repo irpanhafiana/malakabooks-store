@@ -2,6 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { User } from '../core/models';
 import { ApiService } from '../core/services/api.service';
 import { ToastService } from '../core/services/toast.service';
+import { CartStore } from './cart.store';
 
 interface AuthState {
   user: User | null;
@@ -14,6 +15,7 @@ interface AuthState {
 export class AuthStore {
   private readonly apiService = inject(ApiService);
   private readonly toastService = inject(ToastService);
+  private readonly cartStore = inject(CartStore);
 
   // Private state signal
   private readonly state = signal<AuthState>({
@@ -73,12 +75,17 @@ export class AuthStore {
         }
 
         const userWithToken = { ...user, token };
-        
+
         // Simpan sesi aktif ke localStorage
         localStorage.setItem('malakabooks_session_user', JSON.stringify(userWithToken));
         localStorage.setItem('malakabooks_session_token', token);
 
         this.state.set({ user: userWithToken, token });
+
+        // Sync cart guest ke backend
+        const products = await this.apiService.getProducts();
+        await this.cartStore.syncOnLogin(user.id, products);
+
         this.toastService.success(`Selamat datang kembali, ${user.name}!`);
         return true;
       }
@@ -93,6 +100,7 @@ export class AuthStore {
   logout() {
     localStorage.removeItem('malakabooks_session_user');
     localStorage.removeItem('malakabooks_session_token');
+    this.cartStore.clearOnLogout();
     this.state.set({ user: null, token: null });
     this.toastService.info('Anda telah keluar.');
   }

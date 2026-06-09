@@ -5,11 +5,11 @@ import { KeyValuePipe, DatePipe } from '@angular/common';
 import { ApiService } from '../../../core/services/api.service';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
+import { AuthStore } from '../../../store/auth.store';
 import { Product, Review } from '../../../core/models';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
-import { InputComponent } from '../../../shared/ui/input/input.component';
 import { TextareaComponent } from '../../../shared/ui/textarea/textarea.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { ToastService } from '../../../core/services/toast.service';
@@ -17,7 +17,7 @@ import { ToastService } from '../../../core/services/toast.service';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, PriceComponent, IconComponent, ButtonComponent, InputComponent, TextareaComponent, SkeletonComponent, KeyValuePipe, DatePipe],
+  imports: [RouterLink, ReactiveFormsModule, PriceComponent, IconComponent, ButtonComponent, TextareaComponent, SkeletonComponent, KeyValuePipe, DatePipe],
   template: `
     <div class="flex flex-col h-full overflow-hidden animate-fade-in">
       @if (loading()) {
@@ -235,13 +235,6 @@ import { ToastService } from '../../../core/services/toast.service';
                         </div>
                       </div>
 
-                      <app-input
-                        label="Reviewer Name"
-                        type="text"
-                        placeholder="e.g. Dewi Lestari"
-                        [control]="userNameControl"
-                      ></app-input>
-
                       <app-textarea
                         label="Review Comment"
                         placeholder="Write your thoughts and experience about this product..."
@@ -334,6 +327,7 @@ export class ProductDetailComponent implements OnInit {
   private readonly apiService = inject(ApiService);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
+  protected readonly authStore = inject(AuthStore);
   private readonly toastService = inject(ToastService);
 
   loading = signal<boolean>(true);
@@ -345,11 +339,9 @@ export class ProductDetailComponent implements OnInit {
 
   // Review Form controls
   reviewRating = signal<number>(5);
-  userNameControl = new FormControl('', [Validators.required, Validators.minLength(2)]);
   commentControl = new FormControl('', [Validators.required, Validators.minLength(5)]);
 
   reviewForm = new FormGroup({
-    name: this.userNameControl,
     comment: this.commentControl
   });
 
@@ -446,7 +438,7 @@ export class ProductDetailComponent implements OnInit {
     const newReview: Review = {
       id: '',
       productId: prodId,
-      userName: this.userNameControl.value || 'Anonymous',
+      userName: this.authStore.currentUser()?.name || 'Anonymous',
       rating: this.reviewRating(),
       comment: this.commentControl.value || '',
       date: new Date().toISOString()

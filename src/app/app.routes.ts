@@ -51,6 +51,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/users/users-crud.component').then(c => c.UsersCrudComponent)
       },
       {
+        path: 'complaints',
+        loadComponent: () => import('./features/admin/complaints/complaints-crud.component').then(c => c.ComplaintsCrudComponent)
+      },
+      {
         path: 'reports',
         loadComponent: () => import('./features/admin/reports/reports.component').then(c => c.ReportsComponent)
       }
@@ -100,6 +104,11 @@ export const routes: Routes = [
       {
         path: 'profile',
         loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
+        canActivate: [authGuard]
+      },
+      {
+        path: 'complaints',
+        loadComponent: () => import('./features/complaint/complaint.component').then(c => c.ComplaintComponent),
         canActivate: [authGuard]
       }
     ]

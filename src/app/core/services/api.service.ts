@@ -1,15 +1,19 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Product, Category, User, Order, Review, DashboardMetrics, Address } from '../models';
+import { Product, Category, User, Order, Review, DashboardMetrics, Address, Complaint, CreateComplaintPayload, RespondComplaintPayload } from '../models';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   private readonly http = inject(HttpClient);
-  private readonly BASE_URL = 'http://192.168.1.15:25168/api/v1';
-  private readonly AUTH_URL = 'http://192.168.1.15:44310/connect/token';
+  private readonly BASE_URL = environment.apiBaseUrl;
+  private readonly AUTH_URL = environment.authUrl;
+
+  private categoryCache: { data: import('../models').Category[]; ts: number } | null = null;
+  private readonly CATEGORY_TTL_MS = 5 * 60 * 1000; // 5 menit
 
   // --- HELPER UNTUK OAUTH2 / CONNECT TOKEN ---
   async loginAndGetToken(username: string, password: string): Promise<string | null> {
@@ -42,13 +46,13 @@ export class ApiService {
       description: book.description || '',
       price: book.price,
       categoryId: book.categoryId,
-      categoryName: '', // Diisi dinamis
-      stock: book.stock || 0,
-      rating: book.averageRating || 5.0,
-      reviewsCount: book.totalReviews || 0,
+      categoryName: '',
+      stock: book.stock ?? 0,
+      rating: book.averageRating ?? 0,
+      reviewsCount: book.totalReviews ?? 0,
       images: book.coverImage ? [book.coverImage] : [],
-      brand: book.publisher || 'Unknown Publisher',
-      featured: true,
+      brand: book.publisher || '',
+      featured: false,
       specifications: {
         'Author': book.author || '',
         'ISBN': book.isbn || '',
@@ -136,19 +140,29 @@ export class ApiService {
 
   // --- CATEGORIES API ---
   async getCategories(): Promise<Category[]> {
+    const now = Date.now();
+    if (this.categoryCache && now - this.categoryCache.ts < this.CATEGORY_TTL_MS) {
+      return this.categoryCache.data;
+    }
     try {
       const list = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/public/Categories`)) || [];
-      return list.map(c => ({
+      const data = list.map(c => ({
         id: c.id,
         name: c.name,
         slug: c.slug || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
         icon: c.icon || 'book',
         description: c.description || ''
       }));
+      this.categoryCache = { data, ts: now };
+      return data;
     } catch (e) {
       console.error('Gagal mengambil kategori:', e);
       return [];
     }
+  }
+
+  private invalidateCategoryCache() {
+    this.categoryCache = null;
   }
 
   async saveCategory(category: Category): Promise<Category> {
@@ -161,11 +175,14 @@ export class ApiService {
     };
 
     try {
+      let result: Category;
       if (isNew) {
-        return await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/Categories`, body));
+        result = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/Categories`, body));
       } else {
-        return await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Categories/${category.id}`, body));
+        result = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Categories/${category.id}`, body));
       }
+      this.invalidateCategoryCache();
+      return result;
     } catch (e) {
       console.error('Gagal menyimpan kategori:', e);
       throw e;
@@ -175,6 +192,7 @@ export class ApiService {
   async deleteCategory(id: string): Promise<boolean> {
     try {
       await firstValueFrom(this.http.delete(`${this.BASE_URL}/admin/Categories/${id}`));
+      this.invalidateCategoryCache();
       return true;
     } catch (e) {
       console.error(`Gagal menghapus kategori ${id}:`, e);
@@ -185,12 +203,17 @@ export class ApiService {
   // --- REVIEWS API ---
   async getReviewsByProductId(productId: string): Promise<Review[]> {
     try {
-      // Endpoint review berada di bawah area customer
-      const reviews = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/customer/Reviews/book/${productId}`)) || [];
+      const currentUserStr = localStorage.getItem('malakabooks_session_user');
+      const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
+
+      const reviews = await firstValueFrom(
+        this.http.get<any[]>(`${this.BASE_URL}/customer/Reviews/book/${productId}`)
+      ) || [];
+
       return reviews.map(r => ({
         id: r.id,
         productId: r.bookId,
-        userName: 'Customer', // Default
+        userName: currentUser?.id === r.userId ? (currentUser.name || 'Customer') : 'Customer',
         rating: r.rating,
         comment: r.comment,
         date: r.createdAt
@@ -204,30 +227,39 @@ export class ApiService {
   async addReview(review: Review): Promise<Review> {
     const currentUserStr = localStorage.getItem('malakabooks_session_user');
     const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
-    const userId = currentUser?.id || 'guest';
+    if (!currentUser) throw new Error('User not authenticated');
+
+    // Cari orderId nyata: ambil order user yang mengandung produk ini
+    let orderId = '';
+    try {
+      const orders = await firstValueFrom(
+        this.http.get<any[]>(`${this.BASE_URL}/customer/Orders/user/${currentUser.id}`)
+      ) || [];
+      const matchingOrder = orders.find(o =>
+        o.items?.some((item: any) => item.bookId === review.productId)
+      );
+      if (matchingOrder) orderId = matchingOrder.id;
+    } catch {
+      // orderId tetap kosong; backend akan menolak jika wajib
+    }
 
     const body = {
-      userId: userId,
+      userId: currentUser.id,
       bookId: review.productId,
-      orderId: '6663f7eb2151680000000000', // Dummy order id valid untuk lolos validasi backend
+      orderId,
       rating: review.rating,
       comment: review.comment
     };
 
-    try {
-      const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Reviews`, body));
-      return {
-        id: res.id,
-        productId: res.bookId,
-        userName: currentUser?.name || 'Customer',
-        rating: res.rating,
-        comment: res.comment,
-        date: res.createdAt
-      };
-    } catch (e) {
-      console.error('Gagal menambahkan ulasan:', e);
-      throw e;
-    }
+    const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Reviews`, body));
+    return {
+      id: res.id,
+      productId: res.bookId,
+      userName: currentUser.name || 'Customer',
+      rating: res.rating,
+      comment: res.comment,
+      date: res.createdAt
+    };
   }
 
   // --- ADDRESSES API HELPER ---
@@ -253,12 +285,30 @@ export class ApiService {
   // --- USERS API ---
   async getUsers(): Promise<User[]> {
     const currentUserStr = localStorage.getItem('malakabooks_session_user');
-    if (currentUserStr) {
-      const u = JSON.parse(currentUserStr);
-      const user = await this.getUserById(u.id);
+    const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
+    if (!currentUser) return [];
+
+    if (currentUser.role === 'admin') {
+      try {
+        const list = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/admin/Users`)) || [];
+        return list.map(u => ({
+          id: u.id,
+          name: u.name,
+          email: '',
+          role: 'customer' as const,
+          phone: u.phone || '',
+          avatar: u.avatar || '',
+          joinedAt: u.createdAt,
+          addresses: []
+        }));
+      } catch (e) {
+        console.error('Gagal mengambil semua user (admin):', e);
+        return [];
+      }
+    } else {
+      const user = await this.getUserById(currentUser.id);
       return user ? [user] : [];
     }
-    return [];
   }
 
   async getUserById(id: string): Promise<User | undefined> {
@@ -356,6 +406,47 @@ export class ApiService {
     } catch (e) {
       console.error('Gagal menyimpan user/alamat:', e);
       throw e;
+    }
+  }
+
+  async updateOrderStatus(id: string, status: string): Promise<boolean> {
+    try {
+      await firstValueFrom(this.http.put(`${this.BASE_URL}/admin/Orders/${id}/status`, { status }));
+      return true;
+    } catch (e) {
+      console.error(`Gagal update status order ${id}:`, e);
+      return false;
+    }
+  }
+
+  // --- CART API ---
+  async getCart(userId: string): Promise<{ bookId: string; quantity: number }[]> {
+    try {
+      const res = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Cart/${userId}`));
+      return (res?.items || []).map((item: any) => ({ bookId: item.bookId, quantity: item.quantity }));
+    } catch (e) {
+      console.error('Gagal mengambil cart:', e);
+      return [];
+    }
+  }
+
+  async addCartItem(userId: string, bookId: string, quantity: number): Promise<boolean> {
+    try {
+      await firstValueFrom(this.http.post(`${this.BASE_URL}/customer/Cart`, { userId, bookId, quantity }));
+      return true;
+    } catch (e) {
+      console.error('Gagal menambah item cart:', e);
+      return false;
+    }
+  }
+
+  async removeCartItem(userId: string, bookId: string): Promise<boolean> {
+    try {
+      await firstValueFrom(this.http.delete(`${this.BASE_URL}/customer/Cart/${userId}/items/${bookId}`));
+      return true;
+    } catch (e) {
+      console.error('Gagal menghapus item cart:', e);
+      return false;
     }
   }
 
@@ -518,65 +609,125 @@ export class ApiService {
     }
   }
 
+  // --- COMPLAINTS API ---
+  private mapComplaint(c: any): Complaint {
+    return {
+      id: c.id,
+      userId: c.userId,
+      orderId: c.orderId,
+      subject: c.subject,
+      description: c.description,
+      status: c.status,
+      adminResponse: c.adminResponse || '',
+      createdAt: c.createdAt,
+      updatedAt: c.updatedAt
+    };
+  }
+
+  async getComplaintsByUser(userId: string): Promise<Complaint[]> {
+    try {
+      const list = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/customer/Complaints/user/${userId}`)) || [];
+      return list.map(c => this.mapComplaint(c));
+    } catch (e) {
+      console.error('Gagal mengambil complaints user:', e);
+      return [];
+    }
+  }
+
+  async createComplaint(payload: CreateComplaintPayload): Promise<Complaint> {
+    const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Complaints`, payload));
+    return this.mapComplaint(res);
+  }
+
+  async getAllComplaints(): Promise<Complaint[]> {
+    try {
+      const list = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/admin/Complaints`)) || [];
+      return list.map(c => this.mapComplaint(c));
+    } catch (e) {
+      console.error('Gagal mengambil semua complaints (admin):', e);
+      return [];
+    }
+  }
+
+  async respondComplaint(id: string, payload: RespondComplaintPayload): Promise<Complaint> {
+    const res = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Complaints/${id}/respond`, payload));
+    return this.mapComplaint(res);
+  }
+
   // --- DASHBOARD METRICS ---
   async getDashboardMetrics(): Promise<DashboardMetrics> {
-    try {
-      const [products, categories, orders] = await Promise.all([
-        this.getProducts(),
-        this.getCategories(),
-        this.getOrders()
-      ]);
-      
-      const totalRevenue = orders.filter(o => o.status !== 'cancelled').reduce((sum, o) => sum + o.total, 0);
-      const totalOrders = orders.length;
-      const totalCustomers = 12; // Placeholder realistis
-      
-      const salesHistory = [];
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        
-        const daysOrders = orders.filter(o => {
-          const oDate = new Date(o.orderDate);
-          return oDate.toDateString() === d.toDateString() && o.status !== 'cancelled';
-        });
+    const [products, categories, orders, users] = await Promise.all([
+      this.getProducts(),
+      this.getCategories(),
+      this.getOrders(),
+      this.getUsers()
+    ]);
 
-        salesHistory.push({
-          date: dateStr,
-          amount: daysOrders.reduce((sum, o) => sum + o.total, 0),
-          orders: daysOrders.length
-        });
-      }
+    const activeOrders = orders.filter(o => o.status !== 'cancelled');
+    const totalRevenue = activeOrders.reduce((sum, o) => sum + o.total, 0);
+    const totalOrders = orders.length;
+    const totalCustomers = users.length;
 
-      const catSalesMap: Record<string, number> = {};
-      orders.filter(o => o.status !== 'cancelled').forEach(o => {
-        o.items.forEach(item => {
-          const cat = item.product.categoryName || 'Other';
-          catSalesMap[cat] = (catSalesMap[cat] || 0) + (item.product.price * item.quantity);
-        });
+    // Growth: bandingkan 7 hari terakhir vs 7 hari sebelumnya
+    const now = new Date();
+    const msDay = 86_400_000;
+    const last7 = activeOrders.filter(o => now.getTime() - new Date(o.orderDate).getTime() <= 7 * msDay);
+    const prev7 = activeOrders.filter(o => {
+      const diff = now.getTime() - new Date(o.orderDate).getTime();
+      return diff > 7 * msDay && diff <= 14 * msDay;
+    });
+
+    const calcGrowth = (curr: number, prev: number) =>
+      prev === 0 ? 0 : parseFloat(((curr - prev) / prev * 100).toFixed(1));
+
+    const revenueGrowth = calcGrowth(
+      last7.reduce((s, o) => s + o.total, 0),
+      prev7.reduce((s, o) => s + o.total, 0)
+    );
+    const ordersGrowth = calcGrowth(last7.length, prev7.length);
+
+    // Sales history — 7 hari terakhir
+    const salesHistory = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const dayOrders = activeOrders.filter(o =>
+        new Date(o.orderDate).toDateString() === d.toDateString()
+      );
+      salesHistory.push({
+        date: dateStr,
+        amount: parseFloat(dayOrders.reduce((s, o) => s + o.total, 0).toFixed(2)),
+        orders: dayOrders.length
       });
-
-      const categorySales = Object.entries(catSalesMap).map(([category, amount]) => ({
-        category,
-        amount: parseFloat(amount.toFixed(2))
-      }));
-
-      return {
-        totalRevenue: parseFloat(totalRevenue.toFixed(2)),
-        revenueGrowth: 8.5,
-        totalOrders,
-        ordersGrowth: 5.2,
-        totalCustomers,
-        customersGrowth: 10.0,
-        conversionRate: 2.8,
-        conversionGrowth: 1.5,
-        salesHistory,
-        categorySales
-      };
-    } catch (e) {
-      console.error('Gagal mengambil metrik dasbor:', e);
-      throw e;
     }
+
+    // Category sales
+    const catSalesMap: Record<string, number> = {};
+    activeOrders.forEach(o => {
+      o.items.forEach(item => {
+        const cat = item.product.categoryName || 'Other';
+        catSalesMap[cat] = (catSalesMap[cat] || 0) + (item.product.price * item.quantity);
+      });
+    });
+    const categorySales = Object.entries(catSalesMap).map(([category, amount]) => ({
+      category,
+      amount: parseFloat(amount.toFixed(2))
+    }));
+
+    return {
+      totalRevenue: parseFloat(totalRevenue.toFixed(2)),
+      revenueGrowth,
+      totalOrders,
+      ordersGrowth,
+      totalCustomers,
+      customersGrowth: 0,
+      conversionRate: totalOrders > 0 && products.length > 0
+        ? parseFloat((totalOrders / products.length).toFixed(2))
+        : 0,
+      conversionGrowth: 0,
+      salesHistory,
+      categorySales
+    };
   }
 }

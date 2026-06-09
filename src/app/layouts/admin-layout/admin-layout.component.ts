@@ -96,6 +96,16 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
             </a>
 
             <a
+              routerLink="/admin/complaints"
+              routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
+              (click)="closeSidebar()"
+              class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white transition-all text-sm group cursor-pointer border-l-4 border-transparent"
+            >
+              <app-icon name="message-square" size="18" class="text-slate-400 group-hover:text-primary-500"></app-icon>
+              Complaints
+            </a>
+
+            <a
               routerLink="/admin/reports"
               routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
               (click)="closeSidebar()"

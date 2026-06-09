@@ -81,12 +81,13 @@ export class OrderStore {
   async updateOrderStatus(orderId: string, status: OrderStatus) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const allOrders = await this.apiService.getOrders();
-      const order = allOrders.find(o => o.id === orderId);
-      if (order) {
-        order.status = status;
-        await this.apiService.saveOrder(order);
-        await this.loadAllOrders(); // Refresh table datasets
+      const success = await this.apiService.updateOrderStatus(orderId, status);
+      if (success) {
+        this.state.update(s => ({
+          ...s,
+          orders: s.orders.map(o => o.id === orderId ? { ...o, status } : o),
+          loading: false
+        }));
         this.toastService.success(`Order #${orderId} status updated to ${status}.`);
       } else {
         this.state.update(s => ({ ...s, loading: false }));

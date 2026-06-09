@@ -90,6 +90,32 @@ export interface Review {
   date: string;
 }
 
+export type ComplaintStatus = 'open' | 'in_progress' | 'resolved' | 'closed';
+
+export interface Complaint {
+  id: string;
+  userId: string;
+  orderId: string;
+  subject: string;
+  description: string;
+  status: ComplaintStatus;
+  adminResponse: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateComplaintPayload {
+  userId: string;
+  orderId: string;
+  subject: string;
+  description: string;
+}
+
+export interface RespondComplaintPayload {
+  status: ComplaintStatus;
+  adminResponse: string;
+}
+
 export interface DashboardMetrics {
   totalRevenue: number;
   revenueGrowth: number;

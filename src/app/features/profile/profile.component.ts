@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { User, Address } from '../../core/models';
 import { InputComponent } from '../../shared/ui/input/input.component';
@@ -11,7 +11,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, ButtonComponent, IconComponent],
+  imports: [ReactiveFormsModule, RouterLink, InputComponent, ButtonComponent, IconComponent],
   template: `
     <div class="animate-fade-in pb-12 flex flex-col gap-6">
       <h1 class="font-display font-extrabold text-slate-800 text-base">User Profile</h1>
@@ -31,6 +31,23 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
             </app-button>
           </div>
         </form>
+      </div>
+
+      <!-- Quick Links Card -->
+      <div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-sm">
+        <h2 class="font-display font-bold text-slate-800 text-xs mb-3">Quick Links</h2>
+        <a
+          routerLink="/complaints"
+          class="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 transition-colors cursor-pointer text-slate-700"
+        >
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center">
+              <i class="bx bx-message-square-error text-orange-500 text-base"></i>
+            </span>
+            <span class="text-xs font-semibold">Komplain Saya</span>
+          </div>
+          <i class="bx bx-chevron-right text-slate-400"></i>
+        </a>
       </div>
 
       <!-- Shipping Addresses Card -->
