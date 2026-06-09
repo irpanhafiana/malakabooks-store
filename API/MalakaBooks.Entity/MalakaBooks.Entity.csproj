@@ -5,6 +5,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
+    <PackageReference Include="MongoDB.Bson" />
   </ItemGroup>
 </Project>

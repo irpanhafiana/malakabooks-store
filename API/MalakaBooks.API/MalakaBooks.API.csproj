@@ -1,10 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
+    <EnvironmentName>Development</EnvironmentName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' != '' AND '$(Configuration)' != 'Debug' ">
+    <EnvironmentName>Production</EnvironmentName>
+  </PropertyGroup>
+
+
+  
   <ItemGroup>
+    <ProjectReference Include="..\MalakaBooks.ConfigSetting\MalakaBooks.ConfigSetting.csproj" />
+    <ProjectReference Include="..\MalakaBooks.DataValidator\MalakaBooks.DataValidator.csproj" />
     <ProjectReference Include="..\MalakaBooks.Entity\MalakaBooks.Entity.csproj" />
     <ProjectReference Include="..\MalakaBooks.ViewModel\MalakaBooks.ViewModel.csproj" />
     <ProjectReference Include="..\MalakaBooks.IRepository\MalakaBooks.IRepository.csproj" />
@@ -13,19 +26,22 @@
     <ProjectReference Include="..\MalakaBooks.Validator\MalakaBooks.Validator.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
-    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
-    <PackageReference Include="EasyCaching.InMemory" Version="1.9.2" />
-    <PackageReference Include="FluentValidation" Version="11.11.0" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageReference Include="IdempotentAPI.Cache.DistributedCache" Version="2.2.0" />
-    <PackageReference Include="IdentityModel" Version="7.0.0" />
-    <PackageReference Include="IdempotentAPI" Version="2.6.0" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.7" />
-    <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Subur.Security.AuthProvider" />
+    <PackageReference Include="Subur.API.SwaggerProvider" />
+    <PackageReference Include="Subur.API.VersioningProvider" />
+    <PackageReference Include="Subur.Messaging.MediatRProvider" />
+    <PackageReference Include="Subur.Extension" />
+    <PackageReference Include="Subur.Security.CorsConfig" />
+    <PackageReference Include="Subur.Security.CorsProvider" />
+    <PackageReference Include="Subur.Storage.CacheProvider" />
+    <PackageReference Include="Subur.Storage.MongoDbProvider" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
+    <PackageReference Include="IdempotentAPI" />
+    <PackageReference Include="IdempotentAPI.Cache.DistributedCache" />
+    <PackageReference Include="IdentityModel" />
+    <PackageReference Include="MediatR" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,86 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="AutoMapper" Version="13.0.1" />
+    <PackageVersion Include="BarcodeLib" Version="3.0.3" />
+    <PackageVersion Include="EasyCaching.Core" Version="1.9.2" />
+    <PackageVersion Include="EasyCaching.Redis" Version="1.9.2" />
+    <PackageVersion Include="EasyCaching.Serialization.Json" Version="1.9.2" />
+    <PackageVersion Include="FileSizeFromBase64.NET" Version="2.0.0" />
+    <PackageVersion Include="FluentValidation" Version="12.1.1" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.18" />
+    <PackageVersion Include="Hangfire.Core" Version="1.8.18" />
+    <PackageVersion Include="Hangfire.Mongo" Version="1.11.5" />
+    <PackageVersion Include="IdempotentAPI" Version="2.3.0" />
+    <PackageVersion Include="IdempotentAPI.Cache.DistributedCache" Version="2.2.0" />
+    <PackageVersion Include="MediatR" Version="12.4.1" />
+    <PackageVersion Include="IdentityModel" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.11" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.11" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="8.0.11" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.11" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="8.0.16" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebSockets" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.EventLog" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.92.0" />
+    <PackageVersion Include="Skoruba.IdentityServer4.Admin.BusinessLogic.Identity" Version="2.1.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    <PackageVersion Include="MMLib.SwaggerForOcelot" Version="8.3.2" />
+    <PackageVersion Include="MongoDB.Bson" Version="3.0.0" />
+    <PackageVersion Include="MongoDB.Driver" Version="3.0.0" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="Nito.AsyncEx.Context" Version="5.1.2" />
+    <PackageVersion Include="Ocelot" Version="23.4.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageVersion Include="Serilog" Version="4.1.0" />
+    <PackageVersion Include="Subur.CustomException" Version="1.1.0" />
+    <PackageVersion Include="Subur.API.SwaggerConfig" Version="1.1.2" />
+    <PackageVersion Include="Subur.Storage.CacheConfig" Version="1.0.4" />
+    <PackageVersion Include="Subur.Storage.CacheProvider" Version="1.0.4" />
+    <PackageVersion Include="Subur.LoggerProvider" Version="1.1.1" />
+    <PackageVersion Include="Subur.Extension" Version="1.1.20" />
+    <PackageVersion Include="Subur.API.SwaggerProvider" Version="1.1.2" />
+    <PackageVersion Include="Subur.API.VersioningProvider" Version="1.1.1" />
+    <PackageVersion Include="Subur.Mapper.AutomapperProvider" Version="1.1.2" />
+    <PackageVersion Include="Subur.Messaging.MediatRProvider" Version="1.1.2" />
+    <PackageVersion Include="Subur.Messaging.FirebaseProvider" Version="1.1.1" />
+    <PackageVersion Include="Subur.Messaging.MassTransitProvider" Version="1.1.101" />
+    <PackageVersion Include="Subur.Messaging.SignalRProvider" Version="1.0.5" />
+    <PackageVersion Include="Subur.Security.CorsConfig" Version="1.1.2" />
+    <PackageVersion Include="Subur.Security.CorsProvider" Version="1.1.4" />
+    <PackageVersion Include="Subur.Security.AuthProvider" Version="1.1.0" />
+    <PackageVersion Include="Subur.Storage.MongoDbProvider" Version="1.1.1" />
+    <PackageVersion Include="Subur.IS4.TokenHandler" Version="1.1.6" />
+    <PackageVersion Include="Subur.POS.TokenService" Version="1.1.6" />
+    <PackageVersion Include="Subur.POS.HttpService" Version="1.1.0" />
+    <PackageVersion Include="System.Diagnostics.EventLog" Version="8.0.1" />
+
+  </ItemGroup>
+  
+    <!--<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
+    <PackageReference Include="EasyCaching.InMemory" Version="1.9.2" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="IdempotentAPI.Cache.DistributedCache" Version="2.2.0" />
+    <PackageReference Include="IdentityModel" Version="7.0.0" />
+    <PackageReference Include="IdempotentAPI" Version="2.6.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.7" />
+    <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />-->
+
+</Project>

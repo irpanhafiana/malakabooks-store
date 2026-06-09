@@ -1,24 +1,31 @@
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
-using EasyCaching.InMemory;
-using FluentValidation.AspNetCore;
 using IdempotentAPI.Cache.DistributedCache.Extensions.DependencyInjection;
 using IdempotentAPI.Extensions.DependencyInjection;
 using MalakaBooks.API.Helper;
-using MalakaBooks.Mediator.Common;
+using MalakaBooks.ConfigSetting;
+using MalakaBooks.DataValidator;
 using MalakaBooks.Repository;
-using MalakaBooks.Repository.Configuration;
 using MalakaBooks.Validator;
-using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
-using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Subur.API.SwaggerConfig;
+using Subur.API.SwaggerProvider;
+using Subur.API.VersioningConfig;
+using Subur.API.VersioningProvider;
+using Subur.Messaging.MediatRProvider;
+using Subur.Security.AuthConfig;
+using Subur.Security.AuthProvider;
+using Subur.Security.CorsConfig;
+using Subur.Security.CorsProvider;
+using Subur.Storage.CacheConfig;
+using Subur.Storage.CacheProvider;
+using Subur.Storage.MongoDbConfig;
+using Subur.Storage.MongoDbProvider;
 using System.IO.Compression;
+using System.Net;
+using System.Reflection;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 var environmentName = builder.Environment.EnvironmentName;
@@ -41,99 +48,77 @@ var swaggerSection = builder.Configuration.GetSection("SwaggerSetting");
 var corsSection = builder.Configuration.GetSection("CorsSetting");
 var tokenSection = builder.Configuration.GetSection("TokenSetting");
 var is4Section = builder.Configuration.GetSection("Is4Setting");
+var appSection = builder.Configuration.GetSection("AppSetting");
+var easyCacheSection = builder.Configuration.GetSection("EasyCachingConfig");
+var mongoSection = builder.Configuration.GetSection("MongoDbSetting");
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddDistributedMemoryCache();
 
 #region MongoDB
-builder.Services.Configure<MongoDbSetting>(builder.Configuration.GetSection("MongoDbSetting"));
-builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
-{
-    var setting = serviceProvider.GetRequiredService<IOptions<MongoDbSetting>>().Value;
-    return new MongoClient(setting.ConnectionString);
-});
-builder.Services.AddSingleton<IMongoDatabase>(serviceProvider =>
-{
-    var setting = serviceProvider.GetRequiredService<IOptions<MongoDbSetting>>().Value;
-    var client = serviceProvider.GetRequiredService<IMongoClient>();
-    return client.GetDatabase(setting.DatabaseName);
-});
+MongoSetting mongoSetting = new();
+mongoSection.Bind(mongoSetting);
+
+builder.Services.AddSingleton(mongoSetting);
+builder.Services.ConfigureMongoService(mongoSetting);
 #endregion
 
 #region IS4
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = is4Section["Authority"];
-        options.Audience = tokenSection["Audience"];
-        options.RequireHttpsMetadata = bool.TryParse(is4Section["RequireHttpsMetadata"], out var requireHttps) && requireHttps;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = true,
-            ValidAudience = tokenSection["Audience"],
-            ValidateIssuer = !string.IsNullOrWhiteSpace(is4Section["Authority"]),
-            ValidIssuer = is4Section["Authority"]
-        };
-    });
-builder.Services.AddAuthorization();
+IS4Setting is4Setting = new();
+is4Section.Bind(is4Setting);
+builder.Services.ConfigureAuthenticationService(is4Setting);
 #endregion
 
 #region API Versioning
-builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(
-        apiVersionSection.GetValue<int>("DefaultMajorVersion", 1),
-        apiVersionSection.GetValue<int>("DefaultMinorVersion", 0));
-    options.AssumeDefaultVersionWhenUnspecified = apiVersionSection.GetValue("AssumeDefaultVersionWhenUnspecified", true);
-    options.ReportApiVersions = apiVersionSection.GetValue("ReportApiVersions", true);
-})
-.AddApiExplorer(options =>
-{
-    options.GroupNameFormat = apiVersionSection["GroupNameFormat"] ?? "'v'VVV";
-    options.SubstituteApiVersionInUrl = apiVersionSection.GetValue("SubstituteApiVersionInUrl", true);
-});
+VersioningSetting versioningSetting = new();
+apiVersionSection.Bind(versioningSetting);
+builder.Services.ConfigureVersioningService(versioningSetting);
 #endregion
 
 #region Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddSwaggerGen(options =>
+SwaggerSetting swaggerSetting = new();
+swaggerSection.Bind(swaggerSetting);
+
+builder.Services.AddSingleton(swaggerSetting);
+
+builder.Services.AddSwaggerGen(c =>
 {
-    var authority = is4Section["Authority"] ?? string.Empty;
-    var scopeKey = tokenSection["Scope"] ?? tokenSection["Audience"] ?? "malakabooks.api";
-    var clientCredentialsTokenUrl = tokenSection["ClientCredentials:TokenEndpoint"] ?? $"{authority.TrimEnd('/')}/connect/token";
-    var passwordTokenUrl = tokenSection["Password:TokenEndpoint"] ?? $"{authority.TrimEnd('/')}/connect/token";
+  c.SwaggerDoc($"v{versioningSetting.MajorVersion}", new OpenApiInfo { Title = swaggerSetting.Title, Version = $"v{versioningSetting.MajorVersion}", Description = "" });
 
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+  c.OperationFilter<SwaggerAuthorizeOperationFilter>();
+  c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+  {
+    Type = SecuritySchemeType.OAuth2,
+    Name = swaggerSetting.OidcClientId,// client id
+    In = ParameterLocation.Cookie, // where the token will go
+    Flows = new OpenApiOAuthFlows()
     {
-        Type = SecuritySchemeType.OAuth2,
-        Flows = new OpenApiOAuthFlows
+      ClientCredentials = new OpenApiOAuthFlow()
+      {
+        Scopes = new Dictionary<string, string>
         {
-            ClientCredentials = new OpenApiOAuthFlow
-            {
-                TokenUrl = new Uri(clientCredentialsTokenUrl),
-                Scopes = new Dictionary<string, string> { [scopeKey] = swaggerSection["Description"] ?? "MalakaBooks API" }
-            },
-            Password = new OpenApiOAuthFlow
-            {
-                TokenUrl = new Uri(passwordTokenUrl),
-                Scopes = new Dictionary<string, string> { [scopeKey] = swaggerSection["Description"] ?? "MalakaBooks API" }
-            }
-        }
-    });
+          {
+            swaggerSetting.OidcApiName!, swaggerSetting.OidcApiName!
+          }
+        },
+        TokenUrl = new Uri($"{swaggerSetting.IdentityServerBaseUrl}/connect/token"),
+      }
+    }
+  });
+  c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+        {
+          {
+            new OpenApiSecurityScheme() { Reference = new OpenApiReference() { Type= ReferenceType.SecurityScheme, Id="oauth2" } },
+            new [] { swaggerSetting.OidcApiName }
+          }
+        });
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
-            },
-            new[] { scopeKey }
-        }
-    });
+  // Set the comments path for the Swagger JSON and UI.
+  var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+  var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+  c.IncludeXmlComments(xmlPath);
 });
 #endregion
 
@@ -142,115 +127,131 @@ builder.Services.AddSwaggerGen(options =>
 #endregion
 
 #region MediatR
-builder.Services.AddMediatR(typeof(MappingExtensions).Assembly);
+builder.Services.ConfigureMediatRService("MalakaBooks.Mediator");
 #endregion
 
 #region Idempotent
+builder.Services.AddIdempotentAPI();
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddIdempotentAPIUsingDistributedCache();
 #endregion
 
 #region JSON Options
-builder.Services
-    .AddControllers()
-    .AddNewtonsoftJson(options =>
-    {
-        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-    });
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddFluentValidationClientsideAdapters();
+AppSetting appSetting = new();
+appSection.Bind(appSetting);
+
+builder.Services.AddControllers(options =>
+{
+  options.Filters.Add(new IdempotentFilter(appSetting.IdempotentExpiredHours!));
+  options.Conventions.Add(new AuthorizeFilterByPolicy());
+  options.Filters.Add(typeof(GlobalHttpMethodAuthorizationFilter));
+}).AddNewtonsoftJson(nwtOptions =>
+{
+  nwtOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+  nwtOptions.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+  nwtOptions.SerializerSettings.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
+  nwtOptions.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+  nwtOptions.SerializerSettings.Formatting = Formatting.None;
+  nwtOptions.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
+});
+//builder.Services.AddFluentValidationAutoValidation();
+//builder.Services.AddFluentValidationClientsideAdapters();
 #endregion
 
 #region CORS
-var allowedOrigins = corsSection.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
-var corsPolicyName = corsSection["PolicyName"] ?? "DefaultCors";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(corsPolicyName, policy =>
-    {
-        if (allowedOrigins.Length > 0)
-        {
-            policy.WithOrigins(allowedOrigins);
-        }
-        else
-        {
-            policy.AllowAnyOrigin();
-        }
+CORSSetting corsSetting = new();
+corsSection.Bind(corsSetting);
 
-        policy.AllowAnyHeader().AllowAnyMethod();
-
-        if (corsSection.GetValue("AllowCredentials", false) && allowedOrigins.Length > 0)
-        {
-            policy.AllowCredentials();
-        }
-    });
-});
+if (corsSetting.Enabled) builder.Services.ConfigureCORSService(corsSetting);
 #endregion
 
 #region ExceptionHandling
 builder.Services.RegisterRepositoryService();
 builder.Services.RegisterAdditionalValidatorService();
+builder.Services.RegisterAdditionalDataValidatorService();
 #endregion
 
 #region Caching
-builder.Services.AddEasyCaching(options => options.UseInMemory(config =>
-{
-    config.EnableLogging = false;
-    config.LockMs = 5000;
-    config.SleepMs = 300;
-}, "default"));
+EasyCachingConfig easyCachingSetting = new();
+easyCacheSection.Bind(easyCachingSetting);
+
+builder.Services.ConfigureCacheService(easyCachingSetting);
 builder.Services.AddOutputCache();
 #endregion
 
 #region OutputCompression
 builder.Services.AddResponseCompression(options =>
 {
-    options.EnableForHttps = true;
-    options.Providers.Add<GzipCompressionProvider>();
+  options.EnableForHttps = true;
+  options.Providers.Add<GzipCompressionProvider>();
 });
 builder.Services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Fastest);
+#endregion
+
+#region Rate Limiter
+
+
+if (appSetting.RateLimiterSetting != null)
+{
+  builder.Services.AddRateLimiter(options =>
+  {
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, IPAddress>(context =>
+    {
+      var clientIp = context.Connection.RemoteIpAddress;
+      return RateLimitPartition.GetFixedWindowLimiter(clientIp!, _ =>
+        new FixedWindowRateLimiterOptions
+        {
+          PermitLimit = appSetting.RateLimiterSetting.Limit,   // Max requests allowed
+          Window = TimeSpan.FromMinutes(appSetting.RateLimiterSetting.ResetMinute), // Reset every minute
+          QueueLimit = appSetting.RateLimiterSetting.QueueLimit,
+          AutoReplenishment = appSetting.RateLimiterSetting.AutoReplenish
+        });
+    });
+  });
+}
+
 #endregion
 
 var app = builder.Build();
 
 app.UseResponseCompression();
 app.UseExceptionHandler();
-app.UseSwagger();
-app.UseSwaggerUI(options =>
-{
-    var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-    foreach (var description in provider.ApiVersionDescriptions)
-    {
-        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"{swaggerSection["Title"] ?? "MalakaBooks API"} {description.GroupName.ToUpperInvariant()}");
-    }
 
-    options.OAuthClientId(is4Section["SwaggerClientId"] ?? "malakabooks-swagger");
-    options.OAuthClientSecret(is4Section["SwaggerClientSecret"] ?? "malakabooks-swagger-secret");
-    options.OAuthAppName(swaggerSection["OAuthAppName"] ?? "MalakaBooks Swagger UI");
-    options.OAuthUsePkce();
-});
+app.UseSwagger();
+if (app.Environment.IsDevelopment())
+{
+  app.UseSwaggerUI(c =>
+  {
+    var descriptions = app.DescribeApiVersions();
+    foreach (var description in descriptions)
+    {
+      var url = $"/swagger/{description.GroupName}/swagger.json";
+      var name = description.GroupName.ToUpperInvariant();
+      c.SwaggerEndpoint(url, name);
+    }
+  });
+}
+
 app.UseHttpsRedirection();
-app.UseCors(corsPolicyName);
+if (corsSetting.Enabled)
+{
+  foreach (var cors in corsSetting.CORSPolicies!)
+  {
+    if (cors.IsDefault)
+    {
+      app.UseCors();
+    }
+    else
+    {
+      app.UseCors(cors.PolicyName!);
+    }
+  }
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseOutputCache();
 app.MapControllers();
 
 app.Run();
-
-internal sealed class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider, IConfiguration configuration) : IConfigureOptions<SwaggerGenOptions>
-{
-    public void Configure(SwaggerGenOptions options)
-    {
-        var swaggerSection = configuration.GetSection("SwaggerSetting");
-        foreach (var description in provider.ApiVersionDescriptions)
-        {
-            options.SwaggerDoc(description.GroupName, new OpenApiInfo
-            {
-                Title = swaggerSection["Title"] ?? "MalakaBooks API",
-                Version = description.ApiVersion.ToString(),
-                Description = swaggerSection["Description"] ?? "MalakaBooks bookstore Web API"
-            });
-        }
-    }
-}

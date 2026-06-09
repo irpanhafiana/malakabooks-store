@@ -7,27 +7,32 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MalakaBooks.API.Controllers.Customer;
-
+/// <summary>
+/// Handles review-related API requests for customers, including retrieving reviews for a specific book and creating new
+/// reviews.
+/// </summary>
+/// <param name="mediator">The mediator used to send commands and queries related to reviews.</param>
+/// <param name="createValidator">The validator used to validate incoming review creation requests.</param>
 [Route("api/v{version:apiVersion}/customer/[controller]")]
-[Authorize(Policy = "CustomerPolicy")]
+[Authorize(Policy = "MalakaCustomerPolicy")]
 public class ReviewsController(
     IMediator mediator,
     IValidator<CreateReviewRequest> createValidator) : ApiControllerBase
 {
-    /// <summary>Get reviews by book</summary>
-    [HttpGet("book/{bookId}")]
-    public async Task<ActionResult<IReadOnlyCollection<ReviewResponse>>> GetByBook(string bookId, CancellationToken cancellationToken) =>
-        Ok(await mediator.Send(new GetReviewsByBookQuery(bookId), cancellationToken));
+  /// <summary>Get reviews by book</summary>
+  [HttpGet("book/{bookId}")]
+  public async Task<IActionResult> GetByBook(string bookId, CancellationToken cancellationToken) =>
+      Success(await mediator.Send(new GetReviewsByBookQuery(bookId), cancellationToken));
 
-    /// <summary>Write a review</summary>
-    [HttpPost]
-    public async Task<ActionResult<ReviewResponse>> Create([FromBody] CreateReviewRequest request, CancellationToken cancellationToken)
-    {
-        var validationResult = await createValidator.ValidateAsync(request, cancellationToken);
-        if (!validationResult.IsValid)
-            return ProcessResult(validationResult);
+  /// <summary>Write a review</summary>
+  [HttpPost]
+  public async Task<IActionResult> Create([FromBody] CreateReviewRequest request, CancellationToken cancellationToken)
+  {
+    var validationResult = await createValidator.ValidateAsync(request, cancellationToken);
+    if (!validationResult.IsValid)
+      return ProcessResult(validationResult);
 
-        var review = await mediator.Send(new CreateReviewCommand(request), cancellationToken);
-        return CreatedAtAction(nameof(GetByBook), new { bookId = review.BookId, version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0" }, review);
-    }
+    var review = await mediator.Send(new CreateReviewCommand(request), cancellationToken);
+    return CreatedAtAction(nameof(GetByBook), new { bookId = review.BookId, version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0" }, review);
+  }
 }

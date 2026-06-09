@@ -1,9 +1,67 @@
 {
-  "Is4Setting": {
-    "Authority": "https://localhost:5001",
+  "IS4Setting": {
+    "IdentityServerBaseUrl": "http://192.168.1.15:44310",
+    "ApiName": "MalakaBooks_Service",
     "RequireHttpsMetadata": false,
-    "SwaggerClientId": "malakabooks-swagger",
-    "SwaggerClientSecret": "change-me-swagger-secret",
-    "ApiName": "malakabooks.api"
+    "PolicySettings": {
+      "Roles": [
+        {
+          "Policy": "MalakaAdminPolicy",
+          "Name": [ "Malaka-Admin" ]
+        },
+        {
+          "Policy": "MalakaCustomerPolicy",
+          "Name": [ "Malaka-Admin", "Malaka-Customer" ]
+        }
+      ],
+      "Scopes": [
+        {
+          "Policy": "CreatePolicy",
+          "Name": [ "Create" ]
+        },
+        {
+          "Policy": "ReadPolicy",
+          "Name": [ "Read" ]
+        },
+        {
+          "Policy": "UpdatePolicy",
+          "Name": [ "Update" ]
+        },
+        {
+          "Policy": "DeletePolicy",
+          "Name": [ "Delete" ]
+        },
+        {
+          "Policy": "ScopesPolicy",
+          "Name": [ "Create", "Read", "Update", "Delete" ]
+        }
+      ],
+      "Claims": [
+        {
+          "Policy": "ClaimsPolicy",
+          "Entries": [
+            {
+              "Name": "client_id",
+              "Values": [ "MalakaBooks-FE" ]
+            }
+          ]
+        }
+      ]
+      //"Customs": [
+      //  {
+      //    "Policy": "CustomPolicy1",
+      //    "Entries": [
+      //      {
+      //        "Name": "salesmanNik",
+      //        "Values": [ "Client1", "Client2" ]
+      //      },
+      //      {
+      //        "Name": "customer_code",
+      //        "Values": [ "Code1", "Code2" ]
+      //      }
+      //    ]
+      //  },        
+      //]
+    }
   }
 }

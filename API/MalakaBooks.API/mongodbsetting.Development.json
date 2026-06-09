@@ -1,6 +1,6 @@
 {
   "MongoDbSetting": {
-    "ConnectionString": "mongodb://localhost:27017",
+    "ConnectionString": "mongodb+srv://sjmartdevteam:R4BwxHqsKFpO0h7p@cluster0.qirhx1o.mongodb.net/?retryWrites=true&w=majority",
     "DatabaseName": "MalakaBooksDb",
     "BooksCollection": "books",
     "CategoriesCollection": "categories",
