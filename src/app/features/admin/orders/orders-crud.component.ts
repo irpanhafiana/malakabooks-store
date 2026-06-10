@@ -5,6 +5,7 @@ import { Order, OrderStatus } from '../../../core/models';
 import { TableComponent } from '../../../shared/ui/table/table.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-orders-crud',
@@ -57,8 +58,9 @@ import { PriceComponent } from '../../../shared/ui/price/price.component';
                 <td class="px-5 py-4 text-right">
                   <div class="relative inline-flex items-center justify-end">
                     <select
+                      #statusSelect
                       [value]="order.status"
-                      (change)="onStatusChange(order.id, $any($event.target).value)"
+                      (change)="onStatusChange(order.id, $any($event.target).value, statusSelect, order.status)"
                       class="border border-slate-200 bg-white text-slate-700 font-semibold py-1.5 px-3 pr-7 rounded-xl focus:outline-none focus:border-primary-500 appearance-none text-[10px] cursor-pointer"
                     >
                       <option value="pending">Pending</option>
@@ -87,13 +89,23 @@ import { PriceComponent } from '../../../shared/ui/price/price.component';
 })
 export class OrdersCrudComponent implements OnInit {
   protected readonly orderStore = inject(OrderStore);
+  private readonly alertService = inject(AlertService);
 
   ngOnInit() {
     this.orderStore.loadAllOrders();
   }
 
-  onStatusChange(orderId: string, status: string) {
-    this.orderStore.updateOrderStatus(orderId, status as OrderStatus);
+  async onStatusChange(orderId: string, status: string, selectElement: HTMLSelectElement, currentStatus: string) {
+    const isConfirmed = await this.alertService.confirm(
+      'Ubah Status Pesanan?',
+      `Apakah Anda yakin ingin mengubah status pesanan ke ${status.toUpperCase()}?`
+    );
+    if (isConfirmed) {
+      await this.orderStore.updateOrderStatus(orderId, status as OrderStatus);
+      this.alertService.success('Berhasil!', 'Status pesanan berhasil diperbarui.');
+    } else {
+      selectElement.value = currentStatus;
+    }
   }
 
   statusVariant(status: string): any {

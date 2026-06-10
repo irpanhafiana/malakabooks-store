@@ -1,55 +1,139 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { AbstractControl, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { AuthStore } from '../../../store/auth.store';
+import { InputComponent } from '../../../shared/ui/input/input.component';
+import { ButtonComponent } from '../../../shared/ui/button/button.component';
+
+function passwordMatchValidator(control: AbstractControl): { [key: string]: any } | null {
+  const group = control as FormGroup;
+  const password = group.get('password')?.value;
+  const confirmPassword = group.get('confirmPassword')?.value;
+  return password === confirmPassword ? null : { passwordMismatch: true };
+}
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, InputComponent, ButtonComponent],
   template: `
-    <div class="text-center flex flex-col items-center gap-5">
-      <div class="w-16 h-16 rounded-2xl bg-primary-50 flex items-center justify-center">
-        <i class="bx bx-user-plus text-3xl text-primary-600"></i>
-      </div>
+    <div>
+      <h2 class="text-xl font-display font-extrabold text-slate-800 tracking-tight text-center mb-1">Daftar Akun Baru</h2>
+      <p class="text-slate-500 text-xs text-center mb-6">Sudah memiliki akun? <a routerLink="/auth/login" class="text-primary-600 hover:text-primary-700 font-semibold transition-colors">Sign in</a></p>
 
-      <div>
-        <h2 class="text-xl font-display font-extrabold text-slate-800 tracking-tight mb-2">
-          Daftar Akun Baru
-        </h2>
-        <p class="text-slate-500 text-xs leading-relaxed max-w-xs mx-auto">
-          Pendaftaran akun dikelola melalui portal admin MalakaBooks.
-          Untuk mendapatkan akses, hubungi administrator Anda.
-        </p>
-      </div>
+      <form [formGroup]="registerForm" (submit)="onSubmit()" class="flex flex-col gap-4">
+        <div class="grid grid-cols-2 gap-4">
+          <app-input
+            label="Nama Depan"
+            type="text"
+            placeholder="e.g. John"
+            icon="user"
+            [control]="firstNameControl"
+          ></app-input>
+          
+          <app-input
+            label="Nama Belakang"
+            type="text"
+            placeholder="e.g. Doe"
+            icon="user"
+            [control]="lastNameControl"
+          ></app-input>
+        </div>
 
-      <div class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-left flex flex-col gap-3">
-        <p class="text-xs font-bold text-slate-600 uppercase tracking-wider">Cara mendapatkan akun:</p>
-        <ol class="text-xs text-slate-600 flex flex-col gap-2 list-decimal list-inside leading-relaxed">
-          <li>Hubungi administrator MalakaBooks</li>
-          <li>Berikan nama lengkap dan email Anda</li>
-          <li>Admin akan membuat akun dan mengirimkan kredensial login</li>
-        </ol>
-      </div>
+        <app-input
+          label="Nomor Telepon"
+          type="tel"
+          placeholder="e.g. 08123456789"
+          icon="phone"
+          [control]="phoneControl"
+        ></app-input>
 
-      <div class="w-full bg-amber-50 border border-amber-100 rounded-2xl p-4 text-left">
-        <p class="text-xs font-bold text-amber-700 mb-1">Demo tersedia:</p>
-        <p class="text-xs text-amber-600">
-          Username: <code class="bg-amber-100 px-1.5 py-0.5 rounded font-mono">customer&#64;malakabooks.local</code>
-        </p>
-        <p class="text-xs text-amber-600 mt-1">Password: <code class="bg-amber-100 px-1.5 py-0.5 rounded font-mono">ChangeMe123!</code></p>
-      </div>
+        <app-input
+          label="Email"
+          type="email"
+          placeholder="e.g. email@example.com"
+          icon="envelope"
+          [control]="emailControl"
+        ></app-input>
 
-      <a
-        routerLink="/auth/login"
-        class="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-bold transition-colors text-center block"
-      >
-        Masuk ke Akun Saya
-      </a>
+        <app-input
+          label="Password"
+          type="password"
+          placeholder="Min. 6 karakter"
+          icon="lock"
+          [control]="passwordControl"
+        ></app-input>
 
-      <p class="text-[10px] text-slate-400">
-        Sudah punya akun?
-        <a routerLink="/auth/login" class="text-primary-600 font-semibold hover:underline">Sign in</a>
-      </p>
+        <div class="flex flex-col gap-1">
+          <app-input
+            label="Konfirmasi Password"
+            type="password"
+            placeholder="Ulangi password"
+            icon="lock"
+            [control]="confirmPasswordControl"
+          ></app-input>
+          @if (registerForm.errors?.['passwordMismatch'] && (confirmPasswordControl.dirty || confirmPasswordControl.touched)) {
+            <span class="text-rose-500 text-xs mt-1.5 block animate-fade-in">Sandi konfirmasi harus cocok.</span>
+          }
+        </div>
+
+        <div class="mt-4">
+          <app-button
+            type="submit"
+            [loading]="isLoading()"
+            [disabled]="registerForm.invalid"
+            [fullWidth]="true"
+            variant="primary"
+          >
+            Daftar Sekarang
+          </app-button>
+        </div>
+      </form>
     </div>
   `
 })
-export class RegisterComponent {}
+export class RegisterComponent {
+  private readonly authStore = inject(AuthStore);
+  private readonly router = inject(Router);
+
+  isLoading = signal<boolean>(false);
+
+  firstNameControl = new FormControl('', [Validators.required]);
+  lastNameControl = new FormControl('', [Validators.required]);
+  phoneControl = new FormControl('', [Validators.required]);
+  emailControl = new FormControl('', [Validators.required, Validators.email]);
+  passwordControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
+  confirmPasswordControl = new FormControl('', [Validators.required]);
+
+  registerForm = new FormGroup(
+    {
+      firstName: this.firstNameControl,
+      lastName: this.lastNameControl,
+      phone: this.phoneControl,
+      email: this.emailControl,
+      password: this.passwordControl,
+      confirmPassword: this.confirmPasswordControl
+    },
+    { validators: passwordMatchValidator }
+  );
+
+  async onSubmit() {
+    if (this.registerForm.invalid) return;
+
+    this.isLoading.set(true);
+    const success = await this.authStore.register({
+      id: '',
+      firstName: this.firstNameControl.value || '',
+      lastName: this.lastNameControl.value || '',
+      phone: this.phoneControl.value || '',
+      email: this.emailControl.value || '',
+      password: this.passwordControl.value || '',
+      avatar: ''
+    });
+    this.isLoading.set(false);
+
+    if (success) {
+      this.router.navigate(['/auth/login']);
+    }
+  }
+}

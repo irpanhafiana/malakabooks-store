@@ -8,6 +8,7 @@ import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { TextareaComponent } from '../../../shared/ui/textarea/textarea.component';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-complaints-crud',
@@ -135,6 +136,7 @@ import { TextareaComponent } from '../../../shared/ui/textarea/textarea.componen
 export class ComplaintsCrudComponent implements OnInit {
   protected readonly complaintStore = inject(ComplaintStore);
   private readonly fb = inject(FormBuilder);
+  private readonly alertService = inject(AlertService);
 
   protected isModalOpen = false;
   protected readonly submitting = signal(false);
@@ -163,7 +165,18 @@ export class ComplaintsCrudComponent implements OnInit {
   }
 
   protected async submitRespond() {
-    if (this.respondForm.invalid || !this.selected()) return;
+    if (this.respondForm.invalid) {
+      this.respondForm.markAllAsTouched();
+      return;
+    }
+    if (!this.selected()) return;
+
+    const isConfirmed = await this.alertService.confirm(
+      'Kirim Respons?',
+      'Apakah Anda yakin ingin mengirim respons untuk pelanggan ini?'
+    );
+    if (!isConfirmed) return;
+
     this.submitting.set(true);
     const { status, adminResponse } = this.respondForm.value;
     const ok = await this.complaintStore.respond(this.selected()!.id, {
@@ -171,7 +184,10 @@ export class ComplaintsCrudComponent implements OnInit {
       adminResponse: adminResponse!.trim()
     });
     this.submitting.set(false);
-    if (ok) this.closeModal();
+    if (ok) {
+      this.closeModal();
+      this.alertService.success('Berhasil!', 'Respons komplain berhasil dikirim.');
+    }
   }
 
   protected statusVariant(status: ComplaintStatus): 'secondary' | 'success' | 'warning' | 'danger' {

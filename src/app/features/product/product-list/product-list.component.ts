@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect, OnInit } from '@angular/core';
 import { ProductStore } from '../../../store/product.store';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
@@ -130,10 +130,14 @@ import { MasonryGridComponent } from '../../../shared/ui/masonry-grid/masonry-gr
     </div>
   `
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
+
+  ngOnInit() {
+    this.productStore.loadAll();
+  }
 
   isFiltersOpen = signal<boolean>(false);
   activeCategoryName = signal<string | null>(null);

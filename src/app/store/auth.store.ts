@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { User } from '../core/models';
+import { User, RegisterPayload } from '../core/models';
 import { ApiService } from '../core/services/api.service';
 import { ToastService } from '../core/services/toast.service';
 import { CartStore } from './cart.store';
@@ -62,23 +62,41 @@ export class AuthStore {
         const decoded = this.decodeToken(token);
         // IdentityServer4 sub claim menyimpan UserId
         const userId = decoded?.sub || decoded?.nameid;
-        
+
         if (!userId) {
           this.toastService.error('Token tidak valid: User ID tidak ditemukan.');
           return false;
         }
 
-        const user = await this.apiService.getUserById(userId);
-        if (!user) {
-          this.toastService.error('Profil user gagal dimuat dari server.');
+        // Simpan token dulu agar interceptor bisa mengirim Bearer pada request berikutnya
+        localStorage.setItem('malakabooks_session_token', token);
+
+        const roles = decoded?.role || [];
+        const hasRole = (roleName: string) => {
+          if (Array.isArray(roles)) {
+            return roles.some((r: string) => r.toLowerCase() === roleName.toLowerCase());
+          }
+          if (typeof roles === 'string') {
+            return roles.toLowerCase() === roleName.toLowerCase();
+          }
           return false;
-        }
+        };
+
+        const isUserAdmin = hasRole('Malaka-Admin') || hasRole('admin');
+
+        const user: User = {
+          id: userId,
+          name: decoded?.given_name || decoded?.name || 'User',
+          email: decoded?.email || '',
+          role: isUserAdmin ? 'admin' : 'customer',
+          phone: decoded?.phone_number || decoded?.phone || (decoded?.name && !decoded?.name.includes('@') ? decoded.name : ''),
+          avatar: decoded?.avatar || '',
+          joinedAt: decoded?.joined_at || new Date().toISOString(),
+          addresses: []
+        };
 
         const userWithToken = { ...user, token };
-
-        // Simpan sesi aktif ke localStorage
         localStorage.setItem('malakabooks_session_user', JSON.stringify(userWithToken));
-        localStorage.setItem('malakabooks_session_token', token);
 
         this.state.set({ user: userWithToken, token });
 
@@ -105,9 +123,22 @@ export class AuthStore {
     this.toastService.info('Anda telah keluar.');
   }
 
-  async register(name: string, email: string): Promise<boolean> {
-    this.toastService.warning('Pendaftaran akun baru harus melalui Identity Server portal. Silakan hubungi admin atau gunakan akun terdaftar (e.g. customer@malakabooks.local).');
-    return false;
+  async register(payload: RegisterPayload): Promise<boolean> {
+    try {
+      await this.apiService.register(payload);
+      this.toastService.success('Pendaftaran akun berhasil! Silakan masuk.');
+      return true;
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      const errorResponse = err?.error;
+      if (errorResponse && errorResponse.errors) {
+        const validationErrors = Object.values(errorResponse.errors).join('\n');
+        this.toastService.error(validationErrors || errorResponse.statusMessage || 'Pendaftaran gagal.');
+      } else {
+        this.toastService.error(errorResponse?.statusMessage || 'Terjadi kesalahan koneksi server.');
+      }
+      return false;
+    }
   }
 
   async updateProfile(updatedUser: User): Promise<boolean> {

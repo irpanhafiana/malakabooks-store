@@ -1,3 +1,13 @@
+export interface RegisterPayload {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  avatar: string;
+  email: string;
+  password: string;
+}
+
 export interface User {
   id: string;
   name: string;

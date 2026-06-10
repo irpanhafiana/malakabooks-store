@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductStore } from '../../store/product.store';
 import { CartStore } from '../../store/cart.store';
@@ -103,10 +103,14 @@ import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.
     </div>
   `
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
+
+  ngOnInit() {
+    this.productStore.loadAll();
+  }
 
   filterByCategory(catId: string) {
     this.productStore.setCategoryFilter(catId);

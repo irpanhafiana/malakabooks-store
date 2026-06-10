@@ -12,6 +12,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-products-crud',
@@ -109,6 +110,14 @@ import { IconComponent } from '../../../shared/ui/icon/icon.component';
           <app-select label="Category" placeholder="Select category" [options]="categoryOptions()" [control]="categoryControl"></app-select>
           <app-input label="Brand" placeholder="e.g. Canongate Books" [control]="brandControl"></app-input>
 
+          <app-input label="Author" placeholder="e.g. Matt Haig" [control]="authorControl"></app-input>
+          <app-input label="ISBN" placeholder="e.g. 978-0525559474" [control]="isbnControl"></app-input>
+
+          <app-input label="Published Year" placeholder="e.g. 2020" type="number" [control]="publishedYearControl"></app-input>
+          <app-input label="Pages" placeholder="e.g. 304" type="number" [control]="pagesControl"></app-input>
+
+          <app-input label="Weight (kg)" placeholder="e.g. 0.35" type="number" [control]="weightControl"></app-input>
+
           <app-input label="Price" placeholder="e.g. 14.99" type="number" [control]="priceControl"></app-input>
           <app-input label="Original Price (Optional)" placeholder="e.g. 19.99" type="number" [control]="origPriceControl"></app-input>
 
@@ -131,6 +140,7 @@ import { IconComponent } from '../../../shared/ui/icon/icon.component';
 })
 export class ProductsCrudComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
+  private readonly alertService = inject(AlertService);
 
   searchQuery = signal<string>('');
   isModalOpen = signal<boolean>(false);
@@ -145,6 +155,11 @@ export class ProductsCrudComponent implements OnInit {
   stockControl = new FormControl<number>(0, [Validators.required, Validators.min(0)]);
   imageControl = new FormControl('', [Validators.required]);
   descControl = new FormControl('', [Validators.required]);
+  authorControl = new FormControl('', [Validators.required]);
+  isbnControl = new FormControl('', [Validators.required]);
+  publishedYearControl = new FormControl<number>(new Date().getFullYear(), [Validators.required, Validators.min(1800), Validators.max(new Date().getFullYear() + 1)]);
+  pagesControl = new FormControl<number>(1, [Validators.required, Validators.min(1)]);
+  weightControl = new FormControl<number>(0.1, [Validators.required, Validators.min(0)]);
 
   productForm = new FormGroup({
     name: this.nameControl,
@@ -154,7 +169,12 @@ export class ProductsCrudComponent implements OnInit {
     originalPrice: this.origPriceControl,
     stock: this.stockControl,
     image: this.imageControl,
-    description: this.descControl
+    description: this.descControl,
+    author: this.authorControl,
+    isbn: this.isbnControl,
+    publishedYear: this.publishedYearControl,
+    pages: this.pagesControl,
+    weight: this.weightControl
   });
 
   categoryOptions = computed(() => {
@@ -181,6 +201,9 @@ export class ProductsCrudComponent implements OnInit {
     this.productForm.reset();
     this.priceControl.setValue(0);
     this.stockControl.setValue(0);
+    this.publishedYearControl.setValue(new Date().getFullYear());
+    this.pagesControl.setValue(1);
+    this.weightControl.setValue(0.1);
     this.isModalOpen.set(true);
   }
 
@@ -194,6 +217,14 @@ export class ProductsCrudComponent implements OnInit {
     this.stockControl.setValue(product.stock);
     this.imageControl.setValue(product.images[0]);
     this.descControl.setValue(product.description);
+    this.authorControl.setValue(product.specifications['Author'] || '');
+    this.isbnControl.setValue(product.specifications['ISBN'] || '');
+    const pubYear = parseInt(product.specifications['Published Year']) || new Date().getFullYear();
+    this.publishedYearControl.setValue(pubYear);
+    const pgs = parseInt(product.specifications['Pages']) || 1;
+    this.pagesControl.setValue(pgs);
+    const wgt = parseFloat(product.specifications['Weight']) || 0.1;
+    this.weightControl.setValue(wgt);
     this.isModalOpen.set(true);
   }
 
@@ -202,7 +233,16 @@ export class ProductsCrudComponent implements OnInit {
   }
 
   async onSubmitForm() {
-    if (this.productForm.invalid) return;
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
+
+    const isConfirmed = await this.alertService.confirm(
+      'Simpan Produk?',
+      'Apakah Anda yakin ingin menyimpan perubahan data produk ini?'
+    );
+    if (!isConfirmed) return;
 
     const catId = this.categoryControl.value || '';
     const catName = this.productStore.categories().find(c => c.id === catId)?.name || 'Other';
@@ -221,20 +261,31 @@ export class ProductsCrudComponent implements OnInit {
       reviewsCount: this.editProduct()?.reviewsCount || 0,
       featured: this.editProduct()?.featured || false,
       brand: this.brandControl.value || '',
-      specifications: this.editProduct()?.specifications || {
-        'Language': 'English',
-        'Format': 'Hardcover'
+      specifications: {
+        'Author': this.authorControl.value || '',
+        'ISBN': this.isbnControl.value || '',
+        'Published Year': (this.publishedYearControl.value || new Date().getFullYear()).toString(),
+        'Pages': (this.pagesControl.value || 1).toString(),
+        'Weight': (this.weightControl.value || 0.1).toString(),
+        'Language': this.editProduct()?.specifications['Language'] || 'English',
+        'Format': this.editProduct()?.specifications['Format'] || 'Hardcover'
       },
       createdAt: this.editProduct()?.createdAt || new Date().toISOString()
     };
 
     await this.productStore.saveProduct(pData);
     this.closeModal();
+    this.alertService.success('Berhasil!', 'Data produk berhasil disimpan.');
   }
 
   async onDelete(id: string) {
-    if (confirm('Are you sure you want to delete this product?')) {
+    const isConfirmed = await this.alertService.confirm(
+      'Hapus Produk?',
+      'Produk ini akan dihapus secara permanen dari katalog.'
+    );
+    if (isConfirmed) {
       await this.productStore.deleteProduct(id);
+      this.alertService.success('Berhasil!', 'Produk telah berhasil dihapus.');
     }
   }
 }

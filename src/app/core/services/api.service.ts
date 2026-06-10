@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Product, Category, User, Order, Review, DashboardMetrics, Address, Complaint, CreateComplaintPayload, RespondComplaintPayload } from '../models';
+import { Product, Category, User, Order, Review, DashboardMetrics, Address, Complaint, CreateComplaintPayload, RespondComplaintPayload, RegisterPayload } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -23,7 +23,7 @@ export class ApiService {
     body.set('client_secret', 'MalakaBooks-FE');
     body.set('username', username);
     body.set('password', password);
-    body.set('scope', 'Create Update Delete Read offline_access MalakaBooks_Scope');
+    body.set('scope', 'Create Update Delete Read offline_access MalakaBooks_Scope General_Scope');
 
     try {
       const res = await firstValueFrom(
@@ -67,11 +67,17 @@ export class ApiService {
   // --- PRODUCTS API ---
   async getProducts(): Promise<Product[]> {
     try {
-      const books = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/public/Books`)) || [];
+      const currentUserStr = localStorage.getItem('malakabooks_session_user');
+      const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
+      const isAdmin = currentUser?.role === 'admin';
+
+      const endpoint = isAdmin ? `${this.BASE_URL}/admin/Books` : `${this.BASE_URL}/public/Books`;
+      const envelope = await firstValueFrom(this.http.get<any>(endpoint));
+      const books = envelope?.data || [];
       const categories = await this.getCategories();
       const catMap = new Map(categories.map(c => [c.id, c.name]));
       
-      return books.map(b => ({
+      return books.map((b: any) => ({
         ...this.mapBookToProduct(b),
         categoryName: catMap.get(b.categoryId) || 'Other'
       }));
@@ -83,7 +89,13 @@ export class ApiService {
 
   async getProductById(id: string): Promise<Product | undefined> {
     try {
-      const book = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/public/Books/${id}`));
+      const currentUserStr = localStorage.getItem('malakabooks_session_user');
+      const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
+      const isAdmin = currentUser?.role === 'admin';
+
+      const endpoint = isAdmin ? `${this.BASE_URL}/admin/Books/${id}` : `${this.BASE_URL}/public/Books/${id}`;
+      const envelope = await firstValueFrom(this.http.get<any>(endpoint));
+      const book = envelope?.data;
       if (!book) return undefined;
       const categories = await this.getCategories();
       const category = categories.find(c => c.id === book.categoryId);
@@ -116,11 +128,11 @@ export class ApiService {
 
     try {
       if (isNew) {
-        const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/Books`, body));
-        return this.mapBookToProduct(res);
+        const envelope = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/Books`, body));
+        return this.mapBookToProduct(envelope?.data);
       } else {
-        const res = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Books/${product.id}`, body));
-        return this.mapBookToProduct(res);
+        const envelope = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Books/${product.id}`, body));
+        return this.mapBookToProduct(envelope?.data);
       }
     } catch (e) {
       console.error('Gagal menyimpan produk:', e);
@@ -141,19 +153,27 @@ export class ApiService {
   // --- CATEGORIES API ---
   async getCategories(): Promise<Category[]> {
     const now = Date.now();
-    if (this.categoryCache && now - this.categoryCache.ts < this.CATEGORY_TTL_MS) {
+    const currentUserStr = localStorage.getItem('malakabooks_session_user');
+    const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
+    const isAdmin = currentUser?.role === 'admin';
+
+    if (!isAdmin && this.categoryCache && now - this.categoryCache.ts < this.CATEGORY_TTL_MS) {
       return this.categoryCache.data;
     }
     try {
-      const list = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/public/Categories`)) || [];
-      const data = list.map(c => ({
+      const endpoint = isAdmin ? `${this.BASE_URL}/admin/Categories` : `${this.BASE_URL}/public/Categories`;
+      const envelope = await firstValueFrom(this.http.get<any>(endpoint));
+      const list = envelope?.data || [];
+      const data = list.map((c: any) => ({
         id: c.id,
         name: c.name,
         slug: c.slug || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
         icon: c.icon || 'book',
         description: c.description || ''
       }));
-      this.categoryCache = { data, ts: now };
+      if (!isAdmin) {
+        this.categoryCache = { data, ts: now };
+      }
       return data;
     } catch (e) {
       console.error('Gagal mengambil kategori:', e);
@@ -167,7 +187,7 @@ export class ApiService {
 
   async saveCategory(category: Category): Promise<Category> {
     const isNew = !category.id || category.id.startsWith('cat-');
-    const body = {
+    const body: any = {
       name: category.name,
       slug: category.slug || category.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
       description: category.description || '',
@@ -177,9 +197,12 @@ export class ApiService {
     try {
       let result: Category;
       if (isNew) {
-        result = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/Categories`, body));
+        const envelope = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/Categories`, body));
+        result = envelope?.data;
       } else {
-        result = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Categories/${category.id}`, body));
+        body.id = category.id;
+        const envelope = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Categories/${category.id}`, body));
+        result = envelope?.data;
       }
       this.invalidateCategoryCache();
       return result;
@@ -206,11 +229,12 @@ export class ApiService {
       const currentUserStr = localStorage.getItem('malakabooks_session_user');
       const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
 
-      const reviews = await firstValueFrom(
-        this.http.get<any[]>(`${this.BASE_URL}/customer/Reviews/book/${productId}`)
-      ) || [];
+      const envelope = await firstValueFrom(
+        this.http.get<any>(`${this.BASE_URL}/customer/Reviews/book/${productId}`)
+      );
+      const reviews = envelope?.data || [];
 
-      return reviews.map(r => ({
+      return reviews.map((r: any) => ({
         id: r.id,
         productId: r.bookId,
         userName: currentUser?.id === r.userId ? (currentUser.name || 'Customer') : 'Customer',
@@ -232,10 +256,11 @@ export class ApiService {
     // Cari orderId nyata: ambil order user yang mengandung produk ini
     let orderId = '';
     try {
-      const orders = await firstValueFrom(
-        this.http.get<any[]>(`${this.BASE_URL}/customer/Orders/user/${currentUser.id}`)
-      ) || [];
-      const matchingOrder = orders.find(o =>
+      const envelope = await firstValueFrom(
+        this.http.get<any>(`${this.BASE_URL}/customer/Orders/user/${currentUser.id}`)
+      );
+      const orders = envelope?.data || [];
+      const matchingOrder = orders.find((o: any) =>
         o.items?.some((item: any) => item.bookId === review.productId)
       );
       if (matchingOrder) orderId = matchingOrder.id;
@@ -252,21 +277,23 @@ export class ApiService {
     };
 
     const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Reviews`, body));
+    const data = res?.data;
     return {
-      id: res.id,
-      productId: res.bookId,
+      id: data.id,
+      productId: data.bookId,
       userName: currentUser.name || 'Customer',
-      rating: res.rating,
-      comment: res.comment,
-      date: res.createdAt
+      rating: data.rating,
+      comment: data.comment,
+      date: data.createdAt
     };
   }
 
   // --- ADDRESSES API HELPER ---
   async getAddressesByUserId(userId: string): Promise<Address[]> {
     try {
-      const list = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/customer/Addresses/user/${userId}`)) || [];
-      return list.map(addr => ({
+      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Addresses/user/${userId}`));
+      const list = envelope?.data || [];
+      return list.map((addr: any) => ({
         id: addr.id,
         name: addr.label,
         phone: addr.phone,
@@ -283,6 +310,12 @@ export class ApiService {
   }
 
   // --- USERS API ---
+  async register(payload: RegisterPayload): Promise<any> {
+    return firstValueFrom(
+      this.http.post<any>(`${this.BASE_URL}/customer/Users`, payload)
+    );
+  }
+
   async getUsers(): Promise<User[]> {
     const currentUserStr = localStorage.getItem('malakabooks_session_user');
     const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
@@ -290,11 +323,12 @@ export class ApiService {
 
     if (currentUser.role === 'admin') {
       try {
-        const list = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/admin/Users`)) || [];
-        return list.map(u => ({
+        const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/admin/Users`));
+        const list = envelope?.data || [];
+        return list.map((u: any) => ({
           id: u.id,
-          name: u.name,
-          email: '',
+          name: `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'User',
+          email: u.email || '',
           role: 'customer' as const,
           phone: u.phone || '',
           avatar: u.avatar || '',
@@ -313,14 +347,15 @@ export class ApiService {
 
   async getUserById(id: string): Promise<User | undefined> {
     try {
-      const userRes = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Users/${id}/profile`));
+      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Users/${id}/profile`));
+      const userRes = envelope?.data;
       if (!userRes) return undefined;
       const addresses = await this.getAddressesByUserId(id);
       return {
         id: userRes.id,
-        name: userRes.name,
-        email: userRes.email,
-        role: userRes.role as 'customer' | 'admin',
+        name: `${userRes.firstName || ''} ${userRes.lastName || ''}`.trim() || 'User',
+        email: userRes.email || '',
+        role: (userRes.role && (userRes.role.toLowerCase() === 'malaka-admin' || userRes.role.toLowerCase() === 'admin')) ? 'admin' : 'customer',
         phone: userRes.phone || '',
         avatar: userRes.avatar || '',
         joinedAt: userRes.createdAt,
@@ -333,9 +368,13 @@ export class ApiService {
   }
 
   async saveUser(user: User): Promise<User> {
+    const nameParts = (user.name || '').trim().split(/\s+/);
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
     const profileBody = {
-      name: user.name,
-      phone: user.phone || '',
+      firstName: firstName,
+      lastName: lastName,
       avatar: user.avatar || ''
     };
 
@@ -346,7 +385,6 @@ export class ApiService {
       // 2. Sinkronisasi Alamat User
       const backendAddresses = await this.getAddressesByUserId(user.id);
       const backendAddrMap = new Map(backendAddresses.map(a => [a.id, a]));
-      const finalAddresses: Address[] = [];
       
       for (const addr of user.addresses) {
         const isNew = !addr.id || addr.id.startsWith('addr-');
@@ -363,29 +401,9 @@ export class ApiService {
         };
         
         if (isNew) {
-          const created = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Addresses`, addressBody));
-          finalAddresses.push({
-            id: created.id,
-            name: created.label,
-            phone: created.phone,
-            street: created.street,
-            city: created.city,
-            province: created.province,
-            postalCode: created.postalCode,
-            isDefault: created.isDefault
-          });
+          await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Addresses`, addressBody));
         } else {
-          const updated = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Addresses/${addr.id}`, addressBody));
-          finalAddresses.push({
-            id: updated.id,
-            name: updated.label,
-            phone: updated.phone,
-            street: updated.street,
-            city: updated.city,
-            province: updated.province,
-            postalCode: updated.postalCode,
-            isDefault: updated.isDefault
-          });
+          await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Addresses/${addr.id}`, addressBody));
           backendAddrMap.delete(addr.id);
         }
       }
@@ -399,9 +417,12 @@ export class ApiService {
         }
       }
 
+      // Ambil alamat terbaru dari backend untuk mendapatkan ID yang sebenarnya
+      const updatedAddresses = await this.getAddressesByUserId(user.id);
+
       return {
         ...user,
-        addresses: finalAddresses
+        addresses: updatedAddresses
       };
     } catch (e) {
       console.error('Gagal menyimpan user/alamat:', e);
@@ -423,7 +444,7 @@ export class ApiService {
   async getCart(userId: string): Promise<{ bookId: string; quantity: number }[]> {
     try {
       const res = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Cart/${userId}`));
-      return (res?.items || []).map((item: any) => ({ bookId: item.bookId, quantity: item.quantity }));
+      return (res?.data?.items || []).map((item: any) => ({ bookId: item.bookId, quantity: item.quantity }));
     } catch (e) {
       console.error('Gagal mengambil cart:', e);
       return [];
@@ -458,49 +479,58 @@ export class ApiService {
 
     if (currentUser.role === 'admin') {
       try {
-        const ordersRes = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/admin/Orders`)) || [];
-        return ordersRes.map(res => ({
-          id: res.id,
-          userId: res.userId,
-          userName: '',
-          userEmail: '',
-          items: res.items.map((item: any) => ({
-            product: {
-              id: item.bookId,
-              name: item.title,
-              description: '',
-              price: item.price,
-              images: [],
-              categoryId: '',
-              categoryName: '',
-              stock: 0,
-              rating: 5,
-              reviewsCount: 0,
-              featured: false,
-              brand: '',
-              specifications: {},
-              createdAt: ''
+        const [ordersEnvelope, users] = await Promise.all([
+          firstValueFrom(this.http.get<any>(`${this.BASE_URL}/admin/Orders`)) || Promise.resolve({ data: [] }),
+          this.getUsers()
+        ]);
+        const ordersRes = ordersEnvelope?.data || [];
+        const userMap = new Map(users.map(u => [u.id, u]));
+
+        return ordersRes.map((res: any) => {
+          const u = userMap.get(res.userId);
+          return {
+            id: res.id,
+            userId: res.userId,
+            userName: u ? u.name : 'Unknown User',
+            userEmail: u ? (u.email || u.phone || 'No Contact') : '',
+            items: res.items.map((item: any) => ({
+              product: {
+                id: item.bookId,
+                name: item.title,
+                description: '',
+                price: item.price,
+                images: [],
+                categoryId: '',
+                categoryName: '',
+                stock: 0,
+                rating: 5,
+                reviewsCount: 0,
+                featured: false,
+                brand: '',
+                specifications: {},
+                createdAt: ''
+              },
+              quantity: item.quantity
+            })),
+            shippingAddress: {
+              id: res.addressId || 'addr-default',
+              name: u ? u.name : 'Customer Address',
+              phone: u ? u.phone || '' : '',
+              street: res.note || 'Default Address',
+              city: '',
+              province: '',
+              postalCode: '',
+              isDefault: false
             },
-            quantity: item.quantity
-          })),
-          shippingAddress: {
-            id: res.addressId || 'addr-default',
-            name: 'Customer Address',
-            phone: '',
-            street: res.note || 'Default Address',
-            city: '',
-            province: '',
-            postalCode: '',
-            isDefault: false
-          },
-          paymentMethod: 'bank_transfer',
-          status: res.status as any,
-          subtotal: res.totalPrice,
-          shippingCost: 0,
-          tax: 0,
-          total: res.totalPrice,
-          orderDate: res.createdAt
-        }));
+            paymentMethod: 'bank_transfer',
+            status: res.status as any,
+            subtotal: res.totalPrice,
+            shippingCost: 0,
+            tax: 0,
+            total: res.totalPrice,
+            orderDate: res.createdAt
+          };
+        });
       } catch (e) {
         console.error('Gagal mengambil semua order (admin):', e);
         return this.getOrdersByUserId(currentUser.id);
@@ -512,14 +542,13 @@ export class ApiService {
 
   async getOrdersByUserId(userId: string): Promise<Order[]> {
     try {
-      const [ordersRes, addresses] = await Promise.all([
-        firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/customer/Orders/user/${userId}`)) || Promise.resolve([]),
-        this.getAddressesByUserId(userId)
-      ]);
+      const ordersResRaw = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Orders/user/${userId}`));
+      const ordersRes = ordersResRaw?.data || [];
+      const addresses = await this.getAddressesByUserId(userId);
       
       const addrMap = new Map(addresses.map(a => [a.id, a]));
       
-      return (ordersRes || []).map(res => {
+      return (ordersRes || []).map((res: any) => {
         const shippingAddress = addrMap.get(res.addressId) || {
           id: res.addressId,
           name: 'Address',
@@ -586,22 +615,23 @@ export class ApiService {
 
     try {
       const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Orders`, body));
+      const placed = res?.data;
       
       return {
-        id: res.id,
-        userId: res.userId,
+        id: placed.id,
+        userId: placed.userId,
         userName: order.userName,
         userEmail: order.userEmail,
         items: order.items,
         shippingAddress: order.shippingAddress,
         paymentMethod: order.paymentMethod,
         paymentDetails: order.paymentDetails,
-        status: res.status as any,
+        status: placed.status as any,
         subtotal: order.subtotal,
         shippingCost: order.shippingCost,
         tax: order.tax,
-        total: Number(res.totalPrice) || order.total,
-        orderDate: res.createdAt
+        total: Number(placed.totalPrice) || order.total,
+        orderDate: placed.createdAt
       };
     } catch (e) {
       console.error('Gagal membuat order:', e);
@@ -626,8 +656,9 @@ export class ApiService {
 
   async getComplaintsByUser(userId: string): Promise<Complaint[]> {
     try {
-      const list = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/customer/Complaints/user/${userId}`)) || [];
-      return list.map(c => this.mapComplaint(c));
+      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Complaints/user/${userId}`));
+      const list = envelope?.data || [];
+      return list.map((c: any) => this.mapComplaint(c));
     } catch (e) {
       console.error('Gagal mengambil complaints user:', e);
       return [];
@@ -636,13 +667,14 @@ export class ApiService {
 
   async createComplaint(payload: CreateComplaintPayload): Promise<Complaint> {
     const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Complaints`, payload));
-    return this.mapComplaint(res);
+    return this.mapComplaint(res?.data);
   }
 
   async getAllComplaints(): Promise<Complaint[]> {
     try {
-      const list = await firstValueFrom(this.http.get<any[]>(`${this.BASE_URL}/admin/Complaints`)) || [];
-      return list.map(c => this.mapComplaint(c));
+      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/admin/Complaints`));
+      const list = envelope?.data || [];
+      return list.map((c: any) => this.mapComplaint(c));
     } catch (e) {
       console.error('Gagal mengambil semua complaints (admin):', e);
       return [];
@@ -651,7 +683,7 @@ export class ApiService {
 
   async respondComplaint(id: string, payload: RespondComplaintPayload): Promise<Complaint> {
     const res = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Complaints/${id}/respond`, payload));
-    return this.mapComplaint(res);
+    return this.mapComplaint(res?.data);
   }
 
   // --- DASHBOARD METRICS ---

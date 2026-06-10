@@ -1,0 +1,15 @@
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": [
+        {
+            "id": "6a2911358127cb584754e88f",
+            "firstName": "irpan",
+            "lastName": "Hafiana",
+            "phone": "088212774117",
+            "avatar": "",
+            "createdAt": "2026-06-10T14:24:37.287+07:00"
+        }
+    ],
+    "isSuccess": true
+}

@@ -83,9 +83,7 @@ export class ProductStore {
     return list;
   });
 
-  constructor() {
-    this.loadAll();
-  }
+  constructor() {}
 
   async loadAll() {
     this.state.update(s => ({ ...s, loading: true }));
@@ -98,6 +96,28 @@ export class ProductStore {
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       this.toastService.error('Failed to load products and categories.');
+    }
+  }
+
+  async loadProducts() {
+    this.state.update(s => ({ ...s, loading: true }));
+    try {
+      const products = await this.apiService.getProducts();
+      this.state.update(s => ({ ...s, products, loading: false }));
+    } catch (e) {
+      this.state.update(s => ({ ...s, loading: false }));
+      this.toastService.error('Failed to load products.');
+    }
+  }
+
+  async loadCategories() {
+    this.state.update(s => ({ ...s, loading: true }));
+    try {
+      const categories = await this.apiService.getCategories();
+      this.state.update(s => ({ ...s, categories, loading: false }));
+    } catch (e) {
+      this.state.update(s => ({ ...s, loading: false }));
+      this.toastService.error('Failed to load categories.');
     }
   }
 
@@ -121,7 +141,7 @@ export class ProductStore {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const saved = await this.apiService.saveProduct(product);
-      await this.loadAll(); // Re-seed client list
+      await this.loadProducts(); // Re-seed client list
       this.toastService.success(`Product "${saved.name}" saved successfully!`);
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
@@ -134,7 +154,7 @@ export class ProductStore {
     try {
       const success = await this.apiService.deleteProduct(id);
       if (success) {
-        await this.loadAll();
+        await this.loadProducts();
         this.toastService.success('Product deleted successfully.');
       } else {
         this.state.update(s => ({ ...s, loading: false }));
@@ -150,7 +170,7 @@ export class ProductStore {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const saved = await this.apiService.saveCategory(category);
-      await this.loadAll();
+      await this.loadCategories();
       this.toastService.success(`Category "${saved.name}" saved successfully!`);
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
@@ -163,7 +183,7 @@ export class ProductStore {
     try {
       const success = await this.apiService.deleteCategory(id);
       if (success) {
-        await this.loadAll();
+        await this.loadCategories();
         this.toastService.success('Category deleted successfully.');
       } else {
         this.state.update(s => ({ ...s, loading: false }));

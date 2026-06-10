@@ -6,6 +6,7 @@ import { TableComponent } from '../../../shared/ui/table/table.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { ToastService } from '../../../core/services/toast.service';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-users-crud',
@@ -76,6 +77,7 @@ import { ToastService } from '../../../core/services/toast.service';
 export class UsersCrudComponent implements OnInit {
   private readonly apiService = inject(ApiService);
   private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   usersList = signal<User[]>([]);
   loading = signal<boolean>(true);
@@ -98,14 +100,20 @@ export class UsersCrudComponent implements OnInit {
 
   async toggleRole(user: User) {
     const newRole: 'customer' | 'admin' = user.role === 'admin' ? 'customer' : 'admin';
-    const updatedUser = { ...user, role: newRole };
     
+    const isConfirmed = await this.alertService.confirm(
+      'Ubah Peran Pengguna?',
+      `Apakah Anda yakin ingin mengubah peran "${user.name}" menjadi ${newRole.toUpperCase()}?`
+    );
+    if (!isConfirmed) return;
+
+    const updatedUser = { ...user, role: newRole };
     try {
       await this.apiService.saveUser(updatedUser);
-      this.toastService.success(`User "${user.name}" role updated to ${newRole}!`);
+      this.alertService.success('Berhasil!', `Peran pengguna "${user.name}" berhasil diubah menjadi ${newRole.toUpperCase()}.`);
       this.loadUsers(); // reload list
     } catch (e) {
-      this.toastService.error('Failed to update user role.');
+      this.alertService.error('Gagal!', 'Gagal mengubah peran pengguna.');
     }
   }
 }

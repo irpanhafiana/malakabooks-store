@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductStore } from '../../../store/product.store';
 import { Category } from '../../../core/models';
@@ -7,6 +7,7 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { InputComponent } from '../../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-categories-crud',
@@ -88,8 +89,13 @@ import { IconComponent } from '../../../shared/ui/icon/icon.component';
     </div>
   `
 })
-export class CategoriesCrudComponent {
+export class CategoriesCrudComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
+  private readonly alertService = inject(AlertService);
+
+  ngOnInit() {
+    this.productStore.loadCategories();
+  }
 
   isModalOpen = signal<boolean>(false);
   editCategory = signal<Category | null>(null);
@@ -120,7 +126,16 @@ export class CategoriesCrudComponent {
   }
 
   async onSubmitForm() {
-    if (this.categoryForm.invalid) return;
+    if (this.categoryForm.invalid) {
+      this.categoryForm.markAllAsTouched();
+      return;
+    }
+
+    const isConfirmed = await this.alertService.confirm(
+      'Simpan Kategori?',
+      'Apakah Anda yakin ingin menyimpan perubahan data kategori ini?'
+    );
+    if (!isConfirmed) return;
 
     const cData: Category = {
       id: this.editCategory()?.id || '',
@@ -131,11 +146,17 @@ export class CategoriesCrudComponent {
 
     await this.productStore.saveCategory(cData);
     this.closeModal();
+    this.alertService.success('Berhasil!', 'Data kategori berhasil disimpan.');
   }
 
   async onDelete(id: string) {
-    if (confirm('Are you sure you want to delete this category? All products under it will remain but its category association will be deleted.')) {
+    const isConfirmed = await this.alertService.confirm(
+      'Hapus Kategori?',
+      'Apakah Anda yakin ingin menghapus kategori ini? Asosiasi produk dengan kategori ini akan dihapus.'
+    );
+    if (isConfirmed) {
       await this.productStore.deleteCategory(id);
+      this.alertService.success('Berhasil!', 'Kategori telah berhasil dihapus.');
     }
   }
 }
