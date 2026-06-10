@@ -1,29 +1,25 @@
+using MalakaBooks.IDataValidator;
 using MalakaBooks.IRepository;
-using MalakaBooks.ViewModel;
 using MediatR;
 
 namespace MalakaBooks.Mediator.UserHandlers;
 
-public class UpdateUserProfileHandler(IUserRepository userRepository) : IRequestHandler<UpdateUserProfileCommand, UserResponse?>
+public class UpdateUserProfileHandler(IUserRepository userRepository, IUserEntityValidator validator) : IRequestHandler<UpdateUserProfileCommand, bool>
 {
-    public async Task<UserResponse?> Handle(UpdateUserProfileCommand request, CancellationToken cancellationToken)
-    {
-        var entity = await userRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (entity is null) return null;
+  private readonly IUserEntityValidator _validator = validator;
 
-        entity.Name = request.Request.Name;
-        entity.Phone = request.Request.Phone;
-        entity.Avatar = request.Request.Avatar;
+  public async Task<bool> Handle(UpdateUserProfileCommand request, CancellationToken cancellationToken)
+  {
+    var entity = await userRepository.GetByIdAsync(request.Id, cancellationToken);
+    if (entity is null) return false;
 
-        await userRepository.UpdateAsync(request.Id, entity, cancellationToken);
+    entity.FirstName = request.Request.FirstName;
+    entity.LastName = request.Request.LastName;
+    entity.Avatar = request.Request.Avatar;
 
-        return new UserResponse
-        {
-            Id = entity.Id ?? string.Empty,
-            Name = entity.Name,
-            Phone = entity.Phone,
-            Avatar = entity.Avatar,
-            CreatedAt = entity.CreatedAt
-        };
-    }
+    var result = _validator.UpdateValidateAsync(entity);
+    if (result is not null) return false;
+
+    return await userRepository.UpdateAsync(request.Id, entity, cancellationToken);
+  }
 }

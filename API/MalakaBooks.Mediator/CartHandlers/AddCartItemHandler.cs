@@ -7,9 +7,9 @@ namespace MalakaBooks.Mediator.CartHandlers;
 
 public class AddCartItemHandler(ICartRepository cartRepository) : IRequestHandler<AddCartItemCommand, CartResponse>
 {
-    public async Task<CartResponse> Handle(AddCartItemCommand request, CancellationToken cancellationToken)
-    {
-        var items = await cartRepository.AddItemAsync(request.Request.UserId, request.Request.ToEntity(), cancellationToken);
-        return items.ToResponse(request.Request.UserId);
-    }
+  public async Task<CartResponse> Handle(AddCartItemCommand request, CancellationToken cancellationToken)
+  {
+    var items = await cartRepository.AddItemAsync(request.Request.UserId, request.Request.ToEntity(), cancellationToken);
+    return items.ToResponse(request.Request.UserId);
+  }
 }

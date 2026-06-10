@@ -1,4 +1,3 @@
-using FluentValidation;
 using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.Mediator.AddressHandlers;
 using MalakaBooks.ViewModel;
@@ -15,14 +14,9 @@ namespace MalakaBooks.API.Controllers.Customer;
 /// <remarks>All endpoints require the user to be authenticated and are versioned via the API route. The
 /// controller is intended for use by customer-facing clients to manage their own address data.</remarks>
 /// <param name="mediator">The mediator used to send commands and queries related to address operations.</param>
-/// <param name="createValidator">The validator used to validate requests for creating new addresses.</param>
-/// <param name="updateValidator">The validator used to validate requests for updating existing addresses.</param>
 [Route("api/v{version:apiVersion}/customer/[controller]")]
 [Authorize(Policy = "MalakaCustomerPolicy")]
-public class AddressesController(
-    IMediator mediator,
-    IValidator<CreateAddressRequest> createValidator,
-    IValidator<UpdateAddressRequest> updateValidator) : ApiControllerBase
+public class AddressesController(IMediator mediator) : ApiControllerBase
 {
   /// <summary>Get own addresses</summary>
   [HttpGet("user/{userId}")]
@@ -33,28 +27,20 @@ public class AddressesController(
   [HttpPost]
   public async Task<IActionResult> Create([FromBody] CreateAddressRequest request, CancellationToken cancellationToken)
   {
-    var validationResult = await createValidator.ValidateAsync(request, cancellationToken);
-    if (!validationResult.IsValid)
-      return ProcessResult(validationResult);
-
-    var address = await mediator.Send(new CreateAddressCommand(request), cancellationToken);
-    return CreatedAtAction(nameof(GetByUser), new { userId = address.UserId, version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0" }, address);
+    var result = await mediator.Send(new CreateAddressCommand(request), cancellationToken);
+    return ProcessResult(result);
   }
 
   /// <summary>Update address</summary>
   [HttpPut("{id}")]
   public async Task<IActionResult> Update(string id, [FromBody] UpdateAddressRequest request, CancellationToken cancellationToken)
   {
-    var validationResult = await updateValidator.ValidateAsync(request, cancellationToken);
-    if (!validationResult.IsValid)
-      return ProcessResult(validationResult);
-
-    var address = await mediator.Send(new UpdateAddressCommand(id, request), cancellationToken);
-    return address is null ? NotFound() : Success(address);
+    var result = await mediator.Send(new UpdateAddressCommand(id, request), cancellationToken);
+    return Success(result);
   }
 
   /// <summary>Delete address</summary>
   [HttpDelete("{id}")]
-  public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken) =>
-      await mediator.Send(new DeleteAddressCommand(id), cancellationToken) ? NoContent() : NotFound();
+  public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
+    => Success(await mediator.Send(new DeleteAddressCommand(id), cancellationToken));
 }

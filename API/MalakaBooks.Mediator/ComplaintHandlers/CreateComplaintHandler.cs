@@ -1,16 +1,23 @@
+using MalakaBooks.IDataValidator;
 using MalakaBooks.IRepository;
 using MalakaBooks.Mediator.Common;
-using MalakaBooks.ViewModel;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace MalakaBooks.Mediator.ComplaintHandlers;
 
-public class CreateComplaintHandler(IComplaintRepository complaintRepository) : IRequestHandler<CreateComplaintCommand, ComplaintResponse>
+public class CreateComplaintHandler(IComplaintRepository complaintRepository, IComplaintEntityValidator validator) : IRequestHandler<CreateComplaintCommand, ValidationResult?>
 {
-    public async Task<ComplaintResponse> Handle(CreateComplaintCommand request, CancellationToken cancellationToken)
+  private readonly IComplaintEntityValidator _validator = validator;
+
+  public async Task<ValidationResult?> Handle(CreateComplaintCommand request, CancellationToken cancellationToken)
+  {
+    var entity = request.Request.ToEntity();
+    var result = await _validator.CreateValidateAsync(entity);
+    if (result is null)
     {
-        var entity = request.Request.ToEntity();
-        await complaintRepository.CreateAsync(entity, cancellationToken);
-        return entity.ToResponse();
+      await complaintRepository.CreateAsync(entity, cancellationToken);
     }
+    return result;
+  }
 }

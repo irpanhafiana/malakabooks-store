@@ -3,4 +3,4 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.UserHandlers;
 
-public record UpdateUserProfileCommand(string Id, UpdateUserRequest Request) : IRequest<UserResponse?>;
+public record UpdateUserProfileCommand(string Id, UpdateUserRequest Request) : IRequest<bool>;

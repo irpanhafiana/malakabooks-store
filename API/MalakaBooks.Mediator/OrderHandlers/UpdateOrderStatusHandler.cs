@@ -1,23 +1,24 @@
+using MalakaBooks.IDataValidator;
 using MalakaBooks.IRepository;
-using MalakaBooks.Mediator.Common;
-using MalakaBooks.ViewModel;
 using MediatR;
 
 namespace MalakaBooks.Mediator.OrderHandlers;
 
-public class UpdateOrderStatusHandler(IOrderRepository orderRepository) : IRequestHandler<UpdateOrderStatusCommand, OrderResponse?>
+public class UpdateOrderStatusHandler(IOrderRepository orderRepository, IOrderEntityValidator validator) : IRequestHandler<UpdateOrderStatusCommand, bool>
 {
-    public async Task<OrderResponse?> Handle(UpdateOrderStatusCommand request, CancellationToken cancellationToken)
-    {
-        var entity = await orderRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (entity is null)
-        {
-            return null;
-        }
+  private readonly IOrderEntityValidator _validator = validator;
 
-        entity.Status = request.Request.Status.Trim();
-        entity.UpdatedAt = DateTime.UtcNow;
-        await orderRepository.UpdateAsync(request.Id, entity, cancellationToken);
-        return entity.ToResponse();
-    }
+  public async Task<bool> Handle(UpdateOrderStatusCommand request, CancellationToken cancellationToken)
+  {
+    var entity = await orderRepository.GetByIdAsync(request.Id, cancellationToken);
+    if (entity is null) return false;
+
+    var result = _validator.UpdateValidateAsync(entity);
+    if (result is not null) return false;
+
+    entity.Status = request.Request.Status.Trim();
+    entity.UpdatedAt = DateTime.UtcNow;
+
+    return await orderRepository.UpdateAsync(request.Id, entity, cancellationToken);
+  }
 }

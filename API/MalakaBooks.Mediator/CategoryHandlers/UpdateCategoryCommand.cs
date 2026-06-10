@@ -3,4 +3,4 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.CategoryHandlers;
 
-public record UpdateCategoryCommand(string Id, UpdateCategoryRequest Request) : IRequest<CategoryResponse?>;
+public record UpdateCategoryCommand(string Id, UpdateCategoryRequest Request) : IRequest<bool>;

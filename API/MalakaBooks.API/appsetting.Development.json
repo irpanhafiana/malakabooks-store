@@ -30,5 +30,14 @@
       "Microsoft.AspNetCore": "Warning"
     }
   },
+  "IS4APISettings": {
+    "AuthorityId": "http://192.168.1.15:44310",
+    "BaseUrl": "http://192.168.1.15:44304",
+    "UserId": "admin",
+    "UserPassword": "Admin123$",
+    "ClientId": "IS4ApiClient",
+    "ClientSecret": "IS4ApiClient",
+    "Scopes": "skoruba_identity_admin_api MardikaMessageHubScope DEV-MardikaPortfolio_APIes-scope"
+  },
   "AllowedHosts": "*"
 }

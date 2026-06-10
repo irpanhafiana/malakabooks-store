@@ -1,4 +1,3 @@
-using FluentValidation;
 using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.Mediator.CategoryHandlers;
 using MalakaBooks.ViewModel;
@@ -15,14 +14,9 @@ namespace MalakaBooks.API.Controllers.Admin;
 /// actions are intended for administrative use and are versioned via the API route. Authorization policies may be
 /// applied to restrict access to administrative users.</remarks>
 /// <param name="mediator">The mediator used to send commands and queries related to category operations.</param>
-/// <param name="createValidator">The validator used to validate requests for creating categories.</param>
-/// <param name="updateValidator">The validator used to validate requests for updating categories.</param>
 [Route("api/v{version:apiVersion}/admin/[controller]")]
 [Authorize(Policy = "MalakaAdminPolicy")]
-public class CategoriesController(
-    IMediator mediator,
-    IValidator<CreateCategoryRequest> createValidator,
-    IValidator<UpdateCategoryRequest> updateValidator) : ApiControllerBase
+public class CategoriesController(IMediator mediator) : ApiControllerBase
 {
   /// <summary>Get all categories</summary>
   [HttpGet]
@@ -34,35 +28,27 @@ public class CategoriesController(
   public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
   {
     var category = await mediator.Send(new GetCategoryByIdQuery(id), cancellationToken);
-    return category is null ? NotFound() : Success(category);
+    return Success(category);
   }
 
   /// <summary>Create category</summary>
   [HttpPost]
   public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request, CancellationToken cancellationToken)
   {
-    var validationResult = await createValidator.ValidateAsync(request, cancellationToken);
-    if (!validationResult.IsValid)
-      return ProcessResult(validationResult);
-
-    var category = await mediator.Send(new CreateCategoryCommand(request), cancellationToken);
-    return CreatedAtAction(nameof(GetById), new { id = category.Id, version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0" }, category);
+    var result = await mediator.Send(new CreateCategoryCommand(request), cancellationToken);
+    return ProcessResult(result);
   }
 
   /// <summary>Update category</summary>
   [HttpPut("{id}")]
   public async Task<IActionResult> Update(string id, [FromBody] UpdateCategoryRequest request, CancellationToken cancellationToken)
   {
-    var validationResult = await updateValidator.ValidateAsync(request, cancellationToken);
-    if (!validationResult.IsValid)
-      return ProcessResult(validationResult);
-
-    var category = await mediator.Send(new UpdateCategoryCommand(id, request), cancellationToken);
-    return category is null ? NotFound() : Success(category);
+    var result = await mediator.Send(new UpdateCategoryCommand(id, request), cancellationToken);
+    return Success(result);
   }
 
   /// <summary>Delete category</summary>
   [HttpDelete("{id}")]
-  public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken) =>
-      await mediator.Send(new DeleteCategoryCommand(id), cancellationToken) ? NoContent() : NotFound();
+  public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
+       => Success(await mediator.Send(new DeleteCategoryCommand(id), cancellationToken));
 }

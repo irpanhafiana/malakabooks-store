@@ -1,16 +1,24 @@
+using MalakaBooks.IDataValidator;
 using MalakaBooks.IRepository;
 using MalakaBooks.Mediator.Common;
-using MalakaBooks.ViewModel;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace MalakaBooks.Mediator.OrderHandlers;
 
-public class CreateOrderHandler(IOrderRepository orderRepository) : IRequestHandler<CreateOrderCommand, OrderResponse>
+public class CreateOrderHandler(IOrderRepository orderRepository, IOrderEntityValidator validator) : IRequestHandler<CreateOrderCommand, ValidationResult?>
 {
-    public async Task<OrderResponse> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+  private readonly IOrderEntityValidator _validator = validator;
+
+  public async Task<ValidationResult?> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+  {
+    var entity = request.Request.ToEntity();
+
+    var result = await _validator.CreateValidateAsync(entity);
+    if (result is null)
     {
-        var entity = request.Request.ToEntity();
-        await orderRepository.CreateAsync(entity, cancellationToken);
-        return entity.ToResponse();
+      await orderRepository.CreateAsync(entity, cancellationToken);
     }
+    return result;
+  }
 }

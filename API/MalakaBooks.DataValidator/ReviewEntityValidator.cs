@@ -1,0 +1,56 @@
+using MalakaBooks.Entity;
+using MalakaBooks.IDataValidator;
+using MalakaBooks.Repository;
+using MalakaBooks.Repository.Configuration;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using Subur.Storage.MongoDbProvider;
+using System.ComponentModel.DataAnnotations;
+
+namespace MalakaBooks.DataValidator
+{
+  public class ReviewEntityValidator : BaseRepository<ReviewEntity>, IReviewEntityValidator
+  {
+    private IMongoCollection<ReviewEntity> _collection;
+
+    public ReviewEntityValidator(MongoDbContext mongoDbContext, IMongoClient mongoClient, IHttpContextAccessor contextAccessor, IOptions<MongoDbSetting> mongoDbSetting) : base(mongoDbContext, mongoClient, contextAccessor)
+    {
+      _collection = mongoDbContext.GetCollection<ReviewEntity>(mongoDbSetting.Value.ReviewsCollection);
+    }
+
+    public async Task<ValidationResult> CreateValidateAsync(params ReviewEntity[] entities)
+    {
+      foreach (var entity in entities)
+      {
+        var existing = await _collection.Find(_ =>
+          _.UserId == entity.UserId &&
+          _.BookId == entity.BookId &&
+          _.OrderId == entity.OrderId).FirstOrDefaultAsync();
+
+        if (existing != null) Errors.Add("Review with same user, order and book already exist.");
+      }
+
+      return GetErrorResult();
+    }
+
+    public async Task<ValidationResult> UpdateValidateAsync(params ReviewEntity[] entities)
+    {
+      foreach (var entity in entities)
+      {
+        var existing = await _collection.Find(_ =>
+
+            _.UserId == entity.UserId &&
+            _.BookId == entity.BookId &&
+            _.OrderId == entity.OrderId &&
+            _.Alias!.Equals(entity.Alias, StringComparison.CurrentCultureIgnoreCase)
+          ).FirstOrDefaultAsync();
+
+        if (existing != null) Errors.Add("Review with same user, order and book already exist.");
+      }
+
+      return GetErrorResult();
+    }
+
+  }
+}

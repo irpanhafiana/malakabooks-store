@@ -7,7 +7,7 @@ public class UpdateUserRequestValidator : AbstractValidator<UpdateUserRequest>
 {
   public UpdateUserRequestValidator()
   {
-    RuleFor(x => x.Name).NotEmpty();
-    RuleFor(x => x.Phone).NotEmpty();
+    RuleFor(x => x.FirstName).NotEmpty();
+    RuleFor(x => x.LastName).NotEmpty();
   }
 }

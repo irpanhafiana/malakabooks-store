@@ -1,16 +1,25 @@
+using MalakaBooks.IDataValidator;
 using MalakaBooks.IRepository;
 using MalakaBooks.Mediator.Common;
-using MalakaBooks.ViewModel;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace MalakaBooks.Mediator.BookHandlers;
 
-public class CreateBookHandler(IBookRepository bookRepository) : IRequestHandler<CreateBookCommand, BookResponse>
+public class CreateBookHandler(IBookRepository bookRepository, IBookEntityValidator validator) : IRequestHandler<CreateBookCommand, ValidationResult?>
 {
-    public async Task<BookResponse> Handle(CreateBookCommand request, CancellationToken cancellationToken)
+  private readonly IBookEntityValidator _validator = validator;
+
+  public async Task<ValidationResult?> Handle(CreateBookCommand request, CancellationToken cancellationToken)
+  {
+    var entity = request.Request.ToEntity();
+
+    var result = await _validator.CreateValidateAsync(entity);
+    if (result is null)
     {
-        var entity = request.Request.ToEntity();
-        await bookRepository.CreateAsync(entity, cancellationToken);
-        return entity.ToResponse();
+      await bookRepository.CreateAsync(entity, cancellationToken);
     }
+
+    return result;
+  }
 }

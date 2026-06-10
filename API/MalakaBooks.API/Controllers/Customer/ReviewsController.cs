@@ -1,4 +1,3 @@
-using FluentValidation;
 using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.Mediator.ReviewHandlers;
 using MalakaBooks.ViewModel;
@@ -12,12 +11,9 @@ namespace MalakaBooks.API.Controllers.Customer;
 /// reviews.
 /// </summary>
 /// <param name="mediator">The mediator used to send commands and queries related to reviews.</param>
-/// <param name="createValidator">The validator used to validate incoming review creation requests.</param>
 [Route("api/v{version:apiVersion}/customer/[controller]")]
 [Authorize(Policy = "MalakaCustomerPolicy")]
-public class ReviewsController(
-    IMediator mediator,
-    IValidator<CreateReviewRequest> createValidator) : ApiControllerBase
+public class ReviewsController(IMediator mediator) : ApiControllerBase
 {
   /// <summary>Get reviews by book</summary>
   [HttpGet("book/{bookId}")]
@@ -28,11 +24,7 @@ public class ReviewsController(
   [HttpPost]
   public async Task<IActionResult> Create([FromBody] CreateReviewRequest request, CancellationToken cancellationToken)
   {
-    var validationResult = await createValidator.ValidateAsync(request, cancellationToken);
-    if (!validationResult.IsValid)
-      return ProcessResult(validationResult);
-
-    var review = await mediator.Send(new CreateReviewCommand(request), cancellationToken);
-    return CreatedAtAction(nameof(GetByBook), new { bookId = review.BookId, version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0" }, review);
+    var result = await mediator.Send(new CreateReviewCommand(request), cancellationToken);
+    return ProcessResult(result);
   }
 }
