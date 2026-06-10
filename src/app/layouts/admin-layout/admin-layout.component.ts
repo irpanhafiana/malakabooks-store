@@ -3,11 +3,12 @@ import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } fro
 import { filter } from 'rxjs/operators';
 import { AuthStore } from '../../store/auth.store';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
+import { ToastContainerComponent } from '../../shared/ui/toast-container/toast-container.component';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, IconComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, IconComponent, ToastContainerComponent],
   template: `
     <div class="min-h-screen bg-slate-100 flex flex-col md:flex-row relative">
       <!-- Mobile Top Bar -->
@@ -19,6 +20,8 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
         <button
           type="button"
           (click)="toggleSidebar()"
+          aria-label="Toggle navigation menu"
+          [attr.aria-expanded]="isSidebarOpen()"
           class="p-1 rounded hover:bg-slate-800 transition-colors cursor-pointer"
         >
           <app-icon name="menu" size="20" class="text-white"></app-icon>
@@ -169,6 +172,9 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
           <router-outlet></router-outlet>
         </main>
       </div>
+
+      <!-- Global toast outlet (previously missing in admin → silent failures) -->
+      <app-toast-container></app-toast-container>
     </div>
   `,
   styles: [`

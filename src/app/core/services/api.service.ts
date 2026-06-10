@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Product, Category, User, Order, Review, DashboardMetrics, Address, Complaint, CreateComplaintPayload, RespondComplaintPayload, RegisterPayload } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { getStoredSessionUser, isAdminSession } from '../auth/session.util';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,12 @@ export class ApiService {
     }
   }
 
+  /** Map a backend role string to the app's role union. */
+  private normalizeRole(role: unknown): 'admin' | 'customer' {
+    const r = typeof role === 'string' ? role.toLowerCase() : '';
+    return r === 'malaka-admin' || r === 'admin' ? 'admin' : 'customer';
+  }
+
   // --- BOOK TO PRODUCT MAPPER ---
   private mapBookToProduct(book: any): Product {
     return {
@@ -67,11 +74,7 @@ export class ApiService {
   // --- PRODUCTS API ---
   async getProducts(): Promise<Product[]> {
     try {
-      const currentUserStr = localStorage.getItem('malakabooks_session_user');
-      const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
-      const isAdmin = currentUser?.role === 'admin';
-
-      const endpoint = isAdmin ? `${this.BASE_URL}/admin/Books` : `${this.BASE_URL}/public/Books`;
+      const endpoint = isAdminSession() ? `${this.BASE_URL}/admin/Books` : `${this.BASE_URL}/public/Books`;
       const envelope = await firstValueFrom(this.http.get<any>(endpoint));
       const books = envelope?.data || [];
       const categories = await this.getCategories();
@@ -89,11 +92,7 @@ export class ApiService {
 
   async getProductById(id: string): Promise<Product | undefined> {
     try {
-      const currentUserStr = localStorage.getItem('malakabooks_session_user');
-      const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
-      const isAdmin = currentUser?.role === 'admin';
-
-      const endpoint = isAdmin ? `${this.BASE_URL}/admin/Books/${id}` : `${this.BASE_URL}/public/Books/${id}`;
+      const endpoint = isAdminSession() ? `${this.BASE_URL}/admin/Books/${id}` : `${this.BASE_URL}/public/Books/${id}`;
       const envelope = await firstValueFrom(this.http.get<any>(endpoint));
       const book = envelope?.data;
       if (!book) return undefined;
@@ -153,9 +152,7 @@ export class ApiService {
   // --- CATEGORIES API ---
   async getCategories(): Promise<Category[]> {
     const now = Date.now();
-    const currentUserStr = localStorage.getItem('malakabooks_session_user');
-    const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
-    const isAdmin = currentUser?.role === 'admin';
+    const isAdmin = isAdminSession();
 
     if (!isAdmin && this.categoryCache && now - this.categoryCache.ts < this.CATEGORY_TTL_MS) {
       return this.categoryCache.data;
@@ -226,8 +223,7 @@ export class ApiService {
   // --- REVIEWS API ---
   async getReviewsByProductId(productId: string): Promise<Review[]> {
     try {
-      const currentUserStr = localStorage.getItem('malakabooks_session_user');
-      const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
+      const currentUser = getStoredSessionUser();
 
       const envelope = await firstValueFrom(
         this.http.get<any>(`${this.BASE_URL}/customer/Reviews/book/${productId}`)
@@ -237,7 +233,7 @@ export class ApiService {
       return reviews.map((r: any) => ({
         id: r.id,
         productId: r.bookId,
-        userName: currentUser?.id === r.userId ? (currentUser.name || 'Customer') : 'Customer',
+        userName: currentUser?.id === r.userId ? (currentUser?.name || 'Customer') : 'Customer',
         rating: r.rating,
         comment: r.comment,
         date: r.createdAt
@@ -249,8 +245,7 @@ export class ApiService {
   }
 
   async addReview(review: Review): Promise<Review> {
-    const currentUserStr = localStorage.getItem('malakabooks_session_user');
-    const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
+    const currentUser = getStoredSessionUser();
     if (!currentUser) throw new Error('User not authenticated');
 
     // Cari orderId nyata: ambil order user yang mengandung produk ini
@@ -317,8 +312,7 @@ export class ApiService {
   }
 
   async getUsers(): Promise<User[]> {
-    const currentUserStr = localStorage.getItem('malakabooks_session_user');
-    const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
+    const currentUser = getStoredSessionUser();
     if (!currentUser) return [];
 
     if (currentUser.role === 'admin') {
@@ -329,7 +323,9 @@ export class ApiService {
           id: u.id,
           name: `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'User',
           email: u.email || '',
-          role: 'customer' as const,
+          // Reflect the real backend role instead of hard-coding 'customer',
+          // so the Users table shows accurate ADMIN/CUSTOMER badges.
+          role: this.normalizeRole(u.role),
           phone: u.phone || '',
           avatar: u.avatar || '',
           joinedAt: u.createdAt,
@@ -355,7 +351,7 @@ export class ApiService {
         id: userRes.id,
         name: `${userRes.firstName || ''} ${userRes.lastName || ''}`.trim() || 'User',
         email: userRes.email || '',
-        role: (userRes.role && (userRes.role.toLowerCase() === 'malaka-admin' || userRes.role.toLowerCase() === 'admin')) ? 'admin' : 'customer',
+        role: this.normalizeRole(userRes.role),
         phone: userRes.phone || '',
         avatar: userRes.avatar || '',
         joinedAt: userRes.createdAt,
@@ -473,8 +469,7 @@ export class ApiService {
 
   // --- ORDERS API ---
   async getOrders(): Promise<Order[]> {
-    const currentUserStr = localStorage.getItem('malakabooks_session_user');
-    const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
+    const currentUser = getStoredSessionUser();
     if (!currentUser) return [];
 
     if (currentUser.role === 'admin') {
@@ -759,7 +754,10 @@ export class ApiService {
         : 0,
       conversionGrowth: 0,
       salesHistory,
-      categorySales
+      categorySales,
+      // Surface the most recent orders here so the dashboard does not have to
+      // issue a second getOrders() round-trip (which re-fetches users/addresses).
+      recentOrders: orders.slice(0, 4)
     };
   }
 }

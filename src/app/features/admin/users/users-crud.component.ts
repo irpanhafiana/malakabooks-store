@@ -5,13 +5,15 @@ import { User } from '../../../core/models';
 import { TableComponent } from '../../../shared/ui/table/table.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { PaginationComponent } from '../../../shared/ui/pagination/pagination.component';
 import { ToastService } from '../../../core/services/toast.service';
 import { AlertService } from '../../../core/services/alert.service';
+import { createClientPagination } from '../../../shared/util/pagination.util';
 
 @Component({
   selector: 'app-users-crud',
   standalone: true,
-  imports: [TableComponent, BadgeComponent, ButtonComponent, DatePipe, UpperCasePipe],
+  imports: [TableComponent, BadgeComponent, ButtonComponent, DatePipe, UpperCasePipe, PaginationComponent],
   template: `
     <div class="animate-fade-in flex flex-col gap-6">
       
@@ -35,7 +37,7 @@ import { AlertService } from '../../../core/services/alert.service';
           </tr>
 
           <ng-container table-rows>
-            @for (user of usersList(); track user.id) {
+            @for (user of pagination.paged(); track user.id) {
               <tr class="hover:bg-slate-50/30 text-xs">
                 <td class="px-5 py-4">
                   <div class="flex items-center gap-3">
@@ -66,9 +68,19 @@ import { AlertService } from '../../../core/services/alert.service';
                   </app-button>
                 </td>
               </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="p-8 text-center text-slate-400">No users found.</td>
+              </tr>
             }
           </ng-container>
         </app-table>
+
+        <app-pagination
+          [currentPage]="pagination.page()"
+          [totalPages]="pagination.totalPages()"
+          (pageChange)="pagination.setPage($event)"
+        ></app-pagination>
       }
 
     </div>
@@ -81,6 +93,8 @@ export class UsersCrudComponent implements OnInit {
 
   usersList = signal<User[]>([]);
   loading = signal<boolean>(true);
+
+  protected readonly pagination = createClientPagination(this.usersList, 10);
 
   ngOnInit() {
     this.loadUsers();

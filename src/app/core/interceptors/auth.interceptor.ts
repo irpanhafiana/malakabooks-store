@@ -2,28 +2,18 @@ import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
-
-function isTokenExpired(token: string): boolean {
-  try {
-    const parts = token.split('.');
-    if (parts.length !== 3) return true;
-    const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
-    // exp adalah Unix timestamp dalam detik
-    return payload.exp ? payload.exp * 1000 < Date.now() : false;
-  } catch {
-    return true;
-  }
-}
+import { isTokenExpired } from '../auth/jwt.util';
+import { SESSION_TOKEN_KEY, SESSION_USER_KEY } from '../auth/session.util';
 
 function clearSession() {
-  localStorage.removeItem('malakabooks_session_user');
-  localStorage.removeItem('malakabooks_session_token');
+  localStorage.removeItem(SESSION_USER_KEY);
+  localStorage.removeItem(SESSION_TOKEN_KEY);
   localStorage.removeItem('malakabooks_cart');
 }
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-  const token = localStorage.getItem('malakabooks_session_token');
+  const token = localStorage.getItem(SESSION_TOKEN_KEY);
 
   // Jika token ada tapi sudah expired, langsung logout dan redirect
   if (token && isTokenExpired(token)) {

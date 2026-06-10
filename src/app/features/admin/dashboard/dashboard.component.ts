@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe, CurrencyPipe, UpperCasePipe } from '@angular/common';
 import { ApiService } from '../../../core/services/api.service';
-import { DashboardMetrics, Order } from '../../../core/models';
+import { DashboardMetrics } from '../../../core/models';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
@@ -13,9 +13,29 @@ import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
   imports: [RouterLink, PriceComponent, IconComponent, BadgeComponent, DatePipe, CurrencyPipe, UpperCasePipe],
   template: `
     <div class="animate-fade-in flex flex-col gap-6">
-      
+
+      <!-- Loading state -->
+      @if (loading()) {
+        <div class="p-12 text-center text-slate-400 font-semibold bg-white rounded-2xl border border-slate-100 shadow-xs">
+          Loading dashboard metrics...
+        </div>
+      } @else if (error()) {
+        <!-- Error state with retry -->
+        <div class="p-12 flex flex-col items-center gap-3 text-center bg-white rounded-2xl border border-slate-100 shadow-xs">
+          <app-icon name="bar-chart" size="28" class="text-slate-300"></app-icon>
+          <p class="text-sm font-semibold text-slate-600">Failed to load dashboard metrics.</p>
+          <button
+            type="button"
+            (click)="loadData()"
+            class="text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors cursor-pointer"
+          >
+            Retry
+          </button>
+        </div>
+      }
+
       <!-- Metrics Grid -->
-      @if (metrics(); as data) {
+      @if (!loading() && !error() && metrics(); as data) {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <!-- Metric Card: Revenue -->
           <div class="bg-white border border-slate-200/60 p-5 rounded-2xl shadow-xs flex items-center justify-between">
@@ -168,7 +188,7 @@ import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 bg-white">
-                @for (order of recentOrders(); track order.id) {
+                @for (order of data.recentOrders; track order.id) {
                   <tr class="hover:bg-slate-50/40">
                     <td class="px-5 py-4 font-bold text-slate-800">#{{ order.id }}</td>
                     <td class="px-5 py-4">
@@ -187,6 +207,10 @@ import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
                       {{ order.total | currency }}
                     </td>
                   </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="5" class="px-5 py-8 text-center text-slate-400">No recent orders.</td>
+                  </tr>
                 }
               </tbody>
             </table>
@@ -200,7 +224,8 @@ export class AdminDashboardComponent implements OnInit {
   private readonly apiService = inject(ApiService);
 
   metrics = signal<DashboardMetrics | null>(null);
-  recentOrders = signal<Order[]>([]);
+  loading = signal<boolean>(true);
+  error = signal<boolean>(false);
 
   // Computes chart spacing coordinates
   chartPoints = computed(() => {
@@ -242,13 +267,18 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   async loadData() {
+    this.loading.set(true);
+    this.error.set(false);
     try {
+      // recentOrders now arrives inside the metrics payload, so the previous
+      // second getOrders() round-trip has been removed.
       const data = await this.apiService.getDashboardMetrics();
       this.metrics.set(data);
-      
-      const orders = await this.apiService.getOrders();
-      this.recentOrders.set(orders.slice(0, 4));
-    } catch (e) {}
+    } catch (e) {
+      this.error.set(true);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   categoryPercentage(amount: number): number {

@@ -90,8 +90,12 @@ export class OrderStore {
         }));
         this.toastService.success(`Order #${orderId} status updated to ${status}.`);
       } else {
+        // The API returns false for any failure (network/server), so we must not
+        // claim "not found". Resync from the server to discard the optimistic
+        // assumption and surface a generic, accurate error.
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Order not found.');
+        this.toastService.error('Failed to update order status. Please try again.');
+        await this.loadAllOrders();
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));

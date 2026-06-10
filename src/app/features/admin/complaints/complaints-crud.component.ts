@@ -8,7 +8,9 @@ import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { TextareaComponent } from '../../../shared/ui/textarea/textarea.component';
+import { PaginationComponent } from '../../../shared/ui/pagination/pagination.component';
 import { AlertService } from '../../../core/services/alert.service';
+import { createClientPagination } from '../../../shared/util/pagination.util';
 
 @Component({
   selector: 'app-complaints-crud',
@@ -20,7 +22,8 @@ import { AlertService } from '../../../core/services/alert.service';
     BadgeComponent,
     ButtonComponent,
     ModalComponent,
-    TextareaComponent
+    TextareaComponent,
+    PaginationComponent
   ],
   template: `
     <div class="animate-fade-in flex flex-col gap-6">
@@ -50,7 +53,7 @@ import { AlertService } from '../../../core/services/alert.service';
           </tr>
 
           <ng-container table-rows>
-            @for (c of complaintStore.complaints(); track c.id) {
+            @for (c of pagination.paged(); track c.id) {
               <tr class="hover:bg-slate-50/30 text-xs">
                 <td class="px-5 py-4 font-mono text-slate-500 text-[10px]">{{ c.userId }}</td>
                 <td class="px-5 py-4 font-bold text-slate-800 max-w-[180px]">
@@ -77,6 +80,12 @@ import { AlertService } from '../../../core/services/alert.service';
             }
           </ng-container>
         </app-table>
+
+        <app-pagination
+          [currentPage]="pagination.page()"
+          [totalPages]="pagination.totalPages()"
+          (pageChange)="pagination.setPage($event)"
+        ></app-pagination>
       }
     </div>
 
@@ -137,6 +146,8 @@ export class ComplaintsCrudComponent implements OnInit {
   protected readonly complaintStore = inject(ComplaintStore);
   private readonly fb = inject(FormBuilder);
   private readonly alertService = inject(AlertService);
+
+  protected readonly pagination = createClientPagination(this.complaintStore.complaints, 10);
 
   protected isModalOpen = false;
   protected readonly submitting = signal(false);

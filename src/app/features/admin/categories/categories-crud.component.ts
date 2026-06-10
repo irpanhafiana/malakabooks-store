@@ -7,12 +7,14 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { InputComponent } from '../../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
+import { PaginationComponent } from '../../../shared/ui/pagination/pagination.component';
 import { AlertService } from '../../../core/services/alert.service';
+import { createClientPagination } from '../../../shared/util/pagination.util';
 
 @Component({
   selector: 'app-categories-crud',
   standalone: true,
-  imports: [ReactiveFormsModule, TableComponent, ModalComponent, InputComponent, ButtonComponent, IconComponent],
+  imports: [ReactiveFormsModule, TableComponent, ModalComponent, InputComponent, ButtonComponent, IconComponent, PaginationComponent],
   template: `
     <div class="animate-fade-in flex flex-col gap-6">
       
@@ -39,7 +41,7 @@ import { AlertService } from '../../../core/services/alert.service';
           </tr>
 
           <ng-container table-rows>
-            @for (cat of productStore.categories(); track cat.id) {
+            @for (cat of pagination.paged(); track cat.id) {
               <tr class="hover:bg-slate-50/30">
                 <td class="px-5 py-4 font-bold text-slate-800 text-xs">
                   <div class="flex items-center gap-3">
@@ -71,6 +73,12 @@ import { AlertService } from '../../../core/services/alert.service';
             }
           </ng-container>
         </app-table>
+
+        <app-pagination
+          [currentPage]="pagination.page()"
+          [totalPages]="pagination.totalPages()"
+          (pageChange)="pagination.setPage($event)"
+        ></app-pagination>
       }
 
       <!-- Add/Edit Category Modal Form -->
@@ -92,6 +100,8 @@ import { AlertService } from '../../../core/services/alert.service';
 export class CategoriesCrudComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
   private readonly alertService = inject(AlertService);
+
+  protected readonly pagination = createClientPagination(this.productStore.categories, 10);
 
   ngOnInit() {
     this.productStore.loadCategories();

@@ -12,12 +12,14 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
+import { PaginationComponent } from '../../../shared/ui/pagination/pagination.component';
 import { AlertService } from '../../../core/services/alert.service';
+import { createClientPagination } from '../../../shared/util/pagination.util';
 
 @Component({
   selector: 'app-products-crud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TableComponent, ModalComponent, InputComponent, SelectComponent, TextareaComponent, ButtonComponent, BadgeComponent, PriceComponent, IconComponent],
+  imports: [CommonModule, ReactiveFormsModule, TableComponent, ModalComponent, InputComponent, SelectComponent, TextareaComponent, ButtonComponent, BadgeComponent, PriceComponent, IconComponent, PaginationComponent],
   template: `
     <div class="animate-fade-in flex flex-col gap-6">
       
@@ -57,7 +59,7 @@ import { AlertService } from '../../../core/services/alert.service';
           </tr>
 
           <ng-container table-rows>
-            @for (prod of filteredList(); track prod.id) {
+            @for (prod of pagination.paged(); track prod.id) {
               <tr class="hover:bg-slate-50/30">
                 <td class="px-5 py-4">
                   <div class="flex items-center gap-3">
@@ -98,6 +100,12 @@ import { AlertService } from '../../../core/services/alert.service';
             }
           </ng-container>
         </app-table>
+
+        <app-pagination
+          [currentPage]="pagination.page()"
+          [totalPages]="pagination.totalPages()"
+          (pageChange)="pagination.setPage($event)"
+        ></app-pagination>
       }
 
       <!-- Add/Edit Product Modal Form -->
@@ -188,12 +196,16 @@ export class ProductsCrudComponent implements OnInit {
     return list.filter(p => p.name.toLowerCase().includes(query) || p.brand.toLowerCase().includes(query));
   });
 
+  // Client-side pagination over the filtered list (auto-clamps on filter/delete).
+  protected readonly pagination = createClientPagination(this.filteredList, 10);
+
   ngOnInit() {
     this.productStore.loadAll();
   }
 
   onSearchInput(val: string) {
     this.searchQuery.set(val);
+    this.pagination.setPage(1);
   }
 
   openAddModal() {

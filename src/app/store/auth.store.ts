@@ -3,6 +3,8 @@ import { User, RegisterPayload } from '../core/models';
 import { ApiService } from '../core/services/api.service';
 import { ToastService } from '../core/services/toast.service';
 import { CartStore } from './cart.store';
+import { decodeJwt, isTokenExpired, jwtHasAdminRole, mapJwtToUser } from '../core/auth/jwt.util';
+import { SESSION_TOKEN_KEY, SESSION_USER_KEY } from '../core/auth/session.util';
 
 interface AuthState {
   user: User | null;
@@ -34,24 +36,33 @@ export class AuthStore {
   }
 
   private loadSession() {
-    const savedUser = localStorage.getItem('malakabooks_session_user');
-    const savedToken = localStorage.getItem('malakabooks_session_token');
-    if (savedUser && savedToken) {
+    const savedUser = localStorage.getItem(SESSION_USER_KEY);
+    const savedToken = localStorage.getItem(SESSION_TOKEN_KEY);
+    if (!savedUser || !savedToken) return;
+
+    // Reject restored sessions whose token is missing/expired so the UI never
+    // renders authenticated (or admin) state behind a dead token.
+    if (isTokenExpired(savedToken)) {
+      localStorage.removeItem(SESSION_USER_KEY);
+      localStorage.removeItem(SESSION_TOKEN_KEY);
+      return;
+    }
+
+    try {
+      const persisted = JSON.parse(savedUser) as User;
+      // Re-derive the role from the token rather than trusting the persisted
+      // JSON blob (which a user could edit in localStorage). The token claim is
+      // the authority for what the UI may render; the backend stays the real
+      // security boundary.
+      const decoded = decodeJwt(savedToken);
+      const role: User['role'] = jwtHasAdminRole(decoded) ? 'admin' : 'customer';
       this.state.set({
-        user: JSON.parse(savedUser),
+        user: { ...persisted, role, token: savedToken },
         token: savedToken
       });
-    }
-  }
-
-  private decodeToken(token: string): any {
-    try {
-      const parts = token.split('.');
-      if (parts.length !== 3) return null;
-      const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-      return JSON.parse(atob(payload));
-    } catch (e) {
-      return null;
+    } catch {
+      localStorage.removeItem(SESSION_USER_KEY);
+      localStorage.removeItem(SESSION_TOKEN_KEY);
     }
   }
 
@@ -59,44 +70,20 @@ export class AuthStore {
     try {
       const token = await this.apiService.loginAndGetToken(username, password);
       if (token) {
-        const decoded = this.decodeToken(token);
-        // IdentityServer4 sub claim menyimpan UserId
-        const userId = decoded?.sub || decoded?.nameid;
-
-        if (!userId) {
+        // IdentityServer4 sub claim stores the UserId; mapJwtToUser returns null
+        // when the token lacks a usable id.
+        const user = mapJwtToUser(decodeJwt(token));
+        if (!user) {
           this.toastService.error('Token tidak valid: User ID tidak ditemukan.');
           return false;
         }
 
-        // Simpan token dulu agar interceptor bisa mengirim Bearer pada request berikutnya
-        localStorage.setItem('malakabooks_session_token', token);
-
-        const roles = decoded?.role || [];
-        const hasRole = (roleName: string) => {
-          if (Array.isArray(roles)) {
-            return roles.some((r: string) => r.toLowerCase() === roleName.toLowerCase());
-          }
-          if (typeof roles === 'string') {
-            return roles.toLowerCase() === roleName.toLowerCase();
-          }
-          return false;
-        };
-
-        const isUserAdmin = hasRole('Malaka-Admin') || hasRole('admin');
-
-        const user: User = {
-          id: userId,
-          name: decoded?.given_name || decoded?.name || 'User',
-          email: decoded?.email || '',
-          role: isUserAdmin ? 'admin' : 'customer',
-          phone: decoded?.phone_number || decoded?.phone || (decoded?.name && !decoded?.name.includes('@') ? decoded.name : ''),
-          avatar: decoded?.avatar || '',
-          joinedAt: decoded?.joined_at || new Date().toISOString(),
-          addresses: []
-        };
+        // Persist the token first so the interceptor can attach the Bearer
+        // header to the subsequent requests below.
+        localStorage.setItem(SESSION_TOKEN_KEY, token);
 
         const userWithToken = { ...user, token };
-        localStorage.setItem('malakabooks_session_user', JSON.stringify(userWithToken));
+        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
 
         this.state.set({ user: userWithToken, token });
 
@@ -116,8 +103,8 @@ export class AuthStore {
   }
 
   logout() {
-    localStorage.removeItem('malakabooks_session_user');
-    localStorage.removeItem('malakabooks_session_token');
+    localStorage.removeItem(SESSION_USER_KEY);
+    localStorage.removeItem(SESSION_TOKEN_KEY);
     this.cartStore.clearOnLogout();
     this.state.set({ user: null, token: null });
     this.toastService.info('Anda telah keluar.');
@@ -146,7 +133,7 @@ export class AuthStore {
       const savedUser = await this.apiService.saveUser(updatedUser);
       const activeToken = this.token() || '';
       const userWithToken = { ...savedUser, token: activeToken };
-      localStorage.setItem('malakabooks_session_user', JSON.stringify(userWithToken));
+      localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
       this.state.update(s => ({ ...s, user: userWithToken }));
       this.toastService.success('Profil berhasil diperbarui!');
       return true;

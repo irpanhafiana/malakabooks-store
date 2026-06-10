@@ -3,6 +3,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ToastService } from '../../../core/services/toast.service';
+import { buildCsv, downloadCsv } from '../../../shared/util/csv.util';
 
 @Component({
   selector: 'app-reports',
@@ -67,7 +68,7 @@ export class ReportsComponent {
     try {
       const orders = await this.apiService.getOrders();
       
-      // Build CSV Content
+      // Build CSV Content — every cell is escaped + formula-injection-safe.
       const headers = ['Order ID', 'Customer Name', 'Customer Email', 'Subtotal', 'Tax', 'Shipping', 'Total', 'Status', 'Date'];
       const rows = orders.map(o => [
         o.id,
@@ -81,8 +82,7 @@ export class ReportsComponent {
         o.orderDate
       ]);
 
-      const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-      this.triggerDownload(csvContent, 'sales-revenue-report.csv');
+      downloadCsv(buildCsv(headers, rows), 'sales-revenue-report.csv');
       this.toastService.success('Sales report downloaded successfully!');
     } catch (e) {
       this.toastService.error('Failed to generate sales report.');
@@ -99,7 +99,7 @@ export class ReportsComponent {
       const headers = ['Product ID', 'Name', 'Brand', 'Category', 'Price', 'Original Price', 'Stock Level', 'Rating', 'Reviews Count'];
       const rows = products.map(p => [
         p.id,
-        `"${p.name.replace(/"/g, '""')}"`,
+        p.name,
         p.brand,
         p.categoryName,
         p.price.toFixed(2),
@@ -109,25 +109,12 @@ export class ReportsComponent {
         p.reviewsCount
       ]);
 
-      const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-      this.triggerDownload(csvContent, 'products-inventory-report.csv');
+      downloadCsv(buildCsv(headers, rows), 'products-inventory-report.csv');
       this.toastService.success('Inventory report downloaded successfully!');
     } catch (e) {
       this.toastService.error('Failed to generate inventory report.');
     } finally {
       this.invLoading.set(false);
     }
-  }
-
-  private triggerDownload(content: string, filename: string) {
-    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   }
 }

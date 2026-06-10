@@ -5,12 +5,14 @@ import { Order, OrderStatus } from '../../../core/models';
 import { TableComponent } from '../../../shared/ui/table/table.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
+import { PaginationComponent } from '../../../shared/ui/pagination/pagination.component';
 import { AlertService } from '../../../core/services/alert.service';
+import { createClientPagination } from '../../../shared/util/pagination.util';
 
 @Component({
   selector: 'app-orders-crud',
   standalone: true,
-  imports: [TableComponent, BadgeComponent, PriceComponent, DatePipe, UpperCasePipe],
+  imports: [TableComponent, BadgeComponent, PriceComponent, DatePipe, UpperCasePipe, PaginationComponent],
   template: `
     <div class="animate-fade-in flex flex-col gap-6">
       
@@ -36,7 +38,7 @@ import { AlertService } from '../../../core/services/alert.service';
           </tr>
 
           <ng-container table-rows>
-            @for (order of orderStore.orders(); track order.id) {
+            @for (order of pagination.paged(); track order.id) {
               <tr class="hover:bg-slate-50/30 text-xs">
                 <td class="px-5 py-4 font-bold text-slate-800">#{{ order.id }}</td>
                 <td class="px-5 py-4">
@@ -82,6 +84,12 @@ import { AlertService } from '../../../core/services/alert.service';
             }
           </ng-container>
         </app-table>
+
+        <app-pagination
+          [currentPage]="pagination.page()"
+          [totalPages]="pagination.totalPages()"
+          (pageChange)="pagination.setPage($event)"
+        ></app-pagination>
       }
 
     </div>
@@ -90,6 +98,8 @@ import { AlertService } from '../../../core/services/alert.service';
 export class OrdersCrudComponent implements OnInit {
   protected readonly orderStore = inject(OrderStore);
   private readonly alertService = inject(AlertService);
+
+  protected readonly pagination = createClientPagination(this.orderStore.orders, 10);
 
   ngOnInit() {
     this.orderStore.loadAllOrders();

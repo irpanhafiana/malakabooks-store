@@ -137,4 +137,5 @@ export interface DashboardMetrics {
   conversionGrowth: number;
   salesHistory: { date: string; amount: number; orders: number }[];
   categorySales: { category: string; amount: number }[];
+  recentOrders: Order[];
 }
