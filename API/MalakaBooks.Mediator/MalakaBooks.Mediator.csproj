@@ -3,6 +3,7 @@
     <ProjectReference Include="..\MalakaBooks.Entity\MalakaBooks.Entity.csproj" />
     <ProjectReference Include="..\MalakaBooks.IDataValidator\MalakaBooks.IDataValidator.csproj" />
     <ProjectReference Include="..\MalakaBooks.IRepository\MalakaBooks.IRepository.csproj" />
+    <ProjectReference Include="..\MalakaBooks.IS4RegistrationService\MalakaBooks.IS4RegistrationService.csproj" />
     <ProjectReference Include="..\MalakaBooks.ViewModel\MalakaBooks.ViewModel.csproj" />
   </ItemGroup>
   <ItemGroup>

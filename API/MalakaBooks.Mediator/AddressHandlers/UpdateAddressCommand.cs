@@ -3,4 +3,4 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.AddressHandlers;
 
-public record UpdateAddressCommand(string Id, UpdateAddressRequest Request) : IRequest<AddressResponse?>;
+public record UpdateAddressCommand(string Id, UpdateAddressRequest Request) : IRequest<bool>;

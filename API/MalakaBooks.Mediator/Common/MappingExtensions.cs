@@ -187,7 +187,8 @@ public static class MappingExtensions
   public static UserResponse ToResponse(this UserEntity entity) => new()
   {
     Id = entity.Id ?? string.Empty,
-    Name = entity.Name,
+    FirstName = entity.FirstName,
+    LastName = entity.LastName,
     Phone = entity.Phone,
     Avatar = entity.Avatar,
     CreatedAt = entity.CreatedAt
@@ -195,8 +196,8 @@ public static class MappingExtensions
 
   public static void UpdateFrom(this UserEntity entity, UpdateUserRequest request)
   {
-    entity.Name = request.Name.Trim();
-    entity.Phone = request.Phone.Trim();
+    entity.FirstName = request.FirstName.Trim();
+    entity.LastName = request.LastName.Trim();
     entity.Avatar = request.Avatar.Trim();
   }
 

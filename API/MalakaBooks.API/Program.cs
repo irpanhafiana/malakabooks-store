@@ -1,8 +1,10 @@
 using IdempotentAPI.Cache.DistributedCache.Extensions.DependencyInjection;
 using IdempotentAPI.Extensions.DependencyInjection;
+using IdentityModel.Client;
 using MalakaBooks.API.Helper;
 using MalakaBooks.ConfigSetting;
 using MalakaBooks.DataValidator;
+using MalakaBooks.IS4RegistrationService;
 using MalakaBooks.Repository;
 using MalakaBooks.Validator;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -37,7 +39,7 @@ builder.Configuration
     .AddJsonFile($"swaggersetting.{environmentName}.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"mongodbsetting.{environmentName}.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"corssetting.{environmentName}.json", optional: false, reloadOnChange: true)
-    .AddJsonFile($"tokensetting.{environmentName}.json", optional: false, reloadOnChange: true)
+    //.AddJsonFile($"tokensetting.{environmentName}.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"is4setting.{environmentName}.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"easycaching.{environmentName}.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables();
@@ -46,11 +48,12 @@ builder.Configuration
 var apiVersionSection = builder.Configuration.GetSection("ApiVersionSetting");
 var swaggerSection = builder.Configuration.GetSection("SwaggerSetting");
 var corsSection = builder.Configuration.GetSection("CorsSetting");
-var tokenSection = builder.Configuration.GetSection("TokenSetting");
+//var tokenSection = builder.Configuration.GetSection("TokenSetting");
 var is4Section = builder.Configuration.GetSection("Is4Setting");
 var appSection = builder.Configuration.GetSection("AppSetting");
 var easyCacheSection = builder.Configuration.GetSection("EasyCachingConfig");
 var mongoSection = builder.Configuration.GetSection("MongoDbSetting");
+var is4APISection = builder.Configuration.GetSection("IS4APISettings");
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
@@ -120,6 +123,36 @@ builder.Services.AddSwaggerGen(c =>
   var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
   c.IncludeXmlComments(xmlPath);
 });
+#endregion
+
+#region IS4
+
+IS4APISettings is4APISetting = new();
+is4APISection.Bind(is4APISetting);
+
+builder.Services.AddSingleton(new ClientCredentialsTokenRequest());
+builder.Services.AddSingleton(new PasswordTokenRequest
+{
+  Address = is4APISetting.AuthorityId + "/connect/token",
+  ClientId = is4APISetting.ClientId!,
+  ClientSecret = is4APISetting.ClientSecret!,
+
+  UserName = is4APISetting.UserId!,
+  Password = is4APISetting.UserPassword!,
+
+  Scope = is4APISetting.Scopes!,
+});
+
+builder.Services.AddMemoryCache();
+builder.Services.AddTransient<ProtectedApiBearerTokenHandler>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddHttpClient<IProtectedApiClient, ProtectedApiClient>(client =>
+{
+  client.BaseAddress = new Uri(is4APISetting.BaseUrl!);
+  client.DefaultRequestHeaders.Clear();
+  client.DefaultRequestHeaders.Add("Accept", "application/json");
+}).AddHttpMessageHandler<ProtectedApiBearerTokenHandler>();
+
 #endregion
 
 #region Automapper

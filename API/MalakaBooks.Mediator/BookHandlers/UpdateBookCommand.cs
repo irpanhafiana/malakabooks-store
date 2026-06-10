@@ -3,4 +3,4 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.BookHandlers;
 
-public record UpdateBookCommand(string Id, UpdateBookRequest Request) : IRequest<BookResponse?>;
+public record UpdateBookCommand(string Id, UpdateBookRequest Request) : IRequest<bool>;

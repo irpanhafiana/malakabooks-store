@@ -1,32 +1,33 @@
 using MalakaBooks.Entity;
+using MalakaBooks.IDataValidator;
 using MalakaBooks.IRepository;
-using MalakaBooks.ViewModel;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace MalakaBooks.Mediator.UserHandlers;
 
-public class CreateUserProfileHandler(IUserRepository userRepository) : IRequestHandler<CreateUserProfileCommand, UserResponse>
+public class CreateUserProfileHandler(IUserRepository userRepository, IUserEntityValidator validator) : IRequestHandler<CreateUserProfileCommand, ValidationResult?>
 {
-    public async Task<UserResponse> Handle(CreateUserProfileCommand request, CancellationToken cancellationToken)
+  private readonly IUserEntityValidator _validator = validator;
+
+  public async Task<ValidationResult?> Handle(CreateUserProfileCommand request, CancellationToken cancellationToken)
+  {
+    var entity = new UserEntity
     {
-        var entity = new UserEntity
-        {
-            Id = request.Request.Id,  // IS4 sub claim
-            Name = request.Request.Name,
-            Phone = request.Request.Phone,
-            Avatar = request.Request.Avatar,
-            CreatedAt = DateTime.UtcNow
-        };
+      Id = request.Request.Id,
+      FirstName = request.Request.FirstName,
+      LastName = request.Request.LastName,
+      Phone = request.Request.Phone,
+      Avatar = request.Request.Avatar,
+      CreatedAt = DateTime.UtcNow
+    };
 
-        var created = await userRepository.CreateAsync(entity, cancellationToken);
-
-        return new UserResponse
-        {
-            Id = created.Id ?? string.Empty,
-            Name = created.Name,
-            Phone = created.Phone,
-            Avatar = created.Avatar,
-            CreatedAt = created.CreatedAt
-        };
+    var result = await _validator.CreateValidateAsync(entity);
+    if (result is null)
+    {
+      await userRepository.CreateAsync(entity, cancellationToken);
     }
+
+    return result;
+  }
 }

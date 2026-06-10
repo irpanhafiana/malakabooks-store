@@ -1,4 +1,3 @@
-using FluentValidation;
 using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.Mediator.BookHandlers;
 using MalakaBooks.ViewModel;
@@ -14,14 +13,9 @@ namespace MalakaBooks.API.Controllers.Admin;
 /// <remarks>All endpoints require administrative access. The controller is versioned as part of the API route and
 /// is intended for use by administrative clients managing the book catalog.</remarks>
 /// <param name="mediator">The mediator used to send commands and queries related to book operations.</param>
-/// <param name="createValidator">The validator used to validate requests for creating new books.</param>
-/// <param name="updateValidator">The validator used to validate requests for updating existing books.</param>
 [Route("api/v{version:apiVersion}/admin/[controller]")]
 [Authorize(Policy = "MalakaAdminPolicy")]
-public class BooksController(
-    IMediator mediator,
-    IValidator<CreateBookRequest> createValidator,
-    IValidator<UpdateBookRequest> updateValidator) : ApiControllerBase
+public class BooksController(IMediator mediator) : ApiControllerBase
 {
   /// <summary>Get all books</summary>
   [HttpGet]
@@ -40,28 +34,20 @@ public class BooksController(
   [HttpPost]
   public async Task<IActionResult> Create([FromBody] CreateBookRequest request, CancellationToken cancellationToken)
   {
-    var validationResult = await createValidator.ValidateAsync(request, cancellationToken);
-    if (!validationResult.IsValid)
-      return ProcessResult(validationResult);
-
-    var book = await mediator.Send(new CreateBookCommand(request), cancellationToken);
-    return CreatedAtAction(nameof(GetById), new { id = book.Id, version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0" }, book);
+    var result = await mediator.Send(new CreateBookCommand(request), cancellationToken);
+    return ProcessResult(result);
   }
 
   /// <summary>Update book</summary>
   [HttpPut("{id}")]
   public async Task<IActionResult> Update(string id, [FromBody] UpdateBookRequest request, CancellationToken cancellationToken)
   {
-    var validationResult = await updateValidator.ValidateAsync(request, cancellationToken);
-    if (!validationResult.IsValid)
-      return ProcessResult(validationResult);
-
-    var book = await mediator.Send(new UpdateBookCommand(id, request), cancellationToken);
-    return book is null ? NotFound() : Success(book);
+    var result = await mediator.Send(new UpdateBookCommand(id, request), cancellationToken);
+    return Success(result);
   }
 
   /// <summary>Delete book</summary>
   [HttpDelete("{id}")]
-  public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken) =>
-      await mediator.Send(new DeleteBookCommand(id), cancellationToken) ? NoContent() : NotFound();
+  public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
+    => Success(await mediator.Send(new DeleteBookCommand(id), cancellationToken));
 }

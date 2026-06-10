@@ -1,16 +1,23 @@
+using MalakaBooks.IDataValidator;
 using MalakaBooks.IRepository;
 using MalakaBooks.Mediator.Common;
-using MalakaBooks.ViewModel;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace MalakaBooks.Mediator.AddressHandlers;
 
-public class CreateAddressHandler(IAddressRepository addressRepository) : IRequestHandler<CreateAddressCommand, AddressResponse>
+public class CreateAddressHandler(IAddressRepository addressRepository, IAddressEntityValidator validator) : IRequestHandler<CreateAddressCommand, ValidationResult?>
 {
-    public async Task<AddressResponse> Handle(CreateAddressCommand request, CancellationToken cancellationToken)
+  private readonly IAddressEntityValidator _validator = validator;
+
+  public async Task<ValidationResult?> Handle(CreateAddressCommand request, CancellationToken cancellationToken)
+  {
+    var entity = request.Request.ToEntity();
+    var result = await _validator.CreateValidateAsync(entity);
+    if (result is null)
     {
-        var entity = request.Request.ToEntity();
-        await addressRepository.CreateAsync(entity, cancellationToken);
-        return entity.ToResponse();
+      await addressRepository.CreateAsync(entity, cancellationToken);
     }
+    return result;
+  }
 }
