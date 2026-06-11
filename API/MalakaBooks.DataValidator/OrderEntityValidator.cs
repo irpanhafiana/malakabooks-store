@@ -35,9 +35,7 @@ namespace MalakaBooks.DataValidator
       foreach (var entity in entities)
       {
         var existing = await _collection.Find(_ =>
-
-            _.Id == entity.Id &&
-            _.Alias!.Equals(entity.Alias, StringComparison.CurrentCultureIgnoreCase)
+            _.Id == entity.Id
           ).FirstOrDefaultAsync();
 
         if (existing != null) Errors.Add("Order with same id already exist.");

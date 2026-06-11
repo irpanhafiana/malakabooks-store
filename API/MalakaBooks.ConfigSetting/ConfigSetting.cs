@@ -5,7 +5,20 @@ namespace MalakaBooks.ConfigSetting
     public Dictionary<string, int>? IdempotentExpiredHours { get; set; }
     public ImageSetting? ImageSetting { get; set; }
     public RateLimiterSetting? RateLimiterSetting { get; set; }
+    //public SimasrimSetting? SimasrimSetting { get; set; }
   }
+
+  //public class SimasrimSetting
+  //{
+  //  public string BaseUrl { get; set; } = string.Empty;
+  //  public string ClientId { get; set; } = string.Empty;
+  //  public string ClientSecret { get; set; } = string.Empty;
+  //  public string Email { get; set; } = string.Empty;
+  //  public string Password { get; set; } = string.Empty;
+  //  //public string[] Scope { get; set; }
+
+  //  public string[] Courier { get; set; } = [];
+  //}
 
   public class RateLimiterSetting
   {

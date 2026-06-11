@@ -16,9 +16,11 @@
 
   
   <ItemGroup>
+    <ProjectReference Include="..\..\..\MardikaPortfolio\API\Mardika.Simasrim.Service\Mardika.Simasrim.Service.csproj" />
     <ProjectReference Include="..\MalakaBooks.ConfigSetting\MalakaBooks.ConfigSetting.csproj" />
     <ProjectReference Include="..\MalakaBooks.DataValidator\MalakaBooks.DataValidator.csproj" />
     <ProjectReference Include="..\MalakaBooks.Entity\MalakaBooks.Entity.csproj" />
+    <ProjectReference Include="..\MalakaBooks.General\MalakaBooks.General.csproj" />
     <ProjectReference Include="..\MalakaBooks.IS4RegistrationService\MalakaBooks.IS4RegistrationService.csproj" />
     <ProjectReference Include="..\MalakaBooks.ViewModel\MalakaBooks.ViewModel.csproj" />
     <ProjectReference Include="..\MalakaBooks.IRepository\MalakaBooks.IRepository.csproj" />

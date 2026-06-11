@@ -23,9 +23,10 @@ namespace MalakaBooks.DataValidator
     {
       foreach (var entity in entities)
       {
-        var existing = await _collection.Find(_ =>
-          _.Name.Equals(entity.Name, StringComparison.CurrentCultureIgnoreCase) ||
-          _.Slug.Equals(entity.Slug, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefaultAsync();
+        var name = entity.Name.ToLower();
+        var slug = entity.Slug.ToLower();
+
+        var existing = await _collection.Find(x => x.Name.ToLower() == name || x.Slug.ToLower() == slug).FirstOrDefaultAsync();
 
         if (existing != null) Errors.Add("Category with same slug or name already exist.");
       }
@@ -37,13 +38,13 @@ namespace MalakaBooks.DataValidator
     {
       foreach (var entity in entities)
       {
-        var existing = await _collection.Find(_ =>
-          (
-            _.Name.Equals(entity.Name, StringComparison.CurrentCultureIgnoreCase) ||
-            _.Slug.Equals(entity.Slug, StringComparison.CurrentCultureIgnoreCase)
-          ) &&
-            _.Alias!.Equals(entity.Alias, StringComparison.CurrentCultureIgnoreCase)
-          ).FirstOrDefaultAsync();
+        var name = entity.Name.ToLower();
+        var slug = entity.Slug.ToLower();
+
+        var existing = await _collection.Find(x =>
+            (x.Name.ToLower() == name || x.Slug.ToLower() == slug) &&
+            x.Id != entity.Id
+        ).FirstOrDefaultAsync();
 
         if (existing != null) Errors.Add("Category with same slug or name already exist.");
       }

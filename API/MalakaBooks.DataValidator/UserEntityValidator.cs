@@ -23,8 +23,10 @@ namespace MalakaBooks.DataValidator
     {
       foreach (var entity in entities)
       {
+        var phone = entity.Phone.ToLower();
+
         var existing = await _collection.Find(_ =>
-          _.Phone.Equals(entity.Phone, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefaultAsync();
+          _.Phone.ToLower() == phone).FirstOrDefaultAsync();
 
         if (existing != null) Errors.Add("User already exist.");
       }
@@ -36,10 +38,11 @@ namespace MalakaBooks.DataValidator
     {
       foreach (var entity in entities)
       {
+        var phone = entity.Phone.ToLower();
+
         var existing = await _collection.Find(_ =>
-          _.Phone.Equals(entity.Phone, StringComparison.CurrentCultureIgnoreCase) &&
-            _.Alias!.Equals(entity.Alias, StringComparison.CurrentCultureIgnoreCase)
-          ).FirstOrDefaultAsync();
+          _.Phone.ToLower() == phone &&
+          _.Id != entity.Id).FirstOrDefaultAsync();
 
         if (existing != null) Errors.Add("User already exist.");
       }
