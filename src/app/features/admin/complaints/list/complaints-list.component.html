@@ -10,8 +10,8 @@
 
   <!-- Table -->
   @if (complaintStore.loading()) {
-    <div class="p-8 text-center text-slate-400 font-semibold bg-white rounded-2xl border border-slate-100 shadow-xs">
-      Loading complaints...
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-xs">
+      <app-spinner text="Loading complaints..."></app-spinner>
     </div>
   } @else {
     <app-table>

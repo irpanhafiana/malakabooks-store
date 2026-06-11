@@ -80,10 +80,10 @@ export class ProductListComponent implements OnInit {
   }
 
   filterChipClass(catId: string | null): string {
-    const base = 'px-3.5 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer';
+    const base = 'font-medium px-4 py-2.5 rounded-full text-[13px] transition-all border whitespace-nowrap cursor-pointer';
     const active = this.productStore.selectedCategoryId() === catId
-      ? 'bg-primary-600 border-primary-600 text-white shadow-sm'
-      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50';
+      ? 'bg-primary-600 border-primary-700 text-white'
+      : 'bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200/50';
     return `${base} ${active}`;
   }
 }

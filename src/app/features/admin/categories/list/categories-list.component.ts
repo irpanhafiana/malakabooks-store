@@ -9,11 +9,12 @@ import { PaginationComponent } from '../../../../shared/ui/pagination/pagination
 import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { CategoriesFormComponent } from '../form/categories-form.component';
+import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 
 @Component({
   selector: 'app-categories-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, ButtonComponent, IconComponent, PaginationComponent, CategoriesFormComponent],
+  imports: [TableComponent, ModalComponent, ButtonComponent, IconComponent, PaginationComponent, CategoriesFormComponent, SpinnerComponent],
   templateUrl: './categories-list.component.html',
   styleUrl: './categories-list.component.css'
 })

@@ -1,28 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&family=Poppins:wght@300;400;500;600;700&display=swap');
 @import 'tailwindcss';
 
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Plus Jakarta Sans', sans-serif;
 
-  /* Custom Color Tokens - Bukalapak Red & Kitabisa Cyan inspired, polished for SaaS */
-  --color-primary-50: #fff1f2;
-  --color-primary-100: #ffe4e6;
-  --color-primary-200: #fecdd3;
-  --color-primary-300: #fda4af;
-  --color-primary-400: #fb7185;
-  --color-primary-500: #f43f5e;
-  --color-primary-600: #e11d48; /* Crimson/Rose */
-  --color-primary-700: #be123c;
-  --color-primary-800: #9f1239;
-  --color-primary-900: #881337;
-  --color-primary-950: #4c0519;
+  /* Custom Color Tokens - Deep Navy Primary and Crimson Accent */
+  --color-primary-50: #e6f0f5;
+  --color-primary-100: #ccdfeb;
+  --color-primary-200: #99bfd7;
+  --color-primary-300: #669ec3;
+  --color-primary-400: #337eaf;
+  --color-primary-500: #005e9c;
+  --color-primary-600: #003049; /* Deep Navy Primary */
+  --color-primary-700: #00263a;
+  --color-primary-800: #001c2c;
+  --color-primary-900: #00131e;
+  --color-primary-950: #000b11;
 
-  --color-accent-50: #ecfeff;
-  --color-accent-100: #cffafe;
-  --color-accent-500: #06b6d4; /* Kitabisa Cyan */
-  --color-accent-600: #0891b2;
-  --color-accent-700: #0e7490;
+  --color-accent-50: #fdf2f2;
+  --color-accent-100: #fde2e2;
+  --color-accent-200: #fbc4c4;
+  --color-accent-300: #f99b9b;
+  --color-accent-400: #f46a6a;
+  --color-accent-500: #d32f2f;
+  --color-accent-600: #B61919; /* Dark Red Accent */
+  --color-accent-700: #9b1414;
+  --color-accent-800: #7f1010;
+  --color-accent-900: #640c0c;
 
   --animate-fade-in: fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-slide-up: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -53,8 +58,8 @@
 /* Custom Utilities and Reset Styles */
 body {
   font-family: var(--font-sans);
-  background-color: #f8fafc; /* Slate 50 */
-  color: #0f172a; /* Slate 900 */
+  background-color: #f9fafb; /* gray-50 */
+  color: #111827; /* gray-900 */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -99,4 +104,61 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Customer Specific Typography & Fonts Override */
+.customer-root {
+  --font-sans: 'Poppins', sans-serif !important;
+  --font-display: 'Fraunces', serif !important;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.customer-root h1,
+.customer-root h2,
+.customer-root h3,
+.customer-root h4,
+.customer-root h5,
+.customer-root h6 {
+  font-family: 'Fraunces', serif !important;
+  font-weight: 700 !important;
+}
+
+/* Card Product Styling from layouting.md (with brand colors) */
+.card-product {
+  background-color: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 1rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.card-product:hover {
+  border-color: #e2e8f0;
+}
+
+/* Badge UOM Styling */
+.badge-uom {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  background-color: var(--color-primary-600, #e11d48);
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 700;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.375rem;
+  text-transform: uppercase;
+}
+
+/* scrollbar hide mapping for layouting.md compatibility */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

@@ -15,7 +15,7 @@
           <!-- Cart Items Column (Vertical stack) -->
           <div class="flex flex-col gap-3">
             @for (item of cartStore.items(); track item.product.id) {
-              <div class="flex items-center gap-4 bg-white border border-slate-100 p-4 rounded-2xl shadow-xs transition-all hover:border-slate-200/50">
+              <div class="flex items-center gap-4 bg-white border border-slate-100 p-4 rounded-2xl transition-all hover:border-slate-200/50">
                 <!-- Item Image -->
                 <div (click)="productStore.setSelectedProductId(item.product.id)" class="h-20 w-16 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer">
                   <img [src]="item.product.images[0]" [alt]="item.product.name" class="w-full h-full object-cover" />
@@ -62,7 +62,7 @@
           </div>
 
           <!-- Checkout Summary Card (Pushed below items) -->
-          <div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-xs flex flex-col gap-4">
+          <div class="bg-white border border-slate-100 p-5 rounded-3xl flex flex-col gap-4">
             <h3 class="font-display font-extrabold text-slate-800 text-xs uppercase tracking-wider">Order Summary</h3>
 
             <div class="flex flex-col gap-3.5 text-xs text-slate-500">
@@ -127,7 +127,7 @@
               variant="primary"
               size="md"
               [fullWidth]="true"
-              class="shadow-md"
+              class="border border-primary-700/20"
             >
               Proceed to Checkout
             </app-button>

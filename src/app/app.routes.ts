@@ -3,24 +3,15 @@ import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
-  // Auth layout viewport routes
+  // Auth layout viewport routes for Admin Login
   {
-    path: 'auth',
+    path: 'admin/login',
     loadComponent: () => import('./layouts/auth-layout/auth-layout.component').then(c => c.AuthLayoutComponent),
     children: [
       {
-        path: 'login',
-        loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
-      },
-      {
-        path: 'register',
-        loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent)
-      },
-      {
-        path: 'forgot-password',
-        loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(c => c.ForgotPasswordComponent)
-      },
-      { path: '', redirectTo: 'login', pathMatch: 'full' }
+        path: '',
+        loadComponent: () => import('./features/admin/login/admin-login.component').then(c => c.AdminLoginComponent)
+      }
     ]
   },
 
@@ -63,6 +54,24 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./layouts/customer-layout/customer-layout.component').then(c => c.CustomerLayoutComponent),
     children: [
+      {
+        path: 'auth',
+        children: [
+          {
+            path: 'login',
+            loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
+          },
+          {
+            path: 'register',
+            loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent)
+          },
+          {
+            path: 'forgot-password',
+            loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(c => c.ForgotPasswordComponent)
+          },
+          { path: '', redirectTo: 'login', pathMatch: 'full' }
+        ]
+      },
       {
         path: '',
         loadComponent: () => import('./features/home/home.component').then(c => c.HomeComponent)

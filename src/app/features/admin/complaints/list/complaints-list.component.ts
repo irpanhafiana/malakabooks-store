@@ -9,6 +9,7 @@ import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { ComplaintsFormComponent } from '../form/complaints-form.component';
+import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 
 @Component({
   selector: 'app-complaints-list',
@@ -20,7 +21,8 @@ import { ComplaintsFormComponent } from '../form/complaints-form.component';
     ButtonComponent,
     ModalComponent,
     PaginationComponent,
-    ComplaintsFormComponent
+    ComplaintsFormComponent,
+    SpinnerComponent
   ],
   templateUrl: './complaints-list.component.html',
   styleUrl: './complaints-list.component.css'

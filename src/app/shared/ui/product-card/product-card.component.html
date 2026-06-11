@@ -1,10 +1,10 @@
 @let prod = product();
-    <div class="group relative bg-white border border-slate-100 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-200/60 transition-all duration-200 flex flex-col justify-between h-auto w-full">
+    <div class="card-product group relative p-3">
       <!-- Wishlist Heart Overlay button (Perfect circle wrapper) -->
       <button
         type="button"
         (click)="onToggleWishlist($event)"
-        class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white border-0 p-0 outline-none shadow-sm hover:shadow text-slate-400 hover:text-rose-500 transition-all cursor-pointer active:scale-90 flex items-center justify-center aspect-square flex-shrink-0"
+        class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white border border-slate-200/50 p-0 outline-none text-slate-400 hover:text-rose-500 transition-all cursor-pointer active:scale-95 flex items-center justify-center aspect-square flex-shrink-0"
       >
         <app-icon [name]="isInWishlist() ? 'heart-filled' : 'heart'" size="16" [class]="isInWishlist() ? 'text-rose-500' : 'text-slate-400'"></app-icon>
       </button>
@@ -12,25 +12,26 @@
       <!-- Clickable details container -->
       <div (click)="viewProductDetails()" class="block flex-grow cursor-pointer">
         <!-- Image Container -->
-        <div class="aspect-square w-full bg-slate-50 rounded-xl overflow-hidden mb-3 relative">
+        <div class="aspect-4/3 w-full bg-slate-50 rounded-xl overflow-hidden mb-3 relative">
           <img
             [src]="prod.images[0]"
             [alt]="prod.name"
             class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
+          <div class="badge-uom">PCS</div>
           @if (prod.originalPrice && prod.originalPrice > prod.price) {
-            <span class="absolute bottom-2 left-2 px-2 py-0.5 text-[10px] font-bold bg-rose-500 text-white rounded-lg">
+            <span class="absolute bottom-2 right-2 px-2 py-0.5 text-[10px] font-bold bg-rose-500 text-white rounded-lg">
               Save {{ Math.round(((prod.originalPrice - prod.price)/prod.originalPrice) * 100) }}%
             </span>
           }
         </div>
 
         <!-- Meta info -->
-        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">{{ prod.categoryName }}</span>
+        <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">{{ prod.categoryName }}</span>
         
         <!-- Title -->
-        <h3 class="text-sm font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 transition-colors">{{ prod.name }}</h3>
+        <h3 class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 transition-colors leading-tight">{{ prod.name }}</h3>
         
         <!-- Ratings -->
         <div class="flex items-center gap-1 mb-2">
@@ -46,7 +47,7 @@
           @if (prod.originalPrice && prod.originalPrice > prod.price) {
             <span class="text-[10px] text-slate-400 line-through leading-none mb-0.5">$ {{ prod.originalPrice }}</span>
           }
-          <app-price [value]="prod.price" size="md" class="text-primary-600"></app-price>
+          <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold text-base"></app-price>
         </div>
 
         <button

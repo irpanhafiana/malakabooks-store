@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
     this.productStore.loadAll();
   }
 
-  filterByCategory(catId: string) {
+  filterByCategory(catId: string | null) {
     this.productStore.setCategoryFilter(catId);
   }
 }

@@ -12,7 +12,9 @@
 
   <!-- Data Table -->
   @if (productStore.loading()) {
-    <div class="p-8 text-center text-slate-400 font-semibold bg-white rounded-2xl border border-slate-100 shadow-xs">Loading categories...</div>
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-xs">
+      <app-spinner text="Loading categories..."></app-spinner>
+    </div>
   } @else {
     <app-table>
       <tr table-headers>

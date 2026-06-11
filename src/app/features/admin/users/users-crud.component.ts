@@ -9,11 +9,12 @@ import { PaginationComponent } from '../../../shared/ui/pagination/pagination.co
 import { ToastService } from '../../../core/services/toast.service';
 import { AlertService } from '../../../core/services/alert.service';
 import { createClientPagination } from '../../../shared/util/pagination.util';
+import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 
 @Component({
   selector: 'app-users-crud',
   standalone: true,
-  imports: [TableComponent, BadgeComponent, ButtonComponent, DatePipe, UpperCasePipe, PaginationComponent],
+  imports: [TableComponent, BadgeComponent, ButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent],
   templateUrl: './users-crud.component.html',
   styleUrl: './users-crud.component.css'
 })

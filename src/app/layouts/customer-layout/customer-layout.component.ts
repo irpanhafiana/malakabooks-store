@@ -68,10 +68,10 @@ export class CustomerLayoutComponent {
 
   toastClass(type: string): string {
     const borderType = {
-      success: 'border-l-4 border-l-emerald-500 shadow-emerald-500/5 shadow-md',
-      error: 'border-l-4 border-l-rose-500 shadow-rose-500/5 shadow-md',
-      info: 'border-l-4 border-l-blue-500 shadow-blue-500/5 shadow-md',
-      warning: 'border-l-4 border-l-amber-500 shadow-amber-500/5 shadow-md'
+      success: 'border-l-4 border-l-emerald-500',
+      error: 'border-l-4 border-l-rose-500',
+      info: 'border-l-4 border-l-blue-500',
+      warning: 'border-l-4 border-l-amber-500'
     };
     return borderType[type as keyof typeof borderType] || 'border-l-4 border-l-blue-500';
   }

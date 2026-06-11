@@ -8,7 +8,9 @@
 
       <!-- Data Table -->
       @if (loading()) {
-        <div class="p-8 text-center text-slate-400 font-semibold bg-white rounded-2xl border border-slate-100 shadow-xs">Loading users...</div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-xs">
+          <app-spinner text="Loading users..."></app-spinner>
+        </div>
       } @else {
         <app-table>
           <tr table-headers>

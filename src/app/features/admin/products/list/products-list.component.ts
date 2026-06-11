@@ -12,11 +12,12 @@ import { PaginationComponent } from '../../../../shared/ui/pagination/pagination
 import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { ProductsFormComponent } from '../form/products-form.component';
+import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule, TableComponent, ModalComponent, ButtonComponent, BadgeComponent, PriceComponent, IconComponent, PaginationComponent, ProductsFormComponent],
+  imports: [CommonModule, TableComponent, ModalComponent, ButtonComponent, BadgeComponent, PriceComponent, IconComponent, PaginationComponent, ProductsFormComponent, SpinnerComponent],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.css'
 })

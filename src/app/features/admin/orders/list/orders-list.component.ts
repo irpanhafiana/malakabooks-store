@@ -8,11 +8,12 @@ import { PriceComponent } from '../../../../shared/ui/price/price.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
+import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 
 @Component({
   selector: 'app-orders-list',
   standalone: true,
-  imports: [TableComponent, BadgeComponent, PriceComponent, DatePipe, UpperCasePipe, PaginationComponent],
+  imports: [TableComponent, BadgeComponent, PriceComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent],
   templateUrl: './orders-list.component.html',
   styleUrl: './orders-list.component.css'
 })
