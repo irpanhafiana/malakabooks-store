@@ -1,22 +1,22 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { DatePipe, UpperCasePipe } from '@angular/common';
-import { OrderStore } from '../../../store/order.store';
-import { Order, OrderStatus } from '../../../core/models';
-import { TableComponent } from '../../../shared/ui/table/table.component';
-import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
-import { PriceComponent } from '../../../shared/ui/price/price.component';
-import { PaginationComponent } from '../../../shared/ui/pagination/pagination.component';
-import { AlertService } from '../../../core/services/alert.service';
-import { createClientPagination } from '../../../shared/util/pagination.util';
+import { OrderStore } from '../../../../store/order.store';
+import { Order, OrderStatus } from '../../../../core/models';
+import { TableComponent } from '../../../../shared/ui/table/table.component';
+import { BadgeComponent } from '../../../../shared/ui/badge/badge.component';
+import { PriceComponent } from '../../../../shared/ui/price/price.component';
+import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
+import { AlertService } from '../../../../core/services/alert.service';
+import { createClientPagination } from '../../../../shared/util/pagination.util';
 
 @Component({
-  selector: 'app-orders-crud',
+  selector: 'app-orders-list',
   standalone: true,
   imports: [TableComponent, BadgeComponent, PriceComponent, DatePipe, UpperCasePipe, PaginationComponent],
-  templateUrl: './orders-crud.component.html',
-  styleUrl: './orders-crud.component.css'
+  templateUrl: './orders-list.component.html',
+  styleUrl: './orders-list.component.css'
 })
-export class OrdersCrudComponent implements OnInit {
+export class OrdersListComponent implements OnInit {
   protected readonly orderStore = inject(OrderStore);
   private readonly alertService = inject(AlertService);
 

@@ -1,6 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Product, Category } from '../core/models';
-import { ApiService } from '../core/services/api.service';
+import { ProductApiService } from '../core/services/product-api.service';
+import { CategoryApiService } from '../core/services/category-api.service';
 import { ToastService } from '../core/services/toast.service';
 
 interface ProductState {
@@ -17,7 +18,8 @@ interface ProductState {
   providedIn: 'root'
 })
 export class ProductStore {
-  private readonly apiService = inject(ApiService);
+  private readonly productApi = inject(ProductApiService);
+  private readonly categoryApi = inject(CategoryApiService);
   private readonly toastService = inject(ToastService);
 
   private readonly state = signal<ProductState>({
@@ -89,8 +91,8 @@ export class ProductStore {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const [products, categories] = await Promise.all([
-        this.apiService.getProducts(),
-        this.apiService.getCategories()
+        this.productApi.getProducts(),
+        this.categoryApi.getCategories()
       ]);
       this.state.update(s => ({ ...s, products, categories, loading: false }));
     } catch (e) {
@@ -102,7 +104,7 @@ export class ProductStore {
   async loadProducts() {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const products = await this.apiService.getProducts();
+      const products = await this.productApi.getProducts();
       this.state.update(s => ({ ...s, products, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
@@ -113,7 +115,7 @@ export class ProductStore {
   async loadCategories() {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const categories = await this.apiService.getCategories();
+      const categories = await this.categoryApi.getCategories();
       this.state.update(s => ({ ...s, categories, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
@@ -140,7 +142,7 @@ export class ProductStore {
   async saveProduct(product: Product) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const saved = await this.apiService.saveProduct(product);
+      const saved = await this.productApi.saveProduct(product);
       await this.loadProducts(); // Re-seed client list
       this.toastService.success(`Product "${saved.name}" saved successfully!`);
     } catch (e) {
@@ -152,7 +154,7 @@ export class ProductStore {
   async deleteProduct(id: string) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const success = await this.apiService.deleteProduct(id);
+      const success = await this.productApi.deleteProduct(id);
       if (success) {
         await this.loadProducts();
         this.toastService.success('Product deleted successfully.');
@@ -169,7 +171,7 @@ export class ProductStore {
   async saveCategory(category: Category) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const saved = await this.apiService.saveCategory(category);
+      const saved = await this.categoryApi.saveCategory(category);
       await this.loadCategories();
       this.toastService.success(`Category "${saved.name}" saved successfully!`);
     } catch (e) {
@@ -181,7 +183,7 @@ export class ProductStore {
   async deleteCategory(id: string) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const success = await this.apiService.deleteCategory(id);
+      const success = await this.categoryApi.deleteCategory(id);
       if (success) {
         await this.loadCategories();
         this.toastService.success('Category deleted successfully.');

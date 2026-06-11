@@ -1,6 +1,8 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { User, RegisterPayload } from '../core/models';
-import { ApiService } from '../core/services/api.service';
+import { AuthApiService } from '../core/services/auth-api.service';
+import { UserApiService } from '../core/services/user-api.service';
+import { ProductApiService } from '../core/services/product-api.service';
 import { ToastService } from '../core/services/toast.service';
 import { CartStore } from './cart.store';
 import { decodeJwt, isTokenExpired, jwtHasAdminRole, mapJwtToUser } from '../core/auth/jwt.util';
@@ -15,7 +17,9 @@ interface AuthState {
   providedIn: 'root'
 })
 export class AuthStore {
-  private readonly apiService = inject(ApiService);
+  private readonly authApi = inject(AuthApiService);
+  private readonly userApi = inject(UserApiService);
+  private readonly productApi = inject(ProductApiService);
   private readonly toastService = inject(ToastService);
   private readonly cartStore = inject(CartStore);
 
@@ -68,7 +72,7 @@ export class AuthStore {
 
   async login(username: string, password: string): Promise<boolean> {
     try {
-      const token = await this.apiService.loginAndGetToken(username, password);
+      const token = await this.authApi.loginAndGetToken(username, password);
       if (token) {
         // IdentityServer4 sub claim stores the UserId; mapJwtToUser returns null
         // when the token lacks a usable id.
@@ -88,7 +92,7 @@ export class AuthStore {
         this.state.set({ user: userWithToken, token });
 
         // Sync cart guest ke backend
-        const products = await this.apiService.getProducts();
+        const products = await this.productApi.getProducts();
         await this.cartStore.syncOnLogin(user.id, products);
 
         this.toastService.success(`Selamat datang kembali, ${user.name}!`);
@@ -112,7 +116,7 @@ export class AuthStore {
 
   async register(payload: RegisterPayload): Promise<boolean> {
     try {
-      await this.apiService.register(payload);
+      await this.userApi.register(payload);
       this.toastService.success('Pendaftaran akun berhasil! Silakan masuk.');
       return true;
     } catch (err: any) {
@@ -130,7 +134,7 @@ export class AuthStore {
 
   async updateProfile(updatedUser: User): Promise<boolean> {
     try {
-      const savedUser = await this.apiService.saveUser(updatedUser);
+      const savedUser = await this.userApi.saveUser(updatedUser);
       const activeToken = this.token() || '';
       const userWithToken = { ...savedUser, token: activeToken };
       localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));

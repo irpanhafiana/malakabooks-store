@@ -1,6 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Order, OrderStatus } from '../core/models';
-import { ApiService } from '../core/services/api.service';
+import { OrderApiService } from '../core/services/order-api.service';
 import { ToastService } from '../core/services/toast.service';
 import { CartStore } from './cart.store';
 
@@ -14,7 +14,7 @@ interface OrderState {
   providedIn: 'root'
 })
 export class OrderStore {
-  private readonly apiService = inject(ApiService);
+  private readonly orderApi = inject(OrderApiService);
   private readonly toastService = inject(ToastService);
   private readonly cartStore = inject(CartStore);
 
@@ -32,7 +32,7 @@ export class OrderStore {
   async loadUserOrders(userId: string) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const orders = await this.apiService.getOrdersByUserId(userId);
+      const orders = await this.orderApi.getOrdersByUserId(userId);
       this.state.update(s => ({ ...s, orders, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
@@ -43,7 +43,7 @@ export class OrderStore {
   async loadAllOrders() {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const orders = await this.apiService.getOrders();
+      const orders = await this.orderApi.getOrders();
       this.state.update(s => ({ ...s, orders, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
@@ -61,7 +61,7 @@ export class OrderStore {
         orderDate: new Date().toISOString()
       };
 
-      const placed = await this.apiService.saveOrder(fullOrder);
+      const placed = await this.orderApi.saveOrder(fullOrder);
       this.cartStore.clearCart(); // Reset cart item state
       this.state.update(s => ({
         ...s,
@@ -81,7 +81,7 @@ export class OrderStore {
   async updateOrderStatus(orderId: string, status: OrderStatus) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const success = await this.apiService.updateOrderStatus(orderId, status);
+      const success = await this.orderApi.updateOrderStatus(orderId, status);
       if (success) {
         this.state.update(s => ({
           ...s,

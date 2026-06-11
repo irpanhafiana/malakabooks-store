@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe, CurrencyPipe, UpperCasePipe } from '@angular/common';
-import { ApiService } from '../../../core/services/api.service';
+import { DashboardApiService } from '../../../core/services/dashboard-api.service';
 import { DashboardMetrics } from '../../../core/models';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
@@ -15,7 +15,7 @@ import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
   styleUrl: './dashboard.component.css'
 })
 export class AdminDashboardComponent implements OnInit {
-  private readonly apiService = inject(ApiService);
+  private readonly dashboardApi = inject(DashboardApiService);
 
   metrics = signal<DashboardMetrics | null>(null);
   loading = signal<boolean>(true);
@@ -66,7 +66,7 @@ export class AdminDashboardComponent implements OnInit {
     try {
       // recentOrders now arrives inside the metrics payload, so the previous
       // second getOrders() round-trip has been removed.
-      const data = await this.apiService.getDashboardMetrics();
+      const data = await this.dashboardApi.getDashboardMetrics();
       this.metrics.set(data);
     } catch (e) {
       this.error.set(true);

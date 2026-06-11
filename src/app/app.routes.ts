@@ -36,15 +36,12 @@ export const routes: Routes = [
       },
       {
         path: 'products',
-        loadComponent: () => import('./features/admin/products/products-crud.component').then(c => c.ProductsCrudComponent)
+        loadComponent: () => import('./features/admin/products/list/products-list.component').then(c => c.ProductsListComponent)
       },
-      {
-        path: 'categories',
-        loadComponent: () => import('./features/admin/categories/categories-crud.component').then(c => c.CategoriesCrudComponent)
-      },
+      { path: 'categories', loadComponent: () => import('./features/admin/categories/list/categories-list.component').then(m => m.CategoriesListComponent) },
       {
         path: 'orders',
-        loadComponent: () => import('./features/admin/orders/orders-crud.component').then(c => c.OrdersCrudComponent)
+        loadComponent: () => import('./features/admin/orders/list/orders-list.component').then(c => c.OrdersListComponent)
       },
       {
         path: 'users',
@@ -52,7 +49,7 @@ export const routes: Routes = [
       },
       {
         path: 'complaints',
-        loadComponent: () => import('./features/admin/complaints/complaints-crud.component').then(c => c.ComplaintsCrudComponent)
+        loadComponent: () => import('./features/admin/complaints/list/complaints-list.component').then(c => c.ComplaintsListComponent)
       },
       {
         path: 'reports',

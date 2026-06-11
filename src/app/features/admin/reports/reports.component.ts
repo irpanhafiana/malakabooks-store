@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
-import { ApiService } from '../../../core/services/api.service';
+import { OrderApiService } from '../../../core/services/order-api.service';
+import { ProductApiService } from '../../../core/services/product-api.service';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ToastService } from '../../../core/services/toast.service';
@@ -13,7 +14,8 @@ import { buildCsv, downloadCsv } from '../../../shared/util/csv.util';
   styleUrl: './reports.component.css'
 })
 export class ReportsComponent {
-  private readonly apiService = inject(ApiService);
+  private readonly orderApi = inject(OrderApiService);
+  private readonly productApi = inject(ProductApiService);
   private readonly toastService = inject(ToastService);
 
   salesLoading = signal<boolean>(false);
@@ -22,7 +24,7 @@ export class ReportsComponent {
   async downloadSalesReport() {
     this.salesLoading.set(true);
     try {
-      const orders = await this.apiService.getOrders();
+      const orders = await this.orderApi.getOrders();
       
       // Build CSV Content — every cell is escaped + formula-injection-safe.
       const headers = ['Order ID', 'Customer Name', 'Customer Email', 'Subtotal', 'Tax', 'Shipping', 'Total', 'Status', 'Date'];
@@ -50,7 +52,7 @@ export class ReportsComponent {
   async downloadInventoryReport() {
     this.invLoading.set(true);
     try {
-      const products = await this.apiService.getProducts();
+      const products = await this.productApi.getProducts();
 
       const headers = ['Product ID', 'Name', 'Brand', 'Category', 'Price', 'Original Price', 'Stock Level', 'Rating', 'Reviews Count'];
       const rows = products.map(p => [

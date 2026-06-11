@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { DatePipe, UpperCasePipe } from '@angular/common';
-import { ApiService } from '../../../core/services/api.service';
+import { UserApiService } from '../../../core/services/user-api.service';
 import { User } from '../../../core/models';
 import { TableComponent } from '../../../shared/ui/table/table.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
@@ -18,7 +18,7 @@ import { createClientPagination } from '../../../shared/util/pagination.util';
   styleUrl: './users-crud.component.css'
 })
 export class UsersCrudComponent implements OnInit {
-  private readonly apiService = inject(ApiService);
+  private readonly userApi = inject(UserApiService);
   private readonly toastService = inject(ToastService);
   private readonly alertService = inject(AlertService);
 
@@ -34,7 +34,7 @@ export class UsersCrudComponent implements OnInit {
   async loadUsers() {
     this.loading.set(true);
     try {
-      const users = await this.apiService.getUsers();
+      const users = await this.userApi.getUsers();
       this.usersList.set(users);
     } catch (e) {
       this.toastService.error('Failed to load user accounts.');
@@ -54,7 +54,7 @@ export class UsersCrudComponent implements OnInit {
 
     const updatedUser = { ...user, role: newRole };
     try {
-      await this.apiService.saveUser(updatedUser);
+      await this.userApi.saveUser(updatedUser);
       this.alertService.success('Berhasil!', `Peran pengguna "${user.name}" berhasil diubah menjadi ${newRole.toUpperCase()}.`);
       this.loadUsers(); // reload list
     } catch (e) {

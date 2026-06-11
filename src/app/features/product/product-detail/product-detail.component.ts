@@ -2,7 +2,8 @@ import { Component, inject, signal, computed, OnInit, input, effect } from '@ang
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { KeyValuePipe, DatePipe } from '@angular/common';
-import { ApiService } from '../../../core/services/api.service';
+import { ProductApiService } from '../../../core/services/product-api.service';
+import { ReviewApiService } from '../../../core/services/review-api.service';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
 import { AuthStore } from '../../../store/auth.store';
@@ -25,7 +26,8 @@ export class ProductDetailComponent implements OnInit {
   readonly productIdInput = input<string | null>(null, { alias: 'productId' });
 
   private readonly route = inject(ActivatedRoute);
-  private readonly apiService = inject(ApiService);
+  private readonly productApi = inject(ProductApiService);
+  private readonly reviewApi = inject(ReviewApiService);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   protected readonly authStore = inject(AuthStore);
@@ -69,12 +71,12 @@ export class ProductDetailComponent implements OnInit {
   async loadProduct(id: string) {
     this.loading.set(true);
     try {
-      const prod = await this.apiService.getProductById(id);
+      const prod = await this.productApi.getProductById(id);
       if (prod) {
         this.product.set(prod);
         this.activeImage.set(prod.images[0]);
         this.quantity.set(1);
-        const revs = await this.apiService.getReviewsByProductId(id);
+        const revs = await this.reviewApi.getReviewsByProductId(id);
         this.reviews.set(revs);
       } else {
         this.product.set(null);
@@ -146,10 +148,10 @@ export class ProductDetailComponent implements OnInit {
     };
 
     try {
-      await this.apiService.addReview(newReview);
+      await this.reviewApi.addReview(newReview);
       
       // refresh reviews
-      const updatedRevs = await this.apiService.getReviewsByProductId(prodId);
+      const updatedRevs = await this.reviewApi.getReviewsByProductId(prodId);
       this.reviews.set(updatedRevs);
       
       // update product rating local display

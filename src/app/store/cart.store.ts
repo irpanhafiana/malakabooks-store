@@ -1,6 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { CartItem, Product } from '../core/models';
-import { ApiService } from '../core/services/api.service';
+import { CartApiService } from '../core/services/cart-api.service';
 import { ToastService } from '../core/services/toast.service';
 
 interface CartState {
@@ -13,7 +13,7 @@ interface CartState {
   providedIn: 'root'
 })
 export class CartStore {
-  private readonly apiService = inject(ApiService);
+  private readonly cartApi = inject(CartApiService);
   private readonly toastService = inject(ToastService);
 
   private readonly state = signal<CartState>({
@@ -83,11 +83,11 @@ export class CartStore {
 
     // Kirim item guest ke backend
     for (const item of guestItems) {
-      await this.apiService.addCartItem(userId, item.product.id, item.quantity);
+      await this.cartApi.addCartItem(userId, item.product.id, item.quantity);
     }
 
     // Ambil cart dari backend sebagai sumber kebenaran
-    const backendItems = await this.apiService.getCart(userId);
+    const backendItems = await this.cartApi.getCart(userId);
     const productMap = new Map(products.map(p => [p.id, p]));
 
     const merged: CartItem[] = backendItems
@@ -132,7 +132,7 @@ export class CartStore {
     // Sync ke backend (fire-and-forget)
     const userId = this.getCurrentUserId();
     if (userId) {
-      this.apiService.addCartItem(userId, product.id, index >= 0 ? newQty : quantity);
+      this.cartApi.addCartItem(userId, product.id, index >= 0 ? newQty : quantity);
     }
   }
 
@@ -143,7 +143,7 @@ export class CartStore {
 
     const userId = this.getCurrentUserId();
     if (userId) {
-      this.apiService.removeCartItem(userId, productId);
+      this.cartApi.removeCartItem(userId, productId);
     }
   }
 
@@ -169,7 +169,7 @@ export class CartStore {
     // Re-add dengan quantity baru (backend replace)
     const userId = this.getCurrentUserId();
     if (userId) {
-      this.apiService.addCartItem(userId, productId, quantity);
+      this.cartApi.addCartItem(userId, productId, quantity);
     }
   }
 

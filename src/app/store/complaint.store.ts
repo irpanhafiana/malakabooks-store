@@ -1,6 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Complaint, CreateComplaintPayload, RespondComplaintPayload } from '../core/models';
-import { ApiService } from '../core/services/api.service';
+import { ComplaintApiService } from '../core/services/complaint-api.service';
 import { ToastService } from '../core/services/toast.service';
 
 interface ComplaintState {
@@ -12,7 +12,7 @@ interface ComplaintState {
   providedIn: 'root'
 })
 export class ComplaintStore {
-  private readonly apiService = inject(ApiService);
+  private readonly complaintApi = inject(ComplaintApiService);
   private readonly toastService = inject(ToastService);
 
   private readonly state = signal<ComplaintState>({
@@ -26,7 +26,7 @@ export class ComplaintStore {
   async loadByUser(userId: string) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const complaints = await this.apiService.getComplaintsByUser(userId);
+      const complaints = await this.complaintApi.getComplaintsByUser(userId);
       this.state.update(s => ({ ...s, complaints, loading: false }));
     } catch {
       this.state.update(s => ({ ...s, loading: false }));
@@ -37,7 +37,7 @@ export class ComplaintStore {
   async loadAll() {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const complaints = await this.apiService.getAllComplaints();
+      const complaints = await this.complaintApi.getAllComplaints();
       this.state.update(s => ({ ...s, complaints, loading: false }));
     } catch {
       this.state.update(s => ({ ...s, loading: false }));
@@ -47,7 +47,7 @@ export class ComplaintStore {
 
   async create(payload: CreateComplaintPayload): Promise<boolean> {
     try {
-      const created = await this.apiService.createComplaint(payload);
+      const created = await this.complaintApi.createComplaint(payload);
       this.state.update(s => ({ ...s, complaints: [created, ...s.complaints] }));
       this.toastService.success('Komplain berhasil dikirim.');
       return true;
@@ -59,7 +59,7 @@ export class ComplaintStore {
 
   async respond(id: string, payload: RespondComplaintPayload): Promise<boolean> {
     try {
-      const updated = await this.apiService.respondComplaint(id, payload);
+      const updated = await this.complaintApi.respondComplaint(id, payload);
       this.state.update(s => ({
         ...s,
         complaints: s.complaints.map(c => c.id === id ? updated : c)

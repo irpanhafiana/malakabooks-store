@@ -1,0 +1,31 @@
+<form [formGroup]="productForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div class="sm:col-span-2">
+    <app-input label="Product Name" placeholder="e.g. The Midnight Library" [control]="nameControl"></app-input>
+  </div>
+  
+  <app-select label="Category" placeholder="Select category" [options]="categoryOptions()" [control]="categoryControl"></app-select>
+  <app-input label="Brand" placeholder="e.g. Canongate Books" [control]="brandControl"></app-input>
+
+  <app-input label="Author" placeholder="e.g. Matt Haig" [control]="authorControl"></app-input>
+  <app-input label="ISBN" placeholder="e.g. 978-0525559474" [control]="isbnControl"></app-input>
+
+  <app-input label="Published Year" placeholder="e.g. 2020" type="number" [control]="publishedYearControl"></app-input>
+  <app-input label="Pages" placeholder="e.g. 304" type="number" [control]="pagesControl"></app-input>
+
+  <app-input label="Weight (kg)" placeholder="e.g. 0.35" type="number" [control]="weightControl"></app-input>
+
+  <app-input label="Price" placeholder="e.g. 14.99" type="number" [control]="priceControl"></app-input>
+  <app-input label="Original Price (Optional)" placeholder="e.g. 19.99" type="number" [control]="origPriceControl"></app-input>
+
+  <app-input label="Stock Inventory" placeholder="e.g. 50" type="number" [control]="stockControl"></app-input>
+  <app-input label="Primary Image URL" placeholder="https://images.unsplash.com/..." [control]="imageControl"></app-input>
+  
+  <div class="sm:col-span-2">
+    <app-textarea label="Description" placeholder="Write comprehensive product description..." [control]="descControl" [rows]="3"></app-textarea>
+  </div>
+
+  <div class="sm:col-span-2 flex justify-end gap-2 mt-4">
+    <app-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Cancel</app-button>
+    <app-button (click)="onSubmitForm()" [disabled]="productForm.invalid" type="button" variant="primary" size="sm">Save Product</app-button>
+  </div>
+</form>
