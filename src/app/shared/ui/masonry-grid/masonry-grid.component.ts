@@ -5,22 +5,8 @@ import { NgTemplateOutlet } from '@angular/common';
   selector: 'app-masonry-grid',
   standalone: true,
   imports: [NgTemplateOutlet],
-  template: `
-    <div class="grid grid-cols-2 gap-4 items-start w-full">
-      <!-- Left Column -->
-      <div class="flex flex-col gap-4">
-        @for (item of leftColumnItems(); track trackById(item)) {
-          <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
-        }
-      </div>
-      <!-- Right Column -->
-      <div class="flex flex-col gap-4">
-        @for (item of rightColumnItems(); track trackById(item)) {
-          <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
-        }
-      </div>
-    </div>
-  `
+  templateUrl: './masonry-grid.component.html',
+  styleUrl: './masonry-grid.component.css'
 })
 export class MasonryGridComponent {
   items = input<any[]>([]);

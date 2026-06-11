@@ -3,25 +3,8 @@ import { Component, input, computed } from '@angular/core';
 @Component({
   selector: 'app-button',
   standalone: true,
-  template: `
-    <button
-      [type]="type()"
-      [disabled]="disabled() || loading()"
-      [class]="buttonClass()"
-    >
-      @if (loading()) {
-        <i class="bx bx-loader-alt bx-spin -ml-1 mr-2 text-current text-sm"></i>
-      }
-      <span class="inline-flex items-center justify-center gap-1.5 w-full">
-        <ng-content></ng-content>
-      </span>
-    </button>
-  `,
-  styles: [`
-    :host {
-      display: inline-block;
-    }
-  `]
+  templateUrl: './button.component.html',
+  styleUrl: './button.component.css'
 })
 export class ButtonComponent {
   readonly variant = input<'primary' | 'secondary' | 'accent' | 'danger' | 'ghost' | 'outline'>('primary');

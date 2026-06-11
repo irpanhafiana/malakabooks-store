@@ -1,0 +1,88 @@
+<div class="flex flex-col gap-8 animate-fade-in pb-12">
+      
+      <!-- Hero Banner (Inspired by Bukalapak/Kitabisa - warm gradients, action card) -->
+      <section class="relative rounded-3xl bg-gradient-to-tr from-primary-700 via-primary-600 to-rose-500 text-white overflow-hidden shadow-lg shadow-primary-600/10">
+        <!-- Background light shapes -->
+        <div class="absolute inset-0 bg-cover bg-center opacity-10 bg-[url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1200&q=80')]"></div>
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-rose-500/20 rounded-full blur-2xl"></div>
+
+        <div class="relative max-w-3xl px-5 py-8 flex flex-col items-start gap-3">
+          <span class="px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-[9px] font-bold uppercase tracking-wider">Bookstore Reimagined</span>
+          <h1 class="text-2xl font-display font-extrabold tracking-tight leading-snug">Find Books & Items That Ignite Your Mind</h1>
+          <p class="text-xs text-primary-100 max-w-xl leading-relaxed">Discover a premium collection of literary classics, coding books, journals, pens, and custom digital audiobooks.</p>
+          <div class="flex flex-col items-start gap-2 mt-1">
+            <a routerLink="/product" class="px-4 py-2.5 rounded-xl bg-white text-primary-700 font-bold text-[10px] hover:bg-slate-50 transition-all shadow-md cursor-pointer active:scale-95">Browse Books</a>
+            <span class="text-[10px] text-white/80">Use Code <strong class="text-white font-bold underline">PROMO10</strong> for 10% Off</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Categories quick-scroll (Bukalapak style category icons) -->
+      <section class="flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <h2 class="font-display font-extrabold text-slate-800 text-sm">Popular Categories</h2>
+        </div>
+        
+        <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2 pt-1 -mx-4 px-4">
+          @for (cat of productStore.categories(); track cat.id) {
+            <a
+              routerLink="/product"
+              (click)="filterByCategory(cat.id)"
+              class="flex-shrink-0 flex flex-col items-center gap-2 p-3 rounded-2xl bg-white border border-slate-100 hover:border-primary-500 hover:shadow-md transition-all duration-200 w-24 text-center cursor-pointer group active:scale-95"
+            >
+              <div class="h-10 w-10 rounded-xl bg-slate-50 group-hover:bg-primary-50 text-slate-500 group-hover:text-primary-600 transition-colors flex items-center justify-center">
+                <app-icon [name]="cat.icon" size="20"></app-icon>
+              </div>
+              <span class="text-[10px] font-bold text-slate-700 group-hover:text-slate-800 tracking-tight block w-20 truncate">{{ cat.name }}</span>
+            </a>
+          }
+        </div>
+      </section>
+
+      <!-- Recommended/Featured Products grid -->
+      <section class="flex flex-col gap-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="font-display font-extrabold text-slate-800 text-sm">Featured Publications</h2>
+            <p class="text-[10px] text-slate-400 mt-0.5">Handpicked premium titles & accessories</p>
+          </div>
+          <a routerLink="/product" class="text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors flex items-center gap-1">
+            View All
+            <app-icon name="chevron-right" size="12"></app-icon>
+          </a>
+        </div>
+
+        @if (productStore.loading()) {
+          <div class="grid grid-cols-2 gap-4">
+            <app-skeleton type="card" [count]="2"></app-skeleton>
+          </div>
+        } @else {
+          <app-masonry-grid [items]="productStore.featuredProducts()">
+            <ng-template let-prod>
+              <app-product-card
+                [product]="prod"
+                [isInWishlist]="userStore.isWishlisted(prod.id)"
+                (addToCart)="cartStore.addItem($event)"
+                (toggleWishlist)="userStore.toggleWishlist($event)"
+              ></app-product-card>
+            </ng-template>
+          </app-masonry-grid>
+        }
+      </section>
+      
+      <!-- Promo Alert Panel -->
+      <section class="bg-accent-50 border border-accent-100 rounded-3xl p-5 flex flex-col items-start gap-3.5">
+        <div class="flex items-start gap-3 text-left">
+          <div class="p-2.5 bg-accent-100 rounded-xl text-accent-700">
+            <app-icon name="truck" size="22"></app-icon>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-slate-800 text-xs">Free Shipping Over $50</h3>
+            <p class="text-[10px] text-slate-500 mt-0.5 leading-relaxed">Order premium editions above $50 and receive free express courier shipping.</p>
+          </div>
+        </div>
+        <a routerLink="/product" class="w-full text-center px-4 py-2.5 rounded-xl bg-accent-600 hover:bg-accent-700 text-white font-bold text-[10px] shadow-md shadow-accent-600/10 transition-colors cursor-pointer active:scale-95">Shop Now</a>
+      </section>
+
+    </div>

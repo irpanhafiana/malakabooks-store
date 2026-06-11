@@ -10,32 +10,8 @@ import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.
   selector: 'app-wishlist',
   standalone: true,
   imports: [RouterLink, ProductCardComponent, EmptyStateComponent, MasonryGridComponent],
-  template: `
-    <div class="animate-fade-in pb-12">
-      <h1 class="font-display font-extrabold text-slate-800 text-base mb-4">My Wishlist</h1>
-
-      @if (userStore.wishlistCount() === 0) {
-        <app-empty-state
-          icon="heart"
-          title="Wishlist is Empty"
-          description="You haven't saved any items to your wishlist yet. Tap the heart icon on any product to save it here for later!"
-          actionText="Explore Products"
-          routerLink="/product"
-        ></app-empty-state>
-      } @else {
-        <app-masonry-grid [items]="userStore.wishlist()">
-          <ng-template let-item>
-            <app-product-card
-              [product]="item.product"
-              [isInWishlist]="true"
-              (addToCart)="cartStore.addItem($event)"
-              (toggleWishlist)="userStore.toggleWishlist($event)"
-            ></app-product-card>
-          </ng-template>
-        </app-masonry-grid>
-      }
-    </div>
-  `
+  templateUrl: './wishlist.component.html',
+  styleUrl: './wishlist.component.css'
 })
 export class WishlistComponent {
   protected readonly userStore = inject(UserStore);

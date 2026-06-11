@@ -5,46 +5,8 @@ import { IconComponent } from '../icon/icon.component';
   selector: 'app-pagination',
   standalone: true,
   imports: [IconComponent],
-  template: `
-    @if (totalPages() > 1) {
-      <div class="flex items-center justify-center gap-1.5 mt-6">
-        <!-- Prev Button -->
-        <button
-          type="button"
-          [disabled]="currentPage() === 1"
-          (click)="changePage(currentPage() - 1)"
-          class="p-2 rounded-xl border border-slate-100 bg-white hover:bg-slate-50 text-slate-500 disabled:opacity-40 disabled:hover:bg-white active:scale-95 cursor-pointer transition-all"
-        >
-          <app-icon name="chevron-left" size="16"></app-icon>
-        </button>
-
-        <!-- Page Numbers -->
-        @for (page of pages(); track $index) {
-          @if (page === -1) {
-            <span class="px-2 text-slate-400 text-sm font-semibold">...</span>
-          } @else {
-            <button
-              type="button"
-              (click)="changePage(page)"
-              [class]="pageButtonClass(page)"
-            >
-              {{ page }}
-            </button>
-          }
-        }
-
-        <!-- Next Button -->
-        <button
-          type="button"
-          [disabled]="currentPage() === totalPages()"
-          (click)="changePage(currentPage() + 1)"
-          class="p-2 rounded-xl border border-slate-100 bg-white hover:bg-slate-50 text-slate-500 disabled:opacity-40 disabled:hover:bg-white active:scale-95 cursor-pointer transition-all"
-        >
-          <app-icon name="chevron-right" size="16"></app-icon>
-        </button>
-      </div>
-    }
-  `
+  templateUrl: './pagination.component.html',
+  styleUrl: './pagination.component.css'
 })
 export class PaginationComponent {
   readonly currentPage = input.required<number>();

@@ -5,25 +5,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   selector: 'app-textarea',
   standalone: true,
   imports: [ReactiveFormsModule],
-  template: `
-    <div class="w-full">
-      @if (label()) {
-        <label [for]="id()" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{{ label() }}</label>
-      }
-      <textarea
-        [id]="id()"
-        [placeholder]="placeholder()"
-        [formControl]="control()"
-        [rows]="rows()"
-        [class]="textareaClass()"
-      ></textarea>
-      @if (control().invalid && (control().dirty || control().touched)) {
-        <span class="text-rose-500 text-xs mt-1.5 block animate-fade-in">
-          @if (control().errors?.['required']) { Field is required. }
-        </span>
-      }
-    </div>
-  `
+  templateUrl: './textarea.component.html',
+  styleUrl: './textarea.component.css'
 })
 export class TextareaComponent {
   readonly control = input.required<FormControl>();

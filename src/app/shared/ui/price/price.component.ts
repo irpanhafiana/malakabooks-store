@@ -5,11 +5,8 @@ import { CurrencyPipe } from '@angular/common';
   selector: 'app-price',
   standalone: true,
   imports: [CurrencyPipe],
-  template: `
-    <span [class]="priceClass()">
-      {{ value() | currency: currencyCode() : 'symbol' : '1.2-2' }}
-    </span>
-  `
+  templateUrl: './price.component.html',
+  styleUrl: './price.component.css'
 })
 export class PriceComponent {
   readonly value = input.required<number>();

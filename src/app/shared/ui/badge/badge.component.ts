@@ -3,11 +3,8 @@ import { Component, input, computed } from '@angular/core';
 @Component({
   selector: 'app-badge',
   standalone: true,
-  template: `
-    <span [class]="badgeClass()">
-      <ng-content></ng-content>
-    </span>
-  `
+  templateUrl: './badge.component.html',
+  styleUrl: './badge.component.css'
 })
 export class BadgeComponent {
   readonly variant = input<'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'danger' | 'info'>('secondary');

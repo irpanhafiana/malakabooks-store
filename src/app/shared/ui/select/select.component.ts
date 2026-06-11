@@ -5,36 +5,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   selector: 'app-select',
   standalone: true,
   imports: [ReactiveFormsModule],
-  template: `
-    <div class="w-full">
-      @if (label()) {
-        <label [for]="id()" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{{ label() }}</label>
-      }
-      <div class="relative">
-        <select
-          [id]="id()"
-          [formControl]="control()"
-          [class]="selectClass()"
-        >
-          @if (placeholder()) {
-            <option value="" disabled selected>{{ placeholder() }}</option>
-          }
-          @for (opt of options(); track opt.value) {
-            <option [value]="opt.value">{{ opt.label }}</option>
-          }
-        </select>
-        <!-- Custom Chevron Down arrow for custom select element -->
-        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
-          <i class="bx bx-chevron-down text-sm"></i>
-        </div>
-      </div>
-      @if (control().invalid && (control().dirty || control().touched)) {
-        <span class="text-rose-500 text-xs mt-1.5 block animate-fade-in">
-          @if (control().errors?.['required']) { Selection is required. }
-        </span>
-      }
-    </div>
-  `
+  templateUrl: './select.component.html',
+  styleUrl: './select.component.css'
 })
 export class SelectComponent {
   readonly control = input.required<FormControl>();

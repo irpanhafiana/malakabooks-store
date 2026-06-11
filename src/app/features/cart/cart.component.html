@@ -1,0 +1,140 @@
+<div class="animate-fade-in pb-12">
+      <h1 class="font-display font-extrabold text-slate-800 text-base mb-4">Shopping Cart</h1>
+
+      @if (cartStore.itemsCount() === 0) {
+        <app-empty-state
+          icon="shopping-cart"
+          title="Your Cart is Empty"
+          description="Looks like you haven't added any items to your cart yet. Explore our publications to find your next great read!"
+          actionText="Start Shopping"
+          routerLink="/product"
+        ></app-empty-state>
+      } @else {
+        <div class="flex flex-col gap-5">
+          
+          <!-- Cart Items Column (Vertical stack) -->
+          <div class="flex flex-col gap-3">
+            @for (item of cartStore.items(); track item.product.id) {
+              <div class="flex items-center gap-4 bg-white border border-slate-100 p-4 rounded-2xl shadow-xs transition-all hover:border-slate-200/50">
+                <!-- Item Image -->
+                <div (click)="productStore.setSelectedProductId(item.product.id)" class="h-20 w-16 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer">
+                  <img [src]="item.product.images[0]" [alt]="item.product.name" class="w-full h-full object-cover" />
+                </div>
+
+                <!-- Details & Remove -->
+                <div class="flex-grow flex flex-col">
+                  <div (click)="productStore.setSelectedProductId(item.product.id)" class="text-sm font-semibold text-slate-800 hover:text-primary-600 transition-colors line-clamp-1 mb-0.5 cursor-pointer">{{ item.product.name }}</div>
+                  <span class="text-[10px] text-slate-400 font-semibold mb-1">{{ item.product.categoryName }}</span>
+                  <div class="flex items-center justify-between mt-1">
+                    
+                    <!-- Quantity editor -->
+                    <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white">
+                      <button
+                        (click)="cartStore.updateQuantity(item.product.id, item.quantity - 1)"
+                        class="p-1.5 text-slate-500 hover:bg-slate-50 cursor-pointer"
+                      >
+                        <app-icon name="minus" size="12"></app-icon>
+                      </button>
+                      <span class="w-8 text-center text-xs font-bold text-slate-800">{{ item.quantity }}</span>
+                      <button
+                        (click)="cartStore.updateQuantity(item.product.id, item.quantity + 1)"
+                        class="p-1.5 text-slate-500 hover:bg-slate-50 cursor-pointer"
+                      >
+                        <app-icon name="plus" size="12"></app-icon>
+                      </button>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="flex items-center gap-4">
+                      <app-price [value]="item.product.price * item.quantity" size="sm" class="text-slate-800"></app-price>
+                      <button
+                        type="button"
+                        (click)="cartStore.removeItem(item.product.id)"
+                        class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer active:scale-90"
+                      >
+                        <app-icon name="trash" size="16"></app-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Checkout Summary Card (Pushed below items) -->
+          <div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-xs flex flex-col gap-4">
+            <h3 class="font-display font-extrabold text-slate-800 text-xs uppercase tracking-wider">Order Summary</h3>
+
+            <div class="flex flex-col gap-3.5 text-xs text-slate-500">
+              <div class="flex justify-between">
+                <span>Subtotal</span>
+                <app-price [value]="cartStore.subtotal()" [bold]="false" size="sm"></app-price>
+              </div>
+
+              @if (cartStore.discount() > 0) {
+                <div class="flex justify-between text-rose-600 font-semibold">
+                  <span>Discount (10% promo applied)</span>
+                  <span>- $ {{ cartStore.discount() | number: '1.2-2' }}</span>
+                </div>
+              }
+
+              <div class="flex justify-between">
+                <span>Tax (10%)</span>
+                <app-price [value]="cartStore.tax()" [bold]="false" size="sm"></app-price>
+              </div>
+
+              <div class="flex justify-between">
+                <span>Shipping Cost</span>
+                @if (cartStore.shipping() === 0) {
+                  <span class="text-emerald-600 font-bold">Free</span>
+                } @else {
+                  <app-price [value]="cartStore.shipping()" [bold]="false" size="sm"></app-price>
+                }
+              </div>
+
+              <hr class="border-slate-100 my-1" />
+
+              <div class="flex justify-between text-slate-800 text-sm font-bold">
+                <span>Total Amount</span>
+                <app-price [value]="cartStore.total()" size="md" class="text-primary-600"></app-price>
+              </div>
+            </div>
+
+            <!-- Promo coupon input -->
+            <div class="flex gap-2 mt-2">
+              <div class="flex-grow">
+                <app-input
+                  placeholder="Promo Code (PROMO10)"
+                  [control]="promoControl"
+                  class="h-9"
+                ></app-input>
+              </div>
+              <app-button
+                (click)="applyPromo()"
+                [disabled]="promoControl.invalid"
+                variant="outline"
+                size="sm"
+                class="px-3"
+              >
+                Apply
+              </app-button>
+            </div>
+
+            <hr class="border-slate-100" />
+
+            <app-button
+              routerLink="/checkout"
+              variant="primary"
+              size="md"
+              [fullWidth]="true"
+              class="shadow-md"
+            >
+              Proceed to Checkout
+            </app-button>
+            
+            <p class="text-[10px] text-slate-400 text-center leading-relaxed">By checking out, you agree to our standard terms and refund policy. Free shipping applies automatically to all orders above $50.</p>
+          </div>
+
+        </div>
+      }
+    </div>

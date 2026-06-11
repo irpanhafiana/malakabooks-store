@@ -3,25 +3,8 @@ import { Component, input, computed } from '@angular/core';
 @Component({
   selector: 'app-icon',
   standalone: true,
-  template: `
-    <i [class]="boxiconClass()" [style.fontSize]="fontSize()"></i>
-  `,
-  styles: [`
-    :host {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-    }
-    i {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 1em;
-      height: 1em;
-      line-height: 1;
-    }
-  `]
+  templateUrl: './icon.component.html',
+  styleUrl: './icon.component.css'
 })
 export class IconComponent {
   readonly name = input.required<string>();

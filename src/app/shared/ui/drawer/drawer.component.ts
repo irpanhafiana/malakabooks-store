@@ -5,46 +5,8 @@ import { IconComponent } from '../icon/icon.component';
   selector: 'app-drawer',
   standalone: true,
   imports: [IconComponent],
-  template: `
-    @if (isOpen()) {
-      <div class="fixed inset-0 z-50 overflow-hidden">
-        <!-- Backdrop panel -->
-        <div
-          class="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] transition-opacity animate-fade-in"
-          (click)="close()"
-        ></div>
-
-        <!-- Drawer Content body -->
-        <div [class]="drawerClass()">
-          <!-- Header -->
-          <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h3 class="font-display font-bold text-slate-800 text-base">{{ title() }}</h3>
-            <button
-              type="button"
-              (click)="close()"
-              class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-all cursor-pointer active:scale-90"
-            >
-              <app-icon name="x" size="18"></app-icon>
-            </button>
-          </div>
-
-          <!-- Scroll viewport -->
-          <div class="flex-grow overflow-y-auto p-5">
-            <ng-content></ng-content>
-          </div>
-        </div>
-      </div>
-    }
-  `,
-  styles: [`
-    @keyframes slide-left {
-      from { transform: translateX(100%); }
-      to { transform: translateX(0); }
-    }
-    .animate-slide-left {
-      animation: slide-left 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-  `]
+  templateUrl: './drawer.component.html',
+  styleUrl: './drawer.component.css'
 })
 export class DrawerComponent {
   readonly isOpen = model<boolean>(false);
