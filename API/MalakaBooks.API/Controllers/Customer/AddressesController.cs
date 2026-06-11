@@ -6,6 +6,7 @@ using Mardika.Simasrim.Service.Model;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace MalakaBooks.API.Controllers.Customer;
 
@@ -15,13 +16,32 @@ namespace MalakaBooks.API.Controllers.Customer;
 /// </summary>
 /// <remarks>All endpoints require the user to be authenticated and are versioned via the API route. The
 /// controller is intended for use by customer-facing clients to manage their own address data.</remarks>
-/// <param name="mediator">The mediator used to send commands and queries related to address operations.</param>
-/// <param name="simasrimApiClient"></param>
-/// <param name="simasrimSetting"></param>
+/// <remarks>
+/// Initializes a new instance of the AddressesController class with the specified mediator, Simasrim API client, and
+/// Simasrim settings.
+/// </remarks>
 [Route("api/v{version:apiVersion}/customer/[controller]")]
 [Authorize(Policy = "MalakaCustomerPolicy")]
-public class AddressesController(IMediator mediator, SimasrimApiClient simasrimApiClient, SimasrimSetting simasrimSetting) : ApiControllerBase
+
+public class AddressesController : ApiControllerBase
 {
+  private readonly IMediator mediator;
+  private readonly SimasrimApiClient simasrimApiClient;
+  private readonly SimasrimSetting simasrimSetting;
+
+  /// <summary>
+  /// Initializes a new instance of the AddressesController class with the specified mediator, Simasrim API client, and
+  /// Simasrim settings.
+  /// </summary>
+  /// <param name="mediator">The mediator used to send commands and queries within the application.</param>
+  /// <param name="simasrimApiClient">The client used to interact with the Simasrim API.</param>
+  /// <param name="simasrimOptions">The configuration options containing Simasrim settings. Cannot be null.</param>
+  public AddressesController(IMediator mediator, SimasrimApiClient simasrimApiClient, IOptions<SimasrimSetting> simasrimOptions)
+  {
+    this.mediator = mediator;
+    this.simasrimApiClient = simasrimApiClient;
+    this.simasrimSetting = simasrimOptions.Value;
+  }
 
   /// <summary>Get own addresses</summary>
   [HttpGet("user/{userId}")]

@@ -12,10 +12,6 @@
         {
           "Policy": "MalakaCustomerPolicy",
           "Name": [ "Malaka-Admin", "Malaka-Customer" ]
-        },
-        {
-          "Policy": "RolesPolicy",
-          "Name": [ "Malaka-Admin", "Malaka-Customer" ]
         }
       ],
       "Scopes": [

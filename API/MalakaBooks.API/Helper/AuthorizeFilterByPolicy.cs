@@ -21,9 +21,8 @@ namespace MalakaBooks.API.Helper
     /// <param name="controller">The controller model to which the authorization filters will be applied. Cannot be null.</param>
     public void Apply(ControllerModel controller)
     {
-      controller.Filters.Add(new AuthorizeFilter("RolesPolicy"));
-      controller.Filters.Add(new AuthorizeFilter("ScopesPolicy"));
-      controller.Filters.Add(new AuthorizeFilter("ClaimsPolicy"));
+      controller.Filters.Add(new AuthorizeFilter("MalakaAdminPolicy"));
+      controller.Filters.Add(new AuthorizeFilter("MalakaCustomerPolicy"));
     }
   }
 }
