@@ -34,10 +34,10 @@
     "AuthorityId": "http://192.168.1.15:44310",
     "BaseUrl": "http://192.168.1.15:44304",
     "UserId": "admin",
-    "UserPassword": "Admin123$",
+    "UserPassword": "QwertY!23",
     "ClientId": "IS4ApiClient",
     "ClientSecret": "IS4ApiClient",
-    "Scopes": "skoruba_identity_admin_api MardikaMessageHubScope DEV-MardikaPortfolio_APIes-scope"
+    "Scopes": "skoruba_identity_admin_api"
   },
   "AllowedHosts": "*"
 }

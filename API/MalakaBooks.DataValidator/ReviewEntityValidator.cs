@@ -23,10 +23,14 @@ namespace MalakaBooks.DataValidator
     {
       foreach (var entity in entities)
       {
+        var userId = entity.UserId.ToLower();
+        var bookId = entity.BookId.ToLower();
+        var orderId = entity.OrderId.ToLower();
+
         var existing = await _collection.Find(_ =>
-          _.UserId == entity.UserId &&
-          _.BookId == entity.BookId &&
-          _.OrderId == entity.OrderId).FirstOrDefaultAsync();
+          _.UserId.ToLower() == userId &&
+          _.BookId.ToLower() == bookId &&
+          _.OrderId.ToLower() == orderId).FirstOrDefaultAsync();
 
         if (existing != null) Errors.Add("Review with same user, order and book already exist.");
       }
@@ -38,13 +42,15 @@ namespace MalakaBooks.DataValidator
     {
       foreach (var entity in entities)
       {
-        var existing = await _collection.Find(_ =>
+        var userId = entity.UserId.ToLower();
+        var bookId = entity.BookId.ToLower();
+        var orderId = entity.OrderId.ToLower();
 
-            _.UserId == entity.UserId &&
-            _.BookId == entity.BookId &&
-            _.OrderId == entity.OrderId &&
-            _.Alias!.Equals(entity.Alias, StringComparison.CurrentCultureIgnoreCase)
-          ).FirstOrDefaultAsync();
+        var existing = await _collection.Find(_ =>
+          _.UserId.ToLower() == userId &&
+          _.BookId.ToLower() == bookId &&
+          _.OrderId.ToLower() == orderId &&
+          _.Id != entity.Id).FirstOrDefaultAsync();
 
         if (existing != null) Errors.Add("Review with same user, order and book already exist.");
       }

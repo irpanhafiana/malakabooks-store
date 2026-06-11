@@ -31,7 +31,7 @@ public class UsersController(IMediator mediator) : ApiControllerBase
   [AllowAnonymous]
   public async Task<IActionResult> CreateIS4Profile([FromBody] CreateIS4UserRequest request, CancellationToken cancellationToken)
   {
-    var result = await mediator.Send(new CreateIS4UserCommand(request), cancellationToken);
+    var result = await mediator.Send(new RegisterUserCommand(request), cancellationToken);
 
     return ProcessResult(result);
   }

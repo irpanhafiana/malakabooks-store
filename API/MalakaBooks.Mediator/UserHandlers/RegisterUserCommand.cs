@@ -10,15 +10,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MalakaBooks.Mediator.UserHandlers
 {
-  public record CreateIS4UserCommand(CreateIS4UserRequest Request) : IRequest<ValidationResult?>;
+  public record RegisterUserCommand(CreateIS4UserRequest Request) : IRequest<ValidationResult?>;
 
 
-  public class CreateIS4UserCommandHandler(IUserRepository userRepository, IProtectedApiClient protectedApi, IUserEntityValidator validator) : IRequestHandler<CreateIS4UserCommand, ValidationResult?>
+  public class RegisterUserCommandHandler(IUserRepository userRepository, IProtectedApiClient protectedApi, IUserEntityValidator validator) : IRequestHandler<RegisterUserCommand, ValidationResult?>
   {
     private readonly IProtectedApiClient _protectedApiClient = protectedApi;
     private readonly IUserEntityValidator _validator = validator;
 
-    public async Task<ValidationResult?> Handle(CreateIS4UserCommand request, CancellationToken cancellationToken)
+    public async Task<ValidationResult?> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
       var user = request.Request;
       var result = ValidationResult.Success;
@@ -44,8 +44,8 @@ namespace MalakaBooks.Mediator.UserHandlers
         CreatedAt = DateTime.UtcNow
       };
 
-      var userCreationResult = await _validator.CreateValidateAsync(userEntity);
-      if (userCreationResult is null)
+      result = await _validator.CreateValidateAsync(userEntity);
+      if (result is null)
       {
         var response = await _protectedApiClient.PostAsync("/api/Users", is4UserModel);
         if (response.IsSuccessStatusCode)
@@ -57,7 +57,7 @@ namespace MalakaBooks.Mediator.UserHandlers
           #region Set Role
 
           var existingRoles = await _protectedApiClient.GetAsync<IdentityRolesDto>("/api/Roles");
-          var customerRole = existingRoles.Roles.Single(_ => _.Name == "MardikaPortfolio");
+          var customerRole = existingRoles.Roles.Single(_ => _.Name == "Malaka-Customer");
 
           var userRole = new StringUserRoleApiDto() { RoleId = customerRole.Id, UserId = createdUser!.Id };
           response = await _protectedApiClient.PostAsync("/api/Users/Roles", userRole);
@@ -118,7 +118,7 @@ namespace MalakaBooks.Mediator.UserHandlers
             }
           }
 
-          userEntity.Id = createdUser.Id;
+          userEntity.UserId = createdUser.Id;
           await userRepository.CreateAsync(userEntity, cancellationToken);
 
           #endregion
@@ -131,7 +131,7 @@ namespace MalakaBooks.Mediator.UserHandlers
         }
       }
 
-      return userCreationResult;
+      return result;
     }
   }
 }

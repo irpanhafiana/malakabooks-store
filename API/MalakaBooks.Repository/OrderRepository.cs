@@ -1,39 +1,59 @@
 using MalakaBooks.Entity;
 using MalakaBooks.IRepository;
 using MalakaBooks.Repository.Configuration;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Subur.Extension;
+using Subur.Storage.MongoDbProvider;
 
 namespace MalakaBooks.Repository;
 
-public class OrderRepository : IOrderRepository
+public class OrderRepository : BaseRepository<OrderEntity>, IOrderRepository
 {
-    private readonly IMongoCollection<OrderEntity> _collection;
+  private readonly IMongoCollection<OrderEntity> _collection;
+  private readonly IOptions<MongoDbSetting> _mongoDbSetting;
 
-    public OrderRepository(IMongoDatabase database, IOptions<MongoDbSetting> mongoDbSetting)
-    {
-        _collection = database.GetCollection<OrderEntity>(mongoDbSetting.Value.OrdersCollection);
-    }
+  public OrderRepository(
+    MongoDbContext mongoDbContext,
+    IMongoClient mongoClient,
+    IHttpContextAccessor contextAccessor,
+    IOptions<MongoDbSetting> mongoDbSetting) : base(mongoDbContext, mongoClient, contextAccessor)
+  {
+    _collection = mongoDbContext.GetCollection<OrderEntity>(mongoDbSetting.Value.OrdersCollection);
+    _mongoDbSetting = mongoDbSetting;
+  }
 
-    public async Task<OrderEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
-        await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+  public async Task<OrderEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
+      await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 
-    public async Task<IReadOnlyCollection<OrderEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
-        await _collection.Find(_ => true).ToListAsync(cancellationToken);
+  public async Task<IReadOnlyCollection<OrderEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
+      await _collection.Find(_ => true).ToListAsync(cancellationToken);
 
-    public async Task<IReadOnlyCollection<OrderEntity>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default) =>
-        await _collection.Find(x => x.UserId == userId).ToListAsync(cancellationToken);
+  public async Task<IReadOnlyCollection<OrderEntity>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default) =>
+      await _collection.Find(x => x.UserId == userId).ToListAsync(cancellationToken);
 
-    public async Task<OrderEntity> CreateAsync(OrderEntity order, CancellationToken cancellationToken = default)
-    {
-        await _collection.InsertOneAsync(order, cancellationToken: cancellationToken);
-        return order;
-    }
+  public async Task<OrderEntity> CreateAsync(OrderEntity order, CancellationToken cancellationToken = default)
+  {
+    await _collection.InsertOneAsync(order, cancellationToken: cancellationToken);
+    return order;
+  }
 
-    public async Task<bool> UpdateAsync(string id, OrderEntity order, CancellationToken cancellationToken = default)
-    {
-        order.Id = id;
-        var result = await _collection.ReplaceOneAsync(x => x.Id == id, order, cancellationToken: cancellationToken);
-        return result.ModifiedCount > 0;
-    }
+  public async Task<bool> UpdateAsync(string id, OrderEntity order, CancellationToken cancellationToken = default)
+  {
+    order.Id = id;
+    var result = await _collection.ReplaceOneAsync(x => x.Id == id, order, cancellationToken: cancellationToken);
+    return result.ModifiedCount > 0;
+  }
+
+  public async Task<PagedResult<OrderEntity>> GetAllOrdersPaged(long pageNumber, long pageSize)
+  {
+    var filter = Builders<OrderEntity>.Filter.Empty;
+    var sort = Builders<OrderEntity>.Sort.Descending(_ => _.DateCreated);
+
+    PagedResult<OrderEntity> orders = await QueryByPageAsync(_mongoDbSetting.Value.OrdersCollection, sort, filter, pageNumber, pageSize);
+
+    return orders;
+  }
+
 }

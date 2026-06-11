@@ -23,9 +23,12 @@ namespace MalakaBooks.DataValidator
     {
       foreach (var entity in entities)
       {
+        var userId = entity.UserId.ToLower();
+        var label = entity.Label.ToLower();
+
         var existing = await _collection.Find(_ =>
-          _.UserId.Equals(entity.UserId, StringComparison.CurrentCultureIgnoreCase) &&
-          _.Label.Equals(entity.Label, StringComparison.CurrentCultureIgnoreCase)
+          _.UserId.ToLower() == userId &&
+          _.Label.ToLower() == label
         ).FirstOrDefaultAsync();
 
         if (existing != null) Errors.Add("Address with same label already exist.");
@@ -38,10 +41,13 @@ namespace MalakaBooks.DataValidator
     {
       foreach (var entity in entities)
       {
+        var userId = entity.UserId.ToLower();
+        var label = entity.Label.ToLower();
+
         var existing = await _collection.Find(_ =>
-          _.UserId.Equals(entity.UserId, StringComparison.CurrentCultureIgnoreCase) &&
-          _.Label.Equals(entity.Label, StringComparison.CurrentCultureIgnoreCase) &&
-          _.Alias!.Equals(entity.Alias, StringComparison.CurrentCultureIgnoreCase)
+          _.UserId.ToLower() == userId &&
+          _.Label.ToLower() == label &&
+          _.Id != entity.Id
         ).FirstOrDefaultAsync();
 
         if (existing != null) Errors.Add("Address with same label already exist.");

@@ -66,7 +66,8 @@ public static class MappingExtensions
     Name = entity.Name,
     Slug = entity.Slug,
     Description = entity.Description,
-    Icon = entity.Icon
+    Icon = entity.Icon,
+    Alias = entity.Alias!
   };
 
   public static CategoryEntity ToEntity(this CreateCategoryRequest request) => new()
