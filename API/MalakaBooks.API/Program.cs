@@ -7,6 +7,7 @@ using MalakaBooks.DataValidator;
 using MalakaBooks.IS4RegistrationService;
 using MalakaBooks.Repository;
 using MalakaBooks.Validator;
+using Mardika.Simasrim.Service.Configuration;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -54,6 +55,7 @@ var appSection = builder.Configuration.GetSection("AppSetting");
 var easyCacheSection = builder.Configuration.GetSection("EasyCachingConfig");
 var mongoSection = builder.Configuration.GetSection("MongoDbSetting");
 var is4APISection = builder.Configuration.GetSection("IS4APISettings");
+var simasrimSection = builder.Configuration.GetSection("SimasrimSetting");
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
@@ -220,6 +222,14 @@ builder.Services.AddResponseCompression(options =>
 });
 builder.Services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Fastest);
 #endregion
+
+
+#region Simasrim
+
+builder.Services.AddSimasrimApiClient(builder.Configuration);
+
+#endregion
+
 
 #region Rate Limiter
 

@@ -39,5 +39,24 @@
     "ClientSecret": "IS4ApiClient",
     "Scopes": "skoruba_identity_admin_api"
   },
+  "SimasrimSetting": {
+    "BaseUrl": "https://devapi.simasrim.com",
+    "ClientId": "7",
+    "ClientSecret": "JScxLN7xIw2pciNpZZAMQa8OFKlO1uA93YmPQeMH",
+
+    "Email": "simasrimdev@mail.com",
+    "Password": "646239",
+    "Scope": "",
+    "Courier": [
+      "all",
+      "jne",
+      "jntx",
+      "jntc",
+      "sapx",
+      "spx",
+      "lion",
+      "paxel"
+    ]
+  },
   "AllowedHosts": "*"
 }
