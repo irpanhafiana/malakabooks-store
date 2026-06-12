@@ -1,5 +1,6 @@
 using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.Mediator.AddressHandlers;
+using MalakaBooks.Mediator.SimasrimHandlers;
 using MalakaBooks.ViewModel;
 using Mardika.Portfolio.AppsSetting;
 using Mardika.Simasrim.Service.Model;
@@ -87,10 +88,7 @@ public class AddressesController : ApiControllerBase
   [HttpGet]
   [Route("Simasrim/Province")]
   public async Task<IActionResult> GetSimasrimProvince(CancellationToken cancellationToken)
-  {
-    var response = await simasrimApiClient.GetAsync<BaseResponse>("api/b2b/pengiriman/ekspedisi/wilayah/province", cancellationToken);
-    return Ok(response);
-  }
+    => Success(await mediator.Send(new GetSimasrimProvinceQuery(), cancellationToken));
 
   /// <summary>
   /// Handles a POST request to retrieve city information from the Simasrim API based on the specified criteria.
@@ -102,10 +100,7 @@ public class AddressesController : ApiControllerBase
   [HttpPost]
   [Route("Simasrim/City")]
   public async Task<IActionResult> GetSimasrimCity(CityModel model, CancellationToken cancellationToken)
-  {
-    var response = await simasrimApiClient.PostAsync<BaseResponse>("api/b2b/pengiriman/ekspedisi/wilayah/city", model, cancellationToken);
-    return Ok(response);
-  }
+    => Success(await mediator.Send(new GetSimasrimCityQuery(model), cancellationToken));
 
   /// <summary>
   /// Retrieves the list of available courier codes for Simasrim shipping services.
@@ -140,10 +135,7 @@ public class AddressesController : ApiControllerBase
   [HttpPost]
   [Route("Simasrim/District")]
   public async Task<IActionResult> GetSimasrimDistrict(DistrictModel model, CancellationToken cancellationToken)
-  {
-    var response = await simasrimApiClient.PostAsync<DistrictResponse>("api/b2b/pengiriman/ekspedisi/wilayah/district", model, cancellationToken);
-    return Ok(response);
-  }
+    => Success(await mediator.Send(new GetSimasrimDistrictQuery(model), cancellationToken));
 
   /// <summary>
   /// Handles a request to retrieve shipping tariff information from the Simasrim service based on the specified
@@ -155,11 +147,7 @@ public class AddressesController : ApiControllerBase
   [HttpPost]
   [Route("Simasrim/Tarif")]
   public async Task<IActionResult> GetSimasrimTarif(TariffModel model, CancellationToken cancellationToken)
-  {
-    var response = await simasrimApiClient.PostAsync<TariffResponse>("api/b2b/pengiriman/ekspedisi/cek-tarif", model, cancellationToken);
-
-    return Ok(response);
-  }
+    => Success(await mediator.Send(new GetSimasrimTariffQuery(model), cancellationToken));
 
   #endregion
 }

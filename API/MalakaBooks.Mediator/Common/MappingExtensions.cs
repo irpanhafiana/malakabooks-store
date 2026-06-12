@@ -153,9 +153,13 @@ public static class MappingExtensions
     RecipientName = entity.RecipientName,
     Phone = entity.Phone,
     Street = entity.Street,
-    City = entity.City,
     Province = entity.Province,
+    City = entity.City,
+    District = entity.District,
+    SubDistrict = entity.SubDistrict,
     PostalCode = entity.PostalCode,
+    Longitude = entity.Longitude,
+    Latitude = entity.Latitude,
     IsDefault = entity.IsDefault
   };
 
@@ -166,9 +170,13 @@ public static class MappingExtensions
     RecipientName = request.RecipientName.Trim(),
     Phone = request.Phone.Trim(),
     Street = request.Street.Trim(),
-    City = request.City.Trim(),
     Province = request.Province.Trim(),
+    City = request.City.Trim(),
+    District = request.District.Trim(),
+    SubDistrict = request.SubDistrict.Trim(),
     PostalCode = request.PostalCode.Trim(),
+    Longitude = request.Longitude,
+    Latitude = request.Latitude,
     IsDefault = request.IsDefault
   };
 
@@ -179,9 +187,13 @@ public static class MappingExtensions
     entity.RecipientName = request.RecipientName.Trim();
     entity.Phone = request.Phone.Trim();
     entity.Street = request.Street.Trim();
-    entity.City = request.City.Trim();
     entity.Province = request.Province.Trim();
+    entity.City = request.City.Trim();
+    entity.District = request.District.Trim();
+    entity.SubDistrict = request.SubDistrict.Trim();
     entity.PostalCode = request.PostalCode.Trim();
+    entity.Longitude = request.Longitude;
+    entity.Latitude = request.Latitude;
     entity.IsDefault = request.IsDefault;
   }
 

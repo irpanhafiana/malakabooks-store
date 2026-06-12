@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <ProjectReference Include="..\..\..\MardikaPortfolio\API\Mardika.Simasrim.Service\Mardika.Simasrim.Service.csproj" />
     <ProjectReference Include="..\MalakaBooks.Entity\MalakaBooks.Entity.csproj" />
     <ProjectReference Include="..\MalakaBooks.IDataValidator\MalakaBooks.IDataValidator.csproj" />
     <ProjectReference Include="..\MalakaBooks.IRepository\MalakaBooks.IRepository.csproj" />
