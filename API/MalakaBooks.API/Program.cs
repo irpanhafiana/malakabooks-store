@@ -178,7 +178,7 @@ appSection.Bind(appSetting);
 builder.Services.AddControllers(options =>
 {
   options.Filters.Add(new IdempotentFilter(appSetting.IdempotentExpiredHours!));
-  options.Conventions.Add(new AuthorizeFilterByPolicy());
+  //options.Conventions.Add(new AuthorizeFilterByPolicy());
   options.Filters.Add(typeof(GlobalHttpMethodAuthorizationFilter));
 }).AddNewtonsoftJson(nwtOptions =>
 {

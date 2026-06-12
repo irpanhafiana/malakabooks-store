@@ -1,11 +1,13 @@
 using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.Mediator.AddressHandlers;
+using MalakaBooks.Mediator.SimasrimHandlers;
 using MalakaBooks.ViewModel;
 using Mardika.Portfolio.AppsSetting;
 using Mardika.Simasrim.Service.Model;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace MalakaBooks.API.Controllers.Customer;
 
@@ -15,13 +17,32 @@ namespace MalakaBooks.API.Controllers.Customer;
 /// </summary>
 /// <remarks>All endpoints require the user to be authenticated and are versioned via the API route. The
 /// controller is intended for use by customer-facing clients to manage their own address data.</remarks>
-/// <param name="mediator">The mediator used to send commands and queries related to address operations.</param>
-/// <param name="simasrimApiClient"></param>
-/// <param name="simasrimSetting"></param>
+/// <remarks>
+/// Initializes a new instance of the AddressesController class with the specified mediator, Simasrim API client, and
+/// Simasrim settings.
+/// </remarks>
 [Route("api/v{version:apiVersion}/customer/[controller]")]
 [Authorize(Policy = "MalakaCustomerPolicy")]
-public class AddressesController(IMediator mediator, SimasrimApiClient simasrimApiClient, SimasrimSetting simasrimSetting) : ApiControllerBase
+
+public class AddressesController : ApiControllerBase
 {
+  private readonly IMediator mediator;
+  private readonly SimasrimApiClient simasrimApiClient;
+  private readonly SimasrimSetting simasrimSetting;
+
+  /// <summary>
+  /// Initializes a new instance of the AddressesController class with the specified mediator, Simasrim API client, and
+  /// Simasrim settings.
+  /// </summary>
+  /// <param name="mediator">The mediator used to send commands and queries within the application.</param>
+  /// <param name="simasrimApiClient">The client used to interact with the Simasrim API.</param>
+  /// <param name="simasrimOptions">The configuration options containing Simasrim settings. Cannot be null.</param>
+  public AddressesController(IMediator mediator, SimasrimApiClient simasrimApiClient, IOptions<SimasrimSetting> simasrimOptions)
+  {
+    this.mediator = mediator;
+    this.simasrimApiClient = simasrimApiClient;
+    this.simasrimSetting = simasrimOptions.Value;
+  }
 
   /// <summary>Get own addresses</summary>
   [HttpGet("user/{userId}")]
@@ -67,10 +88,7 @@ public class AddressesController(IMediator mediator, SimasrimApiClient simasrimA
   [HttpGet]
   [Route("Simasrim/Province")]
   public async Task<IActionResult> GetSimasrimProvince(CancellationToken cancellationToken)
-  {
-    var response = await simasrimApiClient.GetAsync<BaseResponse>("api/b2b/pengiriman/ekspedisi/wilayah/province", cancellationToken);
-    return Ok(response);
-  }
+    => Success(await mediator.Send(new GetSimasrimProvinceQuery(), cancellationToken));
 
   /// <summary>
   /// Handles a POST request to retrieve city information from the Simasrim API based on the specified criteria.
@@ -82,10 +100,7 @@ public class AddressesController(IMediator mediator, SimasrimApiClient simasrimA
   [HttpPost]
   [Route("Simasrim/City")]
   public async Task<IActionResult> GetSimasrimCity(CityModel model, CancellationToken cancellationToken)
-  {
-    var response = await simasrimApiClient.PostAsync<BaseResponse>("api/b2b/pengiriman/ekspedisi/wilayah/city", model, cancellationToken);
-    return Ok(response);
-  }
+    => Success(await mediator.Send(new GetSimasrimCityQuery(model), cancellationToken));
 
   /// <summary>
   /// Retrieves the list of available courier codes for Simasrim shipping services.
@@ -120,10 +135,7 @@ public class AddressesController(IMediator mediator, SimasrimApiClient simasrimA
   [HttpPost]
   [Route("Simasrim/District")]
   public async Task<IActionResult> GetSimasrimDistrict(DistrictModel model, CancellationToken cancellationToken)
-  {
-    var response = await simasrimApiClient.PostAsync<DistrictResponse>("api/b2b/pengiriman/ekspedisi/wilayah/district", model, cancellationToken);
-    return Ok(response);
-  }
+    => Success(await mediator.Send(new GetSimasrimDistrictQuery(model), cancellationToken));
 
   /// <summary>
   /// Handles a request to retrieve shipping tariff information from the Simasrim service based on the specified
@@ -135,11 +147,7 @@ public class AddressesController(IMediator mediator, SimasrimApiClient simasrimA
   [HttpPost]
   [Route("Simasrim/Tarif")]
   public async Task<IActionResult> GetSimasrimTarif(TariffModel model, CancellationToken cancellationToken)
-  {
-    var response = await simasrimApiClient.PostAsync<TariffResponse>("api/b2b/pengiriman/ekspedisi/cek-tarif", model, cancellationToken);
-
-    return Ok(response);
-  }
+    => Success(await mediator.Send(new GetSimasrimTariffQuery(model), cancellationToken));
 
   #endregion
 }

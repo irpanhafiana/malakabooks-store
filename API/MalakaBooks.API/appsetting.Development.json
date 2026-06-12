@@ -56,7 +56,11 @@
       "spx",
       "lion",
       "paxel"
-    ]
+    ],
+    "GoodsType": {
+      "SAPX": "SHTPC",
+      "JNTC": "bm000007"
+    }
   },
   "AllowedHosts": "*"
 }

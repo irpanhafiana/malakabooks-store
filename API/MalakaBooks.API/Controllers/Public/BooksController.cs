@@ -28,4 +28,5 @@ public class BooksController(IMediator mediator) : ApiControllerBase
     var book = await mediator.Send(new GetBookByIdQuery(id), cancellationToken);
     return book is null ? NotFound() : Success(book);
   }
+
 }
