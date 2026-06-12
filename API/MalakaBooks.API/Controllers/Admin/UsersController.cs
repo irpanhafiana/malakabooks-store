@@ -14,8 +14,8 @@ namespace MalakaBooks.API.Controllers.Admin;
 [Authorize(Policy = "MalakaAdminPolicy")]
 public class UsersController(IMediator mediator) : ApiControllerBase
 {
-  /// <summary>Get all users</summary>
-  [HttpGet]
-  public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
-      Success(await mediator.Send(new GetAllUsersQuery(), cancellationToken));
+    /// <summary>Get all users</summary>
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetAllUsersQuery(), cancellationToken));
 }

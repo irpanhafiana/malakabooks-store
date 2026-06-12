@@ -10,51 +10,51 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MalakaBooks.DataValidator
 {
-  public class AddressEntityValidator : BaseRepository<AddressEntity>, IAddressEntityValidator
-  {
-    private IMongoCollection<AddressEntity> _collection;
-
-    public AddressEntityValidator(MongoDbContext mongoDbContext, IMongoClient mongoClient, IHttpContextAccessor contextAccessor, IOptions<MongoDbSetting> mongoDbSetting) : base(mongoDbContext, mongoClient, contextAccessor)
+    public class AddressEntityValidator : BaseRepository<AddressEntity>, IAddressEntityValidator
     {
-      _collection = mongoDbContext.GetCollection<AddressEntity>(mongoDbSetting.Value.AddressesCollection);
+        private IMongoCollection<AddressEntity> _collection;
+
+        public AddressEntityValidator(MongoDbContext mongoDbContext, IMongoClient mongoClient, IHttpContextAccessor contextAccessor, IOptions<MongoDbSetting> mongoDbSetting) : base(mongoDbContext, mongoClient, contextAccessor)
+        {
+            _collection = mongoDbContext.GetCollection<AddressEntity>(mongoDbSetting.Value.AddressesCollection);
+        }
+
+        public async Task<ValidationResult> CreateValidateAsync(params AddressEntity[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                var userId = entity.UserId.ToLower();
+                var label = entity.Label.ToLower();
+
+                var existing = await _collection.Find(_ =>
+                  _.UserId.ToLower() == userId &&
+                  _.Label.ToLower() == label
+                ).FirstOrDefaultAsync();
+
+                if (existing != null) Errors.Add("Address with same label already exist.");
+            }
+
+            return GetErrorResult();
+        }
+
+        public async Task<ValidationResult> UpdateValidateAsync(params AddressEntity[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                var userId = entity.UserId.ToLower();
+                var label = entity.Label.ToLower();
+
+                var existing = await _collection.Find(_ =>
+                  _.UserId.ToLower() == userId &&
+                  _.Label.ToLower() == label &&
+                  _.Id != entity.Id
+                ).FirstOrDefaultAsync();
+
+                if (existing != null) Errors.Add("Address with same label already exist.");
+            }
+
+            return GetErrorResult();
+        }
+
     }
-
-    public async Task<ValidationResult> CreateValidateAsync(params AddressEntity[] entities)
-    {
-      foreach (var entity in entities)
-      {
-        var userId = entity.UserId.ToLower();
-        var label = entity.Label.ToLower();
-
-        var existing = await _collection.Find(_ =>
-          _.UserId.ToLower() == userId &&
-          _.Label.ToLower() == label
-        ).FirstOrDefaultAsync();
-
-        if (existing != null) Errors.Add("Address with same label already exist.");
-      }
-
-      return GetErrorResult();
-    }
-
-    public async Task<ValidationResult> UpdateValidateAsync(params AddressEntity[] entities)
-    {
-      foreach (var entity in entities)
-      {
-        var userId = entity.UserId.ToLower();
-        var label = entity.Label.ToLower();
-
-        var existing = await _collection.Find(_ =>
-          _.UserId.ToLower() == userId &&
-          _.Label.ToLower() == label &&
-          _.Id != entity.Id
-        ).FirstOrDefaultAsync();
-
-        if (existing != null) Errors.Add("Address with same label already exist.");
-      }
-
-      return GetErrorResult();
-    }
-
-  }
 }

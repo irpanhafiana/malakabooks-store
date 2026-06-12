@@ -7,17 +7,17 @@ namespace MalakaBooks.Mediator.BookHandlers;
 
 public class UpdateBookHandler(IBookRepository bookRepository, IBookEntityValidator validator) : IRequestHandler<UpdateBookCommand, bool>
 {
-  private readonly IBookEntityValidator _validator = validator;
+    private readonly IBookEntityValidator _validator = validator;
 
-  public async Task<bool> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
-  {
-    var entity = await bookRepository.GetByIdAsync(request.Id, cancellationToken);
-    if (entity is null) return false;
+    public async Task<bool> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
+    {
+        var entity = await bookRepository.GetByIdAsync(request.Id, cancellationToken);
+        if (entity is null) return false;
 
-    var result = _validator.UpdateValidateAsync(entity);
-    if (result is not null) return false;
+        var result = _validator.UpdateValidateAsync(entity);
+        if (result is not null) return false;
 
-    entity.UpdateFrom(request.Request);
-    return await bookRepository.UpdateAsync(request.Id, entity, cancellationToken);
-  }
+        entity.UpdateFrom(request.Request);
+        return await bookRepository.UpdateAsync(request.Id, entity, cancellationToken);
+    }
 }

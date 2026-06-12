@@ -15,16 +15,16 @@ namespace MalakaBooks.API.Controllers.Customer;
 [Authorize(Policy = "MalakaCustomerPolicy")]
 public class ReviewsController(IMediator mediator) : ApiControllerBase
 {
-  /// <summary>Get reviews by book</summary>
-  [HttpGet("book/{bookId}")]
-  public async Task<IActionResult> GetByBook(string bookId, CancellationToken cancellationToken) =>
-      Success(await mediator.Send(new GetReviewsByBookQuery(bookId), cancellationToken));
+    /// <summary>Get reviews by book</summary>
+    [HttpGet("book/{bookId}")]
+    public async Task<IActionResult> GetByBook(string bookId, CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetReviewsByBookQuery(bookId), cancellationToken));
 
-  /// <summary>Write a review</summary>
-  [HttpPost]
-  public async Task<IActionResult> Create([FromBody] CreateReviewRequest request, CancellationToken cancellationToken)
-  {
-    var result = await mediator.Send(new CreateReviewCommand(request), cancellationToken);
-    return ProcessResult(result);
-  }
+    /// <summary>Write a review</summary>
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateReviewRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateReviewCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 }

@@ -17,37 +17,37 @@ namespace MalakaBooks.API.Controllers.Admin;
 [Authorize(Policy = "MalakaAdminPolicy")]
 public class BooksController(IMediator mediator) : ApiControllerBase
 {
-  /// <summary>Get all books</summary>
-  [HttpGet]
-  public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
-      Success(await mediator.Send(new GetBooksQuery(), cancellationToken));
+    /// <summary>Get all books</summary>
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetBooksQuery(), cancellationToken));
 
-  /// <summary>Get book by id</summary>
-  [HttpGet("{id}")]
-  public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
-  {
-    var book = await mediator.Send(new GetBookByIdQuery(id), cancellationToken);
-    return book is null ? NotFound() : Success(book);
-  }
+    /// <summary>Get book by id</summary>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
+    {
+        var book = await mediator.Send(new GetBookByIdQuery(id), cancellationToken);
+        return book is null ? NotFound() : Success(book);
+    }
 
-  /// <summary>Create book</summary>
-  [HttpPost]
-  public async Task<IActionResult> Create([FromBody] CreateBookRequest request, CancellationToken cancellationToken)
-  {
-    var result = await mediator.Send(new CreateBookCommand(request), cancellationToken);
-    return ProcessResult(result);
-  }
+    /// <summary>Create book</summary>
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateBookRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateBookCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
-  /// <summary>Update book</summary>
-  [HttpPut("{id}")]
-  public async Task<IActionResult> Update(string id, [FromBody] UpdateBookRequest request, CancellationToken cancellationToken)
-  {
-    var result = await mediator.Send(new UpdateBookCommand(id, request), cancellationToken);
-    return Success(result);
-  }
+    /// <summary>Update book</summary>
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateBookRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdateBookCommand(id, request), cancellationToken);
+        return Success(result);
+    }
 
-  /// <summary>Delete book</summary>
-  [HttpDelete("{id}")]
-  public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
-    => Success(await mediator.Send(new DeleteBookCommand(id), cancellationToken));
+    /// <summary>Delete book</summary>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
+      => Success(await mediator.Send(new DeleteBookCommand(id), cancellationToken));
 }

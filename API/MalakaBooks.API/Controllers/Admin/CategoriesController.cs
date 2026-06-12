@@ -18,37 +18,37 @@ namespace MalakaBooks.API.Controllers.Admin;
 [Authorize(Policy = "MalakaAdminPolicy")]
 public class CategoriesController(IMediator mediator) : ApiControllerBase
 {
-  /// <summary>Get all categories</summary>
-  [HttpGet]
-  public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
-      Success(await mediator.Send(new GetCategoriesQuery(), cancellationToken));
+    /// <summary>Get all categories</summary>
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetCategoriesQuery(), cancellationToken));
 
-  /// <summary>Get category by id</summary>
-  [HttpGet("{id}")]
-  public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
-  {
-    var category = await mediator.Send(new GetCategoryByIdQuery(id), cancellationToken);
-    return Success(category);
-  }
+    /// <summary>Get category by id</summary>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
+    {
+        var category = await mediator.Send(new GetCategoryByIdQuery(id), cancellationToken);
+        return Success(category);
+    }
 
-  /// <summary>Create category</summary>
-  [HttpPost]
-  public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request, CancellationToken cancellationToken)
-  {
-    var result = await mediator.Send(new CreateCategoryCommand(request), cancellationToken);
-    return ProcessResult(result);
-  }
+    /// <summary>Create category</summary>
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateCategoryCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
-  /// <summary>Update category</summary>
-  [HttpPut("{id}")]
-  public async Task<IActionResult> Update(string id, [FromBody] UpdateCategoryRequest request, CancellationToken cancellationToken)
-  {
-    var result = await mediator.Send(new UpdateCategoryCommand(id, request), cancellationToken);
-    return Success(result);
-  }
+    /// <summary>Update category</summary>
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateCategoryRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdateCategoryCommand(id, request), cancellationToken);
+        return Success(result);
+    }
 
-  /// <summary>Delete category</summary>
-  [HttpDelete("{id}")]
-  public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
-       => Success(await mediator.Send(new DeleteCategoryCommand(id), cancellationToken));
+    /// <summary>Delete category</summary>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
+         => Success(await mediator.Send(new DeleteCategoryCommand(id), cancellationToken));
 }

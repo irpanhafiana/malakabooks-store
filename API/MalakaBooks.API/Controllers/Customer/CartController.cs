@@ -18,24 +18,24 @@ namespace MalakaBooks.API.Controllers.Customer;
 [Authorize(Policy = "MalakaCustomerPolicy")]
 public class CartController(IMediator mediator) : ApiControllerBase
 {
-  /// <summary>Get own cart</summary>
-  [HttpGet("{userId}")]
-  public async Task<IActionResult> GetCart(string userId, CancellationToken cancellationToken)
-    => Success(await mediator.Send(new GetCartQuery(userId), cancellationToken));
+    /// <summary>Get own cart</summary>
+    [HttpGet("{userId}")]
+    public async Task<IActionResult> GetCart(string userId, CancellationToken cancellationToken)
+      => Success(await mediator.Send(new GetCartQuery(userId), cancellationToken));
 
-  /// <summary>Add item to cart</summary>
-  [HttpPost]
-  public async Task<IActionResult> AddItem([FromBody] AddCartItemRequest request, CancellationToken cancellationToken)
-  {
-    return Success(await mediator.Send(new AddCartItemCommand(request), cancellationToken));
-  }
+    /// <summary>Add item to cart</summary>
+    [HttpPost]
+    public async Task<IActionResult> AddItem([FromBody] AddCartItemRequest request, CancellationToken cancellationToken)
+    {
+        return Success(await mediator.Send(new AddCartItemCommand(request), cancellationToken));
+    }
 
-  /// <summary>Remove item from cart</summary>
-  [HttpDelete("{userId}/items/{bookId}")]
-  public async Task<IActionResult> RemoveItem(string userId, string bookId, CancellationToken cancellationToken)
-  {
-    var request = new RemoveCartItemRequest { UserId = userId, BookId = bookId };
+    /// <summary>Remove item from cart</summary>
+    [HttpDelete("{userId}/items/{bookId}")]
+    public async Task<IActionResult> RemoveItem(string userId, string bookId, CancellationToken cancellationToken)
+    {
+        var request = new RemoveCartItemRequest { UserId = userId, BookId = bookId };
 
-    return Success(await mediator.Send(new RemoveCartItemCommand(request), cancellationToken));
-  }
+        return Success(await mediator.Send(new RemoveCartItemCommand(request), cancellationToken));
+    }
 }

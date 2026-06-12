@@ -8,19 +8,19 @@ namespace MalakaBooks.Mediator.CategoryHandlers;
 
 public class CreateCategoryHandler(ICategoryRepository categoryRepository, ICategoryEntityValidator validator) : IRequestHandler<CreateCategoryCommand, ValidationResult?>
 {
-  private readonly ICategoryEntityValidator _validator = validator;
+    private readonly ICategoryEntityValidator _validator = validator;
 
-  public async Task<ValidationResult?> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
-  {
-    var entity = request.Request.ToEntity();
-
-    var result = await _validator.CreateValidateAsync(entity);
-    if (result == null)
+    public async Task<ValidationResult?> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
-      await categoryRepository.CreateAsync(entity, cancellationToken);
-    }
+        var entity = request.Request.ToEntity();
 
-    return result;
-  }
+        var result = await _validator.CreateValidateAsync(entity);
+        if (result == null)
+        {
+            await categoryRepository.CreateAsync(entity, cancellationToken);
+        }
+
+        return result;
+    }
 
 }

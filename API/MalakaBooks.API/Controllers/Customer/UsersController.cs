@@ -20,52 +20,52 @@ namespace MalakaBooks.API.Controllers.Customer;
 public class UsersController(IMediator mediator) : ApiControllerBase
 {
 
-  /// <summary>
-  /// Creates a new IdentityServer4 user profile using the specified request data.
-  /// </summary>
-  /// <param name="request">The details of the user profile to create. Cannot be null.</param>
-  /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-  /// <returns>An <see cref="IActionResult"/> indicating the result of the profile creation operation. Returns a success response
-  /// if the profile is created; otherwise, returns an error response describing the failure.</returns>
-  [HttpPost]
-  [AllowAnonymous]
-  public async Task<IActionResult> CreateIS4Profile([FromBody] CreateIS4UserRequest request, CancellationToken cancellationToken)
-  {
-    var result = await mediator.Send(new RegisterUserCommand(request), cancellationToken);
+    /// <summary>
+    /// Creates a new IdentityServer4 user profile using the specified request data.
+    /// </summary>
+    /// <param name="request">The details of the user profile to create. Cannot be null.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>An <see cref="IActionResult"/> indicating the result of the profile creation operation. Returns a success response
+    /// if the profile is created; otherwise, returns an error response describing the failure.</returns>
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> CreateIS4Profile([FromBody] CreateIS4UserRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RegisterUserCommand(request), cancellationToken);
 
-    return ProcessResult(result);
-  }
+        return ProcessResult(result);
+    }
 
-  ///// <summary>
-  ///// Create user profile in MongoDB after IS4 registration.
-  ///// No auth required — called immediately after IS4 returns the sub claim.
-  ///// Stores: Id (IS4 sub), Name, Phone, Avatar, CreatedAt only.
-  ///// Role/Email/Password are managed by IS4.
-  ///// </summary>
-  //[HttpPost]
-  //[AllowAnonymous]
-  //public async Task<IActionResult> CreateProfile([FromBody] CreateUserProfileRequest request, CancellationToken cancellationToken)
-  //{
-  //  var result = await mediator.Send(new CreateUserProfileCommand(request), cancellationToken);
+    ///// <summary>
+    ///// Create user profile in MongoDB after IS4 registration.
+    ///// No auth required — called immediately after IS4 returns the sub claim.
+    ///// Stores: Id (IS4 sub), Name, Phone, Avatar, CreatedAt only.
+    ///// Role/Email/Password are managed by IS4.
+    ///// </summary>
+    //[HttpPost]
+    //[AllowAnonymous]
+    //public async Task<IActionResult> CreateProfile([FromBody] CreateUserProfileRequest request, CancellationToken cancellationToken)
+    //{
+    //  var result = await mediator.Send(new CreateUserProfileCommand(request), cancellationToken);
 
-  //  return ProcessResult(result);
-  //}
+    //  return ProcessResult(result);
+    //}
 
-  /// <summary>Get own profile</summary>
-  [HttpGet("{id}/profile")]
-  //[Authorize(Policy = "CustomerPolicy")]
-  public async Task<IActionResult> GetProfile(string id, CancellationToken cancellationToken)
-  {
-    var result = await mediator.Send(new GetUserProfileQuery(id), cancellationToken);
-    return Success(result);
-  }
+    /// <summary>Get own profile</summary>
+    [HttpGet("{id}/profile")]
+    //[Authorize(Policy = "CustomerPolicy")]
+    public async Task<IActionResult> GetProfile(string id, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetUserProfileQuery(id), cancellationToken);
+        return Success(result);
+    }
 
-  /// <summary>Update own profile (name, phone, avatar only)</summary>
-  [HttpPut("{id}/profile")]
-  //[Authorize(Policy = "CustomerPolicy")]
-  public async Task<IActionResult> UpdateProfile(string id, [FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
-  {
-    var result = await mediator.Send(new UpdateUserProfileCommand(id, request), cancellationToken);
-    return Success(result);
-  }
+    /// <summary>Update own profile (name, phone, avatar only)</summary>
+    [HttpPut("{id}/profile")]
+    //[Authorize(Policy = "CustomerPolicy")]
+    public async Task<IActionResult> UpdateProfile(string id, [FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdateUserProfileCommand(id, request), cancellationToken);
+        return Success(result);
+    }
 }

@@ -12,7 +12,7 @@ public class OrderResponse
 {
     public string Id { get; set; } = string.Empty;
     public string UserId { get; set; } = string.Empty;
-    public List<OrderItemResponse> Items { get; set; } = new();
+    public List<OrderItemResponse> Items { get; set; } = [];
     public string AddressId { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
     public decimal TotalPrice { get; set; }
@@ -32,7 +32,7 @@ public class CreateOrderItemRequest
 public class CreateOrderRequest
 {
     public string UserId { get; set; } = string.Empty;
-    public List<CreateOrderItemRequest> Items { get; set; } = new();
+    public List<CreateOrderItemRequest> Items { get; set; } = [];
     public string AddressId { get; set; } = string.Empty;
     public string Note { get; set; } = string.Empty;
 }

@@ -73,6 +73,6 @@ public class CartRepository : ICartRepository
         [BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; } = string.Empty;
 
-        public List<CartItemEntity> Items { get; set; } = new();
+        public List<CartItemEntity> Items { get; set; } = [];
     }
 }
