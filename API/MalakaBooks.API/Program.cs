@@ -90,29 +90,29 @@ builder.Services.AddSingleton(swaggerSetting);
 
 builder.Services.AddSwaggerGen(c =>
 {
-  c.SwaggerDoc($"v{versioningSetting.MajorVersion}", new OpenApiInfo { Title = swaggerSetting.Title, Version = $"v{versioningSetting.MajorVersion}", Description = "" });
+    c.SwaggerDoc($"v{versioningSetting.MajorVersion}", new OpenApiInfo { Title = swaggerSetting.Title, Version = $"v{versioningSetting.MajorVersion}", Description = "" });
 
-  c.OperationFilter<SwaggerAuthorizeOperationFilter>();
-  c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-  {
-    Type = SecuritySchemeType.OAuth2,
-    Name = swaggerSetting.OidcClientId,// client id
-    In = ParameterLocation.Cookie, // where the token will go
-    Flows = new OpenApiOAuthFlows()
+    c.OperationFilter<SwaggerAuthorizeOperationFilter>();
+    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-      ClientCredentials = new OpenApiOAuthFlow()
-      {
-        Scopes = new Dictionary<string, string>
+        Type = SecuritySchemeType.OAuth2,
+        Name = swaggerSetting.OidcClientId,// client id
+        In = ParameterLocation.Cookie, // where the token will go
+        Flows = new OpenApiOAuthFlows()
+        {
+            ClientCredentials = new OpenApiOAuthFlow()
+            {
+                Scopes = new Dictionary<string, string>
         {
           {
             swaggerSetting.OidcApiName!, swaggerSetting.OidcApiName!
           }
         },
-        TokenUrl = new Uri($"{swaggerSetting.IdentityServerBaseUrl}/connect/token"),
-      }
-    }
-  });
-  c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                TokenUrl = new Uri($"{swaggerSetting.IdentityServerBaseUrl}/connect/token"),
+            }
+        }
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
         {
           {
             new OpenApiSecurityScheme() { Reference = new OpenApiReference() { Type= ReferenceType.SecurityScheme, Id="oauth2" } },
@@ -120,10 +120,10 @@ builder.Services.AddSwaggerGen(c =>
           }
         });
 
-  // Set the comments path for the Swagger JSON and UI.
-  var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-  var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-  c.IncludeXmlComments(xmlPath);
+    // Set the comments path for the Swagger JSON and UI.
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
 });
 #endregion
 
@@ -135,14 +135,14 @@ is4APISection.Bind(is4APISetting);
 builder.Services.AddSingleton(new ClientCredentialsTokenRequest());
 builder.Services.AddSingleton(new PasswordTokenRequest
 {
-  Address = is4APISetting.AuthorityId + "/connect/token",
-  ClientId = is4APISetting.ClientId!,
-  ClientSecret = is4APISetting.ClientSecret!,
+    Address = is4APISetting.AuthorityId + "/connect/token",
+    ClientId = is4APISetting.ClientId!,
+    ClientSecret = is4APISetting.ClientSecret!,
 
-  UserName = is4APISetting.UserId!,
-  Password = is4APISetting.UserPassword!,
+    UserName = is4APISetting.UserId!,
+    Password = is4APISetting.UserPassword!,
 
-  Scope = is4APISetting.Scopes!,
+    Scope = is4APISetting.Scopes!,
 });
 
 builder.Services.AddMemoryCache();
@@ -150,9 +150,9 @@ builder.Services.AddTransient<ProtectedApiBearerTokenHandler>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddHttpClient<IProtectedApiClient, ProtectedApiClient>(client =>
 {
-  client.BaseAddress = new Uri(is4APISetting.BaseUrl!);
-  client.DefaultRequestHeaders.Clear();
-  client.DefaultRequestHeaders.Add("Accept", "application/json");
+    client.BaseAddress = new Uri(is4APISetting.BaseUrl!);
+    client.DefaultRequestHeaders.Clear();
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
 }).AddHttpMessageHandler<ProtectedApiBearerTokenHandler>();
 
 #endregion
@@ -177,17 +177,17 @@ appSection.Bind(appSetting);
 
 builder.Services.AddControllers(options =>
 {
-  options.Filters.Add(new IdempotentFilter(appSetting.IdempotentExpiredHours!));
-  //options.Conventions.Add(new AuthorizeFilterByPolicy());
-  options.Filters.Add(typeof(GlobalHttpMethodAuthorizationFilter));
+    options.Filters.Add(new IdempotentFilter(appSetting.IdempotentExpiredHours!));
+    //options.Conventions.Add(new AuthorizeFilterByPolicy());
+    options.Filters.Add(typeof(GlobalHttpMethodAuthorizationFilter));
 }).AddNewtonsoftJson(nwtOptions =>
 {
-  nwtOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-  nwtOptions.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-  nwtOptions.SerializerSettings.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
-  nwtOptions.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-  nwtOptions.SerializerSettings.Formatting = Formatting.None;
-  nwtOptions.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
+    nwtOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+    nwtOptions.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+    nwtOptions.SerializerSettings.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
+    nwtOptions.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+    nwtOptions.SerializerSettings.Formatting = Formatting.None;
+    nwtOptions.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
 });
 //builder.Services.AddFluentValidationAutoValidation();
 //builder.Services.AddFluentValidationClientsideAdapters();
@@ -217,8 +217,8 @@ builder.Services.AddOutputCache();
 #region OutputCompression
 builder.Services.AddResponseCompression(options =>
 {
-  options.EnableForHttps = true;
-  options.Providers.Add<GzipCompressionProvider>();
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
 });
 builder.Services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Fastest);
 #endregion
@@ -236,21 +236,21 @@ builder.Services.AddSimasrimApiClient(builder.Configuration);
 
 if (appSetting.RateLimiterSetting != null)
 {
-  builder.Services.AddRateLimiter(options =>
-  {
-    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, IPAddress>(context =>
+    builder.Services.AddRateLimiter(options =>
     {
-      var clientIp = context.Connection.RemoteIpAddress;
-      return RateLimitPartition.GetFixedWindowLimiter(clientIp!, _ =>
-        new FixedWindowRateLimiterOptions
-        {
-          PermitLimit = appSetting.RateLimiterSetting.Limit,   // Max requests allowed
-          Window = TimeSpan.FromMinutes(appSetting.RateLimiterSetting.ResetMinute), // Reset every minute
-          QueueLimit = appSetting.RateLimiterSetting.QueueLimit,
-          AutoReplenishment = appSetting.RateLimiterSetting.AutoReplenish
-        });
+        options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, IPAddress>(context =>
+      {
+          var clientIp = context.Connection.RemoteIpAddress;
+          return RateLimitPartition.GetFixedWindowLimiter(clientIp!, _ =>
+          new FixedWindowRateLimiterOptions
+          {
+              PermitLimit = appSetting.RateLimiterSetting.Limit,   // Max requests allowed
+              Window = TimeSpan.FromMinutes(appSetting.RateLimiterSetting.ResetMinute), // Reset every minute
+              QueueLimit = appSetting.RateLimiterSetting.QueueLimit,
+              AutoReplenishment = appSetting.RateLimiterSetting.AutoReplenish
+          });
+      });
     });
-  });
 }
 
 #endregion
@@ -263,32 +263,32 @@ app.UseExceptionHandler();
 app.UseSwagger();
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwaggerUI(c =>
-  {
-    var descriptions = app.DescribeApiVersions();
-    foreach (var description in descriptions)
+    app.UseSwaggerUI(c =>
     {
-      var url = $"/swagger/{description.GroupName}/swagger.json";
-      var name = description.GroupName.ToUpperInvariant();
-      c.SwaggerEndpoint(url, name);
-    }
-  });
+        var descriptions = app.DescribeApiVersions();
+        foreach (var description in descriptions)
+        {
+            var url = $"/swagger/{description.GroupName}/swagger.json";
+            var name = description.GroupName.ToUpperInvariant();
+            c.SwaggerEndpoint(url, name);
+        }
+    });
 }
 
 app.UseHttpsRedirection();
 if (corsSetting.Enabled)
 {
-  foreach (var cors in corsSetting.CORSPolicies!)
-  {
-    if (cors.IsDefault)
+    foreach (var cors in corsSetting.CORSPolicies!)
     {
-      app.UseCors();
+        if (cors.IsDefault)
+        {
+            app.UseCors();
+        }
+        else
+        {
+            app.UseCors(cors.PolicyName!);
+        }
     }
-    else
-    {
-      app.UseCors(cors.PolicyName!);
-    }
-  }
 }
 
 app.UseAuthentication();

@@ -16,17 +16,17 @@ namespace MalakaBooks.API.Controllers.Public;
 [AllowAnonymous]
 public class BooksController(IMediator mediator) : ApiControllerBase
 {
-  /// <summary>Get all books (public catalog)</summary>
-  [HttpGet]
-  public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
-      Success(await mediator.Send(new GetBooksQuery(), cancellationToken));
+    /// <summary>Get all books (public catalog)</summary>
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetBooksQuery(), cancellationToken));
 
-  /// <summary>Get book by id (public)</summary>
-  [HttpGet("{id}")]
-  public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
-  {
-    var book = await mediator.Send(new GetBookByIdQuery(id), cancellationToken);
-    return book is null ? NotFound() : Success(book);
-  }
+    /// <summary>Get book by id (public)</summary>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
+    {
+        var book = await mediator.Send(new GetBookByIdQuery(id), cancellationToken);
+        return book is null ? NotFound() : Success(book);
+    }
 
 }

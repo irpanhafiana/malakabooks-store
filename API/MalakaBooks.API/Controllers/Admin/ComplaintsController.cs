@@ -17,16 +17,16 @@ namespace MalakaBooks.API.Controllers.Admin;
 [Authorize(Policy = "MalakaAdminPolicy")]
 public class ComplaintsController(IMediator mediator) : ApiControllerBase
 {
-  /// <summary>Get all complaints</summary>
-  [HttpGet]
-  public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
-      Success(await mediator.Send(new GetAllComplaintsQuery(), cancellationToken));
+    /// <summary>Get all complaints</summary>
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetAllComplaintsQuery(), cancellationToken));
 
-  /// <summary>Respond to a complaint</summary>
-  [HttpPut("{id}/respond")]
-  public async Task<IActionResult> Respond(string id, [FromBody] RespondComplaintRequest request, CancellationToken cancellationToken)
-  {
-    var complaint = await mediator.Send(new RespondComplaintCommand(id, request), cancellationToken);
-    return complaint is null ? NotFound() : Success(complaint);
-  }
+    /// <summary>Respond to a complaint</summary>
+    [HttpPut("{id}/respond")]
+    public async Task<IActionResult> Respond(string id, [FromBody] RespondComplaintRequest request, CancellationToken cancellationToken)
+    {
+        var complaint = await mediator.Send(new RespondComplaintCommand(id, request), cancellationToken);
+        return complaint is null ? NotFound() : Success(complaint);
+    }
 }

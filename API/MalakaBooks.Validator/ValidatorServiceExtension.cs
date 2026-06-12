@@ -22,6 +22,9 @@ public static class ValidatorServiceExtension
         services.AddScoped<IValidator<CreateReviewRequest>, CreateReviewRequestValidator>();
         services.AddScoped<IValidator<CreateComplaintRequest>, CreateComplaintRequestValidator>();
         services.AddScoped<IValidator<RespondComplaintRequest>, RespondComplaintRequestValidator>();
+        services.AddScoped<IValidator<CreateHomeAddressRequest>, CreateHomeAddressRequestValidator>();
+        services.AddScoped<IValidator<UpdateHomeAddressRequest>, UpdateHomeAddressRequestValidator>();
+
         return services;
     }
 }

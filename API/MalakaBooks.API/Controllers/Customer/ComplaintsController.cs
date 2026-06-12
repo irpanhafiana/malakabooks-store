@@ -18,16 +18,16 @@ namespace MalakaBooks.API.Controllers.Customer;
 [Authorize(Policy = "MalakaCustomerPolicy")]
 public class ComplaintsController(IMediator mediator) : ApiControllerBase
 {
-  /// <summary>Get own complaints</summary>
-  [HttpGet("user/{userId}")]
-  public async Task<IActionResult> GetByUser(string userId, CancellationToken cancellationToken) =>
-      Success(await mediator.Send(new GetComplaintsByUserQuery(userId), cancellationToken));
+    /// <summary>Get own complaints</summary>
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetByUser(string userId, CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetComplaintsByUserQuery(userId), cancellationToken));
 
-  /// <summary>Submit a complaint</summary>
-  [HttpPost]
-  public async Task<IActionResult> Create([FromBody] CreateComplaintRequest request, CancellationToken cancellationToken)
-  {
-    var result = await mediator.Send(new CreateComplaintCommand(request), cancellationToken);
-    return ProcessResult(result);
-  }
+    /// <summary>Submit a complaint</summary>
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateComplaintRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateComplaintCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 }

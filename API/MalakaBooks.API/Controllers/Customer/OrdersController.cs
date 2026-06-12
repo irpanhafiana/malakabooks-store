@@ -18,24 +18,24 @@ namespace MalakaBooks.API.Controllers.Customer;
 [Authorize(Policy = "MalakaCustomerPolicy")]
 public class OrdersController(IMediator mediator) : ApiControllerBase
 {
-  /// <summary>Create a new order</summary>
-  [HttpPost]
-  public async Task<IActionResult> Create([FromBody] CreateOrderRequest request, CancellationToken cancellationToken)
-  {
-    var result = await mediator.Send(new CreateOrderCommand(request), cancellationToken);
-    return ProcessResult(result);
-  }
+    /// <summary>Create a new order</summary>
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateOrderRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateOrderCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
-  /// <summary>Get own orders</summary>
-  [HttpGet("user/{userId}")]
-  public async Task<IActionResult> GetByUser(string userId, CancellationToken cancellationToken) =>
-      Success(await mediator.Send(new GetOrdersByUserQuery(userId), cancellationToken));
+    /// <summary>Get own orders</summary>
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetByUser(string userId, CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetOrdersByUserQuery(userId), cancellationToken));
 
-  /// <summary>Get own order detail</summary>
-  [HttpGet("{id}")]
-  public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
-  {
-    var order = await mediator.Send(new GetOrderByIdQuery(id), cancellationToken);
-    return Success(order);
-  }
+    /// <summary>Get own order detail</summary>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
+    {
+        var order = await mediator.Send(new GetOrderByIdQuery(id), cancellationToken);
+        return Success(order);
+    }
 }
