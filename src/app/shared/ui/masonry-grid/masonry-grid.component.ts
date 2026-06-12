@@ -1,4 +1,4 @@
-import { Component, input, computed, ContentChild, TemplateRef } from '@angular/core';
+import { Component, input, ContentChild, TemplateRef } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
@@ -12,14 +12,6 @@ export class MasonryGridComponent {
   items = input<any[]>([]);
 
   @ContentChild(TemplateRef) itemTemplate!: TemplateRef<any>;
-
-  leftColumnItems = computed(() => {
-    return this.items().filter((_, index) => index % 2 === 0);
-  });
-
-  rightColumnItems = computed(() => {
-    return this.items().filter((_, index) => index % 2 !== 0);
-  });
 
   trackById(item: any): any {
     return item?.id || item?.product?.id || item;

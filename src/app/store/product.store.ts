@@ -42,7 +42,10 @@ export class ProductStore {
   readonly loading = computed(() => this.state().loading);
 
   readonly featuredProducts = computed(() => {
-    return this.products().filter(p => p.featured);
+    const featured = this.products().filter(p => p.featured);
+    // API buku tidak punya flag "featured"; jika tidak ada yang ditandai,
+    // tampilkan seluruh katalog (perilaku umum home e-commerce).
+    return featured.length > 0 ? featured : this.products();
   });
 
   // Compute filters and sorting in real-time reactively

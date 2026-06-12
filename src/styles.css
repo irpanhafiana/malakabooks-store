@@ -125,9 +125,8 @@ body {
 /* Card Product Styling from layouting.md (with brand colors) */
 .card-product {
   background-color: #ffffff;
-  border: 1px solid #f1f5f9;
-  border-radius: 1rem;
   overflow: hidden;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

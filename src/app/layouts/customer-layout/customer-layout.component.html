@@ -1,11 +1,11 @@
 <div class="h-dvh w-full bg-gray-50/50 flex justify-center overflow-hidden customer-root" style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
   
   <!-- Mobile App Frame Container (Constrained width, clamp scaling, with simulator borders) -->
-  <div class="w-full max-w-[480px] bg-white relative flex flex-col md:border-x md:border-gray-200/60 overflow-hidden" 
+  <div class="w-full max-w-[480px] bg-gray-50 relative flex flex-col md:border-x md:border-gray-200/60 overflow-hidden" 
        style="height: calc(100% / clamp(0.75, 100vw / 480, 1)); transform: scale(clamp(0.75, 100vw / 480, 1)); transform-origin: center top;">
     
     <!-- Mobile-style Header -->
-    <header class="sticky top-0 z-40 bg-white px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
+    <header class="sticky top-0 z-40 bg-gray-50 px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
       @if (isSearchActive()) {
         <!-- Active Search Header -->
         <div class="flex items-center gap-2 w-full animate-fade-in">
@@ -44,7 +44,7 @@
     </header>
 
     <!-- Scrollable Contents Area -->
-    <main class="grow overflow-y-auto px-4 py-4 pb-24 no-scrollbar bg-white">
+    <main class="grow overflow-y-auto px-4 py-4 pb-24 no-scrollbar bg-gray-50">
       <router-outlet></router-outlet>
     </main>
 

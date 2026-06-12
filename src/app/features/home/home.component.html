@@ -5,12 +5,12 @@
         <!-- Embla viewport -->
         <div
           #carouselViewport
-          class="overflow-hidden"
+          class="overflow-hidden -mx-4 px-4 h-[180px]"
         >
           <!-- Embla container -->
-          <div class="flex -ml-3 items-center">
+          <div class="flex -ml-3 items-center h-full">
           @for (slide of slides; track $index) {
-            <div class="flex-[0_0_80%] min-w-0 pl-3">
+            <div class="flex-[0_0_90%] min-w-0 pl-3">
             <div
               class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between transition-all duration-300"
               [style.height.px]="$index === currentSlide() ? 168 : 140"
@@ -71,45 +71,42 @@
         </div>
       </section>
 
-      <!-- Categories quick-scroll (Bukalapak style category icons) -->
-      <section class="flex flex-col gap-2">
-        <!-- <div class="flex items-center justify-between">
-          <h2 class="font-display font-extrabold text-slate-800 text-base">Kategori</h2>
-        </div> -->
-        
-        <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-2 pt-1 -mx-4 px-4">
-          <a
-            routerLink="/product"
-            (click)="filterByCategory(null)"
-            [class]="productStore.selectedCategoryId() === null ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center px-4 py-2.5 rounded-lg text-[13px] transition-all whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center px-4 py-2.5 rounded-lg text-[13px] text-slate-600 transition-all whitespace-nowrap cursor-pointer'"
-          >
-            <i class="bx bx-category text-lg"></i>
-            Semua
-          </a>
-          @for (cat of productStore.categories(); track cat.id) {
-            <a
-              routerLink="/product"
-              (click)="filterByCategory(cat.id)"
-              [class]="productStore.selectedCategoryId() === cat.id ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center px-4 py-2.5 rounded-lg text-[13px] transition-all whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center px-4 py-2.5 rounded-lg text-[13px] text-slate-600 transition-all whitespace-nowrap cursor-pointer'"
-            >
-              <app-icon [name]="cat.icon" size="18"></app-icon>
-              {{ cat.name }}
-            </a>
-          }
-        </div>
-      </section>
-
       <!-- Recommended/Featured Products grid -->
-      <section class="flex flex-col gap-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="font-display font-extrabold text-slate-800 text-sm">Featured Publications</h2>
-            <p class="text-[10px] text-slate-400 mt-0.5">Handpicked premium titles & accessories</p>
+      <section class="flex flex-col gap-6">
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="font-display font-extrabold text-slate-800 text-base">Featured Publications</h2>
+              <p class="text-[12px] text-slate-400 mt-0.5">Handpicked premium titles & accessories</p>
+            </div>
+            <a routerLink="/product" class="text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors flex items-center gap-1">
+              View All
+              <app-icon name="chevron-right" size="12"></app-icon>
+            </a>
           </div>
-          <a routerLink="/product" class="text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors flex items-center gap-1">
-            View All
-            <app-icon name="chevron-right" size="12"></app-icon>
-          </a>
+  
+          <section class="flex flex-col gap-2">
+            <div class="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4">
+              <button
+                type="button"
+                (click)="filterByCategory(null)"
+                [class]="productStore.selectedCategoryId() === null ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center px-4 py-2.5 rounded-lg text-[12px] transition-all whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center px-4 py-2.5 rounded-lg text-[12px] text-slate-600 transition-all whitespace-nowrap cursor-pointer'"
+              >
+                <i class="bx bx-category text-lg"></i>
+                Semua
+              </button>
+              @for (cat of productStore.categories(); track cat.id) {
+                <button
+                  type="button"
+                  (click)="filterByCategory(cat.id)"
+                  [class]="productStore.selectedCategoryId() === cat.id ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center px-4 py-2.5 rounded-lg text-[12px] transition-all whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center px-4 py-2.5 rounded-lg text-[12px] text-slate-600 transition-all whitespace-nowrap cursor-pointer'"
+                >
+                  <app-icon [name]="cat.icon" size="18"></app-icon>
+                  {{ cat.name }}
+                </button>
+              }
+            </div>
+          </section>
         </div>
 
         @if (productStore.loading()) {
@@ -117,7 +114,7 @@
             <app-skeleton type="card" [count]="2"></app-skeleton>
           </div>
         } @else {
-          <app-masonry-grid [items]="productStore.featuredProducts()">
+          <app-masonry-grid [items]="productStore.filteredProducts()">
             <ng-template let-prod>
               <app-product-card
                 [product]="prod"

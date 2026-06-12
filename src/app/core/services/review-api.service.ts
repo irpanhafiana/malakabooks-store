@@ -13,9 +13,12 @@ export class ReviewApiService {
   private readonly BASE_URL = environment.apiBaseUrl;
 
   async getReviewsByProductId(productId: string): Promise<Review[]> {
-    try {
-      const currentUser = getStoredSessionUser();
+    const currentUser = getStoredSessionUser();
+    if (!currentUser) {
+      return [];
+    }
 
+    try {
       const envelope = await firstValueFrom(
         this.http.get<any>(`${this.BASE_URL}/customer/Reviews/book/${productId}`)
       );
@@ -24,13 +27,13 @@ export class ReviewApiService {
       return reviews.map((r: any) => ({
         id: r.id,
         productId: r.bookId,
-        userName: currentUser?.id === r.userId ? (currentUser?.name || 'Customer') : 'Customer',
+        userName: currentUser.id === r.userId ? (currentUser.name || 'Customer') : 'Customer',
         rating: r.rating,
         comment: r.comment,
         date: r.createdAt
       }));
     } catch (e) {
-      console.warn(`Reviews could not be loaded (likely unauthorized for guest):`, e);
+      console.warn(`Reviews could not be loaded:`, e);
       return [];
     }
   }

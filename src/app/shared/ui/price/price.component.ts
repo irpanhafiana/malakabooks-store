@@ -1,10 +1,9 @@
 import { Component, input, computed } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-price',
   standalone: true,
-  imports: [CurrencyPipe],
+  imports: [],
   templateUrl: './price.component.html',
   styleUrl: './price.component.css'
 })
@@ -14,6 +13,10 @@ export class PriceComponent {
   readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
   readonly bold = input<boolean>(true);
   readonly customClass = input<string>('', { alias: 'class' });
+
+  readonly formattedPrice = computed(() => {
+    return 'Rp ' + Math.round(this.value()).toLocaleString('id-ID');
+  });
 
   readonly priceClass = computed(() => {
     const fontSizes = {

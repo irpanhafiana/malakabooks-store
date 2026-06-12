@@ -1,4 +1,4 @@
-import { Component, input, output, inject } from '@angular/core';
+import { Component, input, output, inject, signal } from '@angular/core';
 import { ProductStore } from '../../../store/product.store';
 import { Product } from '../../../core/models';
 import { IconComponent } from '../icon/icon.component';
@@ -21,6 +21,11 @@ export class ProductCardComponent {
   readonly toggleWishlist = output<Product>();
 
   protected readonly Math = Math;
+  protected readonly imageError = signal(false);
+
+  onImageError() {
+    this.imageError.set(true);
+  }
 
   onAddToCart(event: Event) {
     event.stopPropagation();

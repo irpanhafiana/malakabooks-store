@@ -1,14 +1,6 @@
-<div class="flex gap-3 items-start w-full">
-      <!-- Left Column -->
-      <div class="flex-1 flex flex-col gap-3">
-        @for (item of leftColumnItems(); track trackById(item)) {
-          <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
-        }
-      </div>
-      <!-- Right Column -->
-      <div class="flex-1 flex flex-col gap-3">
-        @for (item of rightColumnItems(); track trackById(item)) {
-          <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
-        }
-      </div>
-    </div>
+<!-- Pinterest-style masonry: CSS multi-column height packing -->
+<div class="columns-2 gap-3 w-full [&>*]:block [&>*]:mb-3 [&>*]:break-inside-avoid">
+  @for (item of items(); track trackById(item)) {
+    <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+  }
+</div>
