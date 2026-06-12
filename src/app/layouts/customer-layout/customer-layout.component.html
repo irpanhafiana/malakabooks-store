@@ -5,7 +5,7 @@
        style="height: calc(100% / clamp(0.75, 100vw / 480, 1)); transform: scale(clamp(0.75, 100vw / 480, 1)); transform-origin: center top;">
     
     <!-- Mobile-style Header -->
-    <header class="sticky top-0 z-40 bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
+    <header class="sticky top-0 z-40 bg-white px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
       @if (isSearchActive()) {
         <!-- Active Search Header -->
         <div class="flex items-center gap-2 w-full animate-fade-in">
@@ -16,7 +16,7 @@
           >
             <i class="bx bx-left-arrow-alt text-xl"></i>
           </button>
-          <div class="flex-grow">
+          <div class="grow">
             <app-search-bar [placeholder]="'Search books...'" [value]="productStore.searchQuery()" [autofocus]="true" (search)="onSearch($event)"></app-search-bar>
           </div>
         </div>
@@ -27,29 +27,29 @@
             <img src="/malaka-books.svg" alt="Malaka Books Logo" class="h-6 w-6">
           </div>
           <div class="flex flex-col justify-center min-w-0">
-            <span class="text-sm font-extrabold tracking-tight text-slate-800 leading-tight">Malaka Books</span>
+            <span class="text-base font-extrabold tracking-tight text-slate-800 leading-tight">Malaka Books</span>
             <span class="font-sans text-[8px] text-slate-400 tracking-wider uppercase leading-none mt-0.5">Jendela Literasi Bangsa</span>
           </div>
         </a>
 
         <!-- Right: Search Icon -->
-        <button
+        <!-- <button
           type="button"
           (click)="isSearchActive.set(true)"
           class="p-1.5 rounded-lg text-slate-500 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent"
         >
           <i class="bx bx-search text-lg"></i>
-        </button>
+        </button> -->
       }
     </header>
 
     <!-- Scrollable Contents Area -->
-    <main class="flex-grow overflow-y-auto px-4 py-4 pb-24 no-scrollbar bg-white">
+    <main class="grow overflow-y-auto px-4 py-4 pb-24 no-scrollbar bg-white">
       <router-outlet></router-outlet>
     </main>
 
     <!-- Pinned Bottom Navigation Menu (Floating, rounded, matching bottom-navbar.md) -->
-    <nav class="absolute bottom-4 left-1/2 -translate-x-1/2 w-fit z-[45] bg-white/95 backdrop-blur-md flex items-center justify-center gap-2.5 p-1.5 rounded-full overflow-hidden border border-gray-200/80 whitespace-nowrap">
+    <nav class="absolute bottom-6 left-1/2 -translate-x-1/2 w-fit z-[45] bg-white/95 backdrop-blur-md flex items-center justify-center gap-2.5 p-1.5 rounded-full overflow-hidden border border-gray-200/80 whitespace-nowrap">
       
       <!-- Home Item -->
       <a routerLink="/" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}" aria-label="Beranda" (click)="resetFilters()"

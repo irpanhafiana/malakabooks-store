@@ -47,13 +47,22 @@
                 <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
                 <span class="text-slate-600 font-semibold">{{ addr.street }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
               </div>
-              <button
-                type="button"
-                (click)="deleteAddress(addr.id)"
-                class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-              >
-                <app-icon name="trash" size="14"></app-icon>
-              </button>
+              <div class="flex items-center gap-1">
+                <button
+                  type="button"
+                  (click)="editAddress(addr)"
+                  class="p-1.5 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors cursor-pointer"
+                >
+                  <app-icon name="edit" size="14"></app-icon>
+                </button>
+                <button
+                  type="button"
+                  (click)="deleteAddress(addr.id)"
+                  class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                >
+                  <app-icon name="trash" size="14"></app-icon>
+                </button>
+              </div>
             </div>
           } @empty {
             <p class="text-xs text-slate-400 text-center py-4">No shipping addresses saved yet.</p>
@@ -61,11 +70,12 @@
 
           @if (showAddressForm()) {
             <form [formGroup]="addressForm" class="grid grid-cols-1 gap-3.5 border border-slate-100 p-4 rounded-2xl bg-slate-50/20 mt-4 animate-fade-in">
+              <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">{{ editingAddressId() ? 'Edit Address' : 'Add New Address' }}</h3>
               <app-input label="Recipient Name" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
               <app-input label="Phone Number" placeholder="e.g. +628123456789" [control]="addrPhoneControl"></app-input>
               <app-input label="Street Address" placeholder="e.g. Jl. Sudirman No. 21" [control]="streetControl"></app-input>
-              <app-input label="City" placeholder="e.g. Jakarta Selatan" [control]="cityControl"></app-input>
-              <app-input label="Province" placeholder="e.g. DKI Jakarta" [control]="provinceControl"></app-input>
+              <app-select label="Province" placeholder="Select Province" [control]="provinceControl" [options]="provinceOptions()"></app-select>
+              <app-select label="City" placeholder="Select City" [control]="cityControl" [options]="cityOptions()"></app-select>
               <app-input label="Postal Code" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
               
               <div class="flex justify-end gap-2.5 mt-2">

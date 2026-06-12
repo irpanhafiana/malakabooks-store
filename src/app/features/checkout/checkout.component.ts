@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
@@ -7,15 +7,17 @@ import { CartStore } from '../../store/cart.store';
 import { OrderStore } from '../../store/order.store';
 import { Address, Order } from '../../core/models';
 import { InputComponent } from '../../shared/ui/input/input.component';
+import { SelectComponent } from '../../shared/ui/select/select.component';
 import { RadioComponent } from '../../shared/ui/radio/radio.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { PriceComponent } from '../../shared/ui/price/price.component';
 import { ToastService } from '../../core/services/toast.service';
+import { AddressApiService } from '../../core/services/address-api.service';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, InputComponent, RadioComponent, ButtonComponent, PriceComponent, DecimalPipe],
+  imports: [RouterLink, ReactiveFormsModule, InputComponent, SelectComponent, RadioComponent, ButtonComponent, PriceComponent, DecimalPipe],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
@@ -25,11 +27,19 @@ export class CheckoutComponent implements OnInit {
   private readonly orderStore = inject(OrderStore);
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
+  private readonly addressApi = inject(AddressApiService);
 
   isLoading = signal<boolean>(false);
   showAddressForm = signal<boolean>(false);
   savedAddresses = signal<Address[]>([]);
   selectedAddressId = signal<string | null>(null);
+
+  // Simasrim states
+  provinces = signal<any[]>([]);
+  cities = signal<any[]>([]);
+
+  provinceOptions = computed(() => this.provinces().map(p => ({ value: p.provinceId, label: p.province })));
+  cityOptions = computed(() => this.cities().map(c => ({ value: c.cityId, label: `${c.type} ${c.city}` })));
 
   // Address inputs
   recipientControl = new FormControl('', [Validators.required]);
@@ -62,7 +72,7 @@ export class CheckoutComponent implements OnInit {
   cardExpiryControl = new FormControl('', [Validators.required]);
   cardCvcControl = new FormControl('', [Validators.required]);
 
-  ngOnInit() {
+  async ngOnInit() {
     // Check auth, redirect if not logged in
     if (!this.authStore.isLoggedIn()) {
       this.toastService.info('Please sign in to complete your checkout.');
@@ -72,7 +82,7 @@ export class CheckoutComponent implements OnInit {
 
     const addresses = this.authStore.currentUser()?.addresses || [];
     this.savedAddresses.set(addresses);
-    
+
     const def = addresses.find(a => a.isDefault);
     if (def) {
       this.selectedAddressId.set(def.id);
@@ -81,6 +91,31 @@ export class CheckoutComponent implements OnInit {
     } else {
       this.showAddressForm.set(true);
     }
+
+    // Load provinces
+    await this.loadProvinces();
+
+    // Listen to province changes
+    this.provinceControl.valueChanges.subscribe(async (provinceId) => {
+      if (provinceId) {
+        const cts = await this.addressApi.getCities(provinceId);
+        this.cities.set(cts);
+
+        const currentCityVal = this.cityControl.value;
+        const exists = cts.some(c => c.cityId === currentCityVal);
+        if (!exists) {
+          this.cityControl.setValue('');
+        }
+      } else {
+        this.cities.set([]);
+        this.cityControl.setValue('');
+      }
+    });
+  }
+
+  async loadProvinces() {
+    const provs = await this.addressApi.getProvinces();
+    this.provinces.set(provs);
   }
 
   selectAddress(id: string) {
@@ -89,6 +124,7 @@ export class CheckoutComponent implements OnInit {
 
   addNewAddress() {
     this.addressForm.reset();
+    this.cities.set([]);
     this.showAddressForm.set(true);
   }
 
@@ -96,19 +132,27 @@ export class CheckoutComponent implements OnInit {
     this.showAddressForm.set(false);
   }
 
-  saveAddressForm() {
+  async saveAddressForm() {
     if (this.addressForm.invalid) return;
 
     const user = this.authStore.currentUser();
     if (!user) return;
+
+    // Resolve IDs to names
+    const provId = this.provinceControl.value;
+    const cityId = this.cityControl.value;
+
+    const provName = this.provinces().find(p => p.provinceId === provId)?.province || '';
+    const cityObj = this.cities().find(c => c.cityId === cityId);
+    const cityName = cityObj ? `${cityObj.type} ${cityObj.city}` : '';
 
     const newAddr: Address = {
       id: `addr-${Date.now()}`,
       name: this.recipientControl.value || '',
       phone: this.phoneControl.value || '',
       street: this.streetControl.value || '',
-      city: this.cityControl.value || '',
-      province: this.provinceControl.value || '',
+      city: cityName,
+      province: provName,
       postalCode: this.postalCodeControl.value || '',
       isDefault: user.addresses.length === 0
     };
@@ -118,10 +162,15 @@ export class CheckoutComponent implements OnInit {
       addresses: [...user.addresses, newAddr]
     };
 
-    this.authStore.updateProfile(updatedUser);
-    this.savedAddresses.set(updatedUser.addresses);
-    this.selectedAddressId.set(newAddr.id);
-    this.showAddressForm.set(false);
+    this.isLoading.set(true);
+    const success = await this.authStore.updateProfile(updatedUser);
+    this.isLoading.set(false);
+
+    if (success) {
+      this.savedAddresses.set(updatedUser.addresses);
+      this.selectedAddressId.set(newAddr.id);
+      this.showAddressForm.set(false);
+    }
   }
 
   isOrderInvalid(): boolean {

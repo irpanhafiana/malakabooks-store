@@ -38,6 +38,15 @@ export class LoginComponent implements OnInit {
     password: this.passwordControl
   });
 
+  fillDemoCredentials() {
+    this.usernameControl.setValue('customer@malakabooks.local');
+    this.passwordControl.setValue('ChangeMe123!');
+    this.usernameControl.markAsDirty();
+    this.passwordControl.markAsDirty();
+    this.usernameControl.markAsTouched();
+    this.passwordControl.markAsTouched();
+  }
+
   async onSubmit() {
     if (this.loginForm.invalid) return;
 

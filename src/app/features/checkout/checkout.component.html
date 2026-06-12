@@ -45,8 +45,8 @@
                   <div class="sm:col-span-2">
                     <app-input label="Street Address" placeholder="e.g. Jl. Sudirman No. 21" [control]="streetControl"></app-input>
                   </div>
-                  <app-input label="City" placeholder="e.g. Jakarta Selatan" [control]="cityControl"></app-input>
-                  <app-input label="Province" placeholder="e.g. DKI Jakarta" [control]="provinceControl"></app-input>
+                  <app-select label="Province" placeholder="Select Province" [control]="provinceControl" [options]="provinceOptions()"></app-select>
+                  <app-select label="City" placeholder="Select City" [control]="cityControl" [options]="cityOptions()"></app-select>
                   <app-input label="Postal Code" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
                   
                   <div class="sm:col-span-2 flex justify-end gap-2.5 mt-2">
