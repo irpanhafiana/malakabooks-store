@@ -54,7 +54,7 @@ public class SimasrimController : ApiControllerBase
     /// The response includes status code, status message, and province data.
     /// </returns>
     [HttpGet]
-    [Route("Simasrim/Province")]
+    [Route("Province")]
     public async Task<IActionResult> GetSimasrimProvince(CancellationToken cancellationToken)
       => Success(await mediator.Send(new GetSimasrimProvinceQuery(), cancellationToken));
 
@@ -66,7 +66,7 @@ public class SimasrimController : ApiControllerBase
     /// <returns>An <see cref="IActionResult"/> containing a <see cref="BaseResponse"/> with the list of cities.
     /// matches the specified criteria.</returns>
     [HttpPost]
-    [Route("Simasrim/City")]
+    [Route("City")]
     public async Task<IActionResult> GetSimasrimCity(CityModel model, CancellationToken cancellationToken)
       => Success(await mediator.Send(new GetSimasrimCityQuery(model), cancellationToken));
 
@@ -80,7 +80,7 @@ public class SimasrimController : ApiControllerBase
     /// <returns>An <see cref="IActionResult"/> containing a response with the list of courier codes. The response includes a
     /// status code, status message, and an array of courier code strings.</returns>
     [HttpGet]
-    [Route("Simasrim/Courier")]
+    [Route("Courier")]
     public async Task<IActionResult> GetSimasrimCity(CancellationToken cancellationToken)
     {
         var response = new BaseResponse
@@ -101,7 +101,7 @@ public class SimasrimController : ApiControllerBase
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>An <see cref="IActionResult"/> containing the district information returned by the Simasrim API.</returns>
     [HttpPost]
-    [Route("Simasrim/District")]
+    [Route("District")]
     public async Task<IActionResult> GetSimasrimDistrict(DistrictModel model, CancellationToken cancellationToken)
       => Success(await mediator.Send(new GetSimasrimDistrictQuery(model), cancellationToken));
 
@@ -113,7 +113,7 @@ public class SimasrimController : ApiControllerBase
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>An <see cref="IActionResult"/> containing the shipping tariff information returned by the Simasrim service.</returns>
     [HttpPost]
-    [Route("Simasrim/Tarif")]
+    [Route("Tarif")]
     public async Task<IActionResult> GetSimasrimTarif(TariffModel model, CancellationToken cancellationToken)
       => Success(await mediator.Send(new GetSimasrimTariffQuery(model), cancellationToken));
 

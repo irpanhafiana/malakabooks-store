@@ -5,7 +5,6 @@ namespace MalakaBooks.Entity;
 
 public class ReviewEntity : BaseObject
 {
-    [BsonRepresentation(BsonType.ObjectId)]
     public string UserId { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]

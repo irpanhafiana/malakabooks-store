@@ -5,7 +5,6 @@ namespace MalakaBooks.Entity;
 
 public class OrderEntity : BaseObject
 {
-    [BsonRepresentation(BsonType.ObjectId)]
     public string UserId { get; set; } = string.Empty;
 
     public List<OrderItemEntity> Items { get; set; } = [];

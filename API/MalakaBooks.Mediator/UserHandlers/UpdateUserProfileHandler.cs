@@ -17,7 +17,7 @@ public class UpdateUserProfileHandler(IUserRepository userRepository, IUserEntit
         entity.LastName = request.Request.LastName;
         entity.Avatar = request.Request.Avatar;
 
-        var result = _validator.UpdateValidateAsync(entity);
+        var result = await _validator.UpdateValidateAsync(entity);
         if (result is not null) return false;
 
         return await userRepository.UpdateAsync(request.Id, entity, cancellationToken);

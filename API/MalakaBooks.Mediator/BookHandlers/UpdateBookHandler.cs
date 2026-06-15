@@ -14,7 +14,7 @@ public class UpdateBookHandler(IBookRepository bookRepository, IBookEntityValida
         var entity = await bookRepository.GetByIdAsync(request.Id, cancellationToken);
         if (entity is null) return false;
 
-        var result = _validator.UpdateValidateAsync(entity);
+        var result = await _validator.UpdateValidateAsync(entity);
         if (result is not null) return false;
 
         entity.UpdateFrom(request.Request);
