@@ -240,10 +240,11 @@ export class CheckoutComponent implements OnInit {
     if (totalWeight <= 0) totalWeight = 1000;
 
     const tariffRes = await this.addressApi.calculateTariff({
-      origin: '151', // Jakarta Barat default
-      destination: destinationDistrictId,
-      weight: totalWeight,
-      courier: courier
+      Origin: '151', // Jakarta Barat default
+      Destination: destinationDistrictId,
+      WeightInKg: totalWeight / 1000,
+      Volume: '0',
+      Ekspedisi: courier
     });
 
     this.isLoading.set(false);

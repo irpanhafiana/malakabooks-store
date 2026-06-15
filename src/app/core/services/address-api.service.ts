@@ -12,7 +12,7 @@ export class AddressApiService {
 
   async getProvinces(): Promise<any[]> {
     try {
-      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Simasrim/Simasrim/Province`));
+      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Simasrim/Province`));
       return envelope?.data?.data || [];
     } catch (e) {
       console.error('Failed to load provinces from Simasrim:', e);
@@ -23,7 +23,7 @@ export class AddressApiService {
   async getCities(provinceId: string): Promise<any[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/Simasrim/City`, { provinceId })
+        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/City`, { provinceId })
       );
       return envelope?.data?.data || [];
     } catch (e) {
@@ -35,7 +35,7 @@ export class AddressApiService {
   async getDistricts(cityId: string): Promise<any[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/Simasrim/District`, { cityId })
+        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/District`, { cityId })
       );
       return envelope?.data?.data || [];
     } catch (e) {
@@ -47,7 +47,7 @@ export class AddressApiService {
   async getCouriers(): Promise<string[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.get<any>(`${this.BASE_URL}/customer/Simasrim/Simasrim/Courier`)
+        this.http.get<any>(`${this.BASE_URL}/customer/Simasrim/Courier`)
       );
       return envelope?.data?.data || [];
     } catch (e) {
@@ -56,12 +56,12 @@ export class AddressApiService {
     }
   }
 
-  async calculateTariff(payload: { origin: string; destination: string; weight: number; courier: string }): Promise<any> {
+  async calculateTariff(payload: { Origin: string; Destination: string; WeightInKg: number; Volume: string; Ekspedisi: string }): Promise<any> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/Simasrim/Tarif`, payload)
+        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/Tarif`, {}, { params: payload as any })
       );
-      return envelope?.data?.data || null;
+      return envelope?.data || null;
     } catch (e) {
       console.error('Failed to calculate tariff from Simasrim:', e);
       return null;
