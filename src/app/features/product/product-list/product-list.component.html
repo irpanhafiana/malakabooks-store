@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-4 animate-fade-in pb-12">
       <!-- Search Bar (Primary search input for this page) -->
-      <div class="sticky top-0 z-10 bg-gray-50 -mx-4 px-4 pt-1 pb-3">
+      <div class="sticky top-0 z-10 bg-white border-b border-slate-100 shadow-md shadow-slate-100/30 -mx-4 px-4 pt-3 pb-3">
         <app-search-bar [placeholder]="'Cari buku, penulis...'" [value]="productStore.searchQuery()" [autofocus]="false" (search)="onSearchSubmit($event)"></app-search-bar>
       </div>
 
@@ -64,61 +64,74 @@
         } @else {
           @for (prod of productStore.filteredProducts(); track prod.id) {
             <div
-              class="flex gap-3 bg-white rounded-2xl border border-slate-100/80 p-3 shadow-sm shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 transition-all duration-200 cursor-pointer active:scale-[0.99] group"
+              class="card-product !flex-row border border-slate-100/80 shadow-sm shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 cursor-pointer active:scale-[0.99] group"
               (click)="viewProductDetails(prod.id)"
             >
-              <!-- Thumbnail Image -->
-              <div class="w-24 h-24 rounded-xl bg-slate-50 overflow-hidden shrink-0 relative">
+              <!-- Thumbnail Image (matching product-card aspect & styling) -->
+              <div class="w-28 min-h-[115px] shrink-0 bg-slate-50 overflow-hidden relative">
                 @if (prod.images[0]) {
                   <img
                     [src]="prod.images[0]"
                     [alt]="prod.name"
-                    class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                    class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                   />
                 } @else {
-                  <div class="w-full h-full flex items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-300">
-                    <app-icon name="book-open" size="28"></app-icon>
+                  <div class="absolute inset-0 flex items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-300">
+                    <app-icon name="book-open" size="32"></app-icon>
                   </div>
                 }
-                <!-- Category badge -->
-                <span class="absolute bottom-1 left-1 px-1.5 py-0.5 text-[8px] font-bold bg-white/90 backdrop-blur-sm text-slate-600 rounded-lg border border-slate-100/50">{{ prod.categoryName }}</span>
+                <!-- Category badge (same badge-uom as product-card) -->
+                <div class="badge-uom">{{ prod.categoryName }}</div>
+                <!-- Discount badge (same as product-card) -->
+                @if (prod.originalPrice && prod.originalPrice > prod.price) {
+                  <span class="absolute bottom-2 right-2 px-2 py-0.5 text-[10px] font-bold bg-rose-500 text-white rounded-lg">
+                    Save {{ Math.round(((prod.originalPrice - prod.price)/prod.originalPrice) * 100) }}%
+                  </span>
+                }
               </div>
 
               <!-- Info Section -->
-              <div class="flex flex-col flex-1 min-w-0 justify-between py-0.5">
-                <!-- Top: Author & Title -->
+              <div class="flex flex-col flex-1 min-w-0 justify-between px-3 py-3">
+                <!-- Top: Author, Title, Ratings & Love Button -->
                 <div>
-                  <span class="text-[9px] font-medium text-slate-400 uppercase tracking-wide block mb-0.5 truncate">{{ prod.specifications['Author'] }}</span>
-                  <h3 class="text-[13px] font-semibold text-slate-800 line-clamp-2 leading-tight group-hover:text-primary-600 transition-colors">{{ prod.name }}</h3>
+                  <div class="flex justify-between items-start gap-2">
+                    <div class="flex-1 min-w-0">
+                      <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">{{ prod.specifications['Author'] }}</span>
+                      <h3 class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 transition-colors leading-tight">{{ prod.name }}</h3>
+                    </div>
+                    
+                    <!-- Wishlist button nested inside text wrapper -->
+                    <button
+                      type="button"
+                      (click)="onToggleWishlist($event, prod)"
+                      class="p-1.5 -mr-1 -mt-1 rounded-full text-slate-300 hover:text-rose-500 transition-colors cursor-pointer bg-transparent border-0 shrink-0"
+                    >
+                      <app-icon [name]="userStore.isWishlisted(prod.id) ? 'heart-filled' : 'heart'" size="18" [class]="userStore.isWishlisted(prod.id) ? 'text-rose-500' : 'text-slate-400'"></app-icon>
+                    </button>
+                  </div>
+
+                  <!-- Ratings -->
+                  <div class="flex items-center gap-1 mt-0.5">
+                    <app-icon name="star" size="12" class="text-amber-400 fill-amber-400"></app-icon>
+                    <span class="text-xs font-semibold text-slate-700">{{ prod.rating }}</span>
+                    <span class="text-[10px] text-slate-400">({{ prod.reviewsCount }})</span>
+                  </div>
                 </div>
 
-                <!-- Bottom: Price, Rating & Sold -->
-                <div class="flex items-end justify-between gap-2 mt-1.5">
+                <!-- Bottom: Price & Sold (same as product-card pricing row) -->
+                <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-50 mt-2">
                   <div class="flex flex-col">
                     @if (prod.originalPrice && prod.originalPrice > prod.price) {
-                      <span class="text-[9px] text-slate-400 line-through leading-none mb-0.5">Rp {{ Math.round(prod.originalPrice).toLocaleString('id-ID') }}</span>
+                      <span class="text-[10px] text-slate-400 line-through leading-none mb-0.5">Rp {{ Math.round(prod.originalPrice).toLocaleString('id-ID') }}</span>
                     }
-                    <span class="text-sm font-bold text-primary-600">Rp {{ Math.round(prod.price).toLocaleString('id-ID') }}</span>
+                    <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold"></app-price>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <div class="flex items-center gap-0.5">
-                      <i class="bx bxs-star text-amber-400 text-[10px]"></i>
-                      <span class="text-[10px] font-semibold text-slate-600">{{ prod.rating }}</span>
-                    </div>
-                    <span class="text-[9px] text-slate-400">{{ prod.reviewsCount * 12 + (prod.stock % 7) + 5 }} terjual</span>
-                  </div>
+                  <span class="text-[10px] text-slate-500 font-medium">
+                    {{ prod.reviewsCount * 12 + (prod.stock % 7) + 5 }} terjual
+                  </span>
                 </div>
               </div>
-
-              <!-- Wishlist button -->
-              <button
-                type="button"
-                (click)="onToggleWishlist($event, prod)"
-                class="self-start p-1.5 rounded-full text-slate-300 hover:text-rose-500 transition-colors cursor-pointer bg-transparent border-0 shrink-0"
-              >
-                <i [class]="userStore.isWishlisted(prod.id) ? 'bx bxs-heart text-rose-500 text-base' : 'bx bx-heart text-base'"></i>
-              </button>
             </div>
           }
         }

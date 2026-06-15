@@ -8,11 +8,12 @@ import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { DrawerComponent } from '../../../shared/ui/drawer/drawer.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 import { SearchBarComponent } from '../../../shared/ui/search-bar/search-bar.component';
+import { PriceComponent } from '../../../shared/ui/price/price.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [SkeletonComponent, IconComponent, DrawerComponent, EmptyStateComponent, SearchBarComponent],
+  imports: [SkeletonComponent, IconComponent, DrawerComponent, EmptyStateComponent, SearchBarComponent, PriceComponent],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
