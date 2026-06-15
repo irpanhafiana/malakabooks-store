@@ -30,6 +30,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/products/list/products-list.component').then(c => c.ProductsListComponent)
       },
       { path: 'categories', loadComponent: () => import('./features/admin/categories/list/categories-list.component').then(m => m.CategoriesListComponent) },
+      { path: 'home-addresses', loadComponent: () => import('./features/admin/home-addresses/list/home-addresses-list.component').then(m => m.HomeAddressesListComponent) },
       {
         path: 'orders',
         loadComponent: () => import('./features/admin/orders/list/orders-list.component').then(c => c.OrdersListComponent)

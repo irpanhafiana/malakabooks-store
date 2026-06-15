@@ -1,0 +1,77 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <app-input
+      id="label"
+      label="Label Alamat (Contoh: Gudang Jakarta)"
+      placeholder="Masukkan label alamat"
+      [control]="labelControl"
+    ></app-input>
+  
+    <app-input
+      id="recipientName"
+      label="Nama Penerima/Kontak"
+      placeholder="Masukkan nama penerima"
+      [control]="recipientControl"
+    ></app-input>
+  </div>
+
+  <app-input
+    id="phone"
+    label="Nomor Telepon"
+    placeholder="08xxxxxxxxxx"
+    [control]="phoneControl"
+    type="tel"
+  ></app-input>
+
+  <app-input
+    id="street"
+    label="Alamat Lengkap (Jalan, No Rumah, RT/RW)"
+    placeholder="Masukkan alamat lengkap jalan"
+    [control]="streetControl"
+  ></app-input>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <app-select
+      id="province"
+      label="Provinsi"
+      [control]="provinceControl"
+      [options]="provinceOptions()"
+      placeholder="Pilih Provinsi"
+    ></app-select>
+
+    <app-select
+      id="city"
+      label="Kota/Kabupaten"
+      [control]="cityControl"
+      [options]="cityOptions()"
+      placeholder="Pilih Kota"
+    ></app-select>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <app-select
+      id="district"
+      label="Kecamatan"
+      [control]="districtControl"
+      [options]="districtOptions()"
+      placeholder="Pilih Kecamatan"
+    ></app-select>
+
+    <app-input
+      id="postalCode"
+      label="Kode Pos"
+      placeholder="Kode Pos"
+      [control]="postalCodeControl"
+    ></app-input>
+  </div>
+
+  <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
+    <app-button type="button" variant="ghost" (click)="handleCancel()">
+      Batal
+    </app-button>
+    <app-button type="submit" variant="primary" [disabled]="form.invalid || isLoading()">
+      {{ isLoading() ? 'Menyimpan...' : 'Simpan Alamat' }}
+    </app-button>
+  </div>
+</form>
