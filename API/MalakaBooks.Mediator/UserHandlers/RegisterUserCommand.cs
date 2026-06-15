@@ -83,26 +83,50 @@ namespace MalakaBooks.Mediator.UserHandlers
                     #region add user claims
 
                     var userClaims = new List<StringUserClaimApiDto>
-          {
-              new StringUserClaimApiDto
-              {
-                  UserId = createdUser.Id,
-                  ClaimType = "name",
-                  ClaimValue = user.Phone
-              },
-              new StringUserClaimApiDto
-              {
-                  UserId = createdUser.Id,
-                  ClaimType = "customer_code",
-                  ClaimValue = user.Phone
-              },
-              new StringUserClaimApiDto
-              {
-                  UserId = createdUser.Id,
-                  ClaimType = "given_name",
-                  ClaimValue = string.Format("{0} {1}", user.FirstName, user.LastName).Trim()
-              }
-          };
+                    {
+                        new StringUserClaimApiDto
+                        {
+                            UserId = createdUser.Id,
+                            ClaimType = "Create",
+                            ClaimValue = "true"
+                        },
+                        new StringUserClaimApiDto
+                        {
+                            UserId = createdUser.Id,
+                            ClaimType = "Read",
+                            ClaimValue = "true"
+                        },
+                        new StringUserClaimApiDto
+                        {
+                            UserId = createdUser.Id,
+                            ClaimType = "Update",
+                            ClaimValue = "true"
+                        },
+                        new StringUserClaimApiDto
+                        {
+                            UserId = createdUser.Id,
+                            ClaimType = "Delete",
+                            ClaimValue = "true"
+                        },
+                        new StringUserClaimApiDto
+                        {
+                            UserId = createdUser.Id,
+                            ClaimType = "name",
+                            ClaimValue = user.Phone
+                        },
+                        new StringUserClaimApiDto
+                        {
+                            UserId = createdUser.Id,
+                            ClaimType = "customer_code",
+                            ClaimValue = user.Phone
+                        },
+                        new StringUserClaimApiDto
+                        {
+                            UserId = createdUser.Id,
+                            ClaimType = "given_name",
+                            ClaimValue = string.Format("{0} {1}", user.FirstName, user.LastName).Trim()
+                        }
+                    };
 
                     foreach (var claim in userClaims)
                     {

@@ -1,6 +1,3 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
 namespace MalakaBooks.Entity;
 
 
@@ -22,7 +19,6 @@ public class HomeAddressEntity : BaseObject
 
 public class AddressEntity : HomeAddressEntity
 {
-    [BsonRepresentation(BsonType.ObjectId)]
     public string UserId { get; set; } = string.Empty;
 
     public bool IsDefault { get; set; }

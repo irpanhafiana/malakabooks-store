@@ -70,7 +70,6 @@ public class CartRepository : ICartRepository
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; } = string.Empty;
 
         public List<CartItemEntity> Items { get; set; } = [];
