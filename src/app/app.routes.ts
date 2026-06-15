@@ -50,7 +50,7 @@ export const routes: Routes = [
     ]
   },
 
-  // Customer facing layout website routes
+  // Customer facing layout website routes (with bottom navbar)
   {
     path: '',
     loadComponent: () => import('./layouts/customer-layout/customer-layout.component').then(c => c.CustomerLayoutComponent),
@@ -75,6 +75,10 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
         canActivate: [authGuard]
+      },
+      {
+        path: 'auth/login',
+        loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
       }
     ]
   },
@@ -88,18 +92,13 @@ export const routes: Routes = [
         path: 'auth',
         children: [
           {
-            path: 'login',
-            loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
-          },
-          {
             path: 'register',
             loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent)
           },
           {
             path: 'forgot-password',
             loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(c => c.ForgotPasswordComponent)
-          },
-          { path: '', redirectTo: 'login', pathMatch: 'full' }
+          }
         ]
       },
       {
