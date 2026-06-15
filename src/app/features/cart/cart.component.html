@@ -1,18 +1,18 @@
-<div class="animate-fade-in pb-12">
-      <h1 class="font-display font-extrabold text-slate-800 text-base mb-4">Shopping Cart</h1>
+<div class="absolute inset-0 animate-fade-in flex flex-col">
 
       @if (cartStore.itemsCount() === 0) {
-        <app-empty-state
-          icon="shopping-cart"
-          title="Your Cart is Empty"
-          description="Looks like you haven't added any items to your cart yet. Explore our publications to find your next great read!"
-          actionText="Start Shopping"
-          routerLink="/product"
-        ></app-empty-state>
+        <div class="px-4 py-4">
+          <app-empty-state
+            icon="shopping-cart"
+            title="Your Cart is Empty"
+            description="Looks like you haven't added any items to your cart yet. Explore our publications to find your next great read!"
+            actionText="Start Shopping"
+            routerLink="/product"
+          ></app-empty-state>
+        </div>
       } @else {
-        <div class="flex flex-col gap-5">
-          
-          <!-- Cart Items Column (Vertical stack) -->
+        <!-- Scrollable Items Area -->
+        <div class="flex-grow overflow-y-auto px-4 py-4 no-scrollbar">
           <div class="flex flex-col gap-3">
             @for (item of cartStore.items(); track item.product.id) {
               <div class="flex items-center gap-4 bg-white border border-slate-100 p-4 rounded-2xl transition-all hover:border-slate-200/50">
@@ -60,81 +60,78 @@
               </div>
             }
           </div>
+        </div>
 
-          <!-- Checkout Summary Card (Pushed below items) -->
-          <div class="bg-white border border-slate-100 p-5 rounded-3xl flex flex-col gap-4">
-            <h3 class="font-display font-extrabold text-slate-800 text-xs uppercase tracking-wider">Order Summary</h3>
+        <!-- Checkout Summary Card (Natural fixed bottom via flex) -->
+        <div class="shrink-0 bg-white border-t border-slate-100 p-5 rounded-t-3xl flex flex-col gap-4 z-40 shadow-[0_-15px_30px_-15px_rgba(0,0,0,0.1)]">
+          <h3 class="font-display font-extrabold text-slate-800 text-xs uppercase tracking-wider">Order Summary</h3>
 
-            <div class="flex flex-col gap-3.5 text-xs text-slate-500">
-              <div class="flex justify-between">
-                <span>Subtotal</span>
-                <app-price [value]="cartStore.subtotal()" [bold]="false" size="sm"></app-price>
+          <div class="flex flex-col gap-3.5 text-xs text-slate-500">
+            <div class="flex justify-between">
+              <span>Subtotal</span>
+              <app-price [value]="cartStore.subtotal()" [bold]="false" size="sm"></app-price>
+            </div>
+
+            @if (cartStore.discount() > 0) {
+              <div class="flex justify-between text-rose-600 font-semibold">
+                <span>Discount (10% promo applied)</span>
+                <span>- $ {{ cartStore.discount() | number: '1.2-2' }}</span>
               </div>
+            }
 
-              @if (cartStore.discount() > 0) {
-                <div class="flex justify-between text-rose-600 font-semibold">
-                  <span>Discount (10% promo applied)</span>
-                  <span>- $ {{ cartStore.discount() | number: '1.2-2' }}</span>
-                </div>
+            <div class="flex justify-between">
+              <span>Tax (10%)</span>
+              <app-price [value]="cartStore.tax()" [bold]="false" size="sm"></app-price>
+            </div>
+
+            <div class="flex justify-between">
+              <span>Shipping Cost</span>
+              @if (cartStore.shipping() === 0) {
+                <span class="text-emerald-600 font-bold">Free</span>
+              } @else {
+                <app-price [value]="cartStore.shipping()" [bold]="false" size="sm"></app-price>
               }
-
-              <div class="flex justify-between">
-                <span>Tax (10%)</span>
-                <app-price [value]="cartStore.tax()" [bold]="false" size="sm"></app-price>
-              </div>
-
-              <div class="flex justify-between">
-                <span>Shipping Cost</span>
-                @if (cartStore.shipping() === 0) {
-                  <span class="text-emerald-600 font-bold">Free</span>
-                } @else {
-                  <app-price [value]="cartStore.shipping()" [bold]="false" size="sm"></app-price>
-                }
-              </div>
-
-              <hr class="border-slate-100 my-1" />
-
-              <div class="flex justify-between text-slate-800 text-sm font-bold">
-                <span>Total Amount</span>
-                <app-price [value]="cartStore.total()" size="md" class="text-primary-600"></app-price>
-              </div>
             </div>
 
-            <!-- Promo coupon input -->
-            <div class="flex gap-2 mt-2">
-              <div class="flex-grow">
-                <app-input
-                  placeholder="Promo Code (PROMO10)"
-                  [control]="promoControl"
-                  class="h-9"
-                ></app-input>
-              </div>
-              <app-button
-                (click)="applyPromo()"
-                [disabled]="promoControl.invalid"
-                variant="outline"
-                size="sm"
-                class="px-3"
-              >
-                Apply
-              </app-button>
+            <hr class="border-slate-100 my-1" />
+
+            <div class="flex justify-between text-slate-800 text-sm font-bold">
+              <span>Total Amount</span>
+              <app-price [value]="cartStore.total()" size="md" class="text-primary-600"></app-price>
             </div>
-
-            <hr class="border-slate-100" />
-
-            <app-button
-              routerLink="/checkout"
-              variant="primary"
-              size="md"
-              [fullWidth]="true"
-              class="border border-primary-700/20"
-            >
-              Proceed to Checkout
-            </app-button>
-            
-            <p class="text-[10px] text-slate-400 text-center leading-relaxed">By checking out, you agree to our standard terms and refund policy. Free shipping applies automatically to all orders above $50.</p>
           </div>
 
+          <!-- Promo coupon input -->
+          <div class="flex gap-2 mt-2">
+            <div class="grow">
+              <app-input
+                placeholder="Promo Code (PROMO10)"
+                [control]="promoControl"
+                class="h-9"
+              ></app-input>
+            </div>
+            <app-button
+              (click)="applyPromo()"
+              [disabled]="promoControl.invalid"
+              variant="outline"
+              size="sm"
+              class="px-3"
+            >
+              Apply
+            </app-button>
+          </div>
+
+          <hr class="border-slate-100" />
+
+          <app-button
+            routerLink="/checkout"
+            variant="primary"
+            size="md"
+            [fullWidth]="true"
+            class="border border-primary-700/20"
+          >
+            Proceed to Checkout
+          </app-button>
         </div>
       }
     </div>

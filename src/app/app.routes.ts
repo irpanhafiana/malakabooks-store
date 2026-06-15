@@ -55,6 +55,35 @@ export const routes: Routes = [
     loadComponent: () => import('./layouts/customer-layout/customer-layout.component').then(c => c.CustomerLayoutComponent),
     children: [
       {
+        path: '',
+        loadComponent: () => import('./features/home/home.component').then(c => c.HomeComponent)
+      },
+      {
+        path: 'product',
+        loadComponent: () => import('./features/product/product-list/product-list.component').then(c => c.ProductListComponent)
+      },
+      {
+        path: 'product/:id',
+        loadComponent: () => import('./features/product/product-detail/product-detail.component').then(c => c.ProductDetailComponent)
+      },
+      {
+        path: 'wishlist',
+        loadComponent: () => import('./features/wishlist/wishlist.component').then(c => c.WishlistComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
+        canActivate: [authGuard]
+      }
+    ]
+  },
+
+  // Inner page layout (without bottom nav, with back button)
+  {
+    path: '',
+    loadComponent: () => import('./layouts/inner-page-layout/inner-page-layout.component').then(c => c.InnerPageLayoutComponent),
+    children: [
+      {
         path: 'auth',
         children: [
           {
@@ -73,49 +102,33 @@ export const routes: Routes = [
         ]
       },
       {
-        path: '',
-        loadComponent: () => import('./features/home/home.component').then(c => c.HomeComponent)
-      },
-      {
-        path: 'product',
-        loadComponent: () => import('./features/product/product-list/product-list.component').then(c => c.ProductListComponent)
-      },
-      {
-        path: 'product/:id',
-        loadComponent: () => import('./features/product/product-detail/product-detail.component').then(c => c.ProductDetailComponent)
-      },
-      {
         path: 'cart',
-        loadComponent: () => import('./features/cart/cart.component').then(c => c.CartComponent)
-      },
-      {
-        path: 'wishlist',
-        loadComponent: () => import('./features/wishlist/wishlist.component').then(c => c.WishlistComponent)
+        loadComponent: () => import('./features/cart/cart.component').then(c => c.CartComponent),
+        data: { title: 'Shopping Cart' }
       },
       {
         path: 'checkout',
         loadComponent: () => import('./features/checkout/checkout.component').then(c => c.CheckoutComponent),
-        canActivate: [authGuard]
+        canActivate: [authGuard],
+        data: { title: 'Checkout' }
       },
       {
         path: 'order-success',
         loadComponent: () => import('./features/order/order-success/order-success.component').then(c => c.OrderSuccessComponent),
-        canActivate: [authGuard]
+        canActivate: [authGuard],
+        data: { title: 'Order Status' }
       },
       {
         path: 'order-history',
         loadComponent: () => import('./features/order/order-history/order-history.component').then(c => c.OrderHistoryComponent),
-        canActivate: [authGuard]
-      },
-      {
-        path: 'profile',
-        loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
-        canActivate: [authGuard]
+        canActivate: [authGuard],
+        data: { title: 'Order History' }
       },
       {
         path: 'complaints',
         loadComponent: () => import('./features/complaint/complaint.component').then(c => c.ComplaintComponent),
-        canActivate: [authGuard]
+        canActivate: [authGuard],
+        data: { title: 'Komplain Saya' }
       }
     ]
   },

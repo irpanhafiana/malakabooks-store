@@ -28,7 +28,7 @@ export class BottomSheetComponent {
           this.renderComponent.set(false);
         }, 300);
       }
-    }, { allowSignalWrites: true });
+    });
   }
 
   closeSheet() {

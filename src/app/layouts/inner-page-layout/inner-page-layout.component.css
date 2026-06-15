@@ -1,0 +1,8 @@
+/* Custom scrollbar hides for standard mobile container */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
