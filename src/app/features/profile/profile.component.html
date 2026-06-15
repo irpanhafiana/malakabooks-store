@@ -45,7 +45,7 @@
               <div class="flex flex-col">
                 <strong class="font-bold text-slate-800">{{ addr.name }} @if (addr.isDefault) { <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold ml-1">Default</span> }</strong>
                 <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
-                <span class="text-slate-600 font-semibold">{{ addr.street }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
+                <span class="text-slate-600 font-semibold">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
               </div>
               <div class="flex items-center gap-1">
                 <button
@@ -68,26 +68,32 @@
             <p class="text-xs text-slate-400 text-center py-4">No shipping addresses saved yet.</p>
           }
 
-          @if (showAddressForm()) {
-            <form [formGroup]="addressForm" class="grid grid-cols-1 gap-3.5 border border-slate-100 p-4 rounded-2xl bg-slate-50/20 mt-4 animate-fade-in">
-              <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">{{ editingAddressId() ? 'Edit Address' : 'Add New Address' }}</h3>
+          <button type="button" (click)="addNewAddress()" class="text-xs font-bold text-primary-600 hover:text-primary-700 text-left mt-2 flex items-center gap-1 cursor-pointer">
+            + Add New Address
+          </button>
+
+          <app-bottom-sheet
+            [isOpen]="showAddressForm()"
+            [title]="editingAddressId() ? 'Edit Address' : 'Add New Address'"
+            (closed)="cancelAddressForm()"
+          >
+            <form [formGroup]="addressForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5">
               <app-input label="Recipient Name" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
               <app-input label="Phone Number" placeholder="e.g. +628123456789" [control]="addrPhoneControl"></app-input>
-              <app-input label="Street Address" placeholder="e.g. Jl. Sudirman No. 21" [control]="streetControl"></app-input>
+              <div class="sm:col-span-2">
+                <app-input label="Street Address" placeholder="e.g. Jl. Sudirman No. 21" [control]="streetControl"></app-input>
+              </div>
               <app-select label="Province" placeholder="Select Province" [control]="provinceControl" [options]="provinceOptions()"></app-select>
               <app-select label="City" placeholder="Select City" [control]="cityControl" [options]="cityOptions()"></app-select>
+              <app-select label="District" placeholder="Select District" [control]="districtControl" [options]="districtOptions()"></app-select>
               <app-input label="Postal Code" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
               
-              <div class="flex justify-end gap-2.5 mt-2">
-                <app-button type="button" (click)="cancelAddressForm()" variant="ghost" size="sm">Cancel</app-button>
-                <app-button type="button" (click)="saveAddressForm()" [disabled]="addressForm.invalid" variant="primary" size="sm">Save Address</app-button>
+              <div class="sm:col-span-2 flex flex-col sm:flex-row justify-end gap-3 mt-4">
+                <app-button type="button" (click)="cancelAddressForm()" variant="ghost" size="md" class="w-full sm:w-auto">Cancel</app-button>
+                <app-button type="button" (click)="saveAddressForm()" [disabled]="addressForm.invalid" variant="primary" size="md" class="w-full sm:w-auto">Save Address</app-button>
               </div>
             </form>
-          } @else {
-            <button type="button" (click)="addNewAddress()" class="text-xs font-bold text-primary-600 hover:text-primary-700 text-left mt-2 flex items-center gap-1 cursor-pointer">
-              + Add New Address
-            </button>
-          }
+          </app-bottom-sheet>
         </div>
       </div>
     </div>

@@ -7,11 +7,12 @@ import { ProductStore } from '../../store/product.store';
 import { ToastService } from '../../core/services/toast.service';
 import { SearchBarComponent } from '../../shared/ui/search-bar/search-bar.component';
 import { ProductDetailComponent } from '../../features/product/product-detail/product-detail.component';
+import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 
 @Component({
   selector: 'app-customer-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent],
   templateUrl: './customer-layout.component.html',
   styleUrl: './customer-layout.component.css'
 })
@@ -24,7 +25,6 @@ export class CustomerLayoutComponent {
   private readonly router = inject(Router);
 
   isDetailOpen = signal<boolean>(false);
-  isDetailAnimating = signal<boolean>(false);
   selectedDetailId = signal<string | null>(null);
   isSearchActive = signal<boolean>(false);
 
@@ -34,13 +34,10 @@ export class CustomerLayoutComponent {
       if (id) {
         this.selectedDetailId.set(id);
         this.isDetailOpen.set(true);
-        setTimeout(() => {
-          this.isDetailAnimating.set(true);
-        }, 16);
       } else {
-        this.isDetailAnimating.set(false);
+        this.isDetailOpen.set(false);
+        // Wait for animation before clearing ID to avoid UI jumps
         setTimeout(() => {
-          this.isDetailOpen.set(false);
           this.selectedDetailId.set(null);
         }, 300);
       }

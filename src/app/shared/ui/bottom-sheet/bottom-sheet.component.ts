@@ -1,0 +1,37 @@
+import { Component, input, output, effect, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-bottom-sheet',
+  standalone: true,
+  templateUrl: './bottom-sheet.component.html',
+  styleUrl: './bottom-sheet.component.css'
+})
+export class BottomSheetComponent {
+  readonly isOpen = input<boolean>(false);
+  readonly title = input<string>('');
+  
+  readonly closed = output<void>();
+
+  renderComponent = signal<boolean>(false);
+  isAnimating = signal<boolean>(false);
+
+  constructor() {
+    effect(() => {
+      if (this.isOpen()) {
+        this.renderComponent.set(true);
+        setTimeout(() => {
+          this.isAnimating.set(true);
+        }, 16);
+      } else {
+        this.isAnimating.set(false);
+        setTimeout(() => {
+          this.renderComponent.set(false);
+        }, 300);
+      }
+    }, { allowSignalWrites: true });
+  }
+
+  closeSheet() {
+    this.closed.emit();
+  }
+}

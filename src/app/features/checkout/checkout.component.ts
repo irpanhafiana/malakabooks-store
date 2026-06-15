@@ -37,9 +37,19 @@ export class CheckoutComponent implements OnInit {
   // Simasrim states
   provinces = signal<any[]>([]);
   cities = signal<any[]>([]);
+  districts = signal<any[]>([]);
+  couriers = signal<string[]>([]);
+  shippingCost = signal<number>(5.00);
 
-  provinceOptions = computed(() => this.provinces().map(p => ({ value: p.provinceId, label: p.province })));
-  cityOptions = computed(() => this.cities().map(c => ({ value: c.cityId, label: `${c.type} ${c.city}` })));
+  provinceOptions = computed(() => this.provinces().map(p => ({ value: p, label: p })));
+  cityOptions = computed(() => this.cities().map(c => ({ value: c, label: c })));
+  districtOptions = computed(() => this.districts().map(d => ({ value: d.region_code, label: d.subdistrict_name ? `${d.district_name} - ${d.subdistrict_name}` : d.district_name })));
+  courierOptions = computed(() => this.couriers().map(c => ({ value: c, label: c.toUpperCase() })));
+
+  checkoutTax = computed(() => this.cartStore.subtotal() * 0.10);
+  checkoutTotal = computed(() => {
+    return Math.max(0, this.cartStore.subtotal() + this.checkoutTax() + this.shippingCost() - this.cartStore.discount());
+  });
 
   // Address inputs
   recipientControl = new FormControl('', [Validators.required]);
@@ -47,6 +57,7 @@ export class CheckoutComponent implements OnInit {
   streetControl = new FormControl('', [Validators.required]);
   cityControl = new FormControl('', [Validators.required]);
   provinceControl = new FormControl('', [Validators.required]);
+  districtControl = new FormControl('', [Validators.required]);
   postalCodeControl = new FormControl('', [Validators.required]);
 
   addressForm = new FormGroup({
@@ -55,8 +66,11 @@ export class CheckoutComponent implements OnInit {
     street: this.streetControl,
     city: this.cityControl,
     province: this.provinceControl,
+    district: this.districtControl,
     postalCode: this.postalCodeControl
   });
+
+  courierControl = new FormControl('', [Validators.required]);
 
   // Payment inputs
   paymentOptions = [
@@ -92,8 +106,11 @@ export class CheckoutComponent implements OnInit {
       this.showAddressForm.set(true);
     }
 
-    // Load provinces
-    await this.loadProvinces();
+    // Load provinces & couriers
+    await Promise.all([
+      this.loadProvinces(),
+      this.loadCouriers()
+    ]);
 
     // Listen to province changes
     this.provinceControl.valueChanges.subscribe(async (provinceId) => {
@@ -102,7 +119,7 @@ export class CheckoutComponent implements OnInit {
         this.cities.set(cts);
 
         const currentCityVal = this.cityControl.value;
-        const exists = cts.some(c => c.cityId === currentCityVal);
+        const exists = cts.some(c => c === currentCityVal);
         if (!exists) {
           this.cityControl.setValue('');
         }
@@ -111,6 +128,33 @@ export class CheckoutComponent implements OnInit {
         this.cityControl.setValue('');
       }
     });
+
+    // Listen to city changes
+    this.cityControl.valueChanges.subscribe(async (cityId) => {
+      if (cityId) {
+        const dsts = await this.addressApi.getDistricts(cityId);
+        this.districts.set(dsts);
+
+        const currentDstVal = this.districtControl.value;
+        const exists = dsts.some(d => d.region_code === currentDstVal);
+        if (!exists) {
+          this.districtControl.setValue('');
+        }
+      } else {
+        this.districts.set([]);
+        this.districtControl.setValue('');
+      }
+    });
+
+    // Listen to district changes
+    this.districtControl.valueChanges.subscribe(() => {
+      this.updateShippingCost();
+    });
+
+    // Listen to courier changes
+    this.courierControl.valueChanges.subscribe(() => {
+      this.updateShippingCost();
+    });
   }
 
   async loadProvinces() {
@@ -118,18 +162,118 @@ export class CheckoutComponent implements OnInit {
     this.provinces.set(provs);
   }
 
+  async loadCouriers() {
+    const list = await this.addressApi.getCouriers();
+    this.couriers.set(list);
+  }
+
   selectAddress(id: string) {
     this.selectedAddressId.set(id);
+    this.updateShippingCost();
   }
 
   addNewAddress() {
     this.addressForm.reset();
     this.cities.set([]);
+    this.districts.set([]);
     this.showAddressForm.set(true);
   }
 
   cancelAddressForm() {
     this.showAddressForm.set(false);
+  }
+
+  async resolveDistrictIdForAddress(addr: Address): Promise<string | null> {
+    try {
+      const provs = await this.addressApi.getProvinces();
+      const prov = provs.find(p => p.toLowerCase() === addr.province.toLowerCase());
+      if (!prov) return null;
+
+      const cities = await this.addressApi.getCities(prov);
+      const city = cities.find(c => c.toLowerCase() === addr.city.toLowerCase());
+      if (!city) return null;
+
+      if (addr.district) {
+        const targetDistrict = addr.district.toLowerCase();
+        const targetSubDistrict = addr.subDistrict?.toLowerCase();
+        
+        const districts = await this.addressApi.getDistricts(city);
+        const dist = districts.find(d => 
+            d.district_name.toLowerCase() === targetDistrict && 
+            (targetSubDistrict ? d.subdistrict_name.toLowerCase() === targetSubDistrict : true)
+        );
+        return dist ? dist.region_code : city;
+      }
+      return city;
+    } catch (e) {
+      console.error('Error resolving district ID for saved address:', e);
+      return null;
+    }
+  }
+
+  async updateShippingCost() {
+    const courier = this.courierControl.value;
+    if (!courier) return;
+
+    let destinationDistrictId: string | null = null;
+
+    if (this.showAddressForm()) {
+      destinationDistrictId = this.districtControl.value;
+    } else {
+      const selectedAddr = this.savedAddresses().find(a => a.id === this.selectedAddressId());
+      if (selectedAddr) {
+        destinationDistrictId = await this.resolveDistrictIdForAddress(selectedAddr);
+      }
+    }
+
+    if (!destinationDistrictId) return;
+
+    this.isLoading.set(true);
+
+    const items = this.cartStore.items();
+    let totalWeight = 0;
+    for (const item of items) {
+      const specWeight = item.product.specifications?.['weight'];
+      const itemWeight = specWeight ? parseFloat(specWeight) : 500;
+      totalWeight += itemWeight * item.quantity;
+    }
+    if (totalWeight <= 0) totalWeight = 1000;
+
+    const tariffRes = await this.addressApi.calculateTariff({
+      origin: '151', // Jakarta Barat default
+      destination: destinationDistrictId,
+      weight: totalWeight,
+      courier: courier
+    });
+
+    this.isLoading.set(false);
+
+    let cost = 0;
+    if (tariffRes) {
+      if (Array.isArray(tariffRes)) {
+        const first = tariffRes[0];
+        cost = typeof first.cost === 'number' ? first.cost : (first.cost?.[0]?.value || 0);
+      } else if (tariffRes.costs && Array.isArray(tariffRes.costs)) {
+        const first = tariffRes.costs[0];
+        cost = typeof first.cost === 'number' ? first.cost : (first.cost?.[0]?.value || 0);
+      } else if (tariffRes.rajaongkir?.results?.[0]?.costs?.[0]?.cost?.[0]?.value) {
+        cost = tariffRes.rajaongkir.results[0].costs[0].cost[0].value;
+      } else if (typeof tariffRes.cost === 'number') {
+        cost = tariffRes.cost;
+      } else if (typeof tariffRes.price === 'number') {
+        cost = tariffRes.price;
+      }
+    }
+
+    if (cost > 0) {
+      let costUsd = cost;
+      if (cost >= 1000) {
+        costUsd = cost / 15000;
+      }
+      this.shippingCost.set(costUsd);
+    } else {
+      this.shippingCost.set(5.00);
+    }
   }
 
   async saveAddressForm() {
@@ -138,13 +282,13 @@ export class CheckoutComponent implements OnInit {
     const user = this.authStore.currentUser();
     if (!user) return;
 
-    // Resolve IDs to names
-    const provId = this.provinceControl.value;
-    const cityId = this.cityControl.value;
-
-    const provName = this.provinces().find(p => p.provinceId === provId)?.province || '';
-    const cityObj = this.cities().find(c => c.cityId === cityId);
-    const cityName = cityObj ? `${cityObj.type} ${cityObj.city}` : '';
+    const provName = this.provinceControl.value || '';
+    const cityName = this.cityControl.value || '';
+    const distCode = this.districtControl.value;
+    
+    const distObj = this.districts().find(d => d.region_code === distCode);
+    const districtName = distObj ? distObj.district_name : '';
+    const subDistrictName = distObj ? distObj.subdistrict_name : '';
 
     const newAddr: Address = {
       id: `addr-${Date.now()}`,
@@ -153,27 +297,35 @@ export class CheckoutComponent implements OnInit {
       street: this.streetControl.value || '',
       city: cityName,
       province: provName,
+      district: districtName,
+      subDistrict: subDistrictName,
       postalCode: this.postalCodeControl.value || '',
       isDefault: user.addresses.length === 0
     };
 
-    const updatedUser = {
-      ...user,
-      addresses: [...user.addresses, newAddr]
-    };
-
     this.isLoading.set(true);
-    const success = await this.authStore.updateProfile(updatedUser);
+    const success = await this.authStore.addAddress(newAddr);
     this.isLoading.set(false);
 
     if (success) {
-      this.savedAddresses.set(updatedUser.addresses);
-      this.selectedAddressId.set(newAddr.id);
+      const latestUser = this.authStore.currentUser();
+      if (latestUser) {
+        this.savedAddresses.set(latestUser.addresses);
+        // Find the new address (the one added last)
+        const added = latestUser.addresses[latestUser.addresses.length - 1];
+        if (added) {
+          this.selectedAddressId.set(added.id);
+        }
+      }
       this.showAddressForm.set(false);
+      this.updateShippingCost();
     }
   }
 
   isOrderInvalid(): boolean {
+    if (this.courierControl.invalid) {
+      return true;
+    }
     if (!this.selectedAddressId() && this.showAddressForm()) {
       return true;
     }
@@ -208,6 +360,9 @@ export class CheckoutComponent implements OnInit {
       paymentDetails['walletType'] = 'GoPay E-Wallet';
     }
 
+    const selectedCourier = this.courierControl.value || 'jne';
+    const note = `Courier: ${selectedCourier.toUpperCase()}`;
+
     const orderData: Omit<Order, 'id' | 'orderDate' | 'status' | 'trackingNumber'> = {
       userId: user.id,
       userName: user.name,
@@ -217,9 +372,9 @@ export class CheckoutComponent implements OnInit {
       paymentMethod: method,
       paymentDetails,
       subtotal: this.cartStore.subtotal(),
-      shippingCost: this.cartStore.shipping(),
-      tax: this.cartStore.tax(),
-      total: this.cartStore.total()
+      shippingCost: this.shippingCost(),
+      tax: this.checkoutTax(),
+      total: this.checkoutTotal()
     };
 
     const placed = await this.orderStore.placeOrder(orderData);

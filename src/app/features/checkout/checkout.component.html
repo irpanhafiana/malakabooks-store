@@ -30,7 +30,7 @@
                       <div class="flex flex-col text-xs leading-relaxed">
                         <strong class="font-bold text-slate-800">{{ addr.name }} @if (addr.isDefault) { <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold ml-1">Default</span> }</strong>
                         <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
-                        <span class="text-slate-600 font-semibold">{{ addr.street }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
+                        <span class="text-slate-600 font-semibold">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
                       </div>
                     </label>
                   }
@@ -47,6 +47,7 @@
                   </div>
                   <app-select label="Province" placeholder="Select Province" [control]="provinceControl" [options]="provinceOptions()"></app-select>
                   <app-select label="City" placeholder="Select City" [control]="cityControl" [options]="cityOptions()"></app-select>
+                  <app-select label="District" placeholder="Select District" [control]="districtControl" [options]="districtOptions()"></app-select>
                   <app-input label="Postal Code" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
                   
                   <div class="sm:col-span-2 flex justify-end gap-2.5 mt-2">
@@ -59,10 +60,19 @@
               }
             </div>
 
-            <!-- Step 2: Payment Method -->
+            <!-- Step 2: Shipping Courier -->
             <div class="bg-white border border-slate-100 p-6 rounded-3xl">
               <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
                 <span class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">2</span>
+                Shipping Courier
+              </h2>
+              <app-select label="Select Courier" placeholder="Choose Shipping Courier" [control]="courierControl" [options]="courierOptions()"></app-select>
+            </div>
+
+            <!-- Step 3: Payment Method -->
+            <div class="bg-white border border-slate-100 p-6 rounded-3xl">
+              <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
+                <span class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">3</span>
                 Payment Method
               </h2>
               
@@ -120,20 +130,20 @@
               }
               <div class="flex justify-between">
                 <span>Tax</span>
-                <app-price [value]="cartStore.tax()" [bold]="false" size="sm"></app-price>
+                <app-price [value]="checkoutTax()" [bold]="false" size="sm"></app-price>
               </div>
               <div class="flex justify-between">
                 <span>Shipping Cost</span>
-                @if (cartStore.shipping() === 0) {
+                @if (shippingCost() === 0) {
                   <span class="text-emerald-600 font-bold">Free</span>
                 } @else {
-                  <app-price [value]="cartStore.shipping()" [bold]="false" size="sm"></app-price>
+                  <app-price [value]="shippingCost()" [bold]="false" size="sm"></app-price>
                 }
               </div>
               <hr class="border-slate-100" />
               <div class="flex justify-between text-slate-800 text-sm font-bold">
                 <span>Total Payment</span>
-                <app-price [value]="cartStore.total()" size="md" class="text-primary-600"></app-price>
+                <app-price [value]="checkoutTotal()" size="md" class="text-primary-600"></app-price>
               </div>
             </div>
 

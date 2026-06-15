@@ -25,6 +25,8 @@ export class UserApiService {
         street: addr.street,
         city: addr.city,
         province: addr.province,
+        district: addr.district,
+        subDistrict: addr.subDistrict,
         postalCode: addr.postalCode,
         isDefault: addr.isDefault
       }));
@@ -117,6 +119,8 @@ export class UserApiService {
           street: addr.street,
           city: addr.city,
           province: addr.province,
+          district: addr.district || '',
+          subDistrict: addr.subDistrict || '',
           postalCode: addr.postalCode,
           isDefault: addr.isDefault
         };
@@ -146,6 +150,62 @@ export class UserApiService {
     } catch (e) {
       console.error('Gagal menyimpan user/alamat:', e);
       throw e;
+    }
+  }
+
+  async addAddress(userId: string, userName: string, addr: Address): Promise<boolean> {
+    const addressBody = {
+      userId: userId,
+      label: addr.name,
+      recipientName: userName,
+      phone: addr.phone,
+      street: addr.street,
+      city: addr.city,
+      province: addr.province,
+      district: addr.district || '',
+      subDistrict: addr.subDistrict || '',
+      postalCode: addr.postalCode,
+      isDefault: addr.isDefault
+    };
+    try {
+      await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Addresses`, addressBody));
+      return true;
+    } catch (e) {
+      console.error('Failed to add address:', e);
+      return false;
+    }
+  }
+
+  async updateAddress(userId: string, userName: string, addr: Address): Promise<boolean> {
+    const addressBody = {
+      userId: userId,
+      label: addr.name,
+      recipientName: userName,
+      phone: addr.phone,
+      street: addr.street,
+      city: addr.city,
+      province: addr.province,
+      district: addr.district || '',
+      subDistrict: addr.subDistrict || '',
+      postalCode: addr.postalCode,
+      isDefault: addr.isDefault
+    };
+    try {
+      await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Addresses/${addr.id}`, addressBody));
+      return true;
+    } catch (e) {
+      console.error('Failed to update address:', e);
+      return false;
+    }
+  }
+
+  async deleteAddress(addressId: string): Promise<boolean> {
+    try {
+      await firstValueFrom(this.http.delete(`${this.BASE_URL}/customer/Addresses/${addressId}`));
+      return true;
+    } catch (e) {
+      console.error('Failed to delete address:', e);
+      return false;
     }
   }
 }

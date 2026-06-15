@@ -5,6 +5,8 @@ export interface Address {
   street: string;
   city: string;
   province: string;
+  district?: string;
+  subDistrict?: string;
   postalCode: string;
   isDefault: boolean;
 }

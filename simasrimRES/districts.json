@@ -1,0 +1,410 @@
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": {
+        "code": "001",
+        "status": "Success",
+        "data": [
+            {
+                "region_code": "32.71.20.6",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TIMUR",
+                "subdistrict_name": "SUKASARI"
+            },
+            {
+                "region_code": "32.71.10.8",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "HARJASARI"
+            },
+            {
+                "region_code": "32.71.10.9",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "MUARASARI"
+            },
+            {
+                "region_code": "32.71.10.10",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "PAKUAN"
+            },
+            {
+                "region_code": "32.71.10.11",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "CIPAKU"
+            },
+            {
+                "region_code": "32.71.10.12",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "LAWANGGINTUNG"
+            },
+            {
+                "region_code": "32.71.10.13",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "BATUTULIS"
+            },
+            {
+                "region_code": "32.71.10.14",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "BONDONGAN"
+            },
+            {
+                "region_code": "32.71.10.15",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "EMPANG"
+            },
+            {
+                "region_code": "32.71.10.16",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "CIKARET"
+            },
+            {
+                "region_code": "32.71.20.1",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TIMUR",
+                "subdistrict_name": "SINDANGSARI"
+            },
+            {
+                "region_code": "32.71.20.2",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TIMUR",
+                "subdistrict_name": "SINDANGRASA"
+            },
+            {
+                "region_code": "32.71.20.3",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TIMUR",
+                "subdistrict_name": "TAJUR"
+            },
+            {
+                "region_code": "32.71.20.4",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TIMUR",
+                "subdistrict_name": "KATULAMPA"
+            },
+            {
+                "region_code": "32.71.20.5",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TIMUR",
+                "subdistrict_name": "BARANANGSIANG"
+            },
+            {
+                "region_code": "32.71.10.7",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "BOJONGKERTA"
+            },
+            {
+                "region_code": "32.71.30.1",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR UTARA",
+                "subdistrict_name": "BANTARJATI"
+            },
+            {
+                "region_code": "32.71.30.2",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR UTARA",
+                "subdistrict_name": "TEGALGUNDIL"
+            },
+            {
+                "region_code": "32.71.30.3",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR UTARA",
+                "subdistrict_name": "TANAHBARU"
+            },
+            {
+                "region_code": "32.71.30.4",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR UTARA",
+                "subdistrict_name": "CIMAHPAR"
+            },
+            {
+                "region_code": "32.71.30.5",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR UTARA",
+                "subdistrict_name": "CILUAR"
+            },
+            {
+                "region_code": "32.71.30.6",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR UTARA",
+                "subdistrict_name": "CIBULUH"
+            },
+            {
+                "region_code": "32.71.30.7",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR UTARA",
+                "subdistrict_name": "KEDUNGHALANG"
+            },
+            {
+                "region_code": "32.71.30.8",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR UTARA",
+                "subdistrict_name": "CIPARIGI"
+            },
+            {
+                "region_code": "32.71.40.1",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "PALEDANG"
+            },
+            {
+                "region_code": "32.71.40.2",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "GUDANG"
+            },
+            {
+                "region_code": "32.71.40.3",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "BABAKANPASAR"
+            },
+            {
+                "region_code": "32.71.40.4",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "TEGALLEGA"
+            },
+            {
+                "region_code": "32.71.40.5",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "BABAKAN"
+            },
+            {
+                "region_code": "32.71.50.9",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "SINDANGBARANG"
+            },
+            {
+                "region_code": "32.71.40.7",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "PABATON"
+            },
+            {
+                "region_code": "32.71.40.8",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "CIBOGOR"
+            },
+            {
+                "region_code": "32.71.40.9",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "PANARAGAN"
+            },
+            {
+                "region_code": "32.71.40.10",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "KEBONKALAPA"
+            },
+            {
+                "region_code": "32.71.40.11",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "CIWARINGIN"
+            },
+            {
+                "region_code": "32.71.50.1",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "PASIRMULYA"
+            },
+            {
+                "region_code": "32.71.50.2",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "PASIRKUDA"
+            },
+            {
+                "region_code": "32.71.50.3",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "PASIRJAYA"
+            },
+            {
+                "region_code": "32.71.50.4",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "GUNUNGBATU"
+            },
+            {
+                "region_code": "32.71.50.5",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "LOJI"
+            },
+            {
+                "region_code": "32.71.50.6",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "MENTENG"
+            },
+            {
+                "region_code": "32.71.50.7",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "CILENDEK TIMUR"
+            },
+            {
+                "region_code": "32.71.50.8",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "CILENDEK BARAT"
+            },
+            {
+                "region_code": "32.71.40.6",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR TENGAH",
+                "subdistrict_name": "SEMPUR"
+            },
+            {
+                "region_code": "32.71.50.10",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "MARGAJAYA"
+            },
+            {
+                "region_code": "32.71.50.11",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "BALUNGBANGJAYA"
+            },
+            {
+                "region_code": "32.71.50.12",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "SITUGEDE"
+            },
+            {
+                "region_code": "32.71.50.13",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "BUBULAK"
+            },
+            {
+                "region_code": "32.71.50.14",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "SEMPLAK"
+            },
+            {
+                "region_code": "32.71.50.15",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "CURUGMEKAR"
+            },
+            {
+                "region_code": "32.71.50.16",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR BARAT",
+                "subdistrict_name": "CURUG"
+            },
+            {
+                "region_code": "32.71.10.1",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "MULYAHARJA"
+            },
+            {
+                "region_code": "32.71.10.2",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "PAMOYANAN"
+            },
+            {
+                "region_code": "32.71.10.3",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "RANGGAMEKAR"
+            },
+            {
+                "region_code": "32.71.10.4",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "GENTENG"
+            },
+            {
+                "region_code": "32.71.10.5",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "KERTAMAYA"
+            },
+            {
+                "region_code": "32.71.10.6",
+                "province_name": "JAWA BARAT",
+                "city_name": "KOTA BOGOR",
+                "district_name": "BOGOR SELATAN",
+                "subdistrict_name": "RANCAMAYA"
+            }
+        ]
+    },
+    "isSuccess": true
+}

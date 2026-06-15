@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { User, RegisterPayload } from '../core/models';
+import { User, RegisterPayload, Address } from '../core/models';
 import { AuthApiService } from '../core/services/auth-api.service';
 import { UserApiService } from '../core/services/user-api.service';
 import { ProductApiService } from '../core/services/product-api.service';
@@ -143,6 +143,72 @@ export class AuthStore {
       return true;
     } catch (err) {
       this.toastService.error('Gagal memperbarui profil.');
+      return false;
+    }
+  }
+
+  async addAddress(addr: Address): Promise<boolean> {
+    const user = this.state().user;
+    if (!user) return false;
+    try {
+      const success = await this.userApi.addAddress(user.id, user.name, addr);
+      if (success) {
+        const updatedAddresses = await this.userApi.getAddressesByUserId(user.id);
+        const activeToken = this.token() || '';
+        const userWithToken = { ...user, addresses: updatedAddresses, token: activeToken };
+        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
+        this.state.update(s => ({ ...s, user: userWithToken }));
+        this.toastService.success('Alamat berhasil ditambahkan!');
+        return true;
+      }
+      this.toastService.error('Gagal menambahkan alamat.');
+      return false;
+    } catch (err) {
+      this.toastService.error('Gagal menambahkan alamat.');
+      return false;
+    }
+  }
+
+  async updateAddress(addr: Address): Promise<boolean> {
+    const user = this.state().user;
+    if (!user) return false;
+    try {
+      const success = await this.userApi.updateAddress(user.id, user.name, addr);
+      if (success) {
+        const updatedAddresses = await this.userApi.getAddressesByUserId(user.id);
+        const activeToken = this.token() || '';
+        const userWithToken = { ...user, addresses: updatedAddresses, token: activeToken };
+        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
+        this.state.update(s => ({ ...s, user: userWithToken }));
+        this.toastService.success('Alamat berhasil diperbarui!');
+        return true;
+      }
+      this.toastService.error('Gagal memperbarui alamat.');
+      return false;
+    } catch (err) {
+      this.toastService.error('Gagal memperbarui alamat.');
+      return false;
+    }
+  }
+
+  async deleteAddress(id: string): Promise<boolean> {
+    const user = this.state().user;
+    if (!user) return false;
+    try {
+      const success = await this.userApi.deleteAddress(id);
+      if (success) {
+        const updatedAddresses = await this.userApi.getAddressesByUserId(user.id);
+        const activeToken = this.token() || '';
+        const userWithToken = { ...user, addresses: updatedAddresses, token: activeToken };
+        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
+        this.state.update(s => ({ ...s, user: userWithToken }));
+        this.toastService.success('Alamat berhasil dihapus!');
+        return true;
+      }
+      this.toastService.error('Gagal menghapus alamat.');
+      return false;
+    } catch (err) {
+      this.toastService.error('Gagal menghapus alamat.');
       return false;
     }
   }
