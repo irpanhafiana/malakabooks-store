@@ -31,10 +31,10 @@ export class OrderApiService {
     if (currentUser.role === 'admin') {
       try {
         const [ordersEnvelope, users] = await Promise.all([
-          firstValueFrom(this.http.get<any>(`${this.BASE_URL}/admin/Orders`)) || Promise.resolve({ data: [] }),
+          firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/Orders`, { pageNumber: 1, pageSize: 1000 })) || Promise.resolve({ data: { results: [] } }),
           this.userApi.getUsers()
         ]);
-        const ordersRes = ordersEnvelope?.data || [];
+        const ordersRes = ordersEnvelope?.data?.results || [];
         const userMap = new Map(users.map(u => [u.id, u]));
 
         return ordersRes.map((res: any) => {
@@ -148,6 +148,72 @@ export class OrderApiService {
     } catch (e) {
       console.error(`Gagal mengambil order untuk user ${userId}:`, e);
       return [];
+    }
+  }
+
+  async getOrderById(id: string): Promise<Order | null> {
+    try {
+      const envelope = await firstValueFrom(
+        this.http.get<any>(`${this.BASE_URL}/customer/Orders/${id}`)
+      );
+      const res = envelope?.data || null;
+      if (!res) return null;
+
+      const currentUser = getStoredSessionUser();
+      let shippingAddress = {
+        id: res.addressId,
+        name: 'Address',
+        phone: '',
+        street: 'Unknown Street',
+        city: '',
+        province: '',
+        postalCode: '',
+        isDefault: false
+      };
+      if (currentUser) {
+        const addresses = await this.userApi.getAddressesByUserId(currentUser.id);
+        const matched = addresses.find(a => a.id === res.addressId);
+        if (matched) {
+          shippingAddress = matched;
+        }
+      }
+
+      return {
+        id: res.id,
+        userId: res.userId,
+        userName: currentUser ? currentUser.name : '',
+        userEmail: currentUser ? currentUser.email : '',
+        items: res.items.map((item: any) => ({
+          product: {
+            id: item.bookId,
+            name: item.title,
+            description: '',
+            price: item.price,
+            images: [],
+            categoryId: '',
+            categoryName: '',
+            stock: 0,
+            rating: 5,
+            reviewsCount: 0,
+            featured: false,
+            brand: '',
+            specifications: {},
+            createdAt: ''
+          },
+          quantity: item.quantity
+        })),
+        shippingAddress,
+        paymentMethod: 'bank_transfer',
+        status: res.status as any,
+        subtotal: res.totalPrice,
+        shippingCost: 0,
+        tax: 0,
+        total: res.totalPrice,
+        orderDate: res.createdAt
+      };
+    } catch (e) {
+      console.error(`Gagal mengambil order detail untuk id ${id}:`, e);
+      return null;
     }
   }
 

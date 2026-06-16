@@ -40,6 +40,17 @@ export class OrderStore {
     }
   }
 
+  async loadOrderDetails(orderId: string) {
+    this.state.update(s => ({ ...s, loading: true }));
+    try {
+      const order = await this.orderApi.getOrderById(orderId);
+      this.state.update(s => ({ ...s, currentOrder: order, loading: false }));
+    } catch (e) {
+      this.state.update(s => ({ ...s, loading: false }));
+      this.toastService.error('Failed to load order details.');
+    }
+  }
+
   async loadAllOrders() {
     this.state.update(s => ({ ...s, loading: true }));
     try {

@@ -13,6 +13,9 @@ import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { PriceComponent } from '../../shared/ui/price/price.component';
 import { ToastService } from '../../core/services/toast.service';
 import { AddressApiService } from '../../core/services/address-api.service';
+import { DokuApiService } from '../../core/services/doku-api.service';
+import { UserApiService } from '../../core/services/user-api.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-checkout',
@@ -28,6 +31,8 @@ export class CheckoutComponent implements OnInit {
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
   private readonly addressApi = inject(AddressApiService);
+  private readonly dokuApi = inject(DokuApiService);
+  private readonly userApi = inject(UserApiService);
 
   isLoading = signal<boolean>(false);
   showAddressForm = signal<boolean>(false);
@@ -74,6 +79,7 @@ export class CheckoutComponent implements OnInit {
 
   // Payment inputs
   paymentOptions = [
+    { value: 'doku', label: 'Jokul Checkout (Doku)' },
     { value: 'credit_card', label: 'Credit or Debit Card' },
     { value: 'bank_transfer', label: 'Bank Transfer (BCA, Mandiri, BNI)' },
     { value: 'e_wallet', label: 'GoPay / OVO E-Wallet' },
@@ -94,7 +100,16 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
-    const addresses = this.authStore.currentUser()?.addresses || [];
+    this.isLoading.set(true);
+    const userId = this.authStore.currentUser()?.id || '';
+    let addresses: Address[] = [];
+    if (userId) {
+      try {
+        addresses = await this.userApi.getAddressesByUserId(userId);
+      } catch (err) {
+        console.error('Failed to load user addresses via API:', err);
+      }
+    }
     this.savedAddresses.set(addresses);
 
     const def = addresses.find(a => a.isDefault);
@@ -103,8 +118,9 @@ export class CheckoutComponent implements OnInit {
     } else if (addresses.length > 0) {
       this.selectedAddressId.set(addresses[0].id);
     } else {
-      this.showAddressForm.set(true);
+      this.showAddressForm.set(false);
     }
+    this.isLoading.set(false);
 
     // Load provinces & couriers
     await Promise.all([
@@ -240,11 +256,12 @@ export class CheckoutComponent implements OnInit {
     if (totalWeight <= 0) totalWeight = 1000;
 
     const tariffRes = await this.addressApi.calculateTariff({
-      Origin: '151', // Jakarta Barat default
-      Destination: destinationDistrictId,
-      WeightInKg: totalWeight / 1000,
-      Volume: '1',
-      Ekspedisi: courier
+      origin_code: '32.71.10.8', // Jakarta Barat default
+      desti_code: destinationDistrictId,
+      // berat_paket: totalWeight / 1000,
+      berat_paket: "10",
+      volume: '1x1x1',
+      ekspedisi: courier
     });
 
     this.isLoading.set(false);
@@ -324,10 +341,10 @@ export class CheckoutComponent implements OnInit {
   }
 
   isOrderInvalid(): boolean {
-    if (this.courierControl.invalid) {
+    if (this.showAddressForm() || !this.selectedAddressId()) {
       return true;
     }
-    if (!this.selectedAddressId() && this.showAddressForm()) {
+    if (this.courierControl.invalid) {
       return true;
     }
     if (this.paymentControl.value === 'credit_card') {
@@ -382,7 +399,34 @@ export class CheckoutComponent implements OnInit {
     this.isLoading.set(false);
 
     if (placed) {
-      this.router.navigate(['/order-success']);
+      if (method === 'doku') {
+        try {
+          this.isLoading.set(true);
+          const paymentRes = await firstValueFrom(this.dokuApi.getCheckPaymentDoku(placed.id));
+          this.isLoading.set(false);
+          
+          const checkoutUrl = paymentRes?.checkoutUrl || 
+                              paymentRes?.paymentUrl || 
+                              paymentRes?.data?.checkout_url || 
+                              paymentRes?.url || 
+                              paymentRes?.data?.url;
+
+          if (checkoutUrl) {
+            (window as any).loadJokulCheckout(checkoutUrl);
+          } else {
+            console.error('Failed to resolve checkout URL from Doku response:', paymentRes);
+            this.toastService.error('Order placed, but failed to load payment gateway. Please check your order history.');
+            this.router.navigate(['/order-success'], { queryParams: { id: placed.id } });
+          }
+        } catch (e) {
+          this.isLoading.set(false);
+          console.error('Failed to initiate Doku Jokul checkout overlay:', e);
+          this.toastService.error('Order placed, but failed to load payment gateway. Please check your order history.');
+          this.router.navigate(['/order-success'], { queryParams: { id: placed.id } });
+        }
+      } else {
+        this.router.navigate(['/order-success'], { queryParams: { id: placed.id } });
+      }
     }
   }
 }

@@ -7,7 +7,11 @@
       <h1 class="font-display font-extrabold text-slate-800 text-xl md:text-2xl mb-2">Order Confirmed!</h1>
       <p class="text-xs text-slate-500 mb-6 leading-relaxed">Thank you for your purchase. We have received your order and are preparing it for shipment.</p>
 
-      @if (orderStore.currentOrder(); as order) {
+      @if (orderStore.loading()) {
+        <div class="flex flex-col gap-4 bg-slate-50 rounded-2xl p-4 mb-8">
+          <app-skeleton type="table-row" [count]="3"></app-skeleton>
+        </div>
+      } @else if (orderStore.currentOrder(); as order) {
         <div class="bg-slate-50 rounded-2xl p-4 text-left text-xs text-slate-600 flex flex-col gap-3.5 mb-8">
           <div class="flex justify-between">
             <span class="font-semibold text-slate-400">Order ID</span>
@@ -15,7 +19,7 @@
           </div>
           <div class="flex justify-between">
             <span class="font-semibold text-slate-400">Tracking Number</span>
-            <strong class="font-bold text-slate-800">{{ order.trackingNumber }}</strong>
+            <strong class="font-bold text-slate-800">{{ order.trackingNumber || '-' }}</strong>
           </div>
           <div class="flex justify-between">
             <span class="font-semibold text-slate-400">Payment Method</span>

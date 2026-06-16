@@ -194,3 +194,18 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Ensure child pages inside the inner page layout stretch to fill height and enable scrolling */
+.inner-root main {
+  height: 0;
+  min-height: 0;
+}
+
+.inner-root main > div > :not(router-outlet) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  min-height: 0;
+}
+

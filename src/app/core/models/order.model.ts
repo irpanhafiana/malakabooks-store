@@ -9,7 +9,7 @@ export interface Order {
   userEmail: string;
   items: CartItem[];
   shippingAddress: Address;
-  paymentMethod: 'credit_card' | 'bank_transfer' | 'e_wallet' | 'cod';
+  paymentMethod: 'credit_card' | 'bank_transfer' | 'e_wallet' | 'cod' | 'doku';
   paymentDetails?: {
     cardLast4?: string;
     bankName?: string;

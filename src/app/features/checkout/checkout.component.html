@@ -19,24 +19,33 @@
                 Shipping Address
               </h2>
 
-              @if (savedAddresses().length > 0 && !showAddressForm()) {
-                <div class="flex flex-col gap-3">
-                  @for (addr of savedAddresses(); track addr.id) {
-                    <label class="flex items-start gap-3.5 p-4 border rounded-2xl cursor-pointer transition-all hover:bg-slate-50"
-                           [class.border-primary-500]="selectedAddressId() === addr.id"
-                           [class.border-slate-200]="selectedAddressId() !== addr.id">
-                      <input type="radio" name="address" [value]="addr.id" [checked]="selectedAddressId() === addr.id" (change)="selectAddress(addr.id)" class="mt-1 accent-primary-600 cursor-pointer" />
-                      <div class="flex flex-col text-xs leading-relaxed">
-                        <strong class="font-bold text-slate-800">{{ addr.name }} @if (addr.isDefault) { <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold ml-1">Default</span> }</strong>
-                        <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
-                        <span class="text-slate-600 font-semibold">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
-                      </div>
-                    </label>
-                  }
-                  <button type="button" (click)="addNewAddress()" class="text-xs font-bold text-primary-600 hover:text-primary-700 text-left mt-1 flex items-center gap-1 cursor-pointer">
-                    + Add New Shipping Address
-                  </button>
-                </div>
+              @if (!showAddressForm()) {
+                @if (savedAddresses().length > 0) {
+                  <div class="flex flex-col gap-3">
+                    @for (addr of savedAddresses(); track addr.id) {
+                      <label class="flex items-start gap-3.5 p-4 border rounded-2xl cursor-pointer transition-all hover:bg-slate-50"
+                             [class.border-primary-500]="selectedAddressId() === addr.id"
+                             [class.border-slate-200]="selectedAddressId() !== addr.id">
+                        <input type="radio" name="address" [value]="addr.id" [checked]="selectedAddressId() === addr.id" (change)="selectAddress(addr.id)" class="mt-1 accent-primary-600 cursor-pointer" />
+                        <div class="flex flex-col text-xs leading-relaxed">
+                          <strong class="font-bold text-slate-800">{{ addr.name }} @if (addr.isDefault) { <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold ml-1">Default</span> }</strong>
+                          <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
+                          <span class="text-slate-600 font-semibold">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
+                        </div>
+                      </label>
+                    }
+                    <button type="button" (click)="addNewAddress()" class="text-xs font-bold text-primary-600 hover:text-primary-700 text-left mt-1 flex items-center gap-1 cursor-pointer">
+                      + Add New Shipping Address
+                    </button>
+                  </div>
+                } @else {
+                  <div class="text-center py-6 border border-dashed border-slate-200 rounded-2xl p-4 flex flex-col items-center gap-3">
+                    <p class="text-slate-500 text-xs">You have no saved shipping addresses.</p>
+                    <app-button type="button" (click)="addNewAddress()" variant="outline" size="sm">
+                      + Add New Address
+                    </app-button>
+                  </div>
+                }
               } @else {
                 <form [formGroup]="addressForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <app-input label="Recipient Name" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
@@ -50,9 +59,7 @@
                   <app-input label="Postal Code" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
                   
                   <div class="sm:col-span-2 flex justify-end gap-2.5 mt-2">
-                    @if (savedAddresses().length > 0) {
-                      <app-button type="button" (click)="cancelAddressForm()" variant="ghost" size="sm">Cancel</app-button>
-                    }
+                    <app-button type="button" (click)="cancelAddressForm()" variant="ghost" size="sm">Cancel</app-button>
                     <app-button type="button" (click)="saveAddressForm()" [disabled]="addressForm.invalid" variant="outline" size="sm">Save Address</app-button>
                   </div>
                 </form>
@@ -151,7 +158,6 @@
             <app-button
               (click)="onPlaceOrder()"
               [loading]="isLoading()"
-              [disabled]="isOrderInvalid()"
               variant="primary"
               size="md"
               [fullWidth]="true"
