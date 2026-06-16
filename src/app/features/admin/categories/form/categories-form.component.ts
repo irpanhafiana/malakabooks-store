@@ -1,4 +1,4 @@
-import { Component, input, output, effect, inject } from '@angular/core';
+import { Component, input, output, effect, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Category } from '../../../../core/models';
 import { ProductStore } from '../../../../store/product.store';
@@ -7,6 +7,7 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-categories-form',
   standalone: true,
   imports: [ReactiveFormsModule, InputComponent, ButtonComponent],

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Category } from '../models';
+import { Category, ApiResponse } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { isAdminSession } from '../auth/session.util';
@@ -24,9 +24,9 @@ export class CategoryApiService {
     }
     try {
       const endpoint = isAdmin ? `${this.BASE_URL}/admin/Categories` : `${this.BASE_URL}/public/Categories`;
-      const envelope = await firstValueFrom(this.http.get<any>(endpoint));
+      const envelope = await firstValueFrom(this.http.get<ApiResponse<Category[]>>(endpoint));
       const list = envelope?.data || [];
-      const data = list.map((c: any) => ({
+      const data = list.map((c: Category) => ({
         id: c.id,
         name: c.name,
         slug: c.slug || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
@@ -49,7 +49,7 @@ export class CategoryApiService {
 
   async saveCategory(category: Category): Promise<Category> {
     const isNew = !category.id || category.id.startsWith('cat-');
-    const body: any = {
+    const body: Partial<Category> & { id?: string } = {
       name: category.name,
       slug: category.slug || category.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
       description: category.description || '',
@@ -59,11 +59,11 @@ export class CategoryApiService {
     try {
       let result: Category;
       if (isNew) {
-        const envelope = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/Categories`, body));
+        const envelope = await firstValueFrom(this.http.post<ApiResponse<Category>>(`${this.BASE_URL}/admin/Categories`, body));
         result = envelope?.data;
       } else {
         body.id = category.id;
-        const envelope = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Categories/${category.id}`, body));
+        const envelope = await firstValueFrom(this.http.put<ApiResponse<Category>>(`${this.BASE_URL}/admin/Categories/${category.id}`, body));
         result = envelope?.data;
       }
       this.invalidateCategoryCache();

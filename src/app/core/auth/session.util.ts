@@ -17,6 +17,7 @@ export const SESSION_TOKEN_KEY = 'malakabooks_session_token';
 type StoredUser = (User & { token?: string }) | null;
 
 export function getStoredSessionUser(): StoredUser {
+  if (typeof localStorage === 'undefined') return null;
   const raw = localStorage.getItem(SESSION_USER_KEY);
   if (!raw) return null;
   try {

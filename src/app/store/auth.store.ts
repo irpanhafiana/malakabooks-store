@@ -40,6 +40,7 @@ export class AuthStore {
   }
 
   private loadSession() {
+    if (typeof localStorage === 'undefined') return;
     const savedUser = localStorage.getItem(SESSION_USER_KEY);
     const savedToken = localStorage.getItem(SESSION_TOKEN_KEY);
     if (!savedUser || !savedToken) return;

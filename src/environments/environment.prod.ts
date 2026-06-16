@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'http://192.168.1.15:25168/api/v1',
-  authUrl: 'http://192.168.1.15:44310/connect/token',
-  apiUrl: 'http://192.168.1.15:25168/api/v1/'
+  apiBaseUrl: 'https://api.malakabooks.com/api/v1',
+  authUrl: 'https://auth.malakabooks.com/connect/token',
+  apiUrl: 'https://api.malakabooks.com/api/v1/',
+  originCode: '32.71.10.8'
 };

@@ -185,9 +185,7 @@
                     </td>
                     <td class="px-5 py-4">{{ order.orderDate | date: 'mediumDate' }}</td>
                     <td class="px-5 py-4">
-                      <app-badge [variant]="statusVariant(order.status)">
-                        {{ order.status | uppercase }}
-                      </app-badge>
+                      <app-status-badge [status]="order.status"></app-status-badge>
                     </td>
                     <td class="px-5 py-4 text-right font-bold text-slate-800">
                       {{ order.total | currency }}

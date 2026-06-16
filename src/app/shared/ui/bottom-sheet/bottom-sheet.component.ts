@@ -1,6 +1,7 @@
-import { Component, input, output, effect, signal } from '@angular/core';
+import { Component, input, output, effect, signal, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-bottom-sheet',
   standalone: true,
   templateUrl: './bottom-sheet.component.html',

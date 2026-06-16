@@ -1,18 +1,19 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { DatePipe, UpperCasePipe } from '@angular/common';
+import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { AuthStore } from '../../../store/auth.store';
 import { OrderStore } from '../../../store/order.store';
-import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
+import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-order-history',
   standalone: true,
-  imports: [RouterLink, BadgeComponent, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, DatePipe, UpperCasePipe],
+  imports: [RouterLink, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, StatusBadgeComponent, DatePipe, NgOptimizedImage],
   templateUrl: './order-history.component.html',
   styleUrl: './order-history.component.css'
 })
@@ -29,13 +30,5 @@ export class OrderHistoryComponent implements OnInit {
     }
 
     this.orderStore.loadUserOrders(user.id);
-  }
-
-  statusVariant(status: string): any {
-    if (status === 'completed') return 'success';
-    if (status === 'shipped') return 'accent';
-    if (status === 'processing') return 'info';
-    if (status === 'pending') return 'warning';
-    return 'danger';
   }
 }

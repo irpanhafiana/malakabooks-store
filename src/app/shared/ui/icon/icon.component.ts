@@ -1,6 +1,7 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-icon',
   standalone: true,
   templateUrl: './icon.component.html',
@@ -66,13 +67,12 @@ export class IconComponent {
     
     let bxName = this.iconMap[name] || `bx-${name}`;
     
-    // Special rating star conversion for Boxicons font icon representation
-    if (name === 'star') {
+    if (name === 'star' || name === 'star-half') {
       if (classes.includes('fill-amber-400') || classes.includes('text-amber-400')) {
-        bxName = 'bxs-star';
+        bxName = name === 'star' ? 'bxs-star' : 'bxs-star-half';
         classes = classes.replace('fill-amber-400', 'text-amber-400');
       } else {
-        bxName = 'bx-star';
+        bxName = name === 'star' ? 'bx-star' : 'bx-star-half';
       }
     }
     

@@ -1,7 +1,8 @@
-import { Component, input, model, computed } from '@angular/core';
+import { Component, input, model, computed, ChangeDetectionStrategy } from '@angular/core';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-drawer',
   standalone: true,
   imports: [IconComponent],

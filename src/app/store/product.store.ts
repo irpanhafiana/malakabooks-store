@@ -12,6 +12,7 @@ interface ProductState {
   searchQuery: string;
   sortBy: 'featured' | 'price-asc' | 'price-desc' | 'rating';
   loading: boolean;
+  error: string | null;
 }
 
 @Injectable({
@@ -28,8 +29,9 @@ export class ProductStore {
     selectedCategoryId: null,
     selectedProductId: null,
     searchQuery: '',
-    sortBy: 'featured',
-    loading: false
+    sortBy: (typeof localStorage !== 'undefined' && 'sortBy' in localStorage) ? (localStorage.getItem('sortBy') as any) : 'featured', // Keep existing sort logic if any
+    loading: false,
+    error: null
   });
 
   // Selectors
@@ -40,6 +42,7 @@ export class ProductStore {
   readonly searchQuery = computed(() => this.state().searchQuery);
   readonly sortBy = computed(() => this.state().sortBy);
   readonly loading = computed(() => this.state().loading);
+  readonly error = computed(() => this.state().error);
 
   readonly featuredProducts = computed(() => {
     const featured = this.products().filter(p => p.featured);
@@ -91,37 +94,37 @@ export class ProductStore {
   constructor() {}
 
   async loadAll() {
-    this.state.update(s => ({ ...s, loading: true }));
+    this.state.update(s => ({ ...s, loading: true, error: null }));
     try {
       const [products, categories] = await Promise.all([
         this.productApi.getProducts(),
         this.categoryApi.getCategories()
       ]);
-      this.state.update(s => ({ ...s, products, categories, loading: false }));
+      this.state.update(s => ({ ...s, products, categories, loading: false, error: null }));
     } catch (e) {
-      this.state.update(s => ({ ...s, loading: false }));
+      this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat produk dan kategori dari server.' }));
       this.toastService.error('Failed to load products and categories.');
     }
   }
 
   async loadProducts() {
-    this.state.update(s => ({ ...s, loading: true }));
+    this.state.update(s => ({ ...s, loading: true, error: null }));
     try {
       const products = await this.productApi.getProducts();
-      this.state.update(s => ({ ...s, products, loading: false }));
+      this.state.update(s => ({ ...s, products, loading: false, error: null }));
     } catch (e) {
-      this.state.update(s => ({ ...s, loading: false }));
+      this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat katalog produk dari server.' }));
       this.toastService.error('Failed to load products.');
     }
   }
 
   async loadCategories() {
-    this.state.update(s => ({ ...s, loading: true }));
+    this.state.update(s => ({ ...s, loading: true, error: null }));
     try {
       const categories = await this.categoryApi.getCategories();
-      this.state.update(s => ({ ...s, categories, loading: false }));
+      this.state.update(s => ({ ...s, categories, loading: false, error: null }));
     } catch (e) {
-      this.state.update(s => ({ ...s, loading: false }));
+      this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar kategori dari server.' }));
       this.toastService.error('Failed to load categories.');
     }
   }

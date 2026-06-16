@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ProductStore } from '../../../../store/product.store';
 import { Category } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
@@ -12,6 +12,7 @@ import { CategoriesFormComponent } from '../form/categories-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-categories-list',
   standalone: true,
   imports: [TableComponent, ModalComponent, ButtonComponent, IconComponent, PaginationComponent, CategoriesFormComponent, SpinnerComponent],

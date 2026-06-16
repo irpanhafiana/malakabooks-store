@@ -1,10 +1,12 @@
-import { Component, inject, signal, ElementRef, ViewChild } from '@angular/core';
+import { Component, inject, signal, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastService } from '../../core/services/toast.service';
 import { filter, map, mergeMap } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-inner-page-layout',
   standalone: true,
   imports: [RouterOutlet],
@@ -40,7 +42,8 @@ export class InnerPageLayoutComponent {
         }
         return route;
       }),
-      mergeMap(route => route.data)
+      mergeMap(route => route.data),
+      takeUntilDestroyed()
     ).subscribe(data => {
       this.pageTitle.set(data['title'] || '');
     });

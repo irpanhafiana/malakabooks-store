@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, ElementRef, ViewChild } from '@angular/core';
+import { Component, inject, signal, effect, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
@@ -10,6 +10,7 @@ import { ProductDetailComponent } from '../../features/product/product-detail/pr
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-customer-layout',
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent],

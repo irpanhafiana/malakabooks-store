@@ -1,11 +1,13 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 import { AuthStore } from '../../../store/auth.store';
 import { InputComponent } from '../../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, InputComponent, ButtonComponent],
@@ -17,6 +19,8 @@ export class LoginComponent implements OnInit {
   private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+
+  protected readonly isProduction = environment.production;
 
   isLoading = signal<boolean>(false);
   sessionMessage = signal<string>('');

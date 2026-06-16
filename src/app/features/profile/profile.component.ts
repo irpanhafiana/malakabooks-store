@@ -1,5 +1,6 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { User, Address } from '../../core/models';
@@ -14,6 +15,7 @@ import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-profile',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, InputComponent, SelectComponent, ButtonComponent, IconComponent, BottomSheetComponent, SkeletonComponent],
@@ -24,6 +26,7 @@ export class ProfileComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly addressApi = inject(AddressApiService);
   private readonly userApi = inject(UserApiService);
 
@@ -95,7 +98,7 @@ export class ProfileComponent implements OnInit {
     await this.loadProvinces();
 
     // Listen to province changes
-    this.provinceControl.valueChanges.subscribe(async (provinceId) => {
+    this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (provinceId) => {
       if (provinceId) {
         const cts = await this.addressApi.getCities(provinceId);
         this.cities.set(cts);
@@ -112,7 +115,7 @@ export class ProfileComponent implements OnInit {
     });
 
     // Listen to city changes
-    this.cityControl.valueChanges.subscribe(async (cityId) => {
+    this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (cityId) => {
       if (cityId) {
         const dsts = await this.addressApi.getDistricts(cityId);
         this.districts.set(dsts);

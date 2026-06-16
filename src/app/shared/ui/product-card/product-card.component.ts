@@ -1,13 +1,16 @@
-import { Component, input, output, inject, signal } from '@angular/core';
+import { Component, input, output, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ProductStore } from '../../../store/product.store';
 import { Product } from '../../../core/models';
 import { IconComponent } from '../icon/icon.component';
 import { PriceComponent } from '../price/price.component';
+import { RatingStarsComponent } from '../rating-stars/rating-stars.component';
+import { DiscountBadgeComponent } from '../discount-badge/discount-badge.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-card',
   standalone: true,
-  imports: [IconComponent, PriceComponent],
+  imports: [IconComponent, PriceComponent, RatingStarsComponent, DiscountBadgeComponent],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css'
 })

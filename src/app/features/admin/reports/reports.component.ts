@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { OrderApiService } from '../../../core/services/order-api.service';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
@@ -7,6 +7,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { buildCsv, downloadCsv } from '../../../shared/util/csv.util';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-reports',
   standalone: true,
   imports: [ButtonComponent, IconComponent],

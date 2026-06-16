@@ -53,6 +53,14 @@
       <div class="w-full flex flex-col gap-3">
         @if (productStore.loading()) {
           <app-skeleton type="card" [count]="4"></app-skeleton>
+        } @else if (productStore.error()) {
+          <app-empty-state
+            icon="error"
+            title="Gagal Memuat Produk"
+            [description]="productStore.error() || ''"
+            actionText="Coba Lagi"
+            (actionClick)="retryLoading()"
+          ></app-empty-state>
         } @else if (productStore.filteredProducts().length === 0) {
           <app-empty-state
             icon="book-open"

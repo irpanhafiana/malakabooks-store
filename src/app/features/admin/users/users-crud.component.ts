@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, UpperCasePipe } from '@angular/common';
 import { UserApiService } from '../../../core/services/user-api.service';
 import { User } from '../../../core/models';
@@ -12,6 +12,7 @@ import { createClientPagination } from '../../../shared/util/pagination.util';
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-crud',
   standalone: true,
   imports: [TableComponent, BadgeComponent, ButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent],

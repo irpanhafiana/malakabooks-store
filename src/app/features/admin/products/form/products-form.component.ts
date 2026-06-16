@@ -1,4 +1,4 @@
-import { Component, inject, input, output, effect, computed } from '@angular/core';
+import { Component, inject, input, output, effect, computed, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductStore } from '../../../../store/product.store';
 import { Product } from '../../../../core/models';
@@ -9,6 +9,7 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-form',
   standalone: true,
   imports: [ReactiveFormsModule, InputComponent, SelectComponent, TextareaComponent, ButtonComponent],

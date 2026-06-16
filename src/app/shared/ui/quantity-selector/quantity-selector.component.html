@@ -1,0 +1,23 @@
+<div [class]="containerClass()">
+  <button
+    type="button"
+    [disabled]="disabled() || quantity() <= min()"
+    (click)="decrement()"
+    [class]="buttonClass()"
+  >
+    <app-icon name="minus" size="12"></app-icon>
+  </button>
+  
+  <span class="w-8 text-center text-xs font-bold text-slate-800 select-none">
+    {{ quantity() }}
+  </span>
+  
+  <button
+    type="button"
+    [disabled]="disabled() || quantity() >= effectiveMax()"
+    (click)="increment()"
+    [class]="buttonClass()"
+  >
+    <app-icon name="plus" size="12"></app-icon>
+  </button>
+</div>

@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, OnInit } from '@angular/core';
+import { Component, inject, signal, effect, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ProductStore } from '../../../store/product.store';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
@@ -11,6 +11,7 @@ import { SearchBarComponent } from '../../../shared/ui/search-bar/search-bar.com
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-list',
   standalone: true,
   imports: [SkeletonComponent, IconComponent, DrawerComponent, EmptyStateComponent, SearchBarComponent, PriceComponent],
@@ -79,6 +80,10 @@ export class ProductListComponent implements OnInit {
 
   viewProductDetails(productId: string) {
     this.productStore.setSelectedProductId(productId);
+  }
+
+  retryLoading() {
+    this.productStore.loadAll();
   }
 
   onToggleWishlist(event: Event, product: Product) {

@@ -1,5 +1,6 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, DestroyRef, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HomeAddress } from '../../../../core/models';
 import { AdminHomeAddressStore } from '../../../../store/admin-home-address.store';
 import { InputComponent } from '../../../../shared/ui/input/input.component';
@@ -8,18 +9,20 @@ import { SelectComponent } from '../../../../shared/ui/select/select.component';
 import { AddressApiService } from '../../../../core/services/address-api.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home-addresses-form',
   standalone: true,
   imports: [ReactiveFormsModule, InputComponent, ButtonComponent, SelectComponent],
   templateUrl: './home-addresses-form.component.html'
 })
 export class HomeAddressesFormComponent implements OnInit {
-  @Input() address: HomeAddress | null = null;
-  @Output() onCancel = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<void>();
+  readonly address = input<HomeAddress | null>(null);
+  readonly onCancel = output<void>();
+  readonly onSave = output<void>();
 
   private readonly store = inject(AdminHomeAddressStore);
   private readonly addressApi = inject(AddressApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   isLoading = signal<boolean>(false);
   
@@ -56,7 +59,7 @@ export class HomeAddressesFormComponent implements OnInit {
     await this.loadProvinces();
 
     // Listen to province changes
-    this.provinceControl.valueChanges.subscribe(async (provinceId) => {
+    this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (provinceId) => {
       if (provinceId) {
         const cts = await this.addressApi.getCities(provinceId);
         this.cities.set(cts);
@@ -73,7 +76,7 @@ export class HomeAddressesFormComponent implements OnInit {
     });
 
     // Listen to city changes
-    this.cityControl.valueChanges.subscribe(async (cityId) => {
+    this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (cityId) => {
       if (cityId) {
         const dsts = await this.addressApi.getDistricts(cityId);
         this.districts.set(dsts);
@@ -89,8 +92,9 @@ export class HomeAddressesFormComponent implements OnInit {
       }
     });
 
-    if (this.address) {
-      await this.patchFormValues(this.address);
+    const addr = this.address();
+    if (addr) {
+      await this.patchFormValues(addr);
     }
   }
 
@@ -169,7 +173,7 @@ export class HomeAddressesFormComponent implements OnInit {
     const subDistrictName = distObj ? distObj.subdistrict_name : '';
 
     const payload: HomeAddress = {
-      id: this.address?.id || '',
+      id: this.address()?.id || '',
       label: this.labelControl.value || '',
       recipientName: this.recipientControl.value || '',
       phone: this.phoneControl.value || '',
@@ -179,8 +183,8 @@ export class HomeAddressesFormComponent implements OnInit {
       district: districtName,
       subDistrict: subDistrictName || '',
       postalCode: this.postalCodeControl.value || '',
-      longitude: this.address?.longitude || 0,
-      latitude: this.address?.latitude || 0
+      longitude: this.address()?.longitude || 0,
+      latitude: this.address()?.latitude || 0
     };
 
     await this.store.saveAddress(payload);

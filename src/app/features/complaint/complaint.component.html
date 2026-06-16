@@ -28,7 +28,7 @@
                     Order #{{ c.orderId }} &middot; {{ c.createdAt | date:'mediumDate' }}
                   </p>
                 </div>
-                <app-badge [variant]="statusVariant(c.status)">{{ statusLabel(c.status) }}</app-badge>
+                <app-status-badge [status]="c.status" type="complaint"></app-status-badge>
               </div>
 
               <p class="text-xs text-slate-600">{{ c.description }}</p>

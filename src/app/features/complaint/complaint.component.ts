@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -6,22 +6,23 @@ import { AuthStore } from '../../store/auth.store';
 import { OrderStore } from '../../store/order.store';
 import { ComplaintStore } from '../../store/complaint.store';
 import { ComplaintStatus } from '../../core/models';
-import { BadgeComponent } from '../../shared/ui/badge/badge.component';
 import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { InputComponent } from '../../shared/ui/input/input.component';
 import { TextareaComponent } from '../../shared/ui/textarea/textarea.component';
+import { StatusBadgeComponent } from '../../shared/ui/status-badge/status-badge.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-complaint',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     DatePipe,
     RouterLink,
-    BadgeComponent,
+    StatusBadgeComponent,
     EmptyStateComponent,
     SkeletonComponent,
     ButtonComponent,
@@ -33,18 +34,18 @@ import { TextareaComponent } from '../../shared/ui/textarea/textarea.component';
   styleUrl: './complaint.component.css'
 })
 export class ComplaintComponent implements OnInit {
+  private readonly fb = inject(FormBuilder);
   protected readonly authStore = inject(AuthStore);
   protected readonly orderStore = inject(OrderStore);
   protected readonly complaintStore = inject(ComplaintStore);
-  private readonly fb = inject(FormBuilder);
 
   protected isFormOpen = false;
-  protected readonly submitting = signal(false);
+  protected readonly submitting = signal<boolean>(false);
 
   protected readonly form = this.fb.group({
     orderId: ['', Validators.required],
-    subject: ['', Validators.required],
-    description: ['', Validators.required]
+    subject: ['', [Validators.required, Validators.maxLength(100)]],
+    description: ['', [Validators.required, Validators.maxLength(1000)]]
   });
 
   ngOnInit() {
@@ -79,25 +80,5 @@ export class ComplaintComponent implements OnInit {
     });
     this.submitting.set(false);
     if (ok) this.closeForm();
-  }
-
-  protected statusVariant(status: ComplaintStatus): 'secondary' | 'success' | 'warning' | 'danger' {
-    const map: Record<ComplaintStatus, 'secondary' | 'success' | 'warning' | 'danger'> = {
-      open: 'warning',
-      in_progress: 'secondary',
-      resolved: 'success',
-      closed: 'secondary'
-    };
-    return map[status] ?? 'secondary';
-  }
-
-  protected statusLabel(status: ComplaintStatus): string {
-    const map: Record<ComplaintStatus, string> = {
-      open: 'Terbuka',
-      in_progress: 'Diproses',
-      resolved: 'Selesai',
-      closed: 'Ditutup'
-    };
-    return map[status] ?? status;
   }
 }

@@ -1,19 +1,20 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { DatePipe, UpperCasePipe } from '@angular/common';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { OrderStore } from '../../../../store/order.store';
 import { Order, OrderStatus } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
-import { BadgeComponent } from '../../../../shared/ui/badge/badge.component';
 import { PriceComponent } from '../../../../shared/ui/price/price.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
+import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-badge.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-orders-list',
   standalone: true,
-  imports: [TableComponent, BadgeComponent, PriceComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent],
+  imports: [TableComponent, PriceComponent, DatePipe, PaginationComponent, SpinnerComponent, StatusBadgeComponent],
   templateUrl: './orders-list.component.html',
   styleUrl: './orders-list.component.css'
 })
@@ -38,13 +39,5 @@ export class OrdersListComponent implements OnInit {
     } else {
       selectElement.value = currentStatus;
     }
-  }
-
-  statusVariant(status: string): any {
-    if (status === 'completed') return 'success';
-    if (status === 'shipped') return 'accent';
-    if (status === 'processing') return 'info';
-    if (status === 'pending') return 'warning';
-    return 'danger';
   }
 }

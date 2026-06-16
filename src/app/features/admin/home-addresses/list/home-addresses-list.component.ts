@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AdminHomeAddressStore } from '../../../../store/admin-home-address.store';
 import { HomeAddress } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
@@ -12,6 +12,7 @@ import { HomeAddressesFormComponent } from '../form/home-addresses-form.componen
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home-addresses-list',
   standalone: true,
   imports: [TableComponent, ModalComponent, ButtonComponent, IconComponent, PaginationComponent, HomeAddressesFormComponent, SpinnerComponent],

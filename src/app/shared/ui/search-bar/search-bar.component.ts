@@ -1,8 +1,9 @@
-import { Component, input, output, OnInit } from '@angular/core';
+import { Component, input, output, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-search-bar',
   standalone: true,
   imports: [FormsModule, IconComponent],

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ToastService } from '../../../core/services/toast.service';
 
 /**
@@ -10,6 +10,7 @@ import { ToastService } from '../../../core/services/toast.service';
  * was silently dropped.
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-toast-container',
   standalone: true,
   templateUrl: './toast-container.component.html',

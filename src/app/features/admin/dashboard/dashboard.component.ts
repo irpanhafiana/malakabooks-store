@@ -1,16 +1,17 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DatePipe, CurrencyPipe, UpperCasePipe } from '@angular/common';
+import { DatePipe, CurrencyPipe } from '@angular/common';
 import { DashboardApiService } from '../../../core/services/dashboard-api.service';
 import { DashboardMetrics } from '../../../core/models';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
-import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
+import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [RouterLink, PriceComponent, IconComponent, BadgeComponent, DatePipe, CurrencyPipe, UpperCasePipe],
+  imports: [RouterLink, PriceComponent, IconComponent, StatusBadgeComponent, DatePipe, CurrencyPipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

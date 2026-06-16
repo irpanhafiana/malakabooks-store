@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Product } from '../models';
+import { Product, BookDto, ApiResponse } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { isAdminSession } from '../auth/session.util';
@@ -14,7 +14,7 @@ export class ProductApiService {
   private readonly categoryApi = inject(CategoryApiService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
-  private mapBookToProduct(book: any): Product {
+  private mapBookToProduct(book: BookDto): Product {
     return {
       id: book.id,
       name: book.title,
@@ -42,25 +42,25 @@ export class ProductApiService {
   async getProducts(): Promise<Product[]> {
     try {
       const endpoint = isAdminSession() ? `${this.BASE_URL}/admin/Books` : `${this.BASE_URL}/public/Books`;
-      const envelope = await firstValueFrom(this.http.get<any>(endpoint));
+      const envelope = await firstValueFrom(this.http.get<ApiResponse<BookDto[]>>(endpoint));
       const books = envelope?.data || [];
       const categories = await this.categoryApi.getCategories();
       const catMap = new Map(categories.map(c => [c.id, c.name]));
       
-      return books.map((b: any) => ({
+      return books.map((b: BookDto) => ({
         ...this.mapBookToProduct(b),
         categoryName: catMap.get(b.categoryId) || 'Other'
       }));
     } catch (e) {
       console.error('Gagal mengambil daftar produk:', e);
-      return [];
+      throw e;
     }
   }
 
   async getProductById(id: string): Promise<Product | undefined> {
     try {
       const endpoint = isAdminSession() ? `${this.BASE_URL}/admin/Books/${id}` : `${this.BASE_URL}/public/Books/${id}`;
-      const envelope = await firstValueFrom(this.http.get<any>(endpoint));
+      const envelope = await firstValueFrom(this.http.get<ApiResponse<BookDto>>(endpoint));
       const book = envelope?.data;
       if (!book) return undefined;
       const categories = await this.categoryApi.getCategories();
@@ -94,10 +94,10 @@ export class ProductApiService {
 
     try {
       if (isNew) {
-        const envelope = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/Books`, body));
+        const envelope = await firstValueFrom(this.http.post<ApiResponse<BookDto>>(`${this.BASE_URL}/admin/Books`, body));
         return this.mapBookToProduct(envelope?.data);
       } else {
-        const envelope = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Books/${product.id}`, body));
+        const envelope = await firstValueFrom(this.http.put<ApiResponse<BookDto>>(`${this.BASE_URL}/admin/Books/${product.id}`, body));
         return this.mapBookToProduct(envelope?.data);
       }
     } catch (e) {

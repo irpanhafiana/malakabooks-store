@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
@@ -11,6 +11,7 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
   standalone: true,
   imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent],

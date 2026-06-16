@@ -1,7 +1,8 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { DecimalPipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
 import { OrderStore } from '../../store/order.store';
@@ -16,11 +17,14 @@ import { AddressApiService } from '../../core/services/address-api.service';
 import { DokuApiService } from '../../core/services/doku-api.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { ShippingService } from '../../core/services/shipping.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-checkout',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, InputComponent, SelectComponent, RadioComponent, ButtonComponent, PriceComponent, DecimalPipe],
+  imports: [RouterLink, ReactiveFormsModule, InputComponent, SelectComponent, RadioComponent, ButtonComponent, PriceComponent, DecimalPipe, NgOptimizedImage],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
@@ -28,23 +32,27 @@ export class CheckoutComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
   protected readonly cartStore = inject(CartStore);
   private readonly orderStore = inject(OrderStore);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
   private readonly addressApi = inject(AddressApiService);
   private readonly dokuApi = inject(DokuApiService);
   private readonly userApi = inject(UserApiService);
+  private readonly shippingService = inject(ShippingService);
 
   isLoading = signal<boolean>(false);
   showAddressForm = signal<boolean>(false);
   savedAddresses = signal<Address[]>([]);
   selectedAddressId = signal<string | null>(null);
 
-  // Simasrim states
-  provinces = signal<any[]>([]);
-  cities = signal<any[]>([]);
-  districts = signal<any[]>([]);
+  // Simasrim states (delegated to ShippingService)
+  provinces = this.shippingService.provinces;
+  cities = this.shippingService.cities;
+  districts = this.shippingService.districts;
+  shippingCost = this.shippingService.shippingCost;
+  shippingLoading = this.shippingService.shippingLoading;
+
   couriers = signal<string[]>([]);
-  shippingCost = signal<number>(5.00);
 
   provinceOptions = computed(() => this.provinces().map(p => ({ value: p, label: p })));
   cityOptions = computed(() => this.cities().map(c => ({ value: c, label: c })));
@@ -124,58 +132,61 @@ export class CheckoutComponent implements OnInit {
 
     // Load provinces & couriers
     await Promise.all([
-      this.loadProvinces(),
+      this.shippingService.loadProvinces(),
       this.loadCouriers()
     ]);
 
     // Listen to province changes
-    this.provinceControl.valueChanges.subscribe(async (provinceId) => {
+    this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (provinceId) => {
       if (provinceId) {
-        const cts = await this.addressApi.getCities(provinceId);
-        this.cities.set(cts);
+        this.cityControl.disable({ emitEvent: false });
+        try {
+          await this.shippingService.loadCities(provinceId);
+        } finally {
+          this.cityControl.enable({ emitEvent: false });
+        }
 
         const currentCityVal = this.cityControl.value;
-        const exists = cts.some(c => c === currentCityVal);
+        const exists = this.cities().some(c => c === currentCityVal);
         if (!exists) {
-          this.cityControl.setValue('');
+          this.cityControl.setValue('', { emitEvent: false });
         }
       } else {
-        this.cities.set([]);
-        this.cityControl.setValue('');
+        this.shippingService.clearCities();
+        this.cityControl.setValue('', { emitEvent: false });
       }
     });
 
     // Listen to city changes
-    this.cityControl.valueChanges.subscribe(async (cityId) => {
+    this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (cityId) => {
       if (cityId) {
-        const dsts = await this.addressApi.getDistricts(cityId);
-        this.districts.set(dsts);
+        this.districtControl.disable({ emitEvent: false });
+        try {
+          await this.shippingService.loadDistricts(cityId);
+        } finally {
+          this.districtControl.enable({ emitEvent: false });
+        }
 
         const currentDstVal = this.districtControl.value;
-        const exists = dsts.some(d => d.region_code === currentDstVal);
+        const exists = this.districts().some(d => d.region_code === currentDstVal);
         if (!exists) {
-          this.districtControl.setValue('');
+          this.districtControl.setValue('', { emitEvent: false });
         }
       } else {
-        this.districts.set([]);
-        this.districtControl.setValue('');
+        this.shippingService.clearDistricts();
+        this.districtControl.setValue('', { emitEvent: false });
       }
     });
 
     // Listen to district changes
-    this.districtControl.valueChanges.subscribe(() => {
+    this.districtControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.updateShippingCost();
     });
 
     // Listen to courier changes
-    this.courierControl.valueChanges.subscribe(() => {
+    this.courierControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.updateShippingCost();
     });
-  }
-
-  async loadProvinces() {
-    const provs = await this.addressApi.getProvinces();
-    this.provinces.set(provs);
   }
 
   async loadCouriers() {
@@ -190,8 +201,8 @@ export class CheckoutComponent implements OnInit {
 
   addNewAddress() {
     this.addressForm.reset();
-    this.cities.set([]);
-    this.districts.set([]);
+    this.shippingService.clearCities();
+    this.shippingService.clearDistricts();
     this.showAddressForm.set(true);
   }
 
@@ -245,53 +256,9 @@ export class CheckoutComponent implements OnInit {
     if (!destinationDistrictId) return;
 
     this.isLoading.set(true);
-
-    const items = this.cartStore.items();
-    let totalWeight = 0;
-    for (const item of items) {
-      const specWeight = item.product.specifications?.['weight'];
-      const itemWeight = specWeight ? parseFloat(specWeight) : 500;
-      totalWeight += itemWeight * item.quantity;
-    }
-    if (totalWeight <= 0) totalWeight = 1000;
-
-    const tariffRes = await this.addressApi.calculateTariff({
-      origin_code: '32.71.10.8', // Jakarta Barat default
-      desti_code: destinationDistrictId,
-      // berat_paket: totalWeight / 1000,
-      berat_paket: "10",
-      volume: '1x1x1',
-      ekspedisi: courier
-    });
-
+    await this.shippingService.calculateCost(destinationDistrictId, courier);
     this.isLoading.set(false);
 
-    let cost = 0;
-    if (tariffRes) {
-      if (Array.isArray(tariffRes)) {
-        const first = tariffRes[0];
-        cost = typeof first.cost === 'number' ? first.cost : (first.cost?.[0]?.value || 0);
-      } else if (tariffRes.costs && Array.isArray(tariffRes.costs)) {
-        const first = tariffRes.costs[0];
-        cost = typeof first.cost === 'number' ? first.cost : (first.cost?.[0]?.value || 0);
-      } else if (tariffRes.rajaongkir?.results?.[0]?.costs?.[0]?.cost?.[0]?.value) {
-        cost = tariffRes.rajaongkir.results[0].costs[0].cost[0].value;
-      } else if (typeof tariffRes.cost === 'number') {
-        cost = tariffRes.cost;
-      } else if (typeof tariffRes.price === 'number') {
-        cost = tariffRes.price;
-      }
-    }
-
-    if (cost > 0) {
-      let costUsd = cost;
-      if (cost >= 1000) {
-        costUsd = cost / 15000;
-      }
-      this.shippingCost.set(costUsd);
-    } else {
-      this.shippingCost.set(5.00);
-    }
   }
 
   async saveAddressForm() {

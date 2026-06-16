@@ -31,9 +31,7 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                  <app-badge [variant]="statusVariant(order.status)">
-                    {{ order.status | uppercase }}
-                  </app-badge>
+                  <app-status-badge [status]="order.status"></app-status-badge>
                 </div>
               </div>
 
@@ -41,8 +39,8 @@
               <div class="flex flex-col gap-3">
                 @for (item of order.items; track item.product.id) {
                   <div class="flex items-center gap-4 text-xs">
-                    <div class="h-12 w-10 bg-slate-50 border border-slate-100 rounded overflow-hidden flex-shrink-0">
-                      <img [src]="item.product.images[0]" class="h-full w-full object-cover" />
+                    <div class="h-12 w-10 bg-slate-50 border border-slate-100 rounded overflow-hidden flex-shrink-0 relative">
+                      <img [ngSrc]="item.product.images[0]" [alt]="item.product.name" fill class="object-cover" />
                     </div>
                     <div class="flex-grow min-w-0">
                       <h4 class="font-bold text-slate-800 truncate">{{ item.product.name }}</h4>

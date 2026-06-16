@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
@@ -7,6 +7,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-admin-login',
   standalone: true,
   imports: [ReactiveFormsModule, InputComponent, ButtonComponent],

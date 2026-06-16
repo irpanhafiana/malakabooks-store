@@ -1,7 +1,8 @@
-import { Component, inject, signal, computed, OnInit, input, effect } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, input, effect, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { KeyValuePipe, DatePipe } from '@angular/common';
+import { KeyValuePipe, DatePipe, NgOptimizedImage } from '@angular/common';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { ReviewApiService } from '../../../core/services/review-api.service';
 import { CartStore } from '../../../store/cart.store';
@@ -13,12 +14,30 @@ import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { TextareaComponent } from '../../../shared/ui/textarea/textarea.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
+import { RatingStarsComponent } from '../../../shared/ui/rating-stars/rating-stars.component';
+import { DiscountBadgeComponent } from '../../../shared/ui/discount-badge/discount-badge.component';
+import { QuantitySelectorComponent } from '../../../shared/ui/quantity-selector/quantity-selector.component';
 import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-detail',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, PriceComponent, IconComponent, ButtonComponent, TextareaComponent, SkeletonComponent, KeyValuePipe, DatePipe],
+  imports: [
+    RouterLink, 
+    ReactiveFormsModule, 
+    PriceComponent, 
+    IconComponent, 
+    ButtonComponent, 
+    TextareaComponent, 
+    SkeletonComponent, 
+    RatingStarsComponent, 
+    DiscountBadgeComponent, 
+    QuantitySelectorComponent, 
+    KeyValuePipe, 
+    DatePipe, 
+    NgOptimizedImage
+  ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })
@@ -32,6 +51,7 @@ export class ProductDetailComponent implements OnInit {
   protected readonly userStore = inject(UserStore);
   protected readonly authStore = inject(AuthStore);
   private readonly toastService = inject(ToastService);
+  private readonly destroyRef = inject(DestroyRef);
 
   loading = signal<boolean>(true);
   product = signal<Product | null>(null);
@@ -39,6 +59,7 @@ export class ProductDetailComponent implements OnInit {
   quantity = signal<number>(1);
   activeTab = signal<'details' | 'reviews'>('details');
   reviews = signal<Review[]>([]);
+  isSubmittingReview = signal<boolean>(false);
 
   // Review Form controls
   reviewRating = signal<number>(5);
@@ -60,7 +81,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       const id = params.get('id');
       if (id && !this.productIdInput()) {
         this.loadProduct(id);
@@ -71,13 +92,16 @@ export class ProductDetailComponent implements OnInit {
   async loadProduct(id: string) {
     this.loading.set(true);
     try {
-      const prod = await this.productApi.getProductById(id);
+      const [prod, revs] = await Promise.all([
+        this.productApi.getProductById(id),
+        this.reviewApi.getReviewsByProductId(id)
+      ]);
+
       if (prod) {
         this.product.set(prod);
         this.activeImage.set(prod.images[0]);
         this.quantity.set(1);
-        const revs = await this.reviewApi.getReviewsByProductId(id);
-        this.reviews.set(revs);
+        this.reviews.set(revs || []);
       } else {
         this.product.set(null);
       }
@@ -96,18 +120,7 @@ export class ProductDetailComponent implements OnInit {
     this.activeTab.set(tab);
   }
 
-  incrementQty() {
-    const stock = this.product()?.stock || 0;
-    if (this.quantity() < stock) {
-      this.quantity.update(q => q + 1);
-    }
-  }
 
-  decrementQty() {
-    if (this.quantity() > 1) {
-      this.quantity.update(q => q - 1);
-    }
-  }
 
   addToCart() {
     const prod = this.product();
@@ -137,6 +150,8 @@ export class ProductDetailComponent implements OnInit {
 
     const prodId = this.product()?.id;
     if (!prodId) return;
+
+    this.isSubmittingReview.set(true);
 
     const newReview: Review = {
       id: '',
@@ -168,6 +183,8 @@ export class ProductDetailComponent implements OnInit {
       this.reviewRating.set(5);
     } catch (e) {
       this.toastService.error('Failed to submit review.');
+    } finally {
+      this.isSubmittingReview.set(false);
     }
   }
 }

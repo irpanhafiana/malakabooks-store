@@ -1,11 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthStore } from '../../store/auth.store';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { ToastContainerComponent } from '../../shared/ui/toast-container/toast-container.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-admin-layout',
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, IconComponent, ToastContainerComponent],
@@ -21,7 +23,10 @@ export class AdminLayoutComponent {
 
   constructor() {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntilDestroyed()
+      )
       .subscribe(() => {
         const url = this.router.url;
         if (url.includes('/products')) {

@@ -1,7 +1,8 @@
-import { Component, input, ContentChild, TemplateRef } from '@angular/core';
+import { Component, input, ContentChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-masonry-grid',
   standalone: true,
   imports: [NgTemplateOutlet],

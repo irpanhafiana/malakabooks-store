@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal, effect } from '@angular/core';
+import { Component, inject, input, output, signal, effect, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ComplaintStore } from '../../../../store/complaint.store';
 import { Complaint, ComplaintStatus } from '../../../../core/models';
@@ -7,6 +7,7 @@ import { TextareaComponent } from '../../../../shared/ui/textarea/textarea.compo
 import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-complaints-form',
   standalone: true,
   imports: [ReactiveFormsModule, ButtonComponent, TextareaComponent],

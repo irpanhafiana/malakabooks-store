@@ -35,15 +35,18 @@
               <!-- Main Image Viewer -->
               <div class="aspect-square bg-white border border-slate-100 rounded-3xl overflow-hidden relative">
                 <img
-                  [src]="activeImage()"
+                  [ngSrc]="activeImage()"
                   [alt]="product()!.name"
-                  class="w-full h-full object-cover object-center"
+                  fill
+                  priority
+                  class="object-cover object-center"
                 />
-                @if (product()!.originalPrice && product()!.originalPrice! > product()!.price) {
-                  <span class="absolute top-4 left-4 px-3 py-1 text-xs font-bold bg-rose-500 text-white rounded-lg">
-                    Save {{ Math.round(((product()!.originalPrice! - product()!.price)/product()!.originalPrice!) * 100) }}%
-                  </span>
-                }
+                <app-discount-badge
+                  [price]="product()!.price"
+                  [originalPrice]="product()!.originalPrice"
+                  size="md"
+                  class="absolute top-4 left-4"
+                ></app-discount-badge>
               </div>
 
               <!-- Image Thumbnails -->
@@ -55,9 +58,9 @@
                       (click)="setActiveImage(img)"
                       [class.border-primary-500]="activeImage() === img"
                       [class.border-slate-100]="activeImage() !== img"
-                      class="h-20 w-20 flex-shrink-0 bg-white border-2 rounded-2xl overflow-hidden cursor-pointer active:scale-95 transition-all"
+                      class="h-20 w-20 flex-shrink-0 bg-white border-2 rounded-2xl overflow-hidden cursor-pointer active:scale-95 transition-all relative"
                     >
-                      <img [src]="img" class="w-full h-full object-cover" />
+                      <img [ngSrc]="img" [alt]="product()!.name + ' thumbnail'" fill class="object-cover" />
                     </button>
                   }
                 </div>
@@ -84,15 +87,12 @@
               </div>
 
               <!-- Ratings -->
-              <div class="flex items-center gap-2">
-                <div class="flex items-center gap-0.5 text-amber-400">
-                  @for (star of [1,2,3,4,5]; track star) {
-                    <app-icon name="star" size="14" [class]="star <= Math.round(product()!.rating) ? 'fill-amber-400' : 'text-slate-200'"></app-icon>
-                  }
-                </div>
-                <span class="text-xs font-bold text-slate-700">{{ product()!.rating }}</span>
-                <span class="text-xs text-slate-400">({{ product()!.reviewsCount }} reviews)</span>
-              </div>
+              <app-rating-stars
+                [rating]="product()!.rating"
+                [reviewsCount]="product()!.reviewsCount"
+                [starSize]="14"
+                reviewsSuffix=" reviews"
+              ></app-rating-stars>
 
               <hr class="border-slate-100" />
 
@@ -224,7 +224,8 @@
                       <div class="flex">
                         <app-button
                           type="submit"
-                          [disabled]="reviewForm.invalid"
+                          [disabled]="reviewForm.invalid || isSubmittingReview()"
+                          [loading]="isSubmittingReview()"
                           variant="primary"
                           size="sm"
                         >
@@ -248,25 +249,11 @@
           </div>
 
           <!-- Quantity selectors -->
-          <div class="flex items-center border border-slate-200 bg-slate-50/30 rounded-xl overflow-hidden h-11 shrink-0">
-            <button
-              type="button"
-              (click)="decrementQty()"
-              [disabled]="quantity() <= 1"
-              class="px-2.5 text-slate-500 hover:bg-slate-100 disabled:opacity-30 cursor-pointer active:scale-95 transition-all"
-            >
-              <app-icon name="minus" size="12"></app-icon>
-            </button>
-            <span class="w-8 text-center font-bold text-slate-800 text-xs select-none">{{ quantity() }}</span>
-            <button
-              type="button"
-              (click)="incrementQty()"
-              [disabled]="quantity() >= product()!.stock"
-              class="px-2.5 text-slate-500 hover:bg-slate-100 disabled:opacity-30 cursor-pointer active:scale-95 transition-all"
-            >
-              <app-icon name="plus" size="12"></app-icon>
-            </button>
-          </div>
+          <app-quantity-selector
+            [(quantity)]="quantity"
+            [stock]="product()!.stock"
+            variant="md"
+          ></app-quantity-selector>
 
           <!-- Buy / Add to Cart button -->
           <div class="flex-grow">

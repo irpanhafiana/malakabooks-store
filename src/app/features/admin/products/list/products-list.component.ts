@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductStore } from '../../../../store/product.store';
 import { Product } from '../../../../core/models';
@@ -15,6 +15,7 @@ import { ProductsFormComponent } from '../form/products-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-list',
   standalone: true,
   imports: [CommonModule, TableComponent, ModalComponent, ButtonComponent, BadgeComponent, PriceComponent, IconComponent, PaginationComponent, ProductsFormComponent, SpinnerComponent],

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserStore } from '../../store/user.store';
 import { CartStore } from '../../store/cart.store';
@@ -7,6 +7,7 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.com
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-wishlist',
   standalone: true,
   imports: [RouterLink, ProductCardComponent, EmptyStateComponent, MasonryGridComponent],

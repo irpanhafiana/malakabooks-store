@@ -109,8 +109,8 @@
             <div class="flex flex-col gap-3.5 max-h-48 overflow-y-auto pr-1">
               @for (item of cartStore.items(); track item.product.id) {
                 <div class="flex items-center gap-3 text-xs leading-tight">
-                  <div class="h-10 w-8 bg-slate-50 rounded overflow-hidden flex-shrink-0 border border-slate-100">
-                    <img [src]="item.product.images[0]" class="h-full w-full object-cover" />
+                  <div class="h-10 w-8 bg-slate-50 rounded overflow-hidden flex-shrink-0 border border-slate-100 relative">
+                    <img [ngSrc]="item.product.images[0]" [alt]="item.product.name" fill class="object-cover" />
                   </div>
                   <div class="flex-grow min-w-0">
                     <h4 class="font-bold text-slate-800 truncate">{{ item.product.name }}</h4>

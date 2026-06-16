@@ -29,6 +29,7 @@ export class UserStore {
   }
 
   private loadWishlist() {
+    if (typeof localStorage === 'undefined') return;
     const saved = localStorage.getItem('malakabooks_wishlist');
     if (saved) {
       try {
@@ -41,7 +42,9 @@ export class UserStore {
   }
 
   private saveWishlist(wishlist: WishlistItem[]) {
-    localStorage.setItem('malakabooks_wishlist', JSON.stringify(wishlist));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('malakabooks_wishlist', JSON.stringify(wishlist));
+    }
     this.state.update(s => ({ ...s, wishlist }));
   }
 

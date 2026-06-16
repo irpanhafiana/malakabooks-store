@@ -39,9 +39,7 @@
               <app-price [value]="order.total" size="sm"></app-price>
             </td>
             <td class="px-5 py-4">
-              <app-badge [variant]="statusVariant(order.status)">
-                {{ order.status | uppercase }}
-              </app-badge>
+              <app-status-badge [status]="order.status"></app-status-badge>
             </td>
             <td class="px-5 py-4 text-right">
               <div class="relative inline-flex items-center justify-end">

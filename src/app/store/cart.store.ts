@@ -56,11 +56,13 @@ export class CartStore {
   }
 
   private getCurrentUserId(): string | null {
+    if (typeof localStorage === 'undefined') return null;
     const saved = localStorage.getItem('malakabooks_session_user');
     return saved ? JSON.parse(saved)?.id ?? null : null;
   }
 
   private loadCart() {
+    if (typeof localStorage === 'undefined') return;
     const saved = localStorage.getItem('malakabooks_cart');
     if (saved) {
       try {
@@ -73,7 +75,9 @@ export class CartStore {
   }
 
   private persistLocal(items: CartItem[]) {
-    localStorage.setItem('malakabooks_cart', JSON.stringify(items));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('malakabooks_cart', JSON.stringify(items));
+    }
     this.state.update(s => ({ ...s, items }));
   }
 
@@ -105,7 +109,7 @@ export class CartStore {
     this.clearCart();
   }
 
-  addItem(product: Product, quantity = 1) {
+  async addItem(product: Product, quantity = 1) {
     if (product.stock <= 0) {
       this.toastService.error('Sorry, this product is out of stock!');
       return;
@@ -129,27 +133,37 @@ export class CartStore {
     this.persistLocal(currentItems);
     this.toastService.success(`Added "${product.name}" to cart.`);
 
-    // Sync ke backend (fire-and-forget)
+    // Sync ke backend
     const userId = this.getCurrentUserId();
     if (userId) {
-      this.cartApi.addCartItem(userId, product.id, index >= 0 ? newQty : quantity);
+      this.state.update(s => ({ ...s, loading: true }));
+      try {
+        await this.cartApi.addCartItem(userId, product.id, index >= 0 ? newQty : quantity);
+      } finally {
+        this.state.update(s => ({ ...s, loading: false }));
+      }
     }
   }
 
-  removeItem(productId: string) {
+  async removeItem(productId: string) {
     const filtered = this.items().filter(item => item.product.id !== productId);
     this.persistLocal(filtered);
     this.toastService.info('Item removed from cart.');
 
     const userId = this.getCurrentUserId();
     if (userId) {
-      this.cartApi.removeCartItem(userId, productId);
+      this.state.update(s => ({ ...s, loading: true }));
+      try {
+        await this.cartApi.removeCartItem(userId, productId);
+      } finally {
+        this.state.update(s => ({ ...s, loading: false }));
+      }
     }
   }
 
-  updateQuantity(productId: string, quantity: number) {
+  async updateQuantity(productId: string, quantity: number) {
     if (quantity <= 0) {
-      this.removeItem(productId);
+      await this.removeItem(productId);
       return;
     }
 
@@ -169,7 +183,12 @@ export class CartStore {
     // Re-add dengan quantity baru (backend replace)
     const userId = this.getCurrentUserId();
     if (userId) {
-      this.cartApi.addCartItem(userId, productId, quantity);
+      this.state.update(s => ({ ...s, loading: true }));
+      try {
+        await this.cartApi.addCartItem(userId, productId, quantity);
+      } finally {
+        this.state.update(s => ({ ...s, loading: false }));
+      }
     }
   }
 

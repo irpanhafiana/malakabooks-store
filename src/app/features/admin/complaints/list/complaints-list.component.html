@@ -35,7 +35,7 @@
             <td class="px-5 py-4 font-mono text-slate-500 text-[10px]">{{ c.orderId }}</td>
             <td class="px-5 py-4 text-slate-600">{{ c.createdAt | date:'shortDate' }}</td>
             <td class="px-5 py-4">
-              <app-badge [variant]="statusVariant(c.status)">{{ statusLabel(c.status) }}</app-badge>
+              <app-status-badge [status]="c.status" type="complaint"></app-status-badge>
             </td>
             <td class="px-5 py-4 text-right">
               <app-button size="sm" variant="outline" (click)="openRespond(c)">
