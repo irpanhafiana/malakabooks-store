@@ -67,7 +67,7 @@ public class SimasrimController : ApiControllerBase
     /// matches the specified criteria.</returns>
     [HttpPost]
     [Route("City")]
-    public async Task<IActionResult> GetSimasrimCity(CityModel model, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetSimasrimCity([FromBody] CityModel model, CancellationToken cancellationToken)
       => Success(await mediator.Send(new GetSimasrimCityQuery(model), cancellationToken));
 
     /// <summary>
@@ -102,7 +102,7 @@ public class SimasrimController : ApiControllerBase
     /// <returns>An <see cref="IActionResult"/> containing the district information returned by the Simasrim API.</returns>
     [HttpPost]
     [Route("District")]
-    public async Task<IActionResult> GetSimasrimDistrict(DistrictModel model, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetSimasrimDistrict([FromBody] DistrictModel model, CancellationToken cancellationToken)
       => Success(await mediator.Send(new GetSimasrimDistrictQuery(model), cancellationToken));
 
     /// <summary>
@@ -114,7 +114,7 @@ public class SimasrimController : ApiControllerBase
     /// <returns>An <see cref="IActionResult"/> containing the shipping tariff information returned by the Simasrim service.</returns>
     [HttpPost]
     [Route("Tarif")]
-    public async Task<IActionResult> GetSimasrimTarif(TariffModel model, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetSimasrimTarif([FromBody] TariffModel model, CancellationToken cancellationToken)
       => Success(await mediator.Send(new GetSimasrimTariffQuery(model), cancellationToken));
 
     #endregion
