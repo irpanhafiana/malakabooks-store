@@ -15,8 +15,13 @@ public class OrderResponse
     public List<OrderItemResponse> Items { get; set; } = [];
     public string AddressId { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
+    public string PaymentStatus { get; set; } = string.Empty;
+    public string PaymentMethod { get; set; } = string.Empty;
+    public string PaymentGateway { get; set; } = string.Empty;
+    public string IncomingPaymentId { get; set; } = string.Empty;
     public decimal TotalPrice { get; set; }
     public string Note { get; set; } = string.Empty;
+    public DateTime? PaidAt { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

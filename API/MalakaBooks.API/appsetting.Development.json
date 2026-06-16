@@ -39,6 +39,23 @@
     "ClientSecret": "IS4ApiClient",
     "Scopes": "skoruba_identity_admin_api"
   },
+    "DokuSetting": {
+        "BaseUrl": "https://api-sandbox.doku.com",
+        //"BaseUrl": "https://api.doku.com",
+
+        "CheckPaymentStatusPath": "",
+        "PaymentUrl": "/checkout/v1/payment",
+
+        "PaymentCallbackUrl": "https://mardikakopi.com/main/profile",
+        "PaymentNotificationUrl": "https://mardikakopi.com/api/externalMessage/Doku/Notif",
+
+        "ClientId": "BRN-0229-1734510369511",
+        "SecretKey": "SK-1HyupaxNQ8THX1DDvrWN",
+
+        "RequestPath": "/api/externalMessage/Doku/Notif",
+        "InternalPath": "https://mardikakopi.com:44200/api/externalMessage/Doku/Notif",
+        "CheckPaymentStatusUrl": "/orders/v1/status/{0}"
+    },
   "SimasrimSetting": {
     "BaseUrl": "https://devapi.simasrim.com",
     "ClientId": "7",

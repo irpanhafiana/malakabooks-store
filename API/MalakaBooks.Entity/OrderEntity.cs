@@ -13,8 +13,18 @@ public class OrderEntity : BaseObject
     public string AddressId { get; set; } = string.Empty;
 
     public string Status { get; set; } = "pending";
+    public string PaymentStatus { get; set; } = "unpaid";
+    public string PaymentMethod { get; set; } = string.Empty;
+    public string PaymentGateway { get; set; } = string.Empty;
+
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string IncomingPaymentId { get; set; } = string.Empty;
+
     public decimal TotalPrice { get; set; }
     public string Note { get; set; } = string.Empty;
+
+    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+    public DateTime? PaidAt { get; set; }
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

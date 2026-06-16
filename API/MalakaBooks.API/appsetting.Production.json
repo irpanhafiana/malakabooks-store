@@ -3,6 +3,10 @@
     "ApplicationName": "MalakaBooks API",
     "Description": "MalakaBooks bookstore backend API"
   },
+  "DokuSetting": {
+    "BaseUrl": "",
+    "CheckPaymentStatusPath": ""
+  },
   "Logging": {
     "LogLevel": {
       "Default": "Warning",
