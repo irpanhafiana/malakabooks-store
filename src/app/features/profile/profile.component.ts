@@ -11,11 +11,12 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { AddressApiService } from '../../core/services/address-api.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
+import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, InputComponent, SelectComponent, ButtonComponent, IconComponent, BottomSheetComponent],
+  imports: [ReactiveFormsModule, RouterLink, InputComponent, SelectComponent, ButtonComponent, IconComponent, BottomSheetComponent, SkeletonComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -26,7 +27,10 @@ export class ProfileComponent implements OnInit {
   private readonly addressApi = inject(AddressApiService);
   private readonly userApi = inject(UserApiService);
 
-  isLoading = signal<boolean>(false);
+  isAddressesLoading = signal<boolean>(false);
+  isProfileSaving = signal<boolean>(false);
+  isAddressSaving = signal<boolean>(false);
+  isDropdownLoading = signal<boolean>(false);
   showAddressForm = signal<boolean>(false);
   addresses = signal<Address[]>([]);
 
@@ -82,10 +86,10 @@ export class ProfileComponent implements OnInit {
     this.phoneControl.setValue(user.phone || '');
 
     // Fetch addresses dynamically from database since authStore.currentUser() only has basic session info from token
-    this.isLoading.set(true);
+    this.isAddressesLoading.set(true);
     const freshAddresses = await this.userApi.getAddressesByUserId(user.id);
     this.addresses.set(freshAddresses);
-    this.isLoading.set(false);
+    this.isAddressesLoading.set(false);
 
     // Load Simasrim Provinces
     await this.loadProvinces();
@@ -136,7 +140,7 @@ export class ProfileComponent implements OnInit {
     const user = this.authStore.currentUser();
     if (!user) return;
 
-    this.isLoading.set(true);
+    this.isProfileSaving.set(true);
 
     const updatedUser: User = {
       ...user,
@@ -146,7 +150,7 @@ export class ProfileComponent implements OnInit {
     };
 
     const success = await this.authStore.updateProfile(updatedUser);
-    this.isLoading.set(false);
+    this.isProfileSaving.set(false);
   }
 
   addNewAddress() {
@@ -176,20 +180,20 @@ export class ProfileComponent implements OnInit {
     if (prov) {
       this.provinceControl.setValue(prov);
 
-      this.isLoading.set(true);
+      this.isDropdownLoading.set(true);
       const cts = await this.addressApi.getCities(prov);
       this.cities.set(cts);
-      this.isLoading.set(false);
+      this.isDropdownLoading.set(false);
 
       const city = cts.find(c => c.toLowerCase() === addr.city.toLowerCase());
 
       if (city) {
         this.cityControl.setValue(city);
 
-        this.isLoading.set(true);
+        this.isDropdownLoading.set(true);
         const dsts = await this.addressApi.getDistricts(city);
         this.districts.set(dsts);
-        this.isLoading.set(false);
+        this.isDropdownLoading.set(false);
 
         const targetDistrict = addr.district?.toLowerCase();
         const targetSubDistrict = addr.subDistrict?.toLowerCase();
@@ -235,7 +239,7 @@ export class ProfileComponent implements OnInit {
     const districtName = distObj ? distObj.district_name : '';
     const subDistrictName = distObj ? distObj.subdistrict_name : '';
 
-    this.isLoading.set(true);
+    this.isAddressSaving.set(true);
 
     const isEdit = this.editingAddressId() !== null;
     const addrId = isEdit ? this.editingAddressId()! : `addr-${Date.now()}`;
@@ -262,7 +266,7 @@ export class ProfileComponent implements OnInit {
       success = await this.authStore.addAddress(newAddr);
     }
 
-    this.isLoading.set(false);
+    this.isAddressSaving.set(false);
 
     if (success) {
       // The store already updates the address list, so we just reset the form

@@ -1,3 +1,28 @@
+/* Self-hosted fonts (bundled, no external CDN round-trip) */
+@import '@fontsource/inter/300.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+
+@import '@fontsource/plus-jakarta-sans/400.css';
+@import '@fontsource/plus-jakarta-sans/500.css';
+@import '@fontsource/plus-jakarta-sans/600.css';
+@import '@fontsource/plus-jakarta-sans/700.css';
+@import '@fontsource/plus-jakarta-sans/800.css';
+
+@import '@fontsource/poppins/300.css';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+
+@import '@fontsource/fraunces/700.css';
+@import '@fontsource/fraunces/700-italic.css';
+
+/* Self-hosted icon font (replaces unpkg CDN) */
+@import 'boxicons/css/boxicons.min.css';
+
 @import 'tailwindcss';
 
 @theme {
@@ -32,6 +57,7 @@
   --animate-slide-up: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-slide-down: slide-down 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-scale-in: scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-page-fade: page-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes fade-in {
@@ -54,7 +80,15 @@
   to { transform: scale(1); opacity: 1; }
 }
 
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* Custom Utilities and Reset Styles */
+.animate-page-fade {
+  animation: var(--animate-page-fade);
+}
 body {
   font-family: var(--font-sans);
   background-color: #f9fafb; /* gray-50 */

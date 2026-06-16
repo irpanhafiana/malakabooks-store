@@ -11,7 +11,7 @@
           <app-input label="Phone Number" placeholder="+628123456789" [control]="phoneControl"></app-input>
           
           <div class="sm:col-span-2 flex justify-end mt-2">
-            <app-button type="submit" [loading]="isLoading()" [disabled]="profileForm.invalid" variant="primary" size="sm">
+            <app-button type="submit" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary" size="sm">
               Save Account Details
             </app-button>
           </div>
@@ -40,32 +40,48 @@
         <h2 class="font-display font-bold text-slate-800 text-sm mb-4">Saved Shipping Addresses</h2>
 
         <div class="flex flex-col gap-3">
-          @for (addr of addresses(); track addr.id) {
-            <div class="flex items-start justify-between p-4 border border-slate-100 rounded-2xl bg-slate-50/20 text-xs leading-relaxed">
-              <div class="flex flex-col">
-                <strong class="font-bold text-slate-800">{{ addr.name }} @if (addr.isDefault) { <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold ml-1">Default</span> }</strong>
-                <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
-                <span class="text-slate-600 font-semibold">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
+          @if (isAddressesLoading()) {
+            <!-- Skeleton Screen Loader -->
+            <div class="flex flex-col gap-3 w-full animate-fade-in">
+              <div class="border border-slate-100 rounded-2xl p-4 w-full bg-slate-50/10 flex flex-col gap-2.5">
+                <app-skeleton height="14px" width="25%"></app-skeleton>
+                <app-skeleton height="12px" width="33%"></app-skeleton>
+                <app-skeleton height="12px" width="75%"></app-skeleton>
               </div>
-              <div class="flex items-center gap-1">
-                <button
-                  type="button"
-                  (click)="editAddress(addr)"
-                  class="p-1.5 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors cursor-pointer"
-                >
-                  <app-icon name="edit" size="14"></app-icon>
-                </button>
-                <button
-                  type="button"
-                  (click)="deleteAddress(addr.id)"
-                  class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                >
-                  <app-icon name="trash" size="14"></app-icon>
-                </button>
+              <div class="border border-slate-100 rounded-2xl p-4 w-full bg-slate-50/10 flex flex-col gap-2.5">
+                <app-skeleton height="14px" width="20%"></app-skeleton>
+                <app-skeleton height="12px" width="25%"></app-skeleton>
+                <app-skeleton height="12px" width="66%"></app-skeleton>
               </div>
             </div>
-          } @empty {
-            <p class="text-xs text-slate-400 text-center py-4">No shipping addresses saved yet.</p>
+          } @else {
+            @for (addr of addresses(); track addr.id) {
+              <div class="flex items-start justify-between p-4 border border-slate-100 rounded-2xl bg-slate-50/20 text-xs leading-relaxed">
+                <div class="flex flex-col">
+                  <strong class="font-bold text-slate-800">{{ addr.name }} @if (addr.isDefault) { <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold ml-1">Default</span> }</strong>
+                  <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
+                  <span class="text-slate-600 font-semibold">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button
+                    type="button"
+                    (click)="editAddress(addr)"
+                    class="p-1.5 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors cursor-pointer"
+                  >
+                    <app-icon name="edit" size="14"></app-icon>
+                  </button>
+                  <button
+                    type="button"
+                    (click)="deleteAddress(addr.id)"
+                    class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                  >
+                    <app-icon name="trash" size="14"></app-icon>
+                  </button>
+                </div>
+              </div>
+            } @empty {
+              <p class="text-xs text-slate-400 text-center py-4">No shipping addresses saved yet.</p>
+            }
           }
 
           <button type="button" (click)="addNewAddress()" class="text-xs font-bold text-primary-600 hover:text-primary-700 text-left mt-2 flex items-center gap-1 cursor-pointer">
@@ -90,7 +106,7 @@
               
               <div class="sm:col-span-2 flex flex-col sm:flex-row justify-end gap-3 mt-4">
                 <app-button type="button" (click)="cancelAddressForm()" variant="ghost" size="md" class="w-full sm:w-auto">Cancel</app-button>
-                <app-button type="button" (click)="saveAddressForm()" [disabled]="addressForm.invalid" variant="primary" size="md" class="w-full sm:w-auto">Save Address</app-button>
+                <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()" [disabled]="addressForm.invalid" variant="primary" size="md" class="w-full sm:w-auto">Save Address</app-button>
               </div>
             </form>
           </app-bottom-sheet>

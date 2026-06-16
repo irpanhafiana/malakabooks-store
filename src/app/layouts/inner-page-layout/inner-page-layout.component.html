@@ -22,7 +22,9 @@
 
     <!-- Main Content Area (No scrolling here, children must handle it) -->
     <main class="grow flex flex-col bg-gray-50 relative overflow-hidden">
-      <router-outlet></router-outlet>
+      <div #routeContainer class="w-full h-full flex flex-col grow">
+        <router-outlet (activate)="onRouteActivate()"></router-outlet>
+      </div>
     </main>
 
     <!-- Global Toasts Alert Overlay (relative to phone frame) -->

@@ -243,7 +243,7 @@ export class CheckoutComponent implements OnInit {
       Origin: '151', // Jakarta Barat default
       Destination: destinationDistrictId,
       WeightInKg: totalWeight / 1000,
-      Volume: '0',
+      Volume: '1',
       Ekspedisi: courier
     });
 

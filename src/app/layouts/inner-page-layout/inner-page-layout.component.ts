@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ElementRef, ViewChild } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastService } from '../../core/services/toast.service';
@@ -12,6 +12,17 @@ import { filter, map, mergeMap } from 'rxjs/operators';
   styleUrl: './inner-page-layout.component.css'
 })
 export class InnerPageLayoutComponent {
+  @ViewChild('routeContainer') routeContainer!: ElementRef;
+
+  onRouteActivate() {
+    if (this.routeContainer) {
+      const el = this.routeContainer.nativeElement;
+      el.classList.remove('animate-page-fade');
+      // Trigger reflow to restart CSS animation
+      void el.offsetWidth;
+      el.classList.add('animate-page-fade');
+    }
+  }
   protected readonly toastService = inject(ToastService);
   private readonly location = inject(Location);
   private readonly router = inject(Router);

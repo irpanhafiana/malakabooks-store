@@ -59,9 +59,9 @@ export class AddressApiService {
   async calculateTariff(payload: { Origin: string; Destination: string; WeightInKg: number; Volume: string; Ekspedisi: string }): Promise<any> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/Tarif`, {}, { params: payload as any })
+        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/Tarif`, payload)
       );
-      return envelope?.data || null;
+      return envelope?.data?.data || envelope?.data || null;
     } catch (e) {
       console.error('Failed to calculate tariff from Simasrim:', e);
       return null;

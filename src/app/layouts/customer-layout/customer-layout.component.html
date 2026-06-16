@@ -44,8 +44,10 @@
     </header>
 
     <!-- Scrollable Contents Area -->
-    <main class="grow overflow-y-auto px-4 py-4 pb-24 no-scrollbar bg-gray-50">
-      <router-outlet></router-outlet>
+    <main class="grow overflow-y-auto overflow-x-hidden px-4 py-4 pb-24 no-scrollbar bg-gray-50">
+      <div #routeContainer class="w-full h-full">
+        <router-outlet (activate)="onRouteActivate()"></router-outlet>
+      </div>
     </main>
 
     <!-- Pinned Bottom Navigation Menu (Floating, rounded, matching bottom-navbar.md) -->

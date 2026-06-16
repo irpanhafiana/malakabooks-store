@@ -6,12 +6,54 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <!-- Fonts & boxicons are self-hosted via styles.css (@fontsource + boxicons),
+       so there are no render-blocking cross-origin CDN requests on first paint. -->
+
+  <!-- Preload critical fonts so form controls (buttons, inputs) and their icons
+       paint with the final font on the first frame — avoids the icon "pop-in"
+       (boxicons FOIT) and the button/input text reflow on webfont swap. -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="media/boxicons.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="media/inter-latin-400-normal.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="media/inter-latin-600-normal.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="media/poppins-latin-400-normal.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="media/poppins-latin-600-normal.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="media/fraunces-latin-700-normal.woff2">
+
+  <!-- Critical inline styles: paint the brand background + a loader immediately,
+       before the Angular JS bundle bootstraps, to eliminate the white FOUC flash. -->
+  <style>
+    html, body { margin: 0; height: 100%; background-color: #f9fafb; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #111827;
+      -webkit-font-smoothing: antialiased;
+    }
+    .app-boot-loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f9fafb;
+      z-index: 9999;
+    }
+    .app-boot-loader__spinner {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      border: 3px solid #cdd5e0;
+      border-top-color: #003049; /* primary-600 */
+      animation: app-boot-spin 0.7s linear infinite;
+    }
+    @keyframes app-boot-spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <!-- Removed automatically once Angular renders into <app-root>. -->
+    <div class="app-boot-loader">
+      <div class="app-boot-loader__spinner"></div>
+    </div>
+  </app-root>
 </body>
 </html>

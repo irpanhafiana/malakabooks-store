@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect, ElementRef, ViewChild } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
@@ -17,6 +17,17 @@ import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.
   styleUrl: './customer-layout.component.css'
 })
 export class CustomerLayoutComponent {
+  @ViewChild('routeContainer') routeContainer!: ElementRef;
+
+  onRouteActivate() {
+    if (this.routeContainer) {
+      const el = this.routeContainer.nativeElement;
+      el.classList.remove('animate-page-fade');
+      // Trigger reflow to restart CSS animation
+      void el.offsetWidth;
+      el.classList.add('animate-page-fade');
+    }
+  }
   protected readonly authStore = inject(AuthStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
