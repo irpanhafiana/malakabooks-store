@@ -13,11 +13,14 @@ function clearSession() {
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-  const token = localStorage.getItem(SESSION_TOKEN_KEY);
+  const isBrowser = typeof localStorage !== 'undefined';
+  const token = isBrowser ? localStorage.getItem(SESSION_TOKEN_KEY) : null;
 
   // Jika token ada tapi sudah expired, langsung logout dan redirect
   if (token && isTokenExpired(token)) {
-    clearSession();
+    if (isBrowser) {
+      clearSession();
+    }
     const loginUrl = router.url.startsWith('/admin') ? '/admin/login' : '/auth/login';
     router.navigate([loginUrl], { queryParams: { reason: 'session_expired' } });
     return throwError(() => new Error('Session expired'));
@@ -30,7 +33,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        clearSession();
+        if (isBrowser) {
+          clearSession();
+        }
         const loginUrl = router.url.startsWith('/admin') ? '/admin/login' : '/auth/login';
         router.navigate([loginUrl], { queryParams: { reason: 'unauthorized' } });
       }

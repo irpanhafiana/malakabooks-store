@@ -67,6 +67,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    if (typeof window === 'undefined') return;
     this.embla = EmblaCarousel(
       this.carouselViewport.nativeElement,
       { loop: true, align: 'center', duration: 25 },
