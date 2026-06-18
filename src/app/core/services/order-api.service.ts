@@ -232,11 +232,24 @@ export class OrderApiService {
 
     try {
       const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Orders`, body));
-      const placed = res?.data;
       
+      // Respons dari backend tidak mengandung ID (hanya isSuccess, statusCode, dll)
+      // Kita harus mengambil order terbaru dari user ini untuk mendapatkan ID-nya
+      const userOrdersRaw = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Orders/user/${order.userId}`));
+      const userOrders = userOrdersRaw?.data || [];
+      
+      // Urutkan berdasarkan createdAt terbaru
+      userOrders.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      
+      const placed = userOrders[0];
+      
+      if (!placed || !placed.id) {
+         throw new Error('Order berhasil dibuat tapi gagal mengambil ID order dari server');
+      }
+
       return {
         id: placed.id,
-        userId: placed.userId,
+        userId: placed.userId || order.userId,
         userName: order.userName,
         userEmail: order.userEmail,
         items: order.items,
@@ -248,7 +261,7 @@ export class OrderApiService {
         shippingCost: order.shippingCost,
         tax: order.tax,
         total: Number(placed.totalPrice) || order.total,
-        orderDate: placed.createdAt
+        orderDate: placed.createdAt || new Date().toISOString()
       };
     } catch (e) {
       console.error('Gagal membuat order:', e);

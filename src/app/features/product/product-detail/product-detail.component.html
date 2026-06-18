@@ -1,6 +1,6 @@
 <div class="flex flex-col h-full overflow-hidden animate-fade-in">
       @if (loading()) {
-        <div class="flex-grow overflow-y-auto px-5 py-4 flex flex-col gap-6">
+        <div class="grow overflow-y-auto px-5 py-4 flex flex-col gap-6">
           <app-skeleton type="card"></app-skeleton>
           <div class="flex flex-col gap-4">
             <app-skeleton type="text" height="32px" width="80%"></app-skeleton>
@@ -9,14 +9,14 @@
           </div>
         </div>
       } @else if (!product()) {
-        <div class="flex-grow overflow-y-auto px-5 py-4 text-center py-16">
+        <div class="grow overflow-y-auto px-5 py-4 text-center py-16">
           <h2 class="text-xl font-display font-extrabold text-slate-800 mb-2">Product Not Found</h2>
           <p class="text-slate-500 text-xs mb-6">The product you are trying to view does not exist or has been removed.</p>
           <app-button routerLink="/product" variant="primary">Back to Shop</app-button>
         </div>
       } @else {
         <!-- Scrollable Details area -->
-        <div class="flex-grow overflow-y-auto px-5 py-4 no-scrollbar">
+        <div class="grow overflow-y-auto px-5 py-5 no-scrollbar bg-gradient-to-b from-slate-50/50 to-white">
           <!-- Breadcrumbs -->
           @if (!productIdInput()) {
             <nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-6">
@@ -33,20 +33,29 @@
             <!-- Image Gallery -->
             <div class="flex flex-col gap-4">
               <!-- Main Image Viewer -->
-              <div class="aspect-square bg-white border border-slate-100 rounded-3xl overflow-hidden relative">
+              <div class="aspect-[4/3] sm:aspect-square bg-white border border-slate-100/80 rounded-[32px] overflow-hidden relative shadow-sm shadow-slate-200/50 group">
                 <img
                   [ngSrc]="activeImage()"
                   [alt]="product()!.name"
                   fill
                   priority
-                  class="object-cover object-center"
+                  class="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
                 <app-discount-badge
                   [price]="product()!.price"
                   [originalPrice]="product()!.originalPrice"
                   size="md"
-                  class="absolute top-4 left-4"
+                  class="absolute top-4 left-4 z-10"
                 ></app-discount-badge>
+                
+                <!-- Wishlist Floating Action Button -->
+                <button
+                  type="button"
+                  (click)="toggleWishlist()"
+                  class="absolute top-4 right-4 z-10 p-2.5 bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-white/50 text-slate-400 hover:text-rose-500 hover:bg-white transition-all cursor-pointer active:scale-90 flex items-center justify-center"
+                >
+                  <app-icon [name]="userStore.isWishlisted(product()!.id) ? 'heart-filled' : 'heart'" size="20" [class]="userStore.isWishlisted(product()!.id) ? 'text-rose-500 drop-shadow-sm' : 'text-slate-400'"></app-icon>
+                </button>
               </div>
 
               <!-- Image Thumbnails -->
@@ -70,31 +79,29 @@
             <!-- Product Details Column -->
             <div class="flex flex-col gap-5">
               <!-- Meta & Title -->
-              <div class="flex items-start justify-between gap-4">
-                <div class="flex-grow">
-                  <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">{{ product()!.categoryName }}</span>
-                  <h1 class="text-xl font-display font-extrabold text-slate-800 tracking-tight mt-2.5 leading-snug">{{ product()!.name }}</h1>
-                  <p class="text-xs text-slate-400 mt-1.5">Brand: <strong class="text-slate-600 font-semibold">{{ product()!.brand }}</strong></p>
+              <div class="flex flex-col gap-2">
+                <div class="flex w-full justify-between items-center gap-2">
+                  <span class="px-3 py-1 rounded-full bg-primary-50 text-primary-600 text-[10px] font-extrabold uppercase tracking-widest">{{ product()!.categoryName }}</span>
+                  <div>
+                    @if (product()!.stock > 0) {
+                      <span class="text-xs font-bold text-emerald-600 ml-1.5">{{ product()!.stock }} items left</span>
+                    } @else {
+                      <span class="text-xs font-bold text-rose-500 ml-1.5">Out of Stock</span>
+                    }
+                  </div>
                 </div>
-                <!-- Wishlist heart button next to title -->
-                <button
-                  type="button"
-                  (click)="toggleWishlist()"
-                  class="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-400 hover:text-rose-500 transition-all cursor-pointer active:scale-90 h-10 w-10 flex items-center justify-center flex-shrink-0 aspect-square outline-none"
-                >
-                  <app-icon [name]="userStore.isWishlisted(product()!.id) ? 'heart-filled' : 'heart'" size="18" [class]="userStore.isWishlisted(product()!.id) ? 'text-rose-500' : 'text-slate-400'"></app-icon>
-                </button>
+                <h1 class="text-2xl font-display font-black text-slate-800 tracking-tight mt-1 leading-[1.15]">{{ product()!.name }}</h1>
+                <div class="w-full flex flex-row justify-between">
+                  <p class="text-[13px] text-slate-500 mt-0.5"><strong class="text-slate-700 font-bold">{{ product()!.brand }}</strong></p>
+                    <!-- Ratings -->
+                    <app-rating-stars
+                      [rating]="product()!.rating"
+                      [reviewsCount]="product()!.reviewsCount"
+                      [starSize]="14"
+                  reviewsSuffix=" reviews"
+                ></app-rating-stars>
+                </div>
               </div>
-
-              <!-- Ratings -->
-              <app-rating-stars
-                [rating]="product()!.rating"
-                [reviewsCount]="product()!.reviewsCount"
-                [starSize]="14"
-                reviewsSuffix=" reviews"
-              ></app-rating-stars>
-
-              <hr class="border-slate-100" />
 
               <!-- Price & Stock -->
               <div class="flex items-baseline gap-3">
@@ -104,36 +111,33 @@
                 }
               </div>
 
-              <div>
-                <span class="text-xs font-semibold text-slate-500">Stock Availability:</span>
-                @if (product()!.stock > 0) {
-                  <span class="text-xs font-bold text-emerald-600 ml-1.5">{{ product()!.stock }} items left</span>
-                } @else {
-                  <span class="text-xs font-bold text-rose-500 ml-1.5">Out of Stock</span>
-                }
-              </div>
+              
             </div>
           </div>
 
           <!-- Detail Information Tabs -->
-          <div class="mt-8 bg-white border border-slate-100 rounded-3xl p-6">
-            <!-- Tab Headers -->
-            <div class="flex border-b border-slate-100 gap-6 mb-6">
+          <div class="mt-8 bg-white border border-slate-100/60 rounded-[32px] p-5 shadow-sm shadow-slate-100/50">
+            <!-- Segmented Control Tab Headers -->
+            <div class="flex bg-slate-50/80 p-1.5 rounded-2xl gap-1 mb-6 border border-slate-100/50">
               <button
                 (click)="setActiveTab('details')"
-                [class.text-primary-600]="activeTab() === 'details'"
-                [class.border-primary-600]="activeTab() === 'details'"
-                [class.text-slate-400]="activeTab() !== 'details'"
-                class="pb-3 text-sm font-bold border-b-2 border-transparent transition-all cursor-pointer"
+                [class.bg-white]="activeTab() === 'details'"
+                [class.shadow-sm]="activeTab() === 'details'"
+                [class.text-slate-800]="activeTab() === 'details'"
+                [class.text-slate-500]="activeTab() !== 'details'"
+                [class.hover:bg-slate-100/50]="activeTab() !== 'details'"
+                class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer"
               >
-                Description & Specs
+                Description
               </button>
               <button
                 (click)="setActiveTab('reviews')"
-                [class.text-primary-600]="activeTab() === 'reviews'"
-                [class.border-primary-600]="activeTab() === 'reviews'"
-                [class.text-slate-400]="activeTab() !== 'reviews'"
-                class="pb-3 text-sm font-bold border-b-2 border-transparent transition-all cursor-pointer"
+                [class.bg-white]="activeTab() === 'reviews'"
+                [class.shadow-sm]="activeTab() === 'reviews'"
+                [class.text-slate-800]="activeTab() === 'reviews'"
+                [class.text-slate-500]="activeTab() !== 'reviews'"
+                [class.hover:bg-slate-100/50]="activeTab() !== 'reviews'"
+                class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer"
               >
                 Reviews ({{ reviews().length }})
               </button>
@@ -241,31 +245,33 @@
         </div>
 
         <!-- Sticky Bottom Action Bar -->
-        <div class="shrink-0 border-t border-slate-100 bg-white px-5 py-4 pb-6 flex items-center justify-between gap-3">
+        <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl px-5 py-4 pb-6 flex items-center justify-between gap-4 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.05)] relative z-50">
           <!-- Total Price display -->
-          <div class="flex flex-col shrink-0 min-w-[90px] text-left">
-            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Total Price</span>
-            <app-price [value]="product()!.price * quantity()" size="md" class="text-primary-600"></app-price>
+          <div class="flex flex-col shrink-0 min-w-[80px] text-left">
+            <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest mb-0.5">Total Price</span>
+            <app-price [value]="product()!.price * quantity()" size="lg" class="text-slate-800"></app-price>
           </div>
 
-          <!-- Quantity selectors -->
-          <app-quantity-selector
-            [(quantity)]="quantity"
-            [stock]="product()!.stock"
-            variant="md"
-          ></app-quantity-selector>
+          <!-- Actions Wrapper -->
+          <div class="flex grow items-center justify-end gap-3">
+            <app-quantity-selector
+              [(quantity)]="quantity"
+              [stock]="product()!.stock"
+              variant="md"
+            ></app-quantity-selector>
 
-          <!-- Buy / Add to Cart button -->
-          <div class="flex-grow">
-            <app-button
-              (click)="addToCart()"
-              [disabled]="product()!.stock <= 0"
-              variant="primary"
-              class="h-11 border border-primary-700/20 w-full text-xs font-bold"
-            >
-              <app-icon name="shopping-cart" size="16"></app-icon>
-              Add to Cart
-            </app-button>
+            <div class="grow max-w-[160px]">
+              <app-button
+                (click)="addToCart()"
+                [disabled]="product()!.stock <= 0"
+                variant="primary"
+                [fullWidth]="true"
+                class="h-12 border border-primary-700/20 text-sm font-bold rounded-2xl shadow-md shadow-primary-600/20"
+              >
+                <i class="bx bx-shopping-bag text-lg mr-1 -ml-1"></i>
+                Add to Cart
+              </app-button>
+            </div>
           </div>
         </div>
       }

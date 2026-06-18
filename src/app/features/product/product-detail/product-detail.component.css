@@ -1,5 +1,8 @@
 :host {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      grow: 1;
+      min-height: 0;
       height: 100%;
       overflow: hidden;
     }

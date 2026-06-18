@@ -1,0 +1,115 @@
+// kurir 1
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": {
+        "data": {
+            "jne": [
+                {
+                    "service_display": "CTC",
+                    "price": 10000.0,
+                    "currency": "Rp",
+                    "etd": "1 - 2 Hari"
+                },
+                {
+                    "service_display": "JTR",
+                    "price": 40000.0,
+                    "currency": "Rp",
+                    "etd": "3 - 4 Hari"
+                },
+                {
+                    "service_display": "CTCYES",
+                    "price": 18000.0,
+                    "currency": "Rp",
+                    "etd": "1 - 1 Hari"
+                }
+            ]
+        },
+        "code": "001",
+        "status": "Success"
+    },
+    "isSuccess": true
+}
+
+// kurir 2
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": {
+        "data": {
+            "spx": [
+                {
+                    "service_display": "STD",
+                    "price": 7700.0,
+                    "currency": "Rp",
+                    "etd": "1 - 5 Hari"
+                },
+                {
+                    "service_display": "ECO",
+                    "price": 6600.0,
+                    "currency": "Rp",
+                    "etd": "1 - 6 Hari"
+                }
+            ]
+        },
+        "code": "001",
+        "status": "Success"
+    },
+    "isSuccess": true
+}
+
+// kurir 3
+
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": {
+        "data": {
+            "paxel": [
+                {
+                    "service_display": "SAMEDAY",
+                    "price": {
+                        "small_price": 21900.0,
+                        "medium_price": 25000.0,
+                        "large_price": 30000.0
+                    },
+                    "currency": "Rp",
+                    "etd": "same_day"
+                },
+                {
+                    "service_display": "PAXEL AMPLOP",
+                    "price": {
+                        "small_price": 10000.0,
+                        "medium_price": 10000.0,
+                        "large_price": 10000.0
+                    },
+                    "currency": "Rp",
+                    "etd": "2_days"
+                },
+                {
+                    "service_display": "NEXTDAY",
+                    "price": {
+                        "small_price": 21900.0,
+                        "medium_price": 25000.0,
+                        "large_price": 30000.0
+                    },
+                    "currency": "Rp",
+                    "etd": "next_day"
+                },
+                {
+                    "service_display": "PAXEL BIG",
+                    "price": {
+                        "small_price": 45000.0,
+                        "medium_price": 55000.0,
+                        "large_price": 65000.0
+                    },
+                    "currency": "Rp",
+                    "etd": "same_day"
+                }
+            ]
+        },
+        "code": "001",
+        "status": "Success"
+    },
+    "isSuccess": true
+}

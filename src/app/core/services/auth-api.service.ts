@@ -14,6 +14,7 @@ export class AuthApiService {
     const body = new URLSearchParams();
     body.set('grant_type', 'password');
     body.set('client_id', 'MalakaBooks-FE');
+    body.set('client_secret', 'MalakaBooks-FE');
     body.set('username', username);
     body.set('password', password);
     body.set('scope', 'Create Update Delete Read offline_access MalakaBooks_Scope General_Scope');

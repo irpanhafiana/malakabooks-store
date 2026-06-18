@@ -12,7 +12,7 @@
         </div>
       } @else {
         <!-- Scrollable Items Area -->
-        <div class="flex-grow overflow-y-auto px-4 py-4 no-scrollbar">
+        <div class="grow overflow-y-auto px-4 py-4 no-scrollbar">
           <div class="flex flex-col gap-3">
             @for (item of cartStore.items(); track item.product.id) {
               <div class="flex items-center gap-4 bg-white border border-slate-100 p-4 rounded-2xl transition-all hover:border-slate-200/50">
@@ -22,7 +22,7 @@
                 </div>
 
                 <!-- Details & Remove -->
-                <div class="flex-grow flex flex-col">
+                <div class="grow flex flex-col">
                   <div (click)="productStore.setSelectedProductId(item.product.id)" class="text-sm font-semibold text-slate-800 hover:text-primary-600 transition-colors line-clamp-1 mb-0.5 cursor-pointer">{{ item.product.name }}</div>
                   <span class="text-[10px] text-slate-400 font-semibold mb-1">{{ item.product.categoryName }}</span>
                   <div class="flex items-center justify-between mt-1">

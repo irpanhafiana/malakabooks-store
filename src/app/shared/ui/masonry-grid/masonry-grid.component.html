@@ -1,5 +1,5 @@
 <!-- Pinterest-style masonry: CSS multi-column height packing -->
-<div class="columns-2 gap-3 w-full [&>*]:block [&>*]:mb-3 [&>*]:break-inside-avoid">
+<div class="columns-2 gap-2 w-full [&>*]:block [&>*]:mb-2 [&>*]:break-inside-avoid">
   @for (item of items(); track trackById(item)) {
     <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
   }

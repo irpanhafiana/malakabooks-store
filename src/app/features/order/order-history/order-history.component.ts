@@ -8,6 +8,7 @@ import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
+import { ExternalMessageService } from '../../../core/services/external-message.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +22,7 @@ export class OrderHistoryComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
   protected readonly orderStore = inject(OrderStore);
   private readonly router = inject(Router);
+  private readonly externalMessageService = inject(ExternalMessageService);
 
   ngOnInit() {
     const user = this.authStore.currentUser();
@@ -30,5 +32,20 @@ export class OrderHistoryComponent implements OnInit {
     }
 
     this.orderStore.loadUserOrders(user.id);
+  }
+
+  checkPaymentStatus(orderDocumentNumber: string) {
+    this.externalMessageService.getCheckPaymentDoku(orderDocumentNumber).subscribe({
+      next: (response) => {
+        console.log('Status Pembayaran:', response);
+        const user = this.authStore.currentUser();
+        if (user) {
+          this.orderStore.loadUserOrders(user.id);
+        }
+      },
+      error: (err) => {
+        console.error('Gagal mengecek status pembayaran', err);
+      }
+    });
   }
 }

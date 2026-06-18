@@ -14,16 +14,28 @@ import { UserApiService } from '../../core/services/user-api.service';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 
+import { OrderStore } from '../../store/order.store';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, InputComponent, SelectComponent, ButtonComponent, IconComponent, BottomSheetComponent, SkeletonComponent],
+  imports: [
+    ReactiveFormsModule, 
+    RouterLink, 
+    InputComponent, 
+    SelectComponent, 
+    ButtonComponent, 
+    IconComponent, 
+    BottomSheetComponent, 
+    SkeletonComponent
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
+  protected readonly orderStore = inject(OrderStore);
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -36,6 +48,23 @@ export class ProfileComponent implements OnInit {
   isDropdownLoading = signal<boolean>(false);
   showAddressForm = signal<boolean>(false);
   addresses = signal<Address[]>([]);
+
+  showEditProfile = signal<boolean>(false);
+  showSavedAddresses = signal<boolean>(false);
+  showMockModal = signal<string | null>(null);
+
+  // Order status counts
+  pendingCount = computed(() => this.orderStore.orders().filter(o => o.status === 'pending').length);
+  processingCount = computed(() => this.orderStore.orders().filter(o => o.status === 'processing').length);
+  shippedCount = computed(() => this.orderStore.orders().filter(o => o.status === 'shipped').length);
+  completedCount = computed(() => this.orderStore.orders().filter(o => o.status === 'completed').length);
+
+  // Latest order
+  latestOrder = computed(() => {
+    const orders = this.orderStore.orders();
+    if (!orders || orders.length === 0) return null;
+    return [...orders].sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime())[0];
+  });
 
   // Simasrim states
   provinces = signal<any[]>([]);
@@ -97,6 +126,9 @@ export class ProfileComponent implements OnInit {
     // Load Simasrim Provinces
     await this.loadProvinces();
 
+    // Load user orders
+    this.orderStore.loadUserOrders(user.id);
+
     // Listen to province changes
     this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (provinceId) => {
       if (provinceId) {
@@ -154,6 +186,9 @@ export class ProfileComponent implements OnInit {
 
     const success = await this.authStore.updateProfile(updatedUser);
     this.isProfileSaving.set(false);
+    if (success) {
+      this.showEditProfile.set(false);
+    }
   }
 
   addNewAddress() {
@@ -295,5 +330,15 @@ export class ProfileComponent implements OnInit {
         this.addresses.set(latestUser.addresses);
       }
     }
+  }
+
+  logout() {
+    this.authStore.logout();
+    this.toastService.success('Logged out successfully.');
+    this.router.navigate(['/auth/login']);
+  }
+
+  navigateBack() {
+    this.router.navigate(['/']);
   }
 }

@@ -1,13 +1,29 @@
 <div class="flex flex-col gap-3.5 w-full">
       @for (item of items(); track $index) {
         @if (type() === 'card') {
-          <div class="border border-slate-100 rounded-2xl p-4 w-full bg-white flex flex-col gap-3">
-            <div class="aspect-square w-full bg-slate-200/60 rounded-xl animate-pulse"></div>
-            <div class="h-4 bg-slate-200/60 rounded animate-pulse w-3/4"></div>
-            <div class="h-3 bg-slate-200/60 rounded animate-pulse w-1/2"></div>
-            <div class="flex justify-between items-center mt-2">
-              <div class="h-6 bg-slate-200/60 rounded animate-pulse w-1/3"></div>
-              <div class="h-8 w-8 bg-slate-200/60 rounded-lg animate-pulse"></div>
+          <div class="card-product animate-pulse pointer-events-none border-slate-100 shadow-sm">
+            <!-- Image Container -->
+            <div class="aspect-4/3 w-full bg-slate-200/60 mb-3 relative rounded-t-xl"></div>
+
+            <!-- Meta info, Title & Ratings Wrapper -->
+            <div class="flex flex-col px-3 pb-2 gap-1.5">
+              <!-- Author/Spec -->
+              <div class="h-2.5 bg-slate-200/60 rounded w-1/3 mb-1"></div>
+              
+              <!-- Title -->
+              <div class="flex flex-col gap-1.5 mb-1.5">
+                <div class="h-3.5 bg-slate-200/60 rounded w-full"></div>
+                <div class="h-3.5 bg-slate-200/60 rounded w-4/5"></div>
+              </div>
+              
+              <!-- Ratings -->
+              <div class="h-3 bg-slate-200/60 rounded w-1/4 mt-1"></div>
+            </div>
+
+            <!-- Pricing and Rating Row -->
+            <div class="flex items-center justify-between pt-2 border-t border-slate-50 px-3 pb-3 mt-auto">
+              <div class="h-5 bg-slate-200/60 rounded w-2/5"></div>
+              <div class="h-3 bg-slate-200/60 rounded w-1/4"></div>
             </div>
           </div>
         } @else if (type() === 'avatar') {

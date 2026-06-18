@@ -14,7 +14,7 @@ import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { PriceComponent } from '../../shared/ui/price/price.component';
 import { ToastService } from '../../core/services/toast.service';
 import { AddressApiService } from '../../core/services/address-api.service';
-import { DokuApiService } from '../../core/services/doku-api.service';
+import { ExternalMessageService } from '../../core/services/external-message.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -36,7 +36,7 @@ export class CheckoutComponent implements OnInit {
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
   private readonly addressApi = inject(AddressApiService);
-  private readonly dokuApi = inject(DokuApiService);
+  private readonly externalMessageService = inject(ExternalMessageService);
   private readonly userApi = inject(UserApiService);
   private readonly shippingService = inject(ShippingService);
 
@@ -58,6 +58,24 @@ export class CheckoutComponent implements OnInit {
   cityOptions = computed(() => this.cities().map(c => ({ value: c, label: c })));
   districtOptions = computed(() => this.districts().map(d => ({ value: d.region_code, label: d.subdistrict_name ? `${d.district_name} - ${d.subdistrict_name}` : d.district_name })));
   courierOptions = computed(() => this.couriers().map(c => ({ value: c, label: c.toUpperCase() })));
+
+  courierServices = this.shippingService.courierServices;
+  courierServiceOptions = computed(() => {
+    return this.courierServices().map((s, idx) => {
+      let price = 0;
+      if (typeof s.price === 'number') { price = s.price; }
+      else if (s.price && typeof s.price === 'object') { price = s.price.medium_price || s.price.small_price || s.price.large_price || 0; }
+      else if (typeof s.cost === 'number') { price = s.cost; }
+      else if (s.cost && Array.isArray(s.cost)) { price = s.cost[0]?.value || 0; }
+      else if (s.cost && typeof s.cost === 'object') { price = s.cost.value || 0; }
+      
+      const priceUsd = price >= 1000 ? price / 15000 : price;
+      return {
+        value: idx.toString(),
+        label: `${s.service_display || s.service || 'Reg'} - $ ${priceUsd.toFixed(2)} (ETA: ${s.etd || s.cost?.[0]?.etd || '-'})`
+      };
+    });
+  });
 
   checkoutTax = computed(() => this.cartStore.subtotal() * 0.10);
   checkoutTotal = computed(() => {
@@ -84,6 +102,7 @@ export class CheckoutComponent implements OnInit {
   });
 
   courierControl = new FormControl('', [Validators.required]);
+  courierServiceControl = new FormControl('', [Validators.required]);
 
   // Payment inputs
   paymentOptions = [
@@ -187,6 +206,17 @@ export class CheckoutComponent implements OnInit {
     this.courierControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.updateShippingCost();
     });
+
+    // Listen to courier service changes
+    this.courierServiceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((idxStr) => {
+      if (idxStr !== null && idxStr !== '') {
+        const idx = parseInt(idxStr, 10);
+        const service = this.courierServices()[idx];
+        this.shippingService.setShippingCostFromService(service);
+      } else {
+        this.shippingService.shippingCost.set(0);
+      }
+    });
   }
 
   async loadCouriers() {
@@ -256,7 +286,8 @@ export class CheckoutComponent implements OnInit {
     if (!destinationDistrictId) return;
 
     this.isLoading.set(true);
-    await this.shippingService.calculateCost(destinationDistrictId, courier);
+    this.courierServiceControl.setValue('', { emitEvent: false });
+    await this.shippingService.fetchCourierServices(destinationDistrictId, courier);
     this.isLoading.set(false);
 
   }
@@ -309,15 +340,27 @@ export class CheckoutComponent implements OnInit {
 
   isOrderInvalid(): boolean {
     if (this.showAddressForm() || !this.selectedAddressId()) {
+      this.toastService.error('Please complete your shipping address');
       return true;
     }
     if (this.courierControl.invalid) {
+      this.toastService.error('Please select a shipping courier');
+      return true;
+    }
+    if (this.courierServiceControl.invalid) {
+      this.toastService.error('Please select a shipping service');
       return true;
     }
     if (this.paymentControl.value === 'credit_card') {
-      return this.cardNumControl.invalid || this.cardExpiryControl.invalid || this.cardCvcControl.invalid;
+      if (this.cardNumControl.invalid || this.cardExpiryControl.invalid || this.cardCvcControl.invalid) {
+        this.toastService.error('Please complete your credit card details');
+        return true;
+      }
+    } else if (this.paymentControl.invalid) {
+      this.toastService.error('Please select a payment method');
+      return true;
     }
-    return this.paymentControl.invalid;
+    return false;
   }
 
   async onPlaceOrder() {
@@ -369,7 +412,7 @@ export class CheckoutComponent implements OnInit {
       if (method === 'doku') {
         try {
           this.isLoading.set(true);
-          const paymentRes = await firstValueFrom(this.dokuApi.getCheckPaymentDoku(placed.id));
+          const paymentRes = await firstValueFrom(this.externalMessageService.getCheckPaymentDoku(placed.id));
           this.isLoading.set(false);
           
           const checkoutUrl = paymentRes?.checkoutUrl || 

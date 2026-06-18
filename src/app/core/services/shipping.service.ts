@@ -13,6 +13,7 @@ export class ShippingService {
   readonly provinces = signal<any[]>([]);
   readonly cities = signal<any[]>([]);
   readonly districts = signal<any[]>([]);
+  readonly courierServices = signal<any[]>([]);
   
   readonly shippingCost = signal<number>(0);
   readonly shippingLoading = signal<boolean>(false);
@@ -43,10 +44,11 @@ export class ShippingService {
     this.districts.set([]);
   }
 
-  async calculateCost(districtCode: string | null, courier: string | null): Promise<number> {
+  async fetchCourierServices(districtCode: string | null, courier: string | null): Promise<any[]> {
     if (!districtCode || !courier) {
+      this.courierServices.set([]);
       this.shippingCost.set(0);
-      return 0;
+      return [];
     }
 
     try {
@@ -64,45 +66,63 @@ export class ShippingService {
       const tariffRes = await this.addressApi.calculateTariff({
         origin_code: environment.originCode,
         desti_code: districtCode,
-        berat_paket: "10", // kept as 10 as per original calculation logic
+        berat_paket: "10",
         volume: '1x1x1',
         ekspedisi: courier
       });
 
-      let cost = 0;
+      let services = [];
       if (tariffRes) {
-        if (Array.isArray(tariffRes)) {
-          const first = tariffRes[0];
-          cost = typeof first.cost === 'number' ? first.cost : (first.cost?.[0]?.value || 0);
+        if (tariffRes[courier] && Array.isArray(tariffRes[courier])) {
+           services = tariffRes[courier];
+        } else if (tariffRes.data && tariffRes.data[courier] && Array.isArray(tariffRes.data[courier])) {
+           services = tariffRes.data[courier];
+        } else if (Array.isArray(tariffRes)) {
+           services = tariffRes; 
         } else if (tariffRes.costs && Array.isArray(tariffRes.costs)) {
-          const first = tariffRes.costs[0];
-          cost = typeof first.cost === 'number' ? first.cost : (first.cost?.[0]?.value || 0);
-        } else if (tariffRes.rajaongkir?.results?.[0]?.costs?.[0]?.cost?.[0]?.value) {
-          cost = tariffRes.rajaongkir.results[0].costs[0].cost[0].value;
-        } else if (typeof tariffRes.cost === 'number') {
-          cost = tariffRes.cost;
-        } else if (typeof tariffRes.price === 'number') {
-          cost = tariffRes.price;
+           services = tariffRes.costs;
+        } else if (tariffRes.rajaongkir?.results?.[0]?.costs) {
+           services = tariffRes.rajaongkir.results[0].costs;
         }
       }
 
-      if (cost > 0) {
-        let costUsd = cost;
-        if (cost >= 1000) {
-          costUsd = cost / 15000;
-        }
-        this.shippingCost.set(costUsd);
-        return costUsd;
-      } else {
-        this.shippingCost.set(5.00);
-        return 5.00;
-      }
+      this.courierServices.set(services);
+      this.shippingCost.set(0);
+      return services;
     } catch (e) {
-      console.error('Failed to calculate shipping cost:', e);
-      this.shippingCost.set(5.00);
-      return 5.00;
+      console.error('Failed to fetch courier services:', e);
+      this.courierServices.set([]);
+      this.shippingCost.set(0);
+      return [];
     } finally {
       this.shippingLoading.set(false);
+    }
+  }
+
+  setShippingCostFromService(service: any) {
+    let cost = 0;
+    if (service) {
+      if (typeof service.price === 'number') {
+        cost = service.price;
+      } else if (service.price && typeof service.price === 'object') {
+        cost = service.price.medium_price || service.price.small_price || service.price.large_price || 0;
+      } else if (typeof service.cost === 'number') {
+        cost = service.cost;
+      } else if (service.cost && Array.isArray(service.cost) && service.cost[0]) {
+        cost = service.cost[0].value || 0;
+      } else if (service.cost && typeof service.cost === 'object') {
+        cost = service.cost.value || 0;
+      }
+    }
+    
+    if (cost > 0) {
+      let costUsd = cost;
+      if (cost >= 1000) {
+        costUsd = cost / 15000;
+      }
+      this.shippingCost.set(costUsd);
+    } else {
+      this.shippingCost.set(0);
     }
   }
 }
