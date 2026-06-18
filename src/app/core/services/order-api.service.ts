@@ -218,10 +218,19 @@ export class OrderApiService {
   }
 
   async saveOrder(order: Order): Promise<Order> {
+    const nameParts = (order.userName || '').trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+    const phone = order.shippingAddress?.phone || '';
+
     const body = {
       userId: order.userId,
+      firstName,
+      lastName,
+      phone,
       items: order.items.map(item => ({
         bookId: item.product.id,
+        bookName: item.product.name,
         title: item.product.name,
         price: item.product.price,
         quantity: item.quantity
@@ -233,35 +242,29 @@ export class OrderApiService {
     try {
       const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Orders`, body));
       
-      // Respons dari backend tidak mengandung ID (hanya isSuccess, statusCode, dll)
-      // Kita harus mengambil order terbaru dari user ini untuk mendapatkan ID-nya
-      const userOrdersRaw = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Orders/user/${order.userId}`));
-      const userOrders = userOrdersRaw?.data || [];
+      const responseData = res?.data || {};
+      const placedOrderId = responseData.orderId;
       
-      // Urutkan berdasarkan createdAt terbaru
-      userOrders.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      
-      const placed = userOrders[0];
-      
-      if (!placed || !placed.id) {
+      if (!placedOrderId) {
          throw new Error('Order berhasil dibuat tapi gagal mengambil ID order dari server');
       }
 
       return {
-        id: placed.id,
-        userId: placed.userId || order.userId,
+        id: placedOrderId,
+        userId: order.userId,
         userName: order.userName,
         userEmail: order.userEmail,
         items: order.items,
         shippingAddress: order.shippingAddress,
         paymentMethod: order.paymentMethod,
         paymentDetails: order.paymentDetails,
-        status: placed.status as any,
+        paymentUrl: responseData.paymentUrl,
+        status: 'pending' as any,
         subtotal: order.subtotal,
         shippingCost: order.shippingCost,
         tax: order.tax,
-        total: Number(placed.totalPrice) || order.total,
-        orderDate: placed.createdAt || new Date().toISOString()
+        total: order.total,
+        orderDate: new Date().toISOString()
       };
     } catch (e) {
       console.error('Gagal membuat order:', e);

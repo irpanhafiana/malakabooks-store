@@ -410,27 +410,12 @@ export class CheckoutComponent implements OnInit {
 
     if (placed) {
       if (method === 'doku') {
-        try {
-          this.isLoading.set(true);
-          const paymentRes = await firstValueFrom(this.externalMessageService.getCheckPaymentDoku(placed.id));
-          this.isLoading.set(false);
-          
-          const checkoutUrl = paymentRes?.checkoutUrl || 
-                              paymentRes?.paymentUrl || 
-                              paymentRes?.data?.checkout_url || 
-                              paymentRes?.url || 
-                              paymentRes?.data?.url;
-
-          if (checkoutUrl) {
-            (window as any).loadJokulCheckout(checkoutUrl);
-          } else {
-            console.error('Failed to resolve checkout URL from Doku response:', paymentRes);
-            this.toastService.error('Order placed, but failed to load payment gateway. Please check your order history.');
-            this.router.navigate(['/order-success'], { queryParams: { id: placed.id } });
-          }
-        } catch (e) {
-          this.isLoading.set(false);
-          console.error('Failed to initiate Doku Jokul checkout overlay:', e);
+        const checkoutUrl = placed.paymentUrl;
+        
+        if (checkoutUrl) {
+          (window as any).loadJokulCheckout(checkoutUrl);
+        } else {
+          console.error('Failed to resolve checkout URL from order response:', placed);
           this.toastService.error('Order placed, but failed to load payment gateway. Please check your order history.');
           this.router.navigate(['/order-success'], { queryParams: { id: placed.id } });
         }

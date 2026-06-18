@@ -22,4 +22,5 @@ export interface Order {
   total: number;
   orderDate: string;
   trackingNumber?: string;
+  paymentUrl?: string;
 }
