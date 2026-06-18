@@ -1,6 +1,5 @@
 using MalakaBooks.Entity;
 using MalakaBooks.ViewModel;
-using MalakaBooks.ViewModel.Doku;
 
 namespace MalakaBooks.Mediator.Common;
 
@@ -115,7 +114,7 @@ public static class MappingExtensions
         PaymentMethod = entity.PaymentMethod,
         PaymentGateway = entity.PaymentGateway,
         PaymentUrl = entity.PaymentUrl,
-        IncomingPaymentId = entity.IncomingPaymentId,
+        IncomingPaymentId = entity.IncomingPaymentId ?? string.Empty,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
         PaidAt = entity.PaidAt,
@@ -139,7 +138,7 @@ public static class MappingExtensions
         PaymentMethod = string.Empty,
         PaymentGateway = string.Empty,
         PaymentUrl = string.Empty,
-        IncomingPaymentId = string.Empty,
+        IncomingPaymentId = null,
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow
     };

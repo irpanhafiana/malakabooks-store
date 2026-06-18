@@ -164,12 +164,11 @@ builder.Services.AddHttpClient<IProtectedApiClient, ProtectedApiClient>(client =
 DokuSetting dokuSetting = new();
 dokuSection.Bind(dokuSetting);
 
-builder.Services.AddSingleton(dokuSetting);
 builder.Services.Configure<DokuSetting>(dokuSection);
 
 if (!string.IsNullOrWhiteSpace(dokuSetting.BaseUrl))
 {
-    builder.Services.AddHttpClient<IDokuApiClient, DokuApiClient>(client =>
+    builder.Services.AddHttpClient<DokuApiClient>(client =>
     {
         client.BaseAddress = new Uri(dokuSetting.BaseUrl);
         client.DefaultRequestHeaders.Clear();

@@ -8,13 +8,18 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.OrderHandlers;
 
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using DokuSetting = ConfigSetting.DokuSetting;
+
 public class CreateOrderHandler(
     IOrderRepository orderRepository,
     IOrderEntityValidator validator,
-    IDokuApiClient dokuApiClient,
-    MalakaBooks.ConfigSetting.DokuSetting dokuSetting) : IRequestHandler<CreateOrderCommand, CreateOrderResponse>
+    DokuApiClient dokuApiClient,
+    IOptions<DokuSetting> dokuOptions) : IRequestHandler<CreateOrderCommand, CreateOrderResponse>
 {
     private readonly IOrderEntityValidator _validator = validator;
+    private readonly DokuSetting dokuSetting = dokuOptions.Value;
 
     public async Task<CreateOrderResponse> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
@@ -32,10 +37,18 @@ public class CreateOrderHandler(
 
         await orderRepository.CreateAsync(entity, cancellationToken);
 
-        var dokuResponse = await dokuApiClient.CreatePaymentAsync(ToDokuObject(request.Request, entity, dokuSetting), cancellationToken);
+        var content = ToDokuObject(request.Request, entity, dokuSetting);
+        var url = dokuSetting.BaseUrl + dokuSetting.PaymentUrl;
+
+        var dokuResponse = await dokuApiClient.PostAsync(url, content);
+        dokuResponse.EnsureSuccessStatusCode();
+
+        var responseText = JsonConvert.DeserializeObject<DokuResponse>(await dokuResponse.Content.ReadAsStringAsync());
+
         entity.PaymentGateway = "DOKU";
         entity.PaymentMethod = "QRIS";
-        entity.PaymentUrl = dokuResponse?.response?.payment?.url ?? string.Empty;
+
+        entity.PaymentUrl = responseText!.response.payment!.url!;
         entity.UpdatedAt = DateTime.UtcNow;
 
         await orderRepository.UpdateAsync(entity.Id!, entity, cancellationToken);
@@ -101,3 +114,6 @@ public class CreateOrderHandler(
         };
     }
 }
+
+
+
