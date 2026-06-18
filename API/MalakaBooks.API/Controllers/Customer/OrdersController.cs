@@ -23,7 +23,12 @@ public class OrdersController(IMediator mediator) : ApiControllerBase
     public async Task<IActionResult> Create([FromBody] CreateOrderRequest request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CreateOrderCommand(request), cancellationToken);
-        return ProcessResult(result);
+        if (!result.IsSuccess)
+        {
+            return Fail("Validation failed", result.Errors, "ValidationError", StatusCodes.Status400BadRequest);
+        }
+
+        return Success(result);
     }
 
     /// <summary>Get own orders</summary>

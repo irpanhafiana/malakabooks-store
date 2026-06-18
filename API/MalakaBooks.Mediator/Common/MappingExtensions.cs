@@ -1,5 +1,6 @@
 using MalakaBooks.Entity;
 using MalakaBooks.ViewModel;
+using MalakaBooks.ViewModel.Doku;
 
 namespace MalakaBooks.Mediator.Common;
 
@@ -97,6 +98,7 @@ public static class MappingExtensions
     public static OrderItemEntity ToEntity(this CreateOrderItemRequest request) => new()
     {
         BookId = request.BookId.Trim(),
+        BookName = request.BookName.Trim(),
         Title = request.Title.Trim(),
         Price = request.Price,
         Quantity = request.Quantity
@@ -112,6 +114,7 @@ public static class MappingExtensions
         PaymentStatus = entity.PaymentStatus,
         PaymentMethod = entity.PaymentMethod,
         PaymentGateway = entity.PaymentGateway,
+        PaymentUrl = entity.PaymentUrl,
         IncomingPaymentId = entity.IncomingPaymentId,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
@@ -123,6 +126,10 @@ public static class MappingExtensions
     public static OrderEntity ToEntity(this CreateOrderRequest request) => new()
     {
         UserId = request.UserId.Trim(),
+        FirstName = request.FirstName.Trim(),
+        LastName = request.LastName.Trim(),
+        Phone = request.Phone.Trim(),
+
         AddressId = request.AddressId.Trim(),
         Items = request.Items.Select(ToEntity).ToList(),
         TotalPrice = request.Items.Sum(item => item.Price * item.Quantity),
@@ -131,6 +138,7 @@ public static class MappingExtensions
         PaymentStatus = "unpaid",
         PaymentMethod = string.Empty,
         PaymentGateway = string.Empty,
+        PaymentUrl = string.Empty,
         IncomingPaymentId = string.Empty,
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow
@@ -321,5 +329,4 @@ public static class MappingExtensions
         Longitude = entity.Longitude,
         Latitude = entity.Latitude
     };
-
 }
