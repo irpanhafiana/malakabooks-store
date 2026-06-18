@@ -4,7 +4,7 @@
       <button
         type="button"
         (click)="onToggleWishlist($event)"
-        class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white border border-slate-200/50 p-0 outline-none text-slate-400 hover:text-rose-500 transition-all cursor-pointer active:scale-95 flex items-center justify-center aspect-square flex-shrink-0"
+        class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white border border-slate-200/50 p-0 outline-none text-slate-400 hover:text-rose-500 transition-all cursor-pointer active:scale-95 flex items-center justify-center aspect-square shrink-0"
       >
         <app-icon [name]="isInWishlist() ? 'heart-filled' : 'heart'" size="16" [class]="isInWishlist() ? 'text-rose-500' : 'text-slate-400'"></app-icon>
       </button>

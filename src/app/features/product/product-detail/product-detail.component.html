@@ -9,7 +9,7 @@
           </div>
         </div>
       } @else if (!product()) {
-        <div class="grow overflow-y-auto px-5 py-4 text-center py-16">
+        <div class="flex-grow overflow-y-auto px-5 py-16 text-center">
           <h2 class="text-xl font-display font-extrabold text-slate-800 mb-2">Product Not Found</h2>
           <p class="text-slate-500 text-xs mb-6">The product you are trying to view does not exist or has been removed.</p>
           <app-button routerLink="/product" variant="primary">Back to Shop</app-button>
@@ -67,7 +67,7 @@
                       (click)="setActiveImage(img)"
                       [class.border-primary-500]="activeImage() === img"
                       [class.border-slate-100]="activeImage() !== img"
-                      class="h-20 w-20 flex-shrink-0 bg-white border-2 rounded-2xl overflow-hidden cursor-pointer active:scale-95 transition-all relative"
+                      class="h-20 w-20 shrink-0 bg-white border-2 rounded-2xl overflow-hidden cursor-pointer active:scale-95 transition-all relative"
                     >
                       <img [ngSrc]="img" [alt]="product()!.name + ' thumbnail'" fill class="object-cover" />
                     </button>
