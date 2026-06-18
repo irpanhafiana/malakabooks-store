@@ -7,6 +7,7 @@ public class MongoDbSetting
     public string BooksCollection { get; set; } = "books";
     public string CategoriesCollection { get; set; } = "categories";
     public string OrdersCollection { get; set; } = "orders";
+    public string IncomingPaymentsCollection { get; set; } = "incomingpayments";
     public string CartsCollection { get; set; } = "carts";
     public string AddressesCollection { get; set; } = "addresses";
     public string HomeAddressesCollection { get; set; } = "homeaddresses";

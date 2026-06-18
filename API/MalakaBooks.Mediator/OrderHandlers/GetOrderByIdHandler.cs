@@ -1,4 +1,5 @@
 using MalakaBooks.IRepository;
+using MalakaBooks.Mediator.Common;
 using MalakaBooks.ViewModel;
 using MediatR;
 
@@ -9,25 +10,6 @@ public class GetOrderByIdHandler(IOrderRepository orderRepository) : IRequestHan
     public async Task<OrderResponse?> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
     {
         var entity = await orderRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (entity is null) return null;
-
-        return new OrderResponse
-        {
-            Id = entity.Id ?? string.Empty,
-            UserId = entity.UserId,
-            AddressId = entity.AddressId,
-            Status = entity.Status,
-            TotalPrice = entity.TotalPrice,
-            Note = entity.Note,
-            CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt,
-            Items = entity.Items.Select(i => new OrderItemResponse
-            {
-                BookId = i.BookId,
-                Title = i.Title,
-                Price = i.Price,
-                Quantity = i.Quantity
-            }).ToList()
-        };
+        return entity?.ToResponse();
     }
 }

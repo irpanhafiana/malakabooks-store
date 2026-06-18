@@ -45,4 +45,18 @@ namespace MalakaBooks.ConfigSetting
         public string? Scopes { get; set; }
     }
 
+    public class DokuSetting
+    {
+        public string BaseUrl { get; set; } = string.Empty;
+        public string CheckPaymentStatusPath { get; set; } = string.Empty;
+
+        public string PaymentUrl { get; set; } = string.Empty;
+        public string PaymentCallbackUrl { get; set; } = string.Empty;
+        public string PaymentNotificationUrl { get; set; } = string.Empty;
+        public string ClientId { get; set; } = string.Empty;
+        public string SecretKey { get; set; } = string.Empty;
+
+        public string RequestPath { get; set; } = string.Empty;
+        public string InternalPath { get; set; } = string.Empty;
+    }
 }

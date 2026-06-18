@@ -10,6 +10,7 @@ public static class RepositoryServiceExtension
         services.AddScoped<IBookRepository, BookRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IIncomingPaymentRepository, IncomingPaymentRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IHomeAddressRepository, HomeAddressRepository>();

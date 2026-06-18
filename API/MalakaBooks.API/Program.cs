@@ -56,6 +56,7 @@ var easyCacheSection = builder.Configuration.GetSection("EasyCachingConfig");
 var mongoSection = builder.Configuration.GetSection("MongoDbSetting");
 var is4APISection = builder.Configuration.GetSection("IS4APISettings");
 var simasrimSection = builder.Configuration.GetSection("SimasrimSetting");
+var dokuSection = builder.Configuration.GetSection("DokuSetting");
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
@@ -154,6 +155,28 @@ builder.Services.AddHttpClient<IProtectedApiClient, ProtectedApiClient>(client =
     client.DefaultRequestHeaders.Clear();
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 }).AddHttpMessageHandler<ProtectedApiBearerTokenHandler>();
+
+#endregion
+
+
+#region Doku
+
+DokuSetting dokuSetting = new();
+dokuSection.Bind(dokuSetting);
+builder.Services.Configure<DokuSetting>(dokuSection);
+
+if (!string.IsNullOrWhiteSpace(dokuSetting.BaseUrl))
+{
+    builder.Services.AddHttpClient<IDokuApiClient, DokuApiClient>(client =>
+    {
+        client.BaseAddress = new Uri(dokuSetting.BaseUrl);
+        client.DefaultRequestHeaders.Clear();
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+        client.DefaultRequestHeaders.Add("Client-Id", dokuSetting.ClientId);
+    });
+}
+
+builder.Services.AddScoped<ValidatePaymentSignatureFilter>();
 
 #endregion
 

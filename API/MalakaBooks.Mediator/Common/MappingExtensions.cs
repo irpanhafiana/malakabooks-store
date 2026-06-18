@@ -109,8 +109,13 @@ public static class MappingExtensions
         Items = entity.Items.Select(ToResponse).ToList(),
         AddressId = entity.AddressId,
         Status = entity.Status,
+        PaymentStatus = entity.PaymentStatus,
+        PaymentMethod = entity.PaymentMethod,
+        PaymentGateway = entity.PaymentGateway,
+        IncomingPaymentId = entity.IncomingPaymentId,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
+        PaidAt = entity.PaidAt,
         CreatedAt = entity.CreatedAt,
         UpdatedAt = entity.UpdatedAt
     };
@@ -123,6 +128,10 @@ public static class MappingExtensions
         TotalPrice = request.Items.Sum(item => item.Price * item.Quantity),
         Note = request.Note.Trim(),
         Status = "pending",
+        PaymentStatus = "unpaid",
+        PaymentMethod = string.Empty,
+        PaymentGateway = string.Empty,
+        IncomingPaymentId = string.Empty,
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow
     };
