@@ -7,6 +7,7 @@ public class OrderItemEntity : BaseObject
 {
     [BsonRepresentation(BsonType.ObjectId)]
     public string BookId { get; set; } = string.Empty;
+    public string BookName { get; set; } = string.Empty;
 
     public string Title { get; set; } = string.Empty;
     public decimal Price { get; set; }

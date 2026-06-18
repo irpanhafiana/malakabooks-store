@@ -6,6 +6,9 @@ namespace MalakaBooks.Entity;
 public class OrderEntity : BaseObject
 {
     public string UserId { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string Phone { get; set; } = string.Empty;
 
     public List<OrderItemEntity> Items { get; set; } = [];
 
@@ -16,6 +19,7 @@ public class OrderEntity : BaseObject
     public string PaymentStatus { get; set; } = "unpaid";
     public string PaymentMethod { get; set; } = string.Empty;
     public string PaymentGateway { get; set; } = string.Empty;
+    public string PaymentUrl { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
     public string IncomingPaymentId { get; set; } = string.Empty;
