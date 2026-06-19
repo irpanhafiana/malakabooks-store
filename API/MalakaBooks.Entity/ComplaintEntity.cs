@@ -20,4 +20,6 @@ public class ComplaintEntity : BaseObject
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    public List<AdditionalImage> AdditionalImages { get; set; } = [];
 }

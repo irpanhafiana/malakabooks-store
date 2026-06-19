@@ -1,6 +1,5 @@
 using MalakaBooks.Entity;
 using MalakaBooks.ViewModel;
-using MalakaBooks.ViewModel.Doku;
 
 namespace MalakaBooks.Mediator.Common;
 
@@ -23,7 +22,8 @@ public static class MappingExtensions
         Stock = entity.Stock,
         AverageRating = entity.AverageRating,
         TotalReviews = entity.TotalReviews,
-        CreatedAt = entity.CreatedAt
+        CreatedAt = entity.CreatedAt,
+        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList()
     };
 
     public static BookEntity ToEntity(this CreateBookRequest request) => new()
@@ -40,6 +40,7 @@ public static class MappingExtensions
         Pages = request.Pages,
         Weight = request.Weight,
         Stock = request.Stock,
+        AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         AverageRating = 0,
         TotalReviews = 0,
         CreatedAt = DateTime.UtcNow
@@ -59,7 +60,20 @@ public static class MappingExtensions
         entity.Pages = request.Pages;
         entity.Weight = request.Weight;
         entity.Stock = request.Stock;
+        entity.AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList();
     }
+
+    public static AdditionalImageRequest ToResponse(this AdditionalImage entity) => new()
+    {
+        No = entity.No,
+        Image = entity.Image
+    };
+
+    public static AdditionalImage ToEntity(this AdditionalImageRequest request) => new()
+    {
+        No = request.No,
+        Image = request.Image.Trim()
+    };
 
     public static CategoryResponse ToResponse(this CategoryEntity entity) => new()
     {
@@ -115,7 +129,7 @@ public static class MappingExtensions
         PaymentMethod = entity.PaymentMethod,
         PaymentGateway = entity.PaymentGateway,
         PaymentUrl = entity.PaymentUrl,
-        IncomingPaymentId = entity.IncomingPaymentId,
+        IncomingPaymentId = entity.IncomingPaymentId ?? string.Empty,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
         PaidAt = entity.PaidAt,
@@ -139,7 +153,7 @@ public static class MappingExtensions
         PaymentMethod = string.Empty,
         PaymentGateway = string.Empty,
         PaymentUrl = string.Empty,
-        IncomingPaymentId = string.Empty,
+        IncomingPaymentId = null,
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow
     };
@@ -292,7 +306,8 @@ public static class MappingExtensions
         Status = entity.Status,
         AdminResponse = entity.AdminResponse,
         CreatedAt = entity.CreatedAt,
-        UpdatedAt = entity.UpdatedAt
+        UpdatedAt = entity.UpdatedAt,
+        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList()
     };
 
     public static ComplaintEntity ToEntity(this CreateComplaintRequest request) => new()
@@ -301,6 +316,7 @@ public static class MappingExtensions
         OrderId = request.OrderId.Trim(),
         Subject = request.Subject.Trim(),
         Description = request.Description.Trim(),
+        AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         Status = "open",
         AdminResponse = string.Empty,
         CreatedAt = DateTime.UtcNow,

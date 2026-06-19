@@ -1,3 +1,5 @@
+using Mardika.Simasrim.Service.Model;
+
 namespace MalakaBooks.ViewModel;
 
 public class OrderItemResponse
@@ -19,7 +21,7 @@ public class OrderResponse
     public string PaymentMethod { get; set; } = string.Empty;
     public string PaymentGateway { get; set; } = string.Empty;
     public string PaymentUrl { get; set; } = string.Empty;
-    public string IncomingPaymentId { get; set; } = string.Empty;
+    public string? IncomingPaymentId { get; set; }
     public decimal TotalPrice { get; set; }
     public string Note { get; set; } = string.Empty;
     public DateTime? PaidAt { get; set; }
@@ -54,6 +56,7 @@ public class CreateOrderRequest
     public List<CreateOrderItemRequest> Items { get; set; } = [];
     public string AddressId { get; set; } = string.Empty;
     public string Note { get; set; } = string.Empty;
+    public SimasrimCreateResiRequest? SimasrimRequest { get; set; }
 }
 
 public class UpdateOrderStatusRequest

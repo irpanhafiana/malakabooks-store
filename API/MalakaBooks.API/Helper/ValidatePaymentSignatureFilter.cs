@@ -1,6 +1,7 @@
 using MalakaBooks.ConfigSetting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -22,15 +23,16 @@ namespace MalakaBooks.API.Helper
         private readonly ILogger<ValidatePaymentSignatureFilter> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the ValidatePaymentSignatureFilter class.
+        /// Initializes a new instance of ValidatePaymentSignatureFilter with logging and DOKU configuration.
         /// </summary>
-        /// <remarks>Dependencies are stored for use by the filter during request processing.</remarks>
-        /// <param name="logger">The logger to record diagnostic and operational messages for the filter.</param>
-        /// <param name="dokuSetting">The Doku settings used to validate and verify payment signatures.</param>
-        public ValidatePaymentSignatureFilter(ILogger<ValidatePaymentSignatureFilter> logger, DokuSetting dokuSetting)
+        /// <remarks>Assigns the provided logger and extracts DokuSetting from dokuOptions.Value for later use in
+        /// signature validation.</remarks>
+        /// <param name="logger">Logger for recording diagnostic and operational information.</param>
+        /// <param name="dokuOptions">DOKU configuration options; the DokuSetting value is extracted for signature validation.</param>
+        public ValidatePaymentSignatureFilter(ILogger<ValidatePaymentSignatureFilter> logger, IOptions<DokuSetting> dokuOptions)
         {
             _logger = logger;
-            _dokuSetting = dokuSetting;
+            _dokuSetting = dokuOptions.Value;
         }
 
         /// <summary>

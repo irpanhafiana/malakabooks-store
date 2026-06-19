@@ -22,7 +22,7 @@ public class OrderEntity : BaseObject
     public string PaymentUrl { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string IncomingPaymentId { get; set; } = string.Empty;
+    public string? IncomingPaymentId { get; set; }
 
     public decimal TotalPrice { get; set; }
     public string Note { get; set; } = string.Empty;
@@ -35,4 +35,6 @@ public class OrderEntity : BaseObject
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    public string? AWBNo { get; set; }
 }

@@ -126,6 +126,9 @@ builder.Services.AddSwaggerGen(c =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
 });
+
+builder.Services.AddSwaggerGenNewtonsoftSupport();
+
 #endregion
 
 #region IS4
@@ -164,12 +167,11 @@ builder.Services.AddHttpClient<IProtectedApiClient, ProtectedApiClient>(client =
 DokuSetting dokuSetting = new();
 dokuSection.Bind(dokuSetting);
 
-builder.Services.AddSingleton(dokuSetting);
 builder.Services.Configure<DokuSetting>(dokuSection);
 
 if (!string.IsNullOrWhiteSpace(dokuSetting.BaseUrl))
 {
-    builder.Services.AddHttpClient<IDokuApiClient, DokuApiClient>(client =>
+    builder.Services.AddHttpClient<DokuApiClient>(client =>
     {
         client.BaseAddress = new Uri(dokuSetting.BaseUrl);
         client.DefaultRequestHeaders.Clear();
