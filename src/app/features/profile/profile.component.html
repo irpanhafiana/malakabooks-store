@@ -1,4 +1,4 @@
-﻿<div class="relative w-full pb-12 animate-fade-in flex flex-col gap-6">
+<div class="relative w-full pb-12 animate-fade-in flex flex-col gap-6">
   <!-- Top soft gradient background overlay -->
   <div class="absolute top-0 left-0 w-full h-80 bg-linear-to-b from-primary-50 via-primary-50/60 to-transparent -z-10 rounded-b-[40px]"></div>
 
@@ -41,131 +41,46 @@
     </button>
   </div>
 
-  <!-- Menu Group 1: General Settings -->
-  <div class="flex flex-col gap-2.5 mt-2">
-    <div 
-      (click)="showMockModal.set('Language')"
-      class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
-    >
-      <div class="flex items-center gap-3">
-        <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">
-          <i class="bx bx-globe text-base"></i>
-        </span>
-        <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 transition-colors">Language</span>
-      </div>
-      <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 transition-colors"></i>
+  <!-- Menu Sections (Generated Dynamically) -->
+  @for (section of menuSections; track $index) {
+    <div class="flex flex-col gap-2.5 mt-2">
+      @for (item of section.items; track item.label) {
+        @if (item.route) {
+          <a 
+            [routerLink]="item.route"
+            class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
+          >
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">
+                <i class="bx {{ item.icon }} text-base"></i>
+              </span>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 transition-colors">{{ item.label }}</span>
+            </div>
+            <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 transition-colors"></i>
+          </a>
+        } @else {
+          <div 
+            (click)="item.action ? item.action() : null"
+            class="flex items-center justify-between p-3.5 bg-white border rounded-2xl shadow-sm hover:shadow transition-all cursor-pointer group"
+            [class]="item.isDanger ? 'border-rose-50 hover:border-rose-200 mt-2' : 'border-slate-100 hover:border-slate-200/80 hover:shadow-md hover:-translate-y-0.5 duration-200'"
+          >
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-xl flex items-center justify-center transition-colors"
+                    [class]="item.isDanger ? 'bg-rose-50 group-hover:bg-rose-100 text-rose-500' : 'bg-slate-50 group-hover:bg-primary-50 text-slate-600 group-hover:text-primary-500'">
+                <i class="bx {{ item.icon }} text-base"></i>
+              </span>
+              <span class="text-xs font-bold transition-colors"
+                    [class]="item.isDanger ? 'text-slate-700 group-hover:text-rose-600' : 'text-slate-700 group-hover:text-slate-800'">
+                {{ item.label }}
+              </span>
+            </div>
+            <i class="bx bx-chevron-right transition-colors"
+               [class]="item.isDanger ? 'text-slate-300 group-hover:text-rose-400' : 'text-slate-300 group-hover:text-primary-400'"></i>
+          </div>
+        }
+      }
     </div>
-
-    <div 
-      (click)="showMockModal.set('Currencies')"
-      class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
-    >
-      <div class="flex items-center gap-3">
-        <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">
-          <i class="bx bx-wallet text-base"></i>
-        </span>
-        <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 transition-colors">Currencies</span>
-      </div>
-      <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 transition-colors"></i>
-    </div>
-
-    <div 
-      (click)="showMockModal.set('Appearance')"
-      class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
-    >
-      <div class="flex items-center gap-3">
-        <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">
-          <i class="bx bx-palette text-base"></i>
-        </span>
-        <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 transition-colors">Appearance</span>
-      </div>
-      <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 transition-colors"></i>
-    </div>
-  </div>
-
-  <!-- Menu Group 2: Account & Security -->
-  <div class="flex flex-col gap-2.5">
-    <div 
-      (click)="showSavedAddresses.set(true)"
-      class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
-    >
-      <div class="flex items-center gap-3">
-        <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">
-          <i class="bx bx-map text-base"></i>
-        </span>
-        <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 transition-colors">Daftar Alamat Saya</span>
-      </div>
-      <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 transition-colors"></i>
-    </div>
-
-    <div 
-      (click)="showMockModal.set('Application Security')"
-      class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
-    >
-      <div class="flex items-center gap-3">
-        <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">
-          <i class="bx bx-shield-quarter text-base"></i>
-        </span>
-        <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 transition-colors">Application Security</span>
-      </div>
-      <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 transition-colors"></i>
-    </div>
-
-    <div 
-      (click)="showMockModal.set('Manage Devices')"
-      class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
-    >
-      <div class="flex items-center gap-3">
-        <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">
-          <i class="bx bx-devices text-base"></i>
-        </span>
-        <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 transition-colors">Manage Devices</span>
-      </div>
-      <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 transition-colors"></i>
-    </div>
-
-    <div 
-      (click)="showMockModal.set('Change Password')"
-      class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
-    >
-      <div class="flex items-center gap-3">
-        <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">
-          <i class="bx bx-key text-base"></i>
-        </span>
-        <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 transition-colors">Change Password</span>
-      </div>
-      <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 transition-colors"></i>
-    </div>
-  </div>
-
-  <!-- Menu Group 3: App Links & Logout -->
-  <div class="flex flex-col gap-2.5">
-    <a 
-      routerLink="/complaints"
-      class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
-    >
-      <div class="flex items-center gap-3">
-        <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">
-          <i class="bx bx-message-square-error text-base"></i>
-        </span>
-        <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 transition-colors">Komplain Saya</span>
-      </div>
-      <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 transition-colors"></i>
-    </a>
-
-    <div 
-      (click)="logout()"
-      class="flex items-center justify-between p-3.5 bg-white border border-slate-50 hover:border-rose-100 rounded-2xl shadow-sm hover:shadow transition-all cursor-pointer group"
-    >
-      <div class="flex items-center gap-3">
-        <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-rose-50 flex items-center justify-center text-slate-600 group-hover:text-rose-500 transition-colors">
-          <i class="bx bx-log-out text-base"></i>
-        </span>
-        <span class="text-xs font-bold text-slate-700 group-hover:text-rose-600 transition-colors">Keluar (Logout)</span>
-      </div>
-      <i class="bx bx-chevron-right text-slate-300 group-hover:text-rose-400 transition-colors"></i>
-    </div>
-  </div>
+  }
 </div>
 
 <!-- ================= BOTTOM SHEETS & MODALS ================= -->

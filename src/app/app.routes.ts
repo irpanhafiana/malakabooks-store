@@ -59,14 +59,7 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./features/home/home.component').then(c => c.HomeComponent)
       },
-      {
-        path: 'product',
-        loadComponent: () => import('./features/product/product-list/product-list.component').then(c => c.ProductListComponent)
-      },
-      {
-        path: 'product/:id',
-        loadComponent: () => import('./features/product/product-detail/product-detail.component').then(c => c.ProductDetailComponent)
-      },
+
       {
         path: 'wishlist',
         loadComponent: () => import('./features/wishlist/wishlist.component').then(c => c.WishlistComponent)
@@ -79,6 +72,22 @@ export const routes: Routes = [
       {
         path: 'auth/login',
         loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
+      }
+    ]
+  },
+
+  // Search layout (without top header, just bottom nav)
+  {
+    path: '',
+    loadComponent: () => import('./layouts/search-layout/search-layout.component').then(c => c.SearchLayoutComponent),
+    children: [
+      {
+        path: 'product',
+        loadComponent: () => import('./features/product/product-list/product-list.component').then(c => c.ProductListComponent)
+      },
+      {
+        path: 'product/:id',
+        loadComponent: () => import('./features/product/product-detail/product-detail.component').then(c => c.ProductDetailComponent)
       }
     ]
   },

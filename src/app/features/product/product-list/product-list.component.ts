@@ -5,7 +5,7 @@ import { UserStore } from '../../../store/user.store';
 import { Product } from '../../../core/models';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
-import { DrawerComponent } from '../../../shared/ui/drawer/drawer.component';
+import { BottomSheetComponent } from '../../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 import { SearchBarComponent } from '../../../shared/ui/search-bar/search-bar.component';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
@@ -14,7 +14,7 @@ import { PriceComponent } from '../../../shared/ui/price/price.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-list',
   standalone: true,
-  imports: [SkeletonComponent, IconComponent, DrawerComponent, EmptyStateComponent, SearchBarComponent, PriceComponent],
+  imports: [SkeletonComponent, IconComponent, BottomSheetComponent, EmptyStateComponent, SearchBarComponent, PriceComponent],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
@@ -30,6 +30,7 @@ export class ProductListComponent implements OnInit {
 
   isFiltersOpen = signal<boolean>(false);
   activeCategoryName = signal<string | null>(null);
+  failedImageIds = signal<Set<string>>(new Set());
 
   constructor() {
     // React to category updates reactively using Angular signal effect
@@ -106,5 +107,11 @@ export class ProductListComponent implements OnInit {
       ? 'bg-primary-600 border-primary-700 text-white'
       : 'bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200/50';
     return `${base} ${active}`;
+  }
+
+  onImageError(productId: string) {
+    const set = new Set(this.failedImageIds());
+    set.add(productId);
+    this.failedImageIds.set(set);
   }
 }

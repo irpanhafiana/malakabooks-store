@@ -44,6 +44,20 @@ export class ProductStore {
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
 
+  readonly activeSearchCategories = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    if (!query) return [];
+
+    const matchingProducts = this.products().filter(p => 
+      p.name.toLowerCase().includes(query) || 
+      p.description.toLowerCase().includes(query) ||
+      p.brand.toLowerCase().includes(query)
+    );
+
+    const categoryIds = new Set(matchingProducts.map(p => p.categoryId));
+    return this.categories().filter(c => categoryIds.has(c.id));
+  });
+
   readonly featuredProducts = computed(() => {
     const featured = this.products().filter(p => p.featured);
     // API buku tidak punya flag "featured"; jika tidak ada yang ditandai,
@@ -138,7 +152,7 @@ export class ProductStore {
   }
 
   setSearchQuery(query: string) {
-    this.state.update(s => ({ ...s, searchQuery: query }));
+    this.state.update(s => ({ ...s, searchQuery: query, selectedCategoryId: null }));
   }
 
   setSortBy(sortBy: ProductState['sortBy']) {

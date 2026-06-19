@@ -16,6 +16,18 @@ import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 
 import { OrderStore } from '../../store/order.store';
 
+interface MenuItem {
+  icon: string;
+  label: string;
+  action?: () => void;
+  route?: string;
+  isDanger?: boolean;
+}
+
+interface MenuSection {
+  items: MenuItem[];
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-profile',
@@ -52,6 +64,32 @@ export class ProfileComponent implements OnInit {
   showEditProfile = signal<boolean>(false);
   showSavedAddresses = signal<boolean>(false);
   showMockModal = signal<string | null>(null);
+
+  // Menu configuration for clean looping in template
+  menuSections: MenuSection[] = [
+    {
+      items: [
+        { icon: 'bx-globe', label: 'Language', action: () => this.showMockModal.set('Language') },
+        { icon: 'bx-wallet', label: 'Currencies', action: () => this.showMockModal.set('Currencies') },
+        { icon: 'bx-palette', label: 'Appearance', action: () => this.showMockModal.set('Appearance') }
+      ]
+    },
+    {
+      items: [
+        { icon: 'bx-map', label: 'Daftar Alamat Saya', action: () => this.showSavedAddresses.set(true) },
+        { icon: 'bx-shield-quarter', label: 'Application Security', action: () => this.showMockModal.set('Application Security') },
+        { icon: 'bx-devices', label: 'Manage Devices', action: () => this.showMockModal.set('Manage Devices') },
+        { icon: 'bx-key', label: 'Change Password', action: () => this.showMockModal.set('Change Password') }
+      ]
+    },
+    {
+      items: [
+        { icon: 'bx-message-square-error', label: 'Komplain Saya', route: '/complaints' },
+        { icon: 'bx-package', label: 'Lacak Pesanan / Riwayat', route: '/order-history' },
+        { icon: 'bx-log-out', label: 'Keluar (Logout)', action: () => this.logout(), isDanger: true }
+      ]
+    }
+  ];
 
   // Order status counts
   pendingCount = computed(() => this.orderStore.orders().filter(o => o.status === 'pending').length);
