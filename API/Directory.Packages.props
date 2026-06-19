@@ -68,6 +68,7 @@
     <PackageVersion Include="Subur.IS4.TokenHandler" Version="1.1.6" />
     <PackageVersion Include="Subur.POS.TokenService" Version="1.1.6" />
     <PackageVersion Include="Subur.POS.HttpService" Version="1.1.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Newtonsoft" Version="7.1.0" />
     <PackageVersion Include="System.Diagnostics.EventLog" Version="8.0.1" />
   </ItemGroup>
   <!--<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />

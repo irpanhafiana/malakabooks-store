@@ -126,6 +126,9 @@ builder.Services.AddSwaggerGen(c =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
 });
+
+builder.Services.AddSwaggerGenNewtonsoftSupport();
+
 #endregion
 
 #region IS4

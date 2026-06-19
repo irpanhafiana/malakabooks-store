@@ -25,4 +25,13 @@ public class BookEntity : BaseObject
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public List<AdditionalImage> AdditionalImages { get; set; } = [];
+}
+
+
+public class AdditionalImage
+{
+    public int No { get; set; }
+    public required string Image { get; set; }
 }

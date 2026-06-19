@@ -46,5 +46,6 @@
     <PackageReference Include="IdempotentAPI.Cache.DistributedCache" />
     <PackageReference Include="IdentityModel" />
     <PackageReference Include="MediatR" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" />
   </ItemGroup>
 </Project>
