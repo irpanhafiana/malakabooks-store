@@ -8,6 +8,7 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.OrderHandlers;
 
+using Mardika.Simasrim.Service.Model;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using DokuSetting = ConfigSetting.DokuSetting;
@@ -16,6 +17,7 @@ public class CreateOrderHandler(
     IOrderRepository orderRepository,
     IOrderEntityValidator validator,
     DokuApiClient dokuApiClient,
+    SimasrimApiClient simasrimApiClient,
     IOptions<DokuSetting> dokuOptions) : IRequestHandler<CreateOrderCommand, CreateOrderResponse>
 {
     private readonly IOrderEntityValidator _validator = validator;
@@ -52,6 +54,25 @@ public class CreateOrderHandler(
         entity.UpdatedAt = DateTime.UtcNow;
 
         await orderRepository.UpdateAsync(entity.Id!, entity, cancellationToken);
+
+        if (request.Request.SimasrimRequest is not null)
+        {
+            if (string.IsNullOrEmpty(entity.AWBNo))
+            {
+                var simasrimResponse = await simasrimApiClient.PostAsync<CreateResiResponse>(
+                   "api/b2b/pengiriman/ekspedisi/create-resi",
+                   request.Request.SimasrimRequest,
+                   cancellationToken);
+
+                if (simasrimResponse!.Status.ToUpper() == "SUCCESS")
+                {
+                    entity.AWBNo = simasrimResponse.Data?.Awb;
+                    entity.UpdatedAt = DateTime.UtcNow;
+
+                    await orderRepository.UpdateAsync(entity.Id!, entity, cancellationToken);
+                }
+            }
+        }
 
         return new CreateOrderResponse
         {

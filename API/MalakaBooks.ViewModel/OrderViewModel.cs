@@ -1,3 +1,5 @@
+using Mardika.Simasrim.Service.Model;
+
 namespace MalakaBooks.ViewModel;
 
 public class OrderItemResponse
@@ -54,6 +56,7 @@ public class CreateOrderRequest
     public List<CreateOrderItemRequest> Items { get; set; } = [];
     public string AddressId { get; set; } = string.Empty;
     public string Note { get; set; } = string.Empty;
+    public SimasrimCreateResiRequest? SimasrimRequest { get; set; }
 }
 
 public class UpdateOrderStatusRequest

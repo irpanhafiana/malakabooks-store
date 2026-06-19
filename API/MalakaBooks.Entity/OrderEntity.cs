@@ -35,4 +35,6 @@ public class OrderEntity : BaseObject
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    public string? AWBNo { get; set; }
 }

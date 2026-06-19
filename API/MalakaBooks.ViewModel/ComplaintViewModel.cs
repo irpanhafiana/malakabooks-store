@@ -11,6 +11,7 @@ public class ComplaintResponse
     public string AdminResponse { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
 }
 
 public class CreateComplaintRequest
@@ -19,6 +20,7 @@ public class CreateComplaintRequest
     public string OrderId { get; set; } = string.Empty;
     public string Subject { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
 }
 
 public class RespondComplaintRequest

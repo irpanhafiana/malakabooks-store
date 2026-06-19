@@ -18,6 +18,7 @@ public class BookResponse
     public double AverageRating { get; set; }
     public int TotalReviews { get; set; }
     public DateTime CreatedAt { get; set; }
+    public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
 }
 
 public class CreateBookRequest
@@ -34,8 +35,15 @@ public class CreateBookRequest
     public int Pages { get; set; }
     public decimal Weight { get; set; }
     public int Stock { get; set; }
+    public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
 }
 
 public class UpdateBookRequest : CreateBookRequest
 {
+}
+
+public class AdditionalImageRequest
+{
+    public int No { get; set; }
+    public string Image { get; set; } = string.Empty;
 }
