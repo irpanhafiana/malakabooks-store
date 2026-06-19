@@ -168,9 +168,9 @@ export class ProfileComponent implements OnInit {
     this.orderStore.loadUserOrders(user.id);
 
     // Listen to province changes
-    this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (provinceId) => {
-      if (provinceId) {
-        const cts = await this.addressApi.getCities(provinceId);
+    this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (province) => {
+      if (province) {
+        const cts = await this.addressApi.getCities(province);
         this.cities.set(cts);
 
         const currentCityVal = this.cityControl.value;
@@ -185,9 +185,9 @@ export class ProfileComponent implements OnInit {
     });
 
     // Listen to city changes
-    this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (cityId) => {
-      if (cityId) {
-        const dsts = await this.addressApi.getDistricts(cityId);
+    this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (city) => {
+      if (city) {
+        const dsts = await this.addressApi.getDistricts(city);
         this.districts.set(dsts);
 
         const currentDstVal = this.districtControl.value;

@@ -156,11 +156,11 @@ export class CheckoutComponent implements OnInit {
     ]);
 
     // Listen to province changes
-    this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (provinceId) => {
-      if (provinceId) {
+    this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (province) => {
+      if (province) {
         this.cityControl.disable({ emitEvent: false });
         try {
-          await this.shippingService.loadCities(provinceId);
+          await this.shippingService.loadCities(province);
         } finally {
           this.cityControl.enable({ emitEvent: false });
         }
@@ -177,11 +177,11 @@ export class CheckoutComponent implements OnInit {
     });
 
     // Listen to city changes
-    this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (cityId) => {
-      if (cityId) {
+    this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (city) => {
+      if (city) {
         this.districtControl.disable({ emitEvent: false });
         try {
-          await this.shippingService.loadDistricts(cityId);
+          await this.shippingService.loadDistricts(city);
         } finally {
           this.districtControl.enable({ emitEvent: false });
         }
@@ -240,7 +240,7 @@ export class CheckoutComponent implements OnInit {
     this.showAddressForm.set(false);
   }
 
-  async resolveDistrictIdForAddress(addr: Address): Promise<string | null> {
+  async resolvedistrictForAddress(addr: Address): Promise<string | null> {
     try {
       const provs = await this.addressApi.getProvinces();
       const prov = provs.find(p => p.toLowerCase() === addr.province.toLowerCase());
@@ -272,22 +272,22 @@ export class CheckoutComponent implements OnInit {
     const courier = this.courierControl.value;
     if (!courier) return;
 
-    let destinationDistrictId: string | null = null;
+    let destinationdistrict: string | null = null;
 
     if (this.showAddressForm()) {
-      destinationDistrictId = this.districtControl.value;
+      destinationdistrict = this.districtControl.value;
     } else {
       const selectedAddr = this.savedAddresses().find(a => a.id === this.selectedAddressId());
       if (selectedAddr) {
-        destinationDistrictId = await this.resolveDistrictIdForAddress(selectedAddr);
+        destinationdistrict = await this.resolvedistrictForAddress(selectedAddr);
       }
     }
 
-    if (!destinationDistrictId) return;
+    if (!destinationdistrict) return;
 
     this.isLoading.set(true);
     this.courierServiceControl.setValue('', { emitEvent: false });
-    await this.shippingService.fetchCourierServices(destinationDistrictId, courier);
+    await this.shippingService.fetchCourierServices(destinationdistrict, courier);
     this.isLoading.set(false);
 
   }

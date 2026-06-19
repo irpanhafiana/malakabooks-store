@@ -20,26 +20,26 @@ export class AddressApiService {
     }
   }
 
-  async getCities(provinceId: string): Promise<any[]> {
+  async getCities(province: string): Promise<any[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/City`, { provinceId })
+        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/City`, { province })
       );
       return envelope?.data?.data || [];
     } catch (e) {
-      console.error(`Failed to load cities for province ${provinceId} from Simasrim:`, e);
+      console.error(`Failed to load cities for province ${province} from Simasrim:`, e);
       return [];
     }
   }
 
-  async getDistricts(cityId: string): Promise<any[]> {
+  async getDistricts(city: string): Promise<any[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/District`, { cityId })
+        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/District`, { city })
       );
       return envelope?.data?.data || [];
     } catch (e) {
-      console.error(`Failed to load districts for city ${cityId} from Simasrim:`, e);
+      console.error(`Failed to load districts for city ${city} from Simasrim:`, e);
       return [];
     }
   }
