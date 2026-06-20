@@ -24,11 +24,26 @@ public class OrderEntity : BaseObject
     [BsonRepresentation(BsonType.ObjectId)]
     public string? IncomingPaymentId { get; set; }
 
+    public decimal ItemsSubtotal { get; set; }
+    public decimal ShippingFee { get; set; }
+    public decimal GrandTotal { get; set; }
     public decimal TotalPrice { get; set; }
     public string Note { get; set; } = string.Empty;
+    public string ShipmentDetailJson { get; set; } = string.Empty;
+    public int ShipmentRetryCount { get; set; }
+    public string ShipmentLastError { get; set; } = string.Empty;
+
+    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+    public DateTime? ShipmentCreatedAt { get; set; }
+
+    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+    public DateTime? ShipmentLastAttemptAt { get; set; }
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime? PaidAt { get; set; }
+
+    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+    public DateTime? ExpiresAt { get; set; }
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

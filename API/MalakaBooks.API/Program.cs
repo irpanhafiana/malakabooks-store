@@ -1,6 +1,7 @@
 using IdempotentAPI.Cache.DistributedCache.Extensions.DependencyInjection;
 using IdempotentAPI.Extensions.DependencyInjection;
 using IdentityModel.Client;
+using MalakaBooks.API;
 using MalakaBooks.API.Helper;
 using MalakaBooks.ConfigSetting;
 using MalakaBooks.DataValidator;
@@ -202,6 +203,8 @@ builder.Services.AddIdempotentAPIUsingDistributedCache();
 AppSetting appSetting = new();
 appSection.Bind(appSetting);
 
+builder.Services.Configure<AppSetting>(appSection);
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(new IdempotentFilter(appSetting.IdempotentExpiredHours!));
@@ -231,6 +234,7 @@ if (corsSetting.Enabled) builder.Services.ConfigureCORSService(corsSetting);
 builder.Services.RegisterRepositoryService();
 builder.Services.RegisterAdditionalValidatorService();
 builder.Services.RegisterAdditionalDataValidatorService();
+builder.Services.AddHostedService<UnpaidOrderExpirationService>();
 #endregion
 
 #region Caching

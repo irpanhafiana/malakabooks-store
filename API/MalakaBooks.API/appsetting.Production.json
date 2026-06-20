@@ -1,7 +1,12 @@
 {
   "AppSetting": {
     "ApplicationName": "MalakaBooks API",
-    "Description": "MalakaBooks bookstore backend API"
+    "Description": "MalakaBooks bookstore backend API",
+    "OrderSetting": {
+      "ExpirationTimeoutMinutes": 60,
+      "SimasrimRecheckPath": "",
+      "SimasrimRecheckMethod": "GET"
+    }
   },
   "DokuSetting": {
     "BaseUrl": "",

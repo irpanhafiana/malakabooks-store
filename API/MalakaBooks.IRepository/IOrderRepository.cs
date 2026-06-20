@@ -11,4 +11,5 @@ public interface IOrderRepository
     Task<OrderEntity> CreateAsync(OrderEntity order, CancellationToken cancellationToken = default);
     Task<bool> UpdateAsync(string id, OrderEntity order, CancellationToken cancellationToken = default);
     Task<PagedResult<OrderEntity>> GetAllOrdersPaged(long pageNumber, long pageSize);
+    Task<long> ExpireUnpaidOrdersAsync(DateTime utcNow, CancellationToken cancellationToken = default);
 }

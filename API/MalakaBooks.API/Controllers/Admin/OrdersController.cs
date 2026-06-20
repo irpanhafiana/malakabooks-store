@@ -45,4 +45,42 @@ public class OrdersController(IMediator mediator) : ApiControllerBase
         var result = await mediator.Send(new UpdateOrderStatusCommand(id, request), cancellationToken);
         return Success(result);
     }
+
+    /// <summary>
+    /// Creates or re-triggers the Simasrim shipment AWB for a paid order.
+    /// </summary>
+    /// <param name="id">The unique identifier of the order.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the shipment processing outcome.</returns>
+    [HttpPost("{id}/shipment")]
+    public async Task<IActionResult> CreateShipment(string id, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateOrderShipmentCommand(id), cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Success(result);
+        }
+
+        return Fail(result.Message, result, "ShipmentProcessFailed", StatusCodes.Status400BadRequest);
+    }
+
+    /// <summary>
+    /// Rechecks and reconciles the local shipment state for the specified order.
+    /// </summary>
+    /// <param name="id">The unique identifier of the order.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the shipment recheck outcome.</returns>
+    [HttpPost("{id}/shipment/recheck")]
+    public async Task<IActionResult> RecheckShipment(string id, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RecheckOrderShipmentCommand(id), cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Success(result);
+        }
+
+        return Fail(result.Message, result, "ShipmentRecheckFailed", StatusCodes.Status400BadRequest);
+    }
 }

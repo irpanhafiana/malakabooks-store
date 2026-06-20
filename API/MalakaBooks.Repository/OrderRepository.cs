@@ -56,4 +56,22 @@ public class OrderRepository : BaseRepository<OrderEntity>, IOrderRepository
         return orders;
     }
 
+    public async Task<long> ExpireUnpaidOrdersAsync(DateTime utcNow, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<OrderEntity>.Filter.And(
+            Builders<OrderEntity>.Filter.Ne(order => order.ExpiresAt, null),
+            Builders<OrderEntity>.Filter.Lte(order => order.ExpiresAt, utcNow),
+            Builders<OrderEntity>.Filter.Ne(order => order.PaymentStatus, "paid"),
+            Builders<OrderEntity>.Filter.Ne(order => order.PaymentStatus, "expired"));
+
+        var update = Builders<OrderEntity>.Update
+            .Set(order => order.Status, "expired")
+            .Set(order => order.PaymentStatus, "expired")
+            .Set(order => order.ExpiresAt, null)
+            .Set(order => order.UpdatedAt, utcNow);
+
+        var result = await _collection.UpdateManyAsync(filter, update, cancellationToken: cancellationToken);
+        return result.ModifiedCount;
+    }
+
 }

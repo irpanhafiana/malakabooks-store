@@ -5,6 +5,7 @@ namespace MalakaBooks.ConfigSetting
         public Dictionary<string, int>? IdempotentExpiredHours { get; set; }
         public ImageSetting? ImageSetting { get; set; }
         public RateLimiterSetting? RateLimiterSetting { get; set; }
+        public OrderSetting? OrderSetting { get; set; }
         //public SimasrimSetting? SimasrimSetting { get; set; }
     }
 
@@ -26,6 +27,13 @@ namespace MalakaBooks.ConfigSetting
         public int ResetMinute { get; set; }
         public int QueueLimit { get; set; }
         public bool AutoReplenish { get; set; }
+    }
+
+    public class OrderSetting
+    {
+        public int ExpirationTimeoutMinutes { get; set; } = 60;
+        public string SimasrimRecheckPath { get; set; } = string.Empty;
+        public string SimasrimRecheckMethod { get; set; } = "GET";
     }
 
     public class ImageSetting
