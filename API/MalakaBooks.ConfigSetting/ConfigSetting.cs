@@ -32,6 +32,8 @@ namespace MalakaBooks.ConfigSetting
     public class OrderSetting
     {
         public int ExpirationTimeoutMinutes { get; set; } = 60;
+        public int ExpirationCheckIntervalMinutes { get; set; } = 1;
+        public int ExpirationStartupDelaySeconds { get; set; }
         public string SimasrimRecheckPath { get; set; } = string.Empty;
         public string SimasrimRecheckMethod { get; set; } = "GET";
     }

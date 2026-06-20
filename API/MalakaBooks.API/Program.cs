@@ -63,6 +63,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSingleton(TimeProvider.System);
 
 #region MongoDB
 MongoSetting mongoSetting = new();
