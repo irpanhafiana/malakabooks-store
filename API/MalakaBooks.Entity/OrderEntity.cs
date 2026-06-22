@@ -3,12 +3,17 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MalakaBooks.Entity;
 
-public class OrderEntity : BaseObject
+public class OrderUserEntity
 {
     public string UserId { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
+}
+
+public class OrderEntity : BaseObject
+{
+    public OrderUserEntity User { get; set; } = new();
 
     public List<OrderItemEntity> Items { get; set; } = [];
 
