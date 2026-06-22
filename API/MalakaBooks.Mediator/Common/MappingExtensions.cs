@@ -353,7 +353,8 @@ public static class MappingExtensions
         PostalCode = entity.PostalCode,
         Longitude = entity.Longitude,
         Latitude = entity.Latitude,
-        IsDefault = entity.IsDefault
+        IsDefault = entity.IsDefault,
+        AddressCode = entity.AddressCode
     };
 
     public static HomeAddressEntity ToEntity(this CreateHomeAddressRequest request) => new()
