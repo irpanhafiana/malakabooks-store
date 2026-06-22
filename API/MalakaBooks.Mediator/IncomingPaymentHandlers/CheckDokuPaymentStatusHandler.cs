@@ -1,50 +1,60 @@
+using MalakaBooks.IS4RegistrationService;
+using MalakaBooks.ViewModel;
+using MalakaBooks.ViewModel.Doku;
+using MediatR;
+using Microsoft.Extensions.Options;
+using DokuSetting = MalakaBooks.ConfigSetting.DokuSetting;
+
 namespace MalakaBooks.Mediator.IncomingPaymentHandlers;
 
-//public class CheckDokuPaymentStatusHandler(
-//    DokuApiClient dokuApiClient,
-//    IMediator mediator)
-//    : IRequestHandler<CheckDokuPaymentStatusCommand, ProcessDokuPaymentResult>
-//{
-//    public async Task<ProcessDokuPaymentResult> Handle(CheckDokuPaymentStatusCommand request, CancellationToken cancellationToken)
-//    {
-//        var orderId = request.Request.OrderId?.Trim() ?? string.Empty;
-//        if (string.IsNullOrWhiteSpace(orderId))
-//        {
-//            return new ProcessDokuPaymentResult
-//            {
-//                OrderId = string.Empty,
-//                IsSuccess = false,
-//                Message = "OrderId is required."
-//            };
-//        }
+public class CheckDokuPaymentStatusHandler(
+    DokuApiClient dokuApiClient,
+    IMediator mediator,
+    IOptions<DokuSetting> dokuOptions) : IRequestHandler<CheckDokuPaymentStatusCommand, ProcessDokuPaymentResult>
+{
+    private readonly DokuSetting dokuSetting = dokuOptions.Value;
 
-//        //var dokuResponse = await dokuApiClient.CheckPaymentStatusAsync(
-//        //    new DokuCheckPaymentStatusRequest { OrderId = orderId },
-//        //    cancellationToken);
+    public async Task<ProcessDokuPaymentResult> Handle(CheckDokuPaymentStatusCommand request, CancellationToken cancellationToken)
+    {
+        var orderId = request.Request.OrderId?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(orderId))
+        {
+            return new ProcessDokuPaymentResult
+            {
+                OrderId = string.Empty,
+                IsSuccess = false,
+                Message = "OrderId is required."
+            };
+        }
 
-//        //if (dokuResponse is null)
-//        //{
-//        //    return new ProcessDokuPaymentResult
-//        //    {
-//        //        OrderId = orderId,
-//        //        IsSuccess = false,
-//        //        Message = "No response returned from DOKU."
-//        //    };
-//        //}
+        var dokuResponse = await dokuApiClient.GetAsync<DokuNotification>(string.Format(dokuSetting.CheckPaymentStatusPath, request.Request.OrderId));
+        if (dokuResponse is null)
+        {
+            return new ProcessDokuPaymentResult
+            {
+                OrderId = orderId,
+                IsSuccess = false,
+                Message = "No response returned from DOKU."
+            };
+        }
 
-//        //return await mediator.Send(
-//        //    new ProcessDokuPaymentNotificationCommand(new DokuPaymentNotificationRequest
-//        //    {
-//        //        OrderId = dokuResponse.OrderId,
-//        //        TransactionStatus = dokuResponse.TransactionStatus,
-//        //        PaymentMethod = dokuResponse.PaymentMethod,
-//        //        Amount = dokuResponse.Amount,
-//        //        Currency = dokuResponse.Currency,
-//        //        GatewayReference = dokuResponse.GatewayReference,
-//        //        GatewayInvoiceNumber = dokuResponse.GatewayInvoiceNumber,
-//        //        PaidAt = dokuResponse.PaidAt,
-//        //        RawPayload = dokuResponse.RawPayload
-//        //    }),
-//        //    cancellationToken);
-//    }
-//}
+        if (dokuResponse.order.invoice_number == request.Request.OrderId && dokuResponse.transaction.status == "SUCCESS")
+        {
+            return await mediator.Send(
+                new ProcessDokuPaymentNotificationCommand(new DokuPaymentNotificationRequest
+                {
+                    OrderId = orderId,
+                    TransactionStatus = dokuResponse.transaction.status,
+                    Amount = Convert.ToDecimal(dokuResponse.order.amount),
+                }),
+                cancellationToken);
+        }
+
+        return new ProcessDokuPaymentResult
+        {
+            OrderId = orderId,
+            IsSuccess = false,
+            Message = "No response returned from DOKU."
+        };
+    }
+}

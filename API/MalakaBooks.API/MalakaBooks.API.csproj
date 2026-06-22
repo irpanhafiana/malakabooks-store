@@ -31,6 +31,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+
     <PackageReference Include="Subur.Security.AuthProvider" />
     <PackageReference Include="Subur.API.SwaggerProvider" />
     <PackageReference Include="Subur.API.VersioningProvider" />

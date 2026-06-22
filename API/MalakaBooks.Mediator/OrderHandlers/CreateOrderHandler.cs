@@ -10,6 +10,8 @@ namespace MalakaBooks.Mediator.OrderHandlers;
 
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using PhoneNumbers;
+using System.Text.RegularExpressions;
 using AppSetting = ConfigSetting.AppSetting;
 using DokuSetting = ConfigSetting.DokuSetting;
 
@@ -34,6 +36,7 @@ public class CreateOrderHandler(
         entity.PaymentGateway = "DOKU";
         entity.PaymentMethod = "QRIS";
         entity.ExpiresAt = DateTime.UtcNow.AddMinutes(expirationTimeoutMinutes);
+
 
         var result = await _validator.CreateValidateAsync(entity);
         if (result is not null)
@@ -88,10 +91,12 @@ public class CreateOrderHandler(
 
     private static DokuObject ToDokuObject(CreateOrderRequest request, MalakaBooks.Entity.OrderEntity entity, MalakaBooks.ConfigSetting.DokuSetting dokuSetting)
     {
+        var phoneNumberUtil = PhoneNumberUtil.GetInstance();
+
         var detail = request.Items.Select(item => new Line_Items
         {
             id = item.BookId,
-            name = string.IsNullOrWhiteSpace(item.BookName) ? item.Title : item.BookName,
+            name = string.IsNullOrWhiteSpace(item.BookName) ? RemoveInvalidCharacters(item.Title) : RemoveInvalidCharacters(item.BookName),
             quantity = item.Quantity,
             price = Convert.ToInt32(item.Price),
             type = "PRODUCT"
@@ -109,16 +114,28 @@ public class CreateOrderHandler(
             payment = new Payment(),
             customer = new Customer
             {
-                id = request.UserId,
+                id = request.Id,
                 name = request.FirstName,
                 last_name = request.LastName,
-                phone = request.Phone
+                phone = phoneNumberUtil.Format(phoneNumberUtil.Parse(request.Phone, "ID"), PhoneNumberFormat.E164)
             },
             additional_info = new Additional_Info
             {
                 override_notification_url = dokuSetting.PaymentNotificationUrl
             }
         };
+    }
+
+    private static string RemoveInvalidCharacters(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return value;
+
+        return Regex.Replace(
+            value,
+            @"[^a-zA-Z0-9.\-\/+,=_:'@%]",
+            ""
+        );
     }
 }
 

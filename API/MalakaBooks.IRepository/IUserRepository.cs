@@ -8,4 +8,6 @@ public interface IUserRepository
     Task<IReadOnlyCollection<UserEntity>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<UserEntity> CreateAsync(UserEntity user, CancellationToken cancellationToken = default);
     Task<bool> UpdateAsync(string id, UserEntity user, CancellationToken cancellationToken = default);
+
+    Task<UserEntity?> GetByNameAsync(string username, CancellationToken cancellationToken = default);
 }
