@@ -35,11 +35,9 @@
               <!-- Main Image Viewer -->
               <div class="aspect-4/3 sm:aspect-square bg-white border border-slate-100/80 rounded-[32px] overflow-hidden relative shadow-sm shadow-slate-200/50 group">
                 <img
-                  [ngSrc]="activeImage()"
+                  [src]="activeImage()"
                   [alt]="product()!.name"
-                  fill
-                  priority
-                  class="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                  class="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out w-full h-full"
                 />
                 <app-discount-badge
                   [price]="product()!.price"
@@ -69,7 +67,7 @@
                       [class.border-slate-100]="activeImage() !== img"
                       class="h-20 w-20 shrink-0 bg-white border-2 rounded-2xl overflow-hidden cursor-pointer active:scale-95 transition-all relative"
                     >
-                      <img [ngSrc]="img" [alt]="product()!.name + ' thumbnail'" fill class="object-cover" />
+                      <img [src]="img" [alt]="product()!.name + ' thumbnail'" class="object-cover w-full h-full" />
                     </button>
                   }
                 </div>

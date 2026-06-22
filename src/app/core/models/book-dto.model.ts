@@ -1,3 +1,8 @@
+export interface AdditionalImageDto {
+  no: number;
+  image: string;
+}
+
 export interface BookDto {
   id: string;
   title: string;
@@ -8,6 +13,7 @@ export interface BookDto {
   averageRating?: number;
   totalReviews?: number;
   coverImage?: string;
+  additionalImages?: AdditionalImageDto[];
   publisher?: string;
   author?: string;
   isbn?: string;

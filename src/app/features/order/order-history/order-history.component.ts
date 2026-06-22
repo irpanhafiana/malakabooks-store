@@ -34,17 +34,17 @@ export class OrderHistoryComponent implements OnInit {
     this.orderStore.loadUserOrders(user.id);
   }
 
-  checkPaymentStatus(orderDocumentNumber: string) {
-    this.externalMessageService.getCheckPaymentDoku(orderDocumentNumber).subscribe({
+  checkPaymentStatus(orderId: string) {
+    this.externalMessageService.postCheckPaymentDoku(orderId).subscribe({
       next: (response) => {
-        console.log('Status Pembayaran:', response);
+        console.log('Status Pembayaran DOKU:', response);
         const user = this.authStore.currentUser();
         if (user) {
           this.orderStore.loadUserOrders(user.id);
         }
       },
       error: (err) => {
-        console.error('Gagal mengecek status pembayaran', err);
+        console.error('Gagal mengecek status pembayaran DOKU', err);
       }
     });
   }

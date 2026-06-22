@@ -134,6 +134,12 @@ export const routes: Routes = [
         data: { title: 'Order History' }
       },
       {
+        path: 'tracking',
+        loadComponent: () => import('./features/tracking/tracking.component').then(c => c.TrackingComponent),
+        canActivate: [authGuard],
+        data: { title: 'Tracking Pesanan' }
+      },
+      {
         path: 'complaints',
         loadComponent: () => import('./features/complaint/complaint.component').then(c => c.ComplaintComponent),
         canActivate: [authGuard],

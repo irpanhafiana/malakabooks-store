@@ -9,7 +9,8 @@ import { EndpointConstants } from '../constants/endpoint-constant.service';
 export class ExternalMessageService {
   constructor(private http: HttpClient) {}
 
-  getCheckPaymentDoku(docnum: string): Observable<any> {
-    return this.http.get<any>(`${EndpointConstants.GET_CHECK_PAYMENT}?docnum=${docnum}`); 
+  postCheckPaymentDoku(orderId: string): Observable<any> {
+    const url = 'http://192.168.1.15:25168/api/v1/customer/IncomingPayments/DOKU/CheckStatus';
+    return this.http.post<any>(url, { orderId }); 
   }
 }

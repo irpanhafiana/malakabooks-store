@@ -25,7 +25,7 @@ export class ProductApiService {
       stock: book.stock ?? 0,
       rating: book.averageRating ?? 0,
       reviewsCount: book.totalReviews ?? 0,
-      images: book.coverImage ? [book.coverImage] : [],
+      images: this.buildImagesArray(book),
       brand: book.publisher || '',
       featured: false,
       specifications: {
@@ -37,6 +37,18 @@ export class ProductApiService {
       },
       createdAt: book.createdAt || new Date().toISOString()
     };
+  }
+
+  private buildImagesArray(book: BookDto): string[] {
+    const allImages: string[] = [];
+    if (book.coverImage) {
+      allImages.push(book.coverImage);
+    }
+    if (book.additionalImages && book.additionalImages.length > 0) {
+      const sorted = [...book.additionalImages].sort((a, b) => a.no - b.no);
+      allImages.push(...sorted.map(a => a.image));
+    }
+    return allImages;
   }
 
   async getProducts(): Promise<Product[]> {
@@ -77,6 +89,12 @@ export class ProductApiService {
 
   async saveProduct(product: Product): Promise<Product> {
     const isNew = !product.id || product.id.startsWith('prod-');
+    
+    const additionalImagesArray = product.images.slice(1).map((img, index) => ({
+      no: index + 1,
+      image: img
+    }));
+
     const body = {
       title: product.name,
       author: product.specifications['Author'] || '',
@@ -85,6 +103,7 @@ export class ProductApiService {
       price: product.price,
       description: product.description,
       coverImage: product.images[0] || '',
+      additionalImages: additionalImagesArray,
       publisher: product.brand || product.specifications['Publisher'] || '',
       publishedYear: parseInt(product.specifications['Published Year']) || new Date().getFullYear(),
       pages: parseInt(product.specifications['Pages']) || 0,

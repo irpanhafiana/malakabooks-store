@@ -18,7 +18,7 @@
               <div class="flex items-center gap-4 bg-white border border-slate-100 p-4 rounded-2xl transition-all hover:border-slate-200/50">
                 <!-- Item Image -->
                 <div (click)="productStore.setSelectedProductId(item.product.id)" class="h-20 w-16 bg-slate-50 rounded-lg overflow-hidden shrink-0 cursor-pointer relative">
-                  <img [ngSrc]="item.product.images[0]" [alt]="item.product.name" fill class="object-cover" />
+                  <img [src]="item.product.images[0]" [alt]="item.product.name" class="object-cover w-full h-full" />
                 </div>
 
                 <!-- Details & Remove -->

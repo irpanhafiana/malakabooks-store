@@ -1,4 +1,4 @@
-import { Component, inject, input, output, effect, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, output, effect, computed, ChangeDetectionStrategy, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductStore } from '../../../../store/product.store';
 import { Product } from '../../../../core/models';
@@ -30,7 +30,7 @@ export class ProductsFormComponent {
   priceControl = new FormControl<number>(0, [Validators.required, Validators.min(0.01)]);
   origPriceControl = new FormControl<number | null>(null);
   stockControl = new FormControl<number>(0, [Validators.required, Validators.min(0)]);
-  imageControl = new FormControl('', [Validators.required]);
+  coverImageControl = new FormControl('', [Validators.required]);
   descControl = new FormControl('', [Validators.required]);
   authorControl = new FormControl('', [Validators.required]);
   isbnControl = new FormControl('', [Validators.required]);
@@ -45,7 +45,7 @@ export class ProductsFormComponent {
     price: this.priceControl,
     originalPrice: this.origPriceControl,
     stock: this.stockControl,
-    image: this.imageControl,
+    image: this.coverImageControl,
     description: this.descControl,
     author: this.authorControl,
     isbn: this.isbnControl,
@@ -58,6 +58,58 @@ export class ProductsFormComponent {
     return this.productStore.categories().map(c => ({ value: c.id, label: c.name }));
   });
 
+  additionalImagesControls = signal<string[]>([]);
+
+  addAdditionalImage() {
+    this.additionalImagesControls.update(imgs => [...imgs, '']);
+  }
+
+  updateAdditionalImage(index: number, value: string) {
+    this.additionalImagesControls.update(imgs => {
+      const newImgs = [...imgs];
+      newImgs[index] = value;
+      return newImgs;
+    });
+  }
+
+  removeAdditionalImage(index: number) {
+    this.additionalImagesControls.update(imgs => imgs.filter((_, i) => i !== index));
+  }
+
+  private readFileAsBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject('Gagal membaca berkas gambar.');
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async onCoverImageChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      try {
+        const base64 = await this.readFileAsBase64(input.files[0]);
+        this.coverImageControl.setValue(base64);
+        this.coverImageControl.markAsDirty();
+      } catch (err) {
+        this.alertService.error('Error', String(err));
+      }
+    }
+  }
+
+  async onAdditionalImageChange(event: Event, index: number) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      try {
+        const base64 = await this.readFileAsBase64(input.files[0]);
+        this.updateAdditionalImage(index, base64);
+      } catch (err) {
+        this.alertService.error('Error', String(err));
+      }
+    }
+  }
+
   constructor() {
     effect(() => {
       const prod = this.product();
@@ -68,7 +120,8 @@ export class ProductsFormComponent {
         this.priceControl.setValue(prod.price);
         this.origPriceControl.setValue(prod.originalPrice || null);
         this.stockControl.setValue(prod.stock);
-        this.imageControl.setValue(prod.images[0]);
+        this.coverImageControl.setValue(prod.images[0] || '');
+        this.additionalImagesControls.set(prod.images.slice(1));
         this.descControl.setValue(prod.description);
         this.authorControl.setValue(prod.specifications?.['Author'] || '');
         this.isbnControl.setValue(prod.specifications?.['ISBN'] || '');
@@ -82,6 +135,8 @@ export class ProductsFormComponent {
         this.productForm.reset();
         this.priceControl.setValue(0);
         this.stockControl.setValue(0);
+        this.coverImageControl.setValue('');
+        this.additionalImagesControls.set([]);
         this.publishedYearControl.setValue(new Date().getFullYear());
         this.pagesControl.setValue(1);
         this.weightControl.setValue(0.1);
@@ -104,13 +159,18 @@ export class ProductsFormComponent {
     const catId = this.categoryControl.value || '';
     const catName = this.productStore.categories().find(c => c.id === catId)?.name || 'Other';
 
+    const allImages = [
+      this.coverImageControl.value || '',
+      ...this.additionalImagesControls()
+    ].filter(img => img.trim() !== '');
+
     const pData: Product = {
       id: this.product()?.id || '',
       name: this.nameControl.value || '',
       description: this.descControl.value || '',
       price: this.priceControl.value || 0,
       originalPrice: this.origPriceControl.value || undefined,
-      images: [this.imageControl.value || ''],
+      images: allImages,
       categoryId: catId,
       categoryName: catName,
       stock: this.stockControl.value || 0,

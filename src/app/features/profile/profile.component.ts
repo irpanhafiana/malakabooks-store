@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal, computed, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
@@ -53,6 +54,7 @@ export class ProfileComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly addressApi = inject(AddressApiService);
   private readonly userApi = inject(UserApiService);
+  private readonly http = inject(HttpClient);
 
   isAddressesLoading = signal<boolean>(false);
   isProfileSaving = signal<boolean>(false);
@@ -84,6 +86,7 @@ export class ProfileComponent implements OnInit {
     },
     {
       items: [
+        { icon: 'bx-car', label: 'Tracking Pesanan', route: '/tracking' },
         { icon: 'bx-message-square-error', label: 'Komplain Saya', route: '/complaints' },
         { icon: 'bx-package', label: 'Lacak Pesanan / Riwayat', route: '/order-history' },
         { icon: 'bx-log-out', label: 'Keluar (Logout)', action: () => this.logout(), isDanger: true }
@@ -154,6 +157,17 @@ export class ProfileComponent implements OnInit {
     this.nameControl.setValue(user.name);
     this.emailControl.setValue(user.email);
     this.phoneControl.setValue(user.phone || '');
+
+    this.http.get(`http://192.168.1.15:25168/api/v1/customer/Users/${user.phone}/profile`).subscribe({
+      next: (res: any) => {
+        if (res && res.id) {
+          localStorage.setItem('externalProfileId', res.id);
+        } else if (res && res.data && res.data.id) {
+          localStorage.setItem('externalProfileId', res.data.id);
+        }
+      },
+      error: (err) => console.error('Failed to get external profile id:', err)
+    });
 
     // Fetch addresses dynamically from database since authStore.currentUser() only has basic session info from token
     this.isAddressesLoading.set(true);

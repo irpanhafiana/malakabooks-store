@@ -221,9 +221,11 @@ export class OrderApiService {
     const nameParts = (order.userName || '').trim().split(' ');
     const firstName = nameParts[0] || '';
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-    const phone = order.shippingAddress?.phone || '';
+    const currentUser = getStoredSessionUser();
+    const phone = currentUser?.phone || order.shippingAddress?.phone || '';
 
-    const body = {
+    const externalProfileId = localStorage.getItem('externalProfileId');
+    const body: any = {
       userId: order.userId,
       firstName,
       lastName,
@@ -238,6 +240,10 @@ export class OrderApiService {
       addressId: order.shippingAddress.id,
       note: ''
     };
+
+    if (externalProfileId) {
+      body.id = externalProfileId;
+    }
 
     try {
       const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Orders`, body));
