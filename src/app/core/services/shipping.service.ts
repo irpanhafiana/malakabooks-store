@@ -116,11 +116,7 @@ export class ShippingService {
     }
     
     if (cost > 0) {
-      let costUsd = cost;
-      if (cost >= 1000) {
-        costUsd = cost / 15000;
-      }
-      this.shippingCost.set(costUsd);
+      this.shippingCost.set(cost);
     } else {
       this.shippingCost.set(0);
     }

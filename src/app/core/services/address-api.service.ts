@@ -67,4 +67,14 @@ export class AddressApiService {
       return null;
     }
   }
+
+  async getStoreHomeAddresses(): Promise<any[]> {
+    try {
+      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/public/HomeAddresses`));
+      return envelope?.data || [];
+    } catch (e) {
+      console.error('Failed to load store home addresses:', e);
+      return [];
+    }
+  }
 }

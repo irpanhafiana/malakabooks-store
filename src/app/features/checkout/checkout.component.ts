@@ -69,10 +69,9 @@ export class CheckoutComponent implements OnInit {
       else if (s.cost && Array.isArray(s.cost)) { price = s.cost[0]?.value || 0; }
       else if (s.cost && typeof s.cost === 'object') { price = s.cost.value || 0; }
       
-      const priceUsd = price >= 1000 ? price / 15000 : price;
       return {
         value: idx.toString(),
-        label: `${s.service_display || s.service || 'Reg'} - $ ${priceUsd.toFixed(2)} (ETA: ${s.etd || s.cost?.[0]?.etd || '-'})`
+        label: `${s.service_display || s.service || 'Reg'} - Rp ${price.toLocaleString('id-ID')} (ETA: ${s.etd || s.cost?.[0]?.etd || '-'})`
       };
     });
   });
@@ -391,6 +390,67 @@ export class CheckoutComponent implements OnInit {
     const selectedCourier = this.courierControl.value || 'jne';
     const note = `Courier: ${selectedCourier.toUpperCase()}`;
 
+    // Construct SimasrimRequest
+    const serviceIdxStr = this.courierServiceControl.value;
+    const serviceIdx = serviceIdxStr ? parseInt(serviceIdxStr, 10) : 0;
+    const selectedService = this.courierServices()[serviceIdx] || {} as any;
+    
+    // Fallback values for selectedService properties
+    const serviceDisplay = selectedService.service_display || selectedService.service || 'Reg';
+    let servicePrice = 0;
+    if (typeof selectedService.price === 'number') { servicePrice = selectedService.price; }
+    else if (selectedService.price && typeof selectedService.price === 'object') { servicePrice = selectedService.price.medium_price || selectedService.price.small_price || selectedService.price.large_price || 0; }
+    else if (typeof selectedService.cost === 'number') { servicePrice = selectedService.cost; }
+    else if (selectedService.cost && Array.isArray(selectedService.cost)) { servicePrice = selectedService.cost[0]?.value || 0; }
+    else if (selectedService.cost && typeof selectedService.cost === 'object') { servicePrice = selectedService.cost.value || 0; }
+    
+    const serviceEstimate = selectedService.etd || selectedService.cost?.[0]?.etd || '';
+
+    const simasrimRequest = {
+      ekspedisi: selectedCourier,
+      nama_pickup: "Malaka Books",
+      tgl_pickup: new Date().toISOString(),
+      no_pickup: "08123456789",
+      alamat_pickup: "Jl. Malaka Raya No 1",
+      alamat_id_pickup: "3172020",
+      nama_pengirim: "Malaka Books",
+      alamat_pengirim: "Jl. Malaka Raya No 1",
+      alamat_id_pengirim: "3172020",
+      no_pengirim: "08123456789",
+      nama_penerima: addr.name,
+      alamat_penerima: addr.street,
+      alamat_id_penerima: addr.district || addr.city,
+      no_penerima: addr.phone,
+      type: "paket",
+      berat_barang: "1000",
+      service_tipe: serviceDisplay,
+      service_price: servicePrice.toString(),
+      service_est: serviceEstimate,
+      jumlah: "1",
+      packing_kayu: "0",
+      asuransi: "0",
+      nilai_barang: 0,
+      tipe_barang: "document",
+      volume: "",
+      nama_barang: "Buku",
+      instruksi_kurir: "",
+      zip_pickup: "13460",
+      zip_penerima: addr.postalCode || "",
+      lon_pengirim: "0",
+      lat_pengirim: "0",
+      lon_penerima: "0",
+      lat_penerima: "0",
+      kd_barang: "",
+      kategori_barang: "",
+      is_fragile: 0,
+      size: "",
+      layanan_pickup: "",
+      kendaraan_pickup: "",
+      catatan_penerima: "",
+      bpik: [],
+      partner_name: "MalakaBooks"
+    };
+
     const orderData: Omit<Order, 'id' | 'orderDate' | 'status' | 'trackingNumber'> = {
       userId: user.id,
       userName: user.name,
@@ -402,7 +462,8 @@ export class CheckoutComponent implements OnInit {
       subtotal: this.cartStore.subtotal(),
       shippingCost: this.shippingCost(),
       tax: this.checkoutTax(),
-      total: this.checkoutTotal()
+      total: this.checkoutTotal(),
+      simasrimRequest
     };
 
     const placed = await this.orderStore.placeOrder(orderData);

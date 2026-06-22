@@ -238,7 +238,9 @@ export class OrderApiService {
         quantity: item.quantity
       })),
       addressId: order.shippingAddress.id,
-      note: ''
+      note: '',
+      shippingFee: order.shippingCost || 0,
+      simasrimRequest: order.simasrimRequest
     };
 
     if (externalProfileId) {

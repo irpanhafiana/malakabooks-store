@@ -122,7 +122,7 @@
                   </div>
                   <div class="grow min-w-0">
                     <h4 class="font-bold text-slate-800 truncate">{{ item.product.name }}</h4>
-                    <span class="text-slate-400">Qty: {{ item.quantity }} × $ {{ item.product.price }}</span>
+                    <span class="text-slate-400">Qty: {{ item.quantity }} × Rp {{ item.product.price | number: '1.0-0' }}</span>
                   </div>
                 </div>
               }
@@ -139,7 +139,7 @@
               @if (cartStore.discount() > 0) {
                 <div class="flex justify-between text-rose-600 font-semibold">
                   <span>Discount</span>
-                  <span>- $ {{ cartStore.discount() | number: '1.2-2' }}</span>
+                  <span>- Rp {{ cartStore.discount() | number: '1.0-0' }}</span>
                 </div>
               }
               <div class="flex justify-between">
