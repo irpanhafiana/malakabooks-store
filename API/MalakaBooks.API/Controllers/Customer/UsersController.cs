@@ -52,11 +52,11 @@ public class UsersController(IMediator mediator) : ApiControllerBase
     //}
 
     /// <summary>Get own profile</summary>
-    [HttpGet("{id}/profile")]
+    [HttpGet("{name}/profile")]
     //[Authorize(Policy = "CustomerPolicy")]
-    public async Task<IActionResult> GetProfile(string id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetProfile(string name, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUserProfileQuery(id), cancellationToken);
+        var result = await mediator.Send(new GetUserProfileQuery(name), cancellationToken);
         return Success(result);
     }
 

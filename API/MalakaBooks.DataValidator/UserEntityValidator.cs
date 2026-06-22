@@ -25,8 +25,7 @@ namespace MalakaBooks.DataValidator
             {
                 var phone = entity.Phone.ToLower();
 
-                var existing = await _collection.Find(_ =>
-                  _.Phone.ToLower() == phone).FirstOrDefaultAsync();
+                var existing = await _collection.Find(_ => _.Phone.ToLower() == phone).FirstOrDefaultAsync();
 
                 if (existing != null) Errors.Add("User already exist.");
             }

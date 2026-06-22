@@ -8,7 +8,7 @@ public class GetUserProfileHandler(IUserRepository userRepository) : IRequestHan
 {
     public async Task<UserResponse?> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
     {
-        var entity = await userRepository.GetByIdAsync(request.Id, cancellationToken);
+        var entity = await userRepository.GetByNameAsync(request.name, cancellationToken);
         if (entity is null) return null;
 
         return new UserResponse

@@ -1,5 +1,7 @@
 using MalakaBooks.Entity;
 using MalakaBooks.ViewModel;
+using Mardika.Simasrim.Service.Model;
+using System.Text.Json;
 
 namespace MalakaBooks.Mediator.Common;
 
@@ -118,6 +120,130 @@ public static class MappingExtensions
         Quantity = request.Quantity
     };
 
+    public static OrderShipmentDetail? ToShipmentDetail(this SimasrimCreateResiRequest? request) => request is null
+        ? null
+        : new OrderShipmentDetail
+        {
+            Courier = request.Courier,
+            PickupName = request.PickupName,
+            PickupDate = request.PickupDate,
+            PickupPhoneNumber = request.PickupPhoneNumber,
+            PickupAddress = request.PickupAddress,
+            PickupAddressId = request.PickupAddressId,
+            SenderName = request.SenderName,
+            SenderAddress = request.SenderAddress,
+            SenderAddressId = request.SenderAddressId,
+            SenderPhoneNumber = request.SenderPhoneNumber,
+            ReceiverName = request.ReceiverName,
+            ReceiverAddress = request.ReceiverAddress,
+            ReceiverAddressId = request.ReceiverAddressId,
+            ReceiverPhoneNumber = request.ReceiverPhoneNumber,
+            Type = request.Type,
+            ItemWeight = request.ItemWeight,
+            ServiceType = request.ServiceType,
+            ServicePrice = request.ServicePrice.ToString(),
+            ServiceEstimate = request.ServiceEstimate,
+            Quantity = request.Quantity,
+            WoodenPacking = request.WoodenPacking,
+            Insurance = request.Insurance,
+            ItemValueAmount = request.ItemValue,
+            ItemType = request.ItemType,
+            Volume = request.Volume,
+            ItemName = request.ItemName,
+            CourierInstruction = request.CourierInstruction,
+            PickupZipCode = request.PickupZipCode,
+            ReceiverZipCode = request.ReceiverZipCode,
+            SenderLongitude = request.SenderLongitude,
+            SenderLatitude = request.SenderLatitude,
+            ReceiverLongitude = request.ReceiverLongitude,
+            ReceiverLatitude = request.ReceiverLatitude,
+            ItemCode = request.ItemCode,
+            ItemCategory = request.ItemCategory,
+            IsFragile = request.IsFragile,
+            Size = request.Size,
+            PickupServiceType = request.PickupServiceType,
+            PickupVehicleType = request.PickupVehicleType,
+            ReceiverNote = request.ReceiverNote,
+            Bpik = request.Bpik?.Select(item => new OrderShipmentBpikDetail
+            {
+                ItemValue = item.ItemValue,
+                ItemType = item.ItemType,
+                SerialNumber = item.SerialNumber,
+                InsuranceAmount = item.InsuranceAmount,
+                Color = item.Color,
+                Condition = item.Condition
+            }).ToList(),
+            PartnerName = request.PartnerName
+        };
+
+    public static SimasrimCreateResiRequest ToSimasrimRequest(this OrderShipmentDetail detail) => new()
+    {
+        Courier = detail.Courier,
+        PickupName = detail.PickupName,
+        PickupDate = detail.PickupDate,
+        PickupPhoneNumber = detail.PickupPhoneNumber,
+        PickupAddress = detail.PickupAddress,
+        PickupAddressId = detail.PickupAddressId,
+        SenderName = detail.SenderName,
+        SenderAddress = detail.SenderAddress,
+        SenderAddressId = detail.SenderAddressId,
+        SenderPhoneNumber = detail.SenderPhoneNumber,
+        ReceiverName = detail.ReceiverName,
+        ReceiverAddress = detail.ReceiverAddress,
+        ReceiverAddressId = detail.ReceiverAddressId,
+        ReceiverPhoneNumber = detail.ReceiverPhoneNumber,
+        Type = detail.Type,
+        ItemWeight = detail.ItemWeight,
+        ServiceType = detail.ServiceType,
+        ServicePrice = detail.ServicePrice,
+        ServiceEstimate = detail.ServiceEstimate,
+        Quantity = detail.Quantity,
+        WoodenPacking = detail.WoodenPacking,
+        Insurance = detail.Insurance,
+        ItemValue = detail.ItemValueAmount,
+        ItemType = detail.ItemType,
+        Volume = detail.Volume,
+        ItemName = detail.ItemName,
+        CourierInstruction = detail.CourierInstruction,
+        PickupZipCode = detail.PickupZipCode,
+        ReceiverZipCode = detail.ReceiverZipCode,
+        SenderLongitude = detail.SenderLongitude,
+        SenderLatitude = detail.SenderLatitude,
+        ReceiverLongitude = detail.ReceiverLongitude,
+        ReceiverLatitude = detail.ReceiverLatitude,
+        ItemCode = detail.ItemCode,
+        ItemCategory = detail.ItemCategory,
+        IsFragile = detail.IsFragile,
+        Size = detail.Size,
+        PickupServiceType = detail.PickupServiceType,
+        PickupVehicleType = detail.PickupVehicleType,
+        ReceiverNote = detail.ReceiverNote,
+        Bpik = detail.Bpik?.Select(item => new SimasrimBpikRequest
+        {
+            ItemValue = item.ItemValue,
+            ItemType = item.ItemType,
+            SerialNumber = item.SerialNumber,
+            InsuranceAmount = item.InsuranceAmount,
+            Color = item.Color,
+            Condition = item.Condition
+        }).ToList(),
+        PartnerName = string.IsNullOrWhiteSpace(detail.PartnerName) ? "SIMASRIM" : detail.PartnerName
+    };
+
+    public static string ToShipmentDetailJson(this OrderShipmentDetail? detail) => detail is null
+        ? string.Empty
+        : JsonSerializer.Serialize(detail);
+
+    public static OrderShipmentDetail? ToShipmentDetail(this string? shipmentDetailJson)
+    {
+        if (string.IsNullOrWhiteSpace(shipmentDetailJson))
+        {
+            return null;
+        }
+
+        return JsonSerializer.Deserialize<OrderShipmentDetail>(shipmentDetailJson);
+    }
+
     public static OrderResponse ToResponse(this OrderEntity entity) => new()
     {
         Id = entity.Id ?? string.Empty,
@@ -130,33 +256,57 @@ public static class MappingExtensions
         PaymentGateway = entity.PaymentGateway,
         PaymentUrl = entity.PaymentUrl,
         IncomingPaymentId = entity.IncomingPaymentId ?? string.Empty,
+        ItemsSubtotal = entity.ItemsSubtotal,
+        ShippingFee = entity.ShippingFee,
+        GrandTotal = entity.GrandTotal,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
+        ShipmentDetail = entity.ShipmentDetailJson.ToShipmentDetail(),
+        ShipmentRetryCount = entity.ShipmentRetryCount,
+        ShipmentLastError = entity.ShipmentLastError,
+        ShipmentCreatedAt = entity.ShipmentCreatedAt,
+        ShipmentLastAttemptAt = entity.ShipmentLastAttemptAt,
         PaidAt = entity.PaidAt,
+        ExpiresAt = entity.ExpiresAt,
         CreatedAt = entity.CreatedAt,
         UpdatedAt = entity.UpdatedAt
     };
 
-    public static OrderEntity ToEntity(this CreateOrderRequest request) => new()
+    public static OrderEntity ToEntity(this CreateOrderRequest request)
     {
-        UserId = request.UserId.Trim(),
-        FirstName = request.FirstName.Trim(),
-        LastName = request.LastName.Trim(),
-        Phone = request.Phone.Trim(),
+        var itemsSubtotal = request.Items.Sum(item => item.Price * item.Quantity);
+        var shippingFee = request.ShippingFee;
 
-        AddressId = request.AddressId.Trim(),
-        Items = request.Items.Select(ToEntity).ToList(),
-        TotalPrice = request.Items.Sum(item => item.Price * item.Quantity),
-        Note = request.Note.Trim(),
-        Status = "pending",
-        PaymentStatus = "unpaid",
-        PaymentMethod = string.Empty,
-        PaymentGateway = string.Empty,
-        PaymentUrl = string.Empty,
-        IncomingPaymentId = null,
-        CreatedAt = DateTime.UtcNow,
-        UpdatedAt = DateTime.UtcNow
-    };
+        return new OrderEntity
+        {
+            UserId = request.UserId.Trim(),
+            FirstName = request.FirstName.Trim(),
+            LastName = request.LastName.Trim(),
+            Phone = request.Phone.Trim(),
+
+            AddressId = request.AddressId.Trim(),
+            Items = request.Items.Select(ToEntity).ToList(),
+            ItemsSubtotal = itemsSubtotal,
+            ShippingFee = shippingFee,
+            GrandTotal = itemsSubtotal + shippingFee,
+            TotalPrice = itemsSubtotal + shippingFee,
+            Note = request.Note.Trim(),
+            ShipmentDetailJson = request.SimasrimRequest.ToShipmentDetail().ToShipmentDetailJson(),
+            ShipmentRetryCount = 0,
+            ShipmentLastError = string.Empty,
+            ShipmentCreatedAt = null,
+            ShipmentLastAttemptAt = null,
+            Status = "pending_payment",
+            PaymentStatus = "unpaid",
+            PaymentMethod = string.Empty,
+            PaymentGateway = string.Empty,
+            PaymentUrl = string.Empty,
+            IncomingPaymentId = null,
+            ExpiresAt = null,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+    }
 
     public static CartItemResponse ToResponse(this CartItemEntity entity) => new()
     {

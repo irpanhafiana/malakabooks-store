@@ -31,7 +31,7 @@ namespace MalakaBooks.ViewModel.Doku
         public int quantity { get; set; }
         public int price { get; set; }
         public string? sku { get; set; }
-        public string? category { get; set; } = "food-and-beverage";
+        public string? category { get; set; } = "buku";
         public string? url { get; set; }
         public string? image_url { get; set; }
         public string? type { get; set; }
@@ -92,10 +92,91 @@ namespace MalakaBooks.ViewModel.Doku
 
     public class DokuResponse
     {
-        public required string[] message { get; set; }
+        public required string?[] message { get; set; }
         public required DokuObject response { get; set; }
 
-        public required string[] error_messages { get; set; }
+        public required string?[] error_messages { get; set; }
+    }
+
+
+    public class DokuNotification
+    {
+        public NotificationService service { get; set; } = new NotificationService();
+        public NotificationAcquirer acquirer { get; set; } = new NotificationAcquirer();
+        public NotificationChannel channel { get; set; } = new NotificationChannel();
+        public NotificationCustomer customer { get; set; } = new NotificationCustomer();
+        public NotificationOrder order { get; set; } = new NotificationOrder();
+        public NotificationEmoney_Payment emoney_payment { get; set; } = new NotificationEmoney_Payment();
+        public NotificationTransaction transaction { get; set; } = new NotificationTransaction();
+        public NotificationAdditional_Info additional_info { get; set; } = new NotificationAdditional_Info();
+    }
+
+    public class NotificationService
+    {
+        public string? id { get; set; }
+        public string? name { get; set; }
+    }
+
+    public class NotificationAcquirer
+    {
+        public string? id { get; set; }
+        public string? name { get; set; }
+    }
+
+    public class NotificationChannel
+    {
+        public string? id { get; set; }
+        public string? name { get; set; }
+    }
+
+    public class NotificationCustomer
+    {
+        public string? doku_id { get; set; }
+        public string? name { get; set; }
+        public string? email { get; set; }
+        public string? phone { get; set; }
+    }
+
+    public class NotificationOrder
+    {
+        public string? invoice_number { get; set; }
+        public float amount { get; set; }
+    }
+
+    public class NotificationEmoney_Payment
+    {
+        public string? account_id { get; set; }
+        public string? approval_code { get; set; }
+    }
+
+    public class NotificationTransaction
+    {
+        public string? status { get; set; }
+        public DateTime date { get; set; }
+    }
+
+    public class NotificationAdditional_Info
+    {
+        public NotificationOrigin? origin { get; set; }
+        public NotificationLine_Items[] line_items { get; set; } = [];
+        public string? override_notification_url { get; set; }
+    }
+
+    public class NotificationOrigin
+    {
+        public string? source { get; set; }
+        public string? system { get; set; }
+        public string? product { get; set; }
+        public string? apiFormat { get; set; }
+    }
+
+    public class NotificationLine_Items
+    {
+        public string? name { get; set; }
+        public string? type { get; set; }
+        public string? price { get; set; }
+        public string? category { get; set; }
+        public float quantity { get; set; }
     }
 
 }

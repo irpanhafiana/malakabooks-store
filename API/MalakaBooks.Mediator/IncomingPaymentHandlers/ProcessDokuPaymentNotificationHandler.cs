@@ -45,12 +45,31 @@ public class ProcessDokuPaymentNotificationHandler(
             };
         }
 
+        if (order.ExpiresAt.HasValue && order.ExpiresAt.Value <= DateTime.UtcNow &&
+            !string.Equals(order.PaymentStatus, "paid", StringComparison.OrdinalIgnoreCase))
+        {
+            order.Status = "expired";
+            order.PaymentStatus = "expired";
+            order.UpdatedAt = DateTime.UtcNow;
+
+            await orderRepository.UpdateAsync(order.Id!, order, cancellationToken);
+
+            return new ProcessDokuPaymentResult
+            {
+                OrderId = orderId,
+                IsSuccess = false,
+                Message = "Order payment has expired."
+            };
+        }
+
         var existingIncomingPayment = await incomingPaymentRepository.GetByOrderIdAsync(orderId, cancellationToken);
         if (existingIncomingPayment is not null)
         {
             if (!string.Equals(order.PaymentStatus, "paid", StringComparison.OrdinalIgnoreCase))
             {
+                order.Status = "ready_to_ship";
                 order.PaymentStatus = "paid";
+                order.ExpiresAt = null;
                 order.PaymentMethod = existingIncomingPayment.PaymentMethod;
                 order.PaymentGateway = existingIncomingPayment.Gateway;
                 order.IncomingPaymentId = existingIncomingPayment.Id ?? string.Empty;
@@ -104,7 +123,9 @@ public class ProcessDokuPaymentNotificationHandler(
 
         incomingPayment = await incomingPaymentRepository.CreateAsync(incomingPayment, cancellationToken);
 
+        order.Status = "ready_to_ship";
         order.PaymentStatus = "paid";
+        order.ExpiresAt = null;
         order.PaymentMethod = paymentMethod;
         order.PaymentGateway = "DOKU";
         order.IncomingPaymentId = incomingPayment.Id ?? string.Empty;

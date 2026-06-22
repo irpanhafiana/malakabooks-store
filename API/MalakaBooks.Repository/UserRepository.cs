@@ -33,4 +33,7 @@ public class UserRepository : IUserRepository
         var result = await _collection.ReplaceOneAsync(x => x.Id == id, user, cancellationToken: cancellationToken);
         return result.ModifiedCount > 0;
     }
+
+    public async Task<UserEntity?> GetByNameAsync(string username, CancellationToken cancellationToken = default)
+        => await _collection.Find(x => x.Phone == username).FirstOrDefaultAsync(cancellationToken);
 }

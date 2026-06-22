@@ -17,6 +17,7 @@
     <PackageVersion Include="Hangfire.Mongo" Version="1.11.5" />
     <PackageVersion Include="IdempotentAPI" Version="2.3.0" />
     <PackageVersion Include="IdempotentAPI.Cache.DistributedCache" Version="2.2.0" />
+    <PackageVersion Include="libphonenumber-csharp" Version="9.0.32" />
     <PackageVersion Include="MediatR" Version="12.4.1" />
     <PackageVersion Include="IdentityModel" Version="7.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.3.10" />
