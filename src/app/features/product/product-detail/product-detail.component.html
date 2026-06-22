@@ -33,11 +33,11 @@
             <!-- Image Gallery -->
             <div class="flex flex-col gap-4">
               <!-- Main Image Viewer -->
-              <div class="aspect-4/3 sm:aspect-square bg-white border border-slate-100/80 rounded-[32px] overflow-hidden relative shadow-sm shadow-slate-200/50 group">
+              <div class="w-full bg-white relative group">
                 <img
                   [src]="activeImage()"
                   [alt]="product()!.name"
-                  class="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out w-full h-full"
+                  class="object-contain w-full h-auto transition-transform duration-500 ease-out"
                 />
                 <app-discount-badge
                   [price]="product()!.price"
@@ -45,27 +45,18 @@
                   size="md"
                   class="absolute top-4 left-4 z-10"
                 ></app-discount-badge>
-                
-                <!-- Wishlist Floating Action Button -->
-                <button
-                  type="button"
-                  (click)="toggleWishlist()"
-                  class="absolute top-4 right-4 z-10 p-2.5 bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-white/50 text-slate-400 hover:text-rose-500 hover:bg-white transition-all cursor-pointer active:scale-90 flex items-center justify-center"
-                >
-                  <app-icon [name]="userStore.isWishlisted(product()!.id) ? 'heart-filled' : 'heart'" size="20" [class]="userStore.isWishlisted(product()!.id) ? 'text-rose-500 drop-shadow-sm' : 'text-slate-400'"></app-icon>
-                </button>
               </div>
 
               <!-- Image Thumbnails -->
               @if (product()!.images.length > 1) {
-                <div class="flex gap-3 overflow-x-auto no-scrollbar">
+                <div class="flex gap-1 overflow-x-auto no-scrollbar">
                   @for (img of product()!.images; track img) {
                     <button
                       type="button"
                       (click)="setActiveImage(img)"
                       [class.border-primary-500]="activeImage() === img"
                       [class.border-slate-100]="activeImage() !== img"
-                      class="h-20 w-20 shrink-0 bg-white border-2 rounded-2xl overflow-hidden cursor-pointer active:scale-95 transition-all relative"
+                      class="h-20 w-20 shrink-0 bg-white border-2 rounded-xl overflow-hidden cursor-pointer active:scale-95 transition-all relative"
                     >
                       <img [src]="img" [alt]="product()!.name + ' thumbnail'" class="object-cover w-full h-full" />
                     </button>
@@ -77,7 +68,7 @@
             <!-- Product Details Column -->
             <div class="flex flex-col gap-5">
               <!-- Meta & Title -->
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-3">
                 <div class="flex w-full justify-between items-center gap-2">
                   <span class="px-3 py-1 rounded-full bg-primary-50 text-primary-600 text-[10px] font-extrabold uppercase tracking-widest">{{ product()!.categoryName }}</span>
                   <div>
@@ -100,16 +91,6 @@
                 ></app-rating-stars>
                 </div>
               </div>
-
-              <!-- Price & Stock -->
-              <div class="flex items-baseline gap-3">
-                <app-price [value]="product()!.price" size="xl" class="text-primary-600"></app-price>
-                @if (product()!.originalPrice) {
-                  <span class="text-sm text-slate-400 line-through leading-none">$ {{ product()!.originalPrice }}</span>
-                }
-              </div>
-
-              
             </div>
           </div>
 

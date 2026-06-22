@@ -118,9 +118,7 @@
             <ng-template let-prod>
               <app-product-card
                 [product]="prod"
-                [isInWishlist]="userStore.isWishlisted(prod.id)"
                 (addToCart)="cartStore.addItem($event)"
-                (toggleWishlist)="userStore.toggleWishlist($event)"
               ></app-product-card>
             </ng-template>
           </app-masonry-grid>

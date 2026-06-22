@@ -4,7 +4,6 @@ export * from './user.model';
 export * from './product.model';
 export * from './category.model';
 export * from './cart-item.model';
-export * from './wishlist-item.model';
 export * from './order-status.model';
 export * from './order.model';
 export * from './review.model';

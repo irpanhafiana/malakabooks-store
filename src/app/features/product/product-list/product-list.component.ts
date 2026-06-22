@@ -87,11 +87,6 @@ export class ProductListComponent implements OnInit {
     this.productStore.loadAll();
   }
 
-  onToggleWishlist(event: Event, product: Product) {
-    event.stopPropagation();
-    event.preventDefault();
-    this.userStore.toggleWishlist(product);
-  }
 
   filterButtonClass(catId: string | null): string {
     const base = 'w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer';

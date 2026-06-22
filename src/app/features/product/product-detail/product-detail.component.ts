@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, OnInit, input, effect, DestroyRef,
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { KeyValuePipe, DatePipe, NgOptimizedImage } from '@angular/common';
+import { KeyValuePipe, DatePipe } from '@angular/common';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { ReviewApiService } from '../../../core/services/review-api.service';
 import { CartStore } from '../../../store/cart.store';
@@ -28,15 +28,14 @@ import { ToastService } from '../../../core/services/toast.service';
     ReactiveFormsModule, 
     PriceComponent, 
     IconComponent, 
-    ButtonComponent, 
+    ButtonComponent, 
     TextareaComponent, 
     SkeletonComponent, 
     RatingStarsComponent, 
     DiscountBadgeComponent, 
     QuantitySelectorComponent, 
     KeyValuePipe, 
-    DatePipe, 
-    NgOptimizedImage
+    DatePipe
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
@@ -116,23 +115,15 @@ export class ProductDetailComponent implements OnInit {
     this.activeImage.set(img);
   }
 
+
   setActiveTab(tab: 'details' | 'reviews') {
     this.activeTab.set(tab);
   }
-
-
 
   addToCart() {
     const prod = this.product();
     if (prod) {
       this.cartStore.addItem(prod, this.quantity());
-    }
-  }
-
-  toggleWishlist() {
-    const prod = this.product();
-    if (prod) {
-      this.userStore.toggleWishlist(prod);
     }
   }
 

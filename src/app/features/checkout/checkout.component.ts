@@ -24,7 +24,7 @@ import { ShippingService } from '../../core/services/shipping.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-checkout',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, InputComponent, SelectComponent, RadioComponent, ButtonComponent, PriceComponent, DecimalPipe, NgOptimizedImage],
+  imports: [RouterLink, ReactiveFormsModule, InputComponent, SelectComponent, RadioComponent, ButtonComponent, PriceComponent, DecimalPipe],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })

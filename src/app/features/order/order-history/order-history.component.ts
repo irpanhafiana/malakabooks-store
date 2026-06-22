@@ -14,7 +14,7 @@ import { ExternalMessageService } from '../../../core/services/external-message.
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-order-history',
   standalone: true,
-  imports: [RouterLink, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, StatusBadgeComponent, DatePipe, NgOptimizedImage],
+  imports: [RouterLink, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, StatusBadgeComponent, DatePipe],
   templateUrl: './order-history.component.html',
   styleUrl: './order-history.component.css'
 })

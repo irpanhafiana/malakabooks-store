@@ -11,6 +11,7 @@ import { DiscountBadgeComponent } from '../discount-badge/discount-badge.compone
   selector: 'app-product-card',
   standalone: true,
   imports: [IconComponent, PriceComponent, RatingStarsComponent, DiscountBadgeComponent],
+
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css'
 })
@@ -18,10 +19,8 @@ export class ProductCardComponent {
   private readonly productStore = inject(ProductStore);
 
   readonly product = input.required<Product>();
-  readonly isInWishlist = input<boolean>(false);
   
   readonly addToCart = output<Product>();
-  readonly toggleWishlist = output<Product>();
 
   protected readonly Math = Math;
   protected readonly imageError = signal(false);
@@ -34,12 +33,6 @@ export class ProductCardComponent {
     event.stopPropagation();
     event.preventDefault();
     this.addToCart.emit(this.product());
-  }
-
-  onToggleWishlist(event: Event) {
-    event.stopPropagation();
-    event.preventDefault();
-    this.toggleWishlist.emit(this.product());
   }
 
   viewProductDetails() {

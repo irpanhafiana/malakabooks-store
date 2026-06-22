@@ -1,7 +1,7 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { DecimalPipe, NgOptimizedImage } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { CartStore } from '../../store/cart.store';
 import { ProductStore } from '../../store/product.store';
 import { PriceComponent } from '../../shared/ui/price/price.component';
@@ -15,7 +15,7 @@ import { QuantitySelectorComponent } from '../../shared/ui/quantity-selector/qua
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-cart',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, PriceComponent, IconComponent, ButtonComponent, EmptyStateComponent, InputComponent, QuantitySelectorComponent, DecimalPipe, NgOptimizedImage],
+  imports: [RouterLink, ReactiveFormsModule, PriceComponent, IconComponent, ButtonComponent, EmptyStateComponent, InputComponent, QuantitySelectorComponent, DecimalPipe],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
