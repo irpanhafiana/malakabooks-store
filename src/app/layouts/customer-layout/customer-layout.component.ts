@@ -8,12 +8,15 @@ import { ToastService } from '../../core/services/toast.service';
 import { SearchBarComponent } from '../../shared/ui/search-bar/search-bar.component';
 import { ProductDetailComponent } from '../../features/product/product-detail/product-detail.component';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
+import { QuantitySelectorComponent } from '../../shared/ui/quantity-selector/quantity-selector.component';
+import { ButtonComponent } from '../../shared/ui/button/button.component';
+import { PriceComponent } from '../../shared/ui/price/price.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-customer-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, QuantitySelectorComponent, ButtonComponent, PriceComponent],
   templateUrl: './customer-layout.component.html',
   styleUrl: './customer-layout.component.css'
 })
@@ -43,15 +46,21 @@ export class CustomerLayoutComponent {
   constructor() {
     effect(() => {
       const id = this.productStore.selectedProductId();
-      if (id) {
+      const isQtyOpen = this.productStore.isQtyModalOpen();
+
+      // If product is selected but qty is NOT open, show the product details
+      if (id && !isQtyOpen) {
         this.selectedDetailId.set(id);
         this.isDetailOpen.set(true);
       } else {
         this.isDetailOpen.set(false);
-        // Wait for animation before clearing ID to avoid UI jumps
-        setTimeout(() => {
-          this.selectedDetailId.set(null);
-        }, 300);
+        // We only clear selectedDetailId if the product is genuinely closed, 
+        // not just temporarily hidden for the qty sheet
+        if (!id) {
+          setTimeout(() => {
+            this.selectedDetailId.set(null);
+          }, 300);
+        }
       }
     });
   }
@@ -73,6 +82,24 @@ export class CustomerLayoutComponent {
   resetFilters() {
     this.productStore.setCategoryFilter(null);
     this.productStore.setSearchQuery('');
+  }
+
+  closeQty() {
+    this.productStore.setQtyModalOpen(false);
+  }
+
+  onQtyChange(newQty: number) {
+    this.productStore.setQtyQuantity(newQty);
+  }
+
+  confirmAddToCart() {
+    const prod = this.productStore.activeProduct();
+    const qty = this.productStore.qtyQuantity();
+    if (prod) {
+      this.cartStore.addItem(prod, qty);
+      this.toastService.success('Added to cart!');
+    }
+    this.productStore.setQtyModalOpen(false);
   }
 
   toastClass(type: string): string {

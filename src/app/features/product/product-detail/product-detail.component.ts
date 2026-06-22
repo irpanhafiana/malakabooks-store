@@ -8,6 +8,7 @@ import { ReviewApiService } from '../../../core/services/review-api.service';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
 import { AuthStore } from '../../../store/auth.store';
+import { ProductStore } from '../../../store/product.store';
 import { Product, Review } from '../../../core/models';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
@@ -28,12 +29,11 @@ import { ToastService } from '../../../core/services/toast.service';
     ReactiveFormsModule, 
     PriceComponent, 
     IconComponent, 
-    ButtonComponent, 
+    ButtonComponent, 
     TextareaComponent, 
     SkeletonComponent, 
     RatingStarsComponent, 
     DiscountBadgeComponent, 
-    QuantitySelectorComponent, 
     KeyValuePipe, 
     DatePipe
   ],
@@ -49,13 +49,13 @@ export class ProductDetailComponent implements OnInit {
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   protected readonly authStore = inject(AuthStore);
+  protected readonly productStore = inject(ProductStore);
   private readonly toastService = inject(ToastService);
   private readonly destroyRef = inject(DestroyRef);
 
   loading = signal<boolean>(true);
   product = signal<Product | null>(null);
   activeImage = signal<string>('');
-  quantity = signal<number>(1);
   activeTab = signal<'details' | 'reviews'>('details');
   reviews = signal<Review[]>([]);
   isSubmittingReview = signal<boolean>(false);
@@ -98,8 +98,8 @@ export class ProductDetailComponent implements OnInit {
 
       if (prod) {
         this.product.set(prod);
+        this.productStore.setActiveProduct(prod);
         this.activeImage.set(prod.images[0]);
-        this.quantity.set(1);
         this.reviews.set(revs || []);
       } else {
         this.product.set(null);
@@ -115,16 +115,13 @@ export class ProductDetailComponent implements OnInit {
     this.activeImage.set(img);
   }
 
-
   setActiveTab(tab: 'details' | 'reviews') {
     this.activeTab.set(tab);
   }
 
-  addToCart() {
-    const prod = this.product();
-    if (prod) {
-      this.cartStore.addItem(prod, this.quantity());
-    }
+  openQuantityModal() {
+    this.productStore.setQtyQuantity(1);
+    this.productStore.setQtyModalOpen(true);
   }
 
   hasSpecs(): boolean {

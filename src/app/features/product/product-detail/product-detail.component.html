@@ -95,7 +95,7 @@
           </div>
 
           <!-- Detail Information Tabs -->
-          <div class="mt-8 bg-white border border-slate-100/60 rounded-[32px] p-5 shadow-sm shadow-slate-100/50">
+          <div class="mt-8 pb-4">
             <!-- Segmented Control Tab Headers -->
             <div class="flex bg-slate-50/80 p-1.5 rounded-2xl gap-1 mb-6 border border-slate-100/50">
               <button
@@ -225,23 +225,17 @@
 
         <!-- Sticky Bottom Action Bar -->
         <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl px-5 py-4 pb-6 flex items-center justify-between gap-4 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.05)] relative z-50">
-          <!-- Total Price display -->
+          <!-- Price display -->
           <div class="flex flex-col shrink-0 min-w-[80px] text-left">
-            <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest mb-0.5">Total Price</span>
-            <app-price [value]="product()!.price * quantity()" size="lg" class="text-slate-800"></app-price>
+            <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest mb-0.5">Price</span>
+            <app-price [value]="product()!.price" size="lg" class="text-slate-800"></app-price>
           </div>
 
           <!-- Actions Wrapper -->
           <div class="flex grow items-center justify-end gap-3">
-            <app-quantity-selector
-              [(quantity)]="quantity"
-              [stock]="product()!.stock"
-              variant="md"
-            ></app-quantity-selector>
-
             <div class="grow max-w-[160px]">
               <app-button
-                (click)="addToCart()"
+                (click)="openQuantityModal()"
                 [disabled]="product()!.stock <= 0"
                 variant="primary"
                 [fullWidth]="true"

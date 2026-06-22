@@ -13,6 +13,9 @@ interface ProductState {
   sortBy: 'featured' | 'price-asc' | 'price-desc' | 'rating';
   loading: boolean;
   error: string | null;
+  activeProduct: Product | null;
+  isQtyModalOpen: boolean;
+  qtyQuantity: number;
 }
 
 @Injectable({
@@ -31,7 +34,10 @@ export class ProductStore {
     searchQuery: '',
     sortBy: (typeof localStorage !== 'undefined' && 'sortBy' in localStorage) ? (localStorage.getItem('sortBy') as any) : 'featured', // Keep existing sort logic if any
     loading: false,
-    error: null
+    error: null,
+    activeProduct: null,
+    isQtyModalOpen: false,
+    qtyQuantity: 1
   });
 
   // Selectors
@@ -43,6 +49,9 @@ export class ProductStore {
   readonly sortBy = computed(() => this.state().sortBy);
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
+  readonly activeProduct = computed(() => this.state().activeProduct);
+  readonly isQtyModalOpen = computed(() => this.state().isQtyModalOpen);
+  readonly qtyQuantity = computed(() => this.state().qtyQuantity);
 
   readonly activeSearchCategories = computed(() => {
     const query = this.searchQuery().toLowerCase().trim();
@@ -157,6 +166,18 @@ export class ProductStore {
 
   setSortBy(sortBy: ProductState['sortBy']) {
     this.state.update(s => ({ ...s, sortBy }));
+  }
+
+  setActiveProduct(product: Product | null) {
+    this.state.update(s => ({ ...s, activeProduct: product }));
+  }
+
+  setQtyModalOpen(isOpen: boolean) {
+    this.state.update(s => ({ ...s, isQtyModalOpen: isOpen }));
+  }
+
+  setQtyQuantity(quantity: number) {
+    this.state.update(s => ({ ...s, qtyQuantity: quantity }));
   }
 
   async saveProduct(product: Product) {
