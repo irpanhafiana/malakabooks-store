@@ -66,6 +66,25 @@ public class OrdersController(IMediator mediator) : ApiControllerBase
     }
 
     /// <summary>
+    /// Creates or re-triggers the Simasrim shipment AWB for multiple paid orders.
+    /// </summary>
+    /// <param name="request">The batch request containing order identifiers.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the per-order shipment processing outcome.</returns>
+    [HttpPost("shipment")]
+    public async Task<IActionResult> CreateShipments([FromBody] BatchOrderShipmentRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateOrderShipmentsCommand(request.OrderIds), cancellationToken);
+
+        if (!result.HasFailures)
+        {
+            return Success(result);
+        }
+
+        return Fail("One or more shipment processes failed.", result, "ShipmentProcessFailed", StatusCodes.Status400BadRequest);
+    }
+
+    /// <summary>
     /// Rechecks and reconciles the local shipment state for the specified order.
     /// </summary>
     /// <param name="id">The unique identifier of the order.</param>
@@ -82,5 +101,24 @@ public class OrdersController(IMediator mediator) : ApiControllerBase
         }
 
         return Fail(result.Message, result, "ShipmentRecheckFailed", StatusCodes.Status400BadRequest);
+    }
+
+    /// <summary>
+    /// Rechecks and reconciles the local shipment state for multiple orders.
+    /// </summary>
+    /// <param name="request">The batch request containing order identifiers.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the per-order shipment recheck outcome.</returns>
+    [HttpPost("shipment/recheck")]
+    public async Task<IActionResult> RecheckShipments([FromBody] BatchOrderShipmentRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RecheckOrderShipmentsCommand(request.OrderIds), cancellationToken);
+
+        if (!result.HasFailures)
+        {
+            return Success(result);
+        }
+
+        return Fail("One or more shipment rechecks failed.", result, "ShipmentRecheckFailed", StatusCodes.Status400BadRequest);
     }
 }

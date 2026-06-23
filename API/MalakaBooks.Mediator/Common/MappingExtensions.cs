@@ -227,7 +227,8 @@ public static class MappingExtensions
             Color = item.Color,
             Condition = item.Condition
         }).ToList(),
-        PartnerName = string.IsNullOrWhiteSpace(detail.PartnerName) ? "SIMASRIM" : detail.PartnerName
+        PartnerName = string.IsNullOrWhiteSpace(detail.PartnerName) ? "SIMASRIM" : detail.PartnerName,
+        ReferenceNo = detail.ReferenceNo
     };
 
     public static string ToShipmentDetailJson(this OrderShipmentDetail? detail) => detail is null
@@ -277,7 +278,12 @@ public static class MappingExtensions
         GrandTotal = entity.GrandTotal,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
-        ShipmentDetail = entity.ShipmentDetailJson.ToShipmentDetail(),
+
+        ShippingCourier = entity.ShippingCourier,
+        ShippingEst = entity.ShippingEst,
+        ShippingType = entity.ShippingType,
+        AWBNo = entity.AWBNo,
+
         ShipmentRetryCount = entity.ShipmentRetryCount,
         ShipmentLastError = entity.ShipmentLastError,
         ShipmentCreatedAt = entity.ShipmentCreatedAt,
@@ -288,7 +294,42 @@ public static class MappingExtensions
         UpdatedAt = entity.UpdatedAt
     };
 
-    public static OrderEntity ToEntity(this CreateOrderRequest request, UserEntity user, OrderShipmentDetail? shipmentDetail = null)
+    public static AdminOrderResponse ToAdminResponse(this OrderEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        User = entity.User.ToResponse(),
+        Items = entity.Items.Select(ToResponse).ToList(),
+        AddressId = entity.AddressId,
+        Status = entity.Status,
+        PaymentStatus = entity.PaymentStatus,
+        PaymentMethod = entity.PaymentMethod,
+        PaymentGateway = entity.PaymentGateway,
+        PaymentUrl = entity.PaymentUrl,
+        IncomingPaymentId = entity.IncomingPaymentId ?? string.Empty,
+        ItemsSubtotal = entity.ItemsSubtotal,
+        ShippingFee = entity.ShippingFee,
+        GrandTotal = entity.GrandTotal,
+        TotalPrice = entity.TotalPrice,
+        Note = entity.Note,
+
+        ShippingCourier = entity.ShippingCourier,
+        ShippingEst = entity.ShippingEst,
+        ShippingType = entity.ShippingType,
+        AWBNo = entity.AWBNo,
+
+        ShipmentDetail = entity.ShipmentDetailJson.ToShipmentDetail(),
+
+        ShipmentRetryCount = entity.ShipmentRetryCount,
+        ShipmentLastError = entity.ShipmentLastError,
+        ShipmentCreatedAt = entity.ShipmentCreatedAt,
+        ShipmentLastAttemptAt = entity.ShipmentLastAttemptAt,
+        PaidAt = entity.PaidAt,
+        ExpiresAt = entity.ExpiresAt,
+        CreatedAt = entity.CreatedAt,
+        UpdatedAt = entity.UpdatedAt
+    };
+
+    public static OrderEntity ToEntity(this CreateOrderRequest request, UserEntity user)
     {
         var itemsSubtotal = request.Items.Sum(item => item.Price * item.Quantity);
         var shippingFee = request.ShippingFee;
@@ -306,7 +347,7 @@ public static class MappingExtensions
             GrandTotal = itemsSubtotal + shippingFee,
             TotalPrice = itemsSubtotal + shippingFee,
             Note = request.Note.Trim(),
-            ShipmentDetailJson = shipmentDetail.ToShipmentDetailJson(),
+
             ShipmentRetryCount = 0,
             ShipmentLastError = string.Empty,
             ShipmentCreatedAt = null,

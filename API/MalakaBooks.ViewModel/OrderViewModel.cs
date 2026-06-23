@@ -1,5 +1,3 @@
-using Mardika.Simasrim.Service.Model;
-
 namespace MalakaBooks.ViewModel;
 
 public class OrderUserResponse
@@ -47,13 +45,14 @@ public class OrderShipmentDetail
     public string? ReceiverLatitude { get; set; }
     public string? ItemCode { get; set; }
     public string? ItemCategory { get; set; }
-    public int? IsFragile { get; set; }
+    public int? IsFragile { get; set; } = 0;
     public string? Size { get; set; }
-    public string? PickupServiceType { get; set; }
-    public string? PickupVehicleType { get; set; }
-    public string? ReceiverNote { get; set; }
-    public List<OrderShipmentBpikDetail>? Bpik { get; set; }
-    public string PartnerName { get; set; } = string.Empty;
+    public string? PickupServiceType { get; set; } = "Reguler";
+    public string? PickupVehicleType { get; set; } = "Mobil";
+    public string? ReceiverNote { get; set; } = "tolong video unboxing";
+    public List<OrderShipmentBpikDetail>? Bpik { get; set; } = [];
+    public string PartnerName { get; set; } = "SIMASRIM";
+    public string ReferenceNo { get; set; } = string.Empty;
 }
 
 public class OrderShipmentBpikDetail
@@ -87,19 +86,30 @@ public class OrderResponse
     public string PaymentUrl { get; set; } = string.Empty;
     public string? IncomingPaymentId { get; set; }
     public decimal ItemsSubtotal { get; set; }
-    public decimal ShippingFee { get; set; }
     public decimal GrandTotal { get; set; }
     public decimal TotalPrice { get; set; }
     public string Note { get; set; } = string.Empty;
-    public OrderShipmentDetail? ShipmentDetail { get; set; }
+
+    public decimal ShippingFee { get; set; }
     public int ShipmentRetryCount { get; set; }
     public string ShipmentLastError { get; set; } = string.Empty;
+    public string ShippingCourier { get; set; } = string.Empty;
+    public string ShippingType { get; set; } = string.Empty;
+    public string ShippingEst { get; set; } = string.Empty;
+
     public DateTime? ShipmentCreatedAt { get; set; }
     public DateTime? ShipmentLastAttemptAt { get; set; }
     public DateTime? PaidAt { get; set; }
     public DateTime? ExpiresAt { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
+    public string? AWBNo { get; set; }
+}
+
+public class AdminOrderResponse : OrderResponse
+{
+    public OrderShipmentDetail? ShipmentDetail { get; set; }
 }
 
 public class CreateOrderResponse
@@ -131,12 +141,16 @@ public class CreateOrderRequest
     public string ShippingType { get; set; } = string.Empty;
     public string ShippingEst { get; set; } = string.Empty;
     public decimal ShippingFee { get; set; }
-    public SimasrimCreateResiRequest? SimasrimRequest { get; set; }
 }
 
 public class UpdateOrderStatusRequest
 {
     public string Status { get; set; } = string.Empty;
+}
+
+public class BatchOrderShipmentRequest
+{
+    public List<string> OrderIds { get; set; } = [];
 }
 
 public static class OrderStatuses
@@ -159,6 +173,15 @@ public class RecheckOrderShipmentResponse
     public string ShipmentLastError { get; set; } = string.Empty;
     public DateTime? ShipmentCreatedAt { get; set; }
     public DateTime? ShipmentLastAttemptAt { get; set; }
+}
+
+public class BatchOrderShipmentResponse<TItem>
+{
+    public int TotalOrders { get; set; }
+    public int SuccessCount { get; set; }
+    public int FailureCount { get; set; }
+    public bool HasFailures => FailureCount > 0;
+    public List<TItem> Results { get; set; } = [];
 }
 
 public class CreateOrderShipmentResponse

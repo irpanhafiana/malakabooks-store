@@ -90,7 +90,7 @@ public class CreateOrderShipmentHandler(
             order.ShipmentRetryCount++;
 
             var simasrimResponse = await simasrimApiClient.PostAsync<CreateResiResponse>(
-                "api/b2b/pengiriman/ekspedisi/create-resi",
+                "api/b2b/pengiriman/ekspedisi/cetak-resi",
                 shipmentDetail.ToSimasrimRequest(),
                 cancellationToken);
 
