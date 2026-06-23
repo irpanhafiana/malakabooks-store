@@ -1,0 +1,19 @@
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": {
+        "code": "200",
+        "status": "Success",
+        "data": [
+            "all",
+            "jne",
+            "jntx",
+            "jntc",
+            "sapx",
+            "spx",
+            "lion",
+            "paxel"
+        ]
+    },
+    "isSuccess": true
+}

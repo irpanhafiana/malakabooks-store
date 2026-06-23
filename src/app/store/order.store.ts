@@ -113,4 +113,16 @@ export class OrderStore {
       this.toastService.error('Failed to update order status.');
     }
   }
+
+  async createShipment(orderId: string): Promise<any> {
+    this.state.update(s => ({ ...s, loading: true }));
+    try {
+      const result = await this.orderApi.createShipment(orderId);
+      this.state.update(s => ({ ...s, loading: false }));
+      return result;
+    } catch (e) {
+      this.state.update(s => ({ ...s, loading: false }));
+      throw e;
+    }
+  }
 }

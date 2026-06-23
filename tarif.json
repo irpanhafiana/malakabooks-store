@@ -1,0 +1,31 @@
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": {
+        "data": {
+            "jne": [
+                {
+                    "service_display": "CTC",
+                    "price": 10000.0,
+                    "currency": "Rp",
+                    "etd": "1 - 2 Hari"
+                },
+                {
+                    "service_display": "JTR",
+                    "price": 40000.0,
+                    "currency": "Rp",
+                    "etd": "3 - 4 Hari"
+                },
+                {
+                    "service_display": "CTCYES",
+                    "price": 18000.0,
+                    "currency": "Rp",
+                    "etd": "1 - 1 Hari"
+                }
+            ]
+        },
+        "code": "001",
+        "status": "Success"
+    },
+    "isSuccess": true
+}

@@ -409,6 +409,13 @@ export class CheckoutComponent implements OnInit {
     const selectedCourier = this.courierControl.value || 'jne';
     const note = `Courier: ${selectedCourier.toUpperCase()}`;
 
+    const serviceIdxStr = this.courierServiceControl.value;
+    const serviceIdx = serviceIdxStr ? parseInt(serviceIdxStr, 10) : -1;
+    const selectedService = serviceIdx >= 0 ? this.courierServices()[serviceIdx] : null;
+
+    const shippingType = selectedService?.service_display || selectedService?.service || 'Reg';
+    const shippingEst = selectedService?.etd || selectedService?.cost?.[0]?.etd || '-';
+
     const orderData: Omit<Order, 'id' | 'orderDate' | 'status' | 'trackingNumber'> = {
       userId: user.id,
       userName: user.name,
@@ -420,7 +427,10 @@ export class CheckoutComponent implements OnInit {
       subtotal: this.cartStore.subtotal(),
       shippingCost: this.shippingCost(),
       tax: this.checkoutTax(),
-      total: this.checkoutTotal()
+      total: this.checkoutTotal(),
+      shippingCourier: selectedCourier,
+      shippingType,
+      shippingEst
     };
 
     const placed = await this.orderStore.placeOrder(orderData);

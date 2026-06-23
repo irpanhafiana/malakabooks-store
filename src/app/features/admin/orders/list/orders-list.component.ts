@@ -40,4 +40,28 @@ export class OrdersListComponent implements OnInit {
       selectElement.value = currentStatus;
     }
   }
+
+  async onCreateShipment(orderId: string) {
+    const isConfirmed = await this.alertService.confirm(
+      'Buat Pengiriman?',
+      `Apakah Anda yakin ingin memproses pengiriman untuk pesanan #${orderId}?`
+    );
+    if (!isConfirmed) return;
+
+    try {
+      const res = await this.orderStore.createShipment(orderId);
+      if (res?.isSuccess || res?.shipmentCreated) {
+        this.alertService.success(
+          'Berhasil!',
+          `Pengiriman berhasil dibuat. AWB: ${res.awbNo || '-'}`
+        );
+        this.orderStore.loadAllOrders(); // Refresh status order
+      } else {
+        this.alertService.error('Gagal!', res?.message || 'Gagal memproses pengiriman.');
+      }
+    } catch (e: any) {
+      const errorMsg = e?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman.';
+      this.alertService.error('Error!', errorMsg);
+    }
+  }
 }

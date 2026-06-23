@@ -239,7 +239,10 @@ export class OrderApiService {
       })),
       addressId: order.shippingAddress.id,
       note: '',
-      shippingFee: order.shippingCost || 0
+      shippingFee: order.shippingCost || 0,
+      shippingCourier: order.shippingCourier || '',
+      shippingType: order.shippingType || '',
+      shippingEst: order.shippingEst || ''
     };
 
     if (externalProfileId) {
@@ -275,6 +278,18 @@ export class OrderApiService {
       };
     } catch (e) {
       console.error('Gagal membuat order:', e);
+      throw e;
+    }
+  }
+
+  async createShipment(id: string): Promise<any> {
+    try {
+      const res = await firstValueFrom(
+        this.http.post<any>(`${this.BASE_URL}/admin/Orders/${id}/shipment`, {})
+      );
+      return res?.data || res || null;
+    } catch (e) {
+      console.error(`Gagal membuat shipment untuk order ${id}:`, e);
       throw e;
     }
   }

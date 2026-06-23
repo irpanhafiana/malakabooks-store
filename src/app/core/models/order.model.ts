@@ -23,4 +23,7 @@ export interface Order {
   orderDate: string;
   trackingNumber?: string;
   paymentUrl?: string;
+  shippingCourier?: string;
+  shippingType?: string;
+  shippingEst?: string;
 }
