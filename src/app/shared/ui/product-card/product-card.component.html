@@ -35,26 +35,26 @@
           <!-- Title -->
           <h3 class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 transition-colors leading-tight">{{ prod.name }}</h3>
           
-          <!-- Ratings -->
-          <app-rating-stars
-            [rating]="prod.rating"
-            [reviewsCount]="prod.reviewsCount"
-            [starSize]="12"
-          ></app-rating-stars>
+          <!-- Price -->
+          <div class="flex flex-col">
+            @if (prod.originalPrice && prod.originalPrice > prod.price) {
+              <span class="text-[10px] text-slate-400 line-through leading-none mb-0.5">Rp {{ Math.round(prod.originalPrice).toLocaleString('id-ID') }}</span>
+            }
+            <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold text-base"></app-price>
+          </div>
         </div>
       </div>
 
-      <!-- Pricing and Rating Row -->
+      <!-- Rating and Sold Row -->
       <div class="flex items-center justify-between py-2 border-t border-slate-50">
-        <div class="flex flex-col">
-          @if (prod.originalPrice && prod.originalPrice > prod.price) {
-            <span class="text-[10px] text-slate-400 line-through leading-none mb-0.5">Rp {{ Math.round(prod.originalPrice).toLocaleString('id-ID') }}</span>
-          }
-          <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold text-base"></app-price>
+        <!-- Ratings Badge -->
+        <div class="flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-100">
+          <app-icon name="star" size="10" class="text-amber-500 fill-amber-500"></app-icon>
+          <span class="text-[10px] font-bold text-amber-700">{{ prod.rating }}</span>
         </div>
 
         <!-- Total Sold -->
         <span class="text-[10px] text-slate-500 font-medium">
-          {{ prod.reviewsCount * 12 + (prod.stock % 7) + 5 }} terjual
+          {{ prod.reviewsCount * 12 + (prod.stock % 7) + 5 }} Terjual
         </span>
       </div>

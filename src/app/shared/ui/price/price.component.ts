@@ -21,12 +21,12 @@ export class PriceComponent {
 
   readonly priceClass = computed(() => {
     const fontSizes = {
-      sm: 'text-xs',
-      md: 'text-sm',
-      lg: 'text-base md:text-lg',
-      xl: 'text-lg md:text-xl font-extrabold'
+      sm: 'text-sm',
+      md: 'text-base',
+      lg: 'text-lg md:text-xl',
+      xl: 'text-xl md:text-2xl font-extrabold'
     };
-    const fontWeight = this.bold() ? 'font-bold font-display text-slate-900' : 'text-slate-600';
+    const fontWeight = this.bold() ? 'font-bold font-display text-red-700' : 'text-red-600';
     return `${fontSizes[this.size()]} ${fontWeight} ${this.customClass()}`;
   });
 }

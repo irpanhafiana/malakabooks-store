@@ -18,6 +18,7 @@ export class ProductApiService {
     return {
       id: book.id,
       name: book.title,
+      author: book.author || '',
       description: book.description || '',
       price: book.price,
       categoryId: book.categoryId,

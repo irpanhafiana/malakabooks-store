@@ -183,6 +183,20 @@ body {
   text-transform: uppercase;
 }
 
+.badge-uom-lg {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  background-color: var(--color-primary-600, #e11d48);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 /* scrollbar hide mapping for layouting.md compatibility */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;

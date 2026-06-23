@@ -15,7 +15,7 @@ import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { TextareaComponent } from '../../../shared/ui/textarea/textarea.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
-import { RatingStarsComponent } from '../../../shared/ui/rating-stars/rating-stars.component';
+
 import { DiscountBadgeComponent } from '../../../shared/ui/discount-badge/discount-badge.component';
 import { QuantitySelectorComponent } from '../../../shared/ui/quantity-selector/quantity-selector.component';
 import { ToastService } from '../../../core/services/toast.service';
@@ -32,7 +32,7 @@ import { ToastService } from '../../../core/services/toast.service';
     ButtonComponent, 
     TextareaComponent, 
     SkeletonComponent, 
-    RatingStarsComponent, 
+
     DiscountBadgeComponent, 
     KeyValuePipe, 
     DatePipe

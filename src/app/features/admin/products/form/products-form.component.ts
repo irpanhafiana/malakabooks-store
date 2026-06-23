@@ -167,6 +167,7 @@ export class ProductsFormComponent {
     const pData: Product = {
       id: this.product()?.id || '',
       name: this.nameControl.value || '',
+      author: this.authorControl.value || '',
       description: this.descControl.value || '',
       price: this.priceControl.value || 0,
       originalPrice: this.origPriceControl.value || undefined,

@@ -12,6 +12,7 @@ export interface Product {
   reviewsCount: number;
   featured: boolean;
   brand: string;
+  author: string;
   specifications: Record<string, string>;
   createdAt: string;
 }

@@ -18,17 +18,7 @@
       <div class="w-12 h-1.5 rounded-full bg-slate-200 hover:bg-slate-300 transition-colors"></div>
     </div>
 
-    <!-- Sticky Top Header within Sheet (Close button and Title) -->
-    <div class="px-5 pb-3 border-b border-slate-100 flex items-center justify-between shrink-0">
-      <h3 class="font-display font-extrabold text-slate-800 text-sm">{{ title() }}</h3>
-      <button
-        type="button"
-        (click)="closeSheet()"
-        class="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-all cursor-pointer active:scale-90 flex items-center justify-center border-0"
-      >
-        <i class="bx bx-x text-lg"></i>
-      </button>
-    </div>
+
 
     <!-- Content Viewport -->
     <div class="grow flex flex-col overflow-hidden w-full relative min-h-0">

@@ -124,7 +124,7 @@
     <!-- Product Detail Bottom Sheet (Height ~85%, constrained inside the mobile container) -->
     <app-bottom-sheet 
       [isOpen]="isDetailOpen()" 
-      title="Product Details" 
+      [title]="productStore.activeProduct()?.name || 'Product Details'" 
       (closed)="closeProductDetails()"
     >
       <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
