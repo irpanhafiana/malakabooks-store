@@ -225,7 +225,7 @@
           <div class="flex grow items-center justify-end gap-3">
             <div class="grow max-w-[160px]">
               <app-button
-                (click)="openQuantityModal()"
+                (click)="openQuantityModal($event)"
                 [disabled]="product()!.stock <= 0"
                 variant="primary"
                 [fullWidth]="true"

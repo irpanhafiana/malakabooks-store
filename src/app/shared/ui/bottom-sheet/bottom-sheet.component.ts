@@ -1,4 +1,4 @@
-import { Component, input, output, effect, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, effect, signal, ChangeDetectionStrategy, inject, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,18 +15,24 @@ export class BottomSheetComponent {
 
   renderComponent = signal<boolean>(false);
   isAnimating = signal<boolean>(false);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   constructor() {
     effect(() => {
-      if (this.isOpen()) {
+      const open = this.isOpen();
+      if (open) {
         this.renderComponent.set(true);
-        setTimeout(() => {
+        // Force evaluation in next microtask to allow DOM to render before animating
+        Promise.resolve().then(() => {
           this.isAnimating.set(true);
-        }, 16);
+          this.cdr.markForCheck();
+        });
       } else {
         this.isAnimating.set(false);
+        this.cdr.markForCheck();
         setTimeout(() => {
           this.renderComponent.set(false);
+          this.cdr.markForCheck();
         }, 300);
       }
     });

@@ -14,6 +14,7 @@ import { AddressApiService } from '../../core/services/address-api.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
+import { MapPickerComponent } from '../../shared/ui/map-picker/map-picker.component';
 
 import { OrderStore } from '../../store/order.store';
 
@@ -41,7 +42,8 @@ interface MenuSection {
     ButtonComponent, 
     IconComponent, 
     BottomSheetComponent, 
-    SkeletonComponent
+    SkeletonComponent,
+    MapPickerComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
@@ -112,6 +114,9 @@ export class ProfileComponent implements OnInit {
   cities = signal<any[]>([]);
   districts = signal<any[]>([]);
   editingAddressId = signal<string | null>(null);
+
+  selectedLat = signal<number | undefined>(undefined);
+  selectedLng = signal<number | undefined>(undefined);
 
   provinceOptions = computed(() => this.provinces().map(p => ({ value: p, label: p })));
   cityOptions = computed(() => this.cities().map(c => ({ value: c, label: c })));
@@ -214,6 +219,15 @@ export class ProfileComponent implements OnInit {
         this.districtControl.setValue('');
       }
     });
+
+    // Listen to district changes
+    this.districtControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(distCode => {
+      const dist = this.districts().find(d => d.region_code === distCode);
+      if (dist && dist.latitude && dist.longitude) {
+        this.selectedLat.set(Number(dist.latitude));
+        this.selectedLng.set(Number(dist.longitude));
+      }
+    });
   }
 
   async loadProvinces() {
@@ -243,9 +257,16 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  onMapLocationSelected(loc: { latitude: number; longitude: number }) {
+    this.selectedLat.set(loc.latitude);
+    this.selectedLng.set(loc.longitude);
+  }
+
   addNewAddress() {
     this.editingAddressId.set(null);
     this.addressForm.reset();
+    this.selectedLat.set(undefined);
+    this.selectedLng.set(undefined);
     this.cities.set([]);
     this.districts.set([]);
     this.showAddressForm.set(true);
@@ -259,6 +280,8 @@ export class ProfileComponent implements OnInit {
   async editAddress(addr: Address) {
     this.addressForm.reset();
     this.editingAddressId.set(addr.id);
+    this.selectedLat.set(addr.latitude);
+    this.selectedLng.set(addr.longitude);
 
     this.recipientControl.setValue(addr.name);
     this.addrPhoneControl.setValue(addr.phone);
@@ -344,6 +367,9 @@ export class ProfileComponent implements OnInit {
       district: districtName,
       subDistrict: subDistrictName,
       postalCode: this.postalCodeControl.value || '',
+      addressCode: distObj?.origin_code || distCode || '',
+      latitude: this.selectedLat() ?? (distObj?.latitude ? Number(distObj.latitude) : (isEdit ? this.addresses().find(a => a.id === addrId)?.latitude : 0) || 0),
+      longitude: this.selectedLng() ?? (distObj?.longitude ? Number(distObj.longitude) : (isEdit ? this.addresses().find(a => a.id === addrId)?.longitude : 0) || 0),
       isDefault: isEdit
         ? (this.addresses().find(a => a.id === addrId)?.isDefault || false)
         : (this.addresses().length === 0)

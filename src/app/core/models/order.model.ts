@@ -23,5 +23,4 @@ export interface Order {
   orderDate: string;
   trackingNumber?: string;
   paymentUrl?: string;
-  simasrimRequest?: any;
 }

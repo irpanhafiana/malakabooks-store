@@ -13,7 +13,6 @@ import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { PriceComponent } from '../../shared/ui/price/price.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-customer-layout',
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, QuantitySelectorComponent, ButtonComponent, PriceComponent],
@@ -46,21 +45,15 @@ export class CustomerLayoutComponent {
   constructor() {
     effect(() => {
       const id = this.productStore.selectedProductId();
-      const isQtyOpen = this.productStore.isQtyModalOpen();
 
-      // If product is selected but qty is NOT open, show the product details
-      if (id && !isQtyOpen) {
+      if (id) {
         this.selectedDetailId.set(id);
         this.isDetailOpen.set(true);
       } else {
         this.isDetailOpen.set(false);
-        // We only clear selectedDetailId if the product is genuinely closed, 
-        // not just temporarily hidden for the qty sheet
-        if (!id) {
-          setTimeout(() => {
-            this.selectedDetailId.set(null);
-          }, 300);
-        }
+        setTimeout(() => {
+          this.selectedDetailId.set(null);
+        }, 300);
       }
     });
   }

@@ -33,6 +33,7 @@ export class AdminHomeAddressApiService {
       district: address.district,
       subDistrict: address.subDistrict,
       postalCode: address.postalCode,
+      addressCode: address.addressCode || '',
       longitude: address.longitude || 0,
       latitude: address.latitude || 0
     };

@@ -7,12 +7,13 @@ import { InputComponent } from '../../../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { SelectComponent } from '../../../../shared/ui/select/select.component';
 import { AddressApiService } from '../../../../core/services/address-api.service';
+import { MapPickerComponent } from '../../../../shared/ui/map-picker/map-picker.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home-addresses-form',
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, ButtonComponent, SelectComponent],
+  imports: [ReactiveFormsModule, InputComponent, ButtonComponent, SelectComponent, MapPickerComponent],
   templateUrl: './home-addresses-form.component.html'
 })
 export class HomeAddressesFormComponent implements OnInit {
@@ -30,6 +31,9 @@ export class HomeAddressesFormComponent implements OnInit {
   provinces = signal<any[]>([]);
   cities = signal<any[]>([]);
   districts = signal<any[]>([]);
+
+  selectedLat = signal<number | undefined>(undefined);
+  selectedLng = signal<number | undefined>(undefined);
 
   provinceOptions = computed(() => this.provinces().map(p => ({ value: p, label: p })));
   cityOptions = computed(() => this.cities().map(c => ({ value: c, label: c })));
@@ -92,8 +96,19 @@ export class HomeAddressesFormComponent implements OnInit {
       }
     });
 
+    // Listen to district changes
+    this.districtControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(distCode => {
+      const dist = this.districts().find(d => d.region_code === distCode);
+      if (dist && dist.latitude && dist.longitude) {
+        this.selectedLat.set(Number(dist.latitude));
+        this.selectedLng.set(Number(dist.longitude));
+      }
+    });
+
     const addr = this.address();
     if (addr) {
+      this.selectedLat.set(addr.latitude);
+      this.selectedLng.set(addr.longitude);
       await this.patchFormValues(addr);
     }
   }
@@ -159,6 +174,11 @@ export class HomeAddressesFormComponent implements OnInit {
     }
   }
 
+  onMapLocationSelected(loc: { latitude: number; longitude: number }) {
+    this.selectedLat.set(loc.latitude);
+    this.selectedLng.set(loc.longitude);
+  }
+
   async onSubmit() {
     if (this.form.invalid) return;
 
@@ -183,8 +203,9 @@ export class HomeAddressesFormComponent implements OnInit {
       district: districtName,
       subDistrict: subDistrictName || '',
       postalCode: this.postalCodeControl.value || '',
-      longitude: this.address()?.longitude || 0,
-      latitude: this.address()?.latitude || 0
+      addressCode: distObj?.origin_code || distCode || '',
+      longitude: this.selectedLng() ?? (distObj?.longitude ? Number(distObj.longitude) : undefined) ?? this.address()?.longitude ?? 0,
+      latitude: this.selectedLat() ?? (distObj?.latitude ? Number(distObj.latitude) : undefined) ?? this.address()?.latitude ?? 0
     };
 
     await this.store.saveAddress(payload);

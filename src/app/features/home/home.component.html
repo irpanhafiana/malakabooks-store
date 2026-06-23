@@ -118,7 +118,7 @@
             <ng-template let-prod>
               <app-product-card
                 [product]="prod"
-                (addToCart)="cartStore.addItem($event)"
+                (addToCart)="openQtyModal($event)"
               ></app-product-card>
             </ng-template>
           </app-masonry-grid>

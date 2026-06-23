@@ -66,6 +66,16 @@
     ></app-input>
   </div>
 
+  <div class="mt-2">
+    <label class="block text-sm font-medium text-slate-700 mb-2">Pin Lokasi Peta</label>
+    <app-map-picker 
+      [initialLat]="selectedLat()" 
+      [initialLng]="selectedLng()" 
+      (locationSelected)="onMapLocationSelected($event)">
+    </app-map-picker>
+    <p class="text-xs text-slate-500 mt-2">Klik peta atau geser pin untuk menyesuaikan titik koordinat.</p>
+  </div>
+
   <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
     <app-button type="button" variant="ghost" (click)="handleCancel()">
       Batal

@@ -28,6 +28,9 @@ export class UserApiService {
         district: addr.district,
         subDistrict: addr.subDistrict,
         postalCode: addr.postalCode,
+        addressCode: addr.addressCode,
+        latitude: addr.latitude,
+        longitude: addr.longitude,
         isDefault: addr.isDefault
       }));
     } catch (e) {
@@ -122,6 +125,9 @@ export class UserApiService {
           district: addr.district || '',
           subDistrict: addr.subDistrict || '',
           postalCode: addr.postalCode,
+          addressCode: addr.addressCode || '',
+          latitude: addr.latitude || 0,
+          longitude: addr.longitude || 0,
           isDefault: addr.isDefault
         };
         
@@ -165,6 +171,9 @@ export class UserApiService {
       district: addr.district || '',
       subDistrict: addr.subDistrict || '',
       postalCode: addr.postalCode,
+      addressCode: addr.addressCode || '',
+      latitude: addr.latitude || 0,
+      longitude: addr.longitude || 0,
       isDefault: addr.isDefault
     };
     try {
@@ -188,6 +197,9 @@ export class UserApiService {
       district: addr.district || '',
       subDistrict: addr.subDistrict || '',
       postalCode: addr.postalCode,
+      addressCode: addr.addressCode || '',
+      latitude: addr.latitude || 0,
+      longitude: addr.longitude || 0,
       isDefault: addr.isDefault
     };
     try {

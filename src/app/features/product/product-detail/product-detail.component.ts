@@ -119,7 +119,8 @@ export class ProductDetailComponent implements OnInit {
     this.activeTab.set(tab);
   }
 
-  openQuantityModal() {
+  openQuantityModal(event: Event) {
+    event.stopPropagation();
     this.productStore.setQtyQuantity(1);
     this.productStore.setQtyModalOpen(true);
   }

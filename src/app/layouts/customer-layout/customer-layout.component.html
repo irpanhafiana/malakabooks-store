@@ -130,13 +130,12 @@
       <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
     </app-bottom-sheet>
 
-    <!-- Quantity Bottom Sheet -->
     <app-bottom-sheet
       [isOpen]="productStore.isQtyModalOpen()"
       title="Set Quantity"
       (closed)="closeQty()"
     >
-      <div class="px-5 py-6 flex flex-col bg-white">
+      <div class="px-5 py-6 flex flex-col bg-white min-h-[320px]">
         <p class="text-xs text-slate-500 mb-6 text-center">How many items would you like to buy?</p>
 
         <div class="flex items-center justify-center py-6 bg-slate-50/50 rounded-2xl mb-8 border border-slate-100/60">

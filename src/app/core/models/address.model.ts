@@ -8,5 +8,8 @@ export interface Address {
   district?: string;
   subDistrict?: string;
   postalCode: string;
+  addressCode?: string;
+  latitude?: number;
+  longitude?: number;
   isDefault: boolean;
 }

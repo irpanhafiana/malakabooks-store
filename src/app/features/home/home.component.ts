@@ -91,4 +91,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   filterByCategory(catId: string | null) {
     this.productStore.setCategoryFilter(catId);
   }
+
+  openQtyModal(product: any) {
+    this.productStore.setActiveProduct(product);
+    this.productStore.setSelectedProductId(product.id);
+    this.productStore.setQtyQuantity(1);
+    this.productStore.setQtyModalOpen(true);
+  }
 }

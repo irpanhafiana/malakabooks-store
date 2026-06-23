@@ -239,8 +239,7 @@ export class OrderApiService {
       })),
       addressId: order.shippingAddress.id,
       note: '',
-      shippingFee: order.shippingCost || 0,
-      simasrimRequest: order.simasrimRequest
+      shippingFee: order.shippingCost || 0
     };
 
     if (externalProfileId) {

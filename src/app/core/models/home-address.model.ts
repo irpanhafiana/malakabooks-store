@@ -9,6 +9,7 @@ export interface HomeAddress {
   district: string;
   subDistrict: string;
   postalCode: string;
+  addressCode?: string;
   longitude?: number;
   latitude?: number;
 }
