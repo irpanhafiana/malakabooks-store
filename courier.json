@@ -2,18 +2,56 @@
     "statusCode": 200,
     "statusMessage": "OK",
     "data": {
-        "code": "200",
-        "status": "Success",
-        "data": [
-            "all",
-            "jne",
-            "jntx",
-            "jntc",
-            "sapx",
-            "spx",
-            "lion",
-            "paxel"
-        ]
+        "data": {
+            "ket": "Sukses melacak resi",
+            "user_id": 2781,
+            "created_date": "2025-11-11 10:34:13",
+            "awb": "SPXID25998031095",
+            "ekspedisi": "spx",
+            "status": "delivered",
+            "shipper_name": "Agung",
+            "receiver_name": "Sudarsono",
+            "history_pengiriman": [
+                {
+                    "date": "2025-11-11 10:34:13",
+                    "desc": "Manifes"
+                },
+                {
+                    "date": "2025-11-11 21:10:16",
+                    "desc": "Pickup Failed"
+                },
+                {
+                    "date": "2025-11-12 10:53:05",
+                    "desc": "Paket telah diterima oleh SUKARAJA_1"
+                },
+                {
+                    "date": "2025-11-12 20:21:08",
+                    "desc": "Paket akan dikirimkan ke BGR_GATEWAY"
+                },
+                {
+                    "date": "2025-11-12 22:31:03",
+                    "desc": "Paket telah sampai di BGR_GATEWAY"
+                },
+                {
+                    "date": "2025-11-12 23:54:22",
+                    "desc": "Paket akan dikirimkan ke DC_BOGOR_KOTA"
+                },
+                {
+                    "date": "2025-11-13 04:26:18",
+                    "desc": "Paket telah sampai di DC_BOGOR_KOTA"
+                },
+                {
+                    "date": "2025-11-13 07:21:39",
+                    "desc": "Paket akan dikirim ke alamat penerima"
+                },
+                {
+                    "date": "2025-11-13 10:27:12",
+                    "desc": "Paket telah diterima"
+                }
+            ]
+        },
+        "code": "001",
+        "status": "Success"
     },
     "isSuccess": true
 }

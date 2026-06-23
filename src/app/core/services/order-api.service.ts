@@ -79,7 +79,8 @@ export class OrderApiService {
             shippingCost: 0,
             tax: 0,
             total: res.totalPrice,
-            orderDate: res.createdAt
+            orderDate: res.createdAt,
+            trackingNumber: res.awbNo || res.awbNo || res.trackingNumber
           };
         });
       } catch (e) {
@@ -142,7 +143,8 @@ export class OrderApiService {
           shippingCost: 0,
           tax: 0,
           total: res.totalPrice,
-          orderDate: res.createdAt
+          orderDate: res.createdAt,
+          trackingNumber: res.awbNo || res.awbNo || res.trackingNumber
         };
       });
     } catch (e) {
@@ -209,7 +211,8 @@ export class OrderApiService {
         shippingCost: 0,
         tax: 0,
         total: res.totalPrice,
-        orderDate: res.createdAt
+        orderDate: res.createdAt,
+        trackingNumber: res.awbNo || res.awbNo || res.trackingNumber
       };
     } catch (e) {
       console.error(`Gagal mengambil order detail untuk id ${id}:`, e);
@@ -302,6 +305,18 @@ export class OrderApiService {
       return res?.data || res || null;
     } catch (e) {
       console.error('Gagal membuat bulk shipment:', e);
+      throw e;
+    }
+  }
+
+  async trackAwb(awb: string): Promise<any> {
+    try {
+      const res = await firstValueFrom(
+        this.http.get<any>(`${this.BASE_URL}/customer/Simasrim/TrackAwb/${awb}`)
+      );
+      return res?.data || res || null;
+    } catch (e) {
+      console.error(`Gagal tracking AWB ${awb}:`, e);
       throw e;
     }
   }

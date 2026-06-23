@@ -15,7 +15,14 @@
       } @else {
         <div class="flex flex-col gap-6">
           @for (order of orderStore.orders(); track order.id) {
-            <div class="bg-white border border-slate-100 rounded-3xl p-5 flex flex-col gap-4">
+             <div 
+              [routerLink]="(order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled') ? ['/detail-shipment', order.id] : null"
+              [class.cursor-pointer]="order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled'"
+              [class.hover:border-primary-100]="order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled'"
+              [class.hover:shadow-md]="order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled'"
+              [class.hover:shadow-primary-50/50]="order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled'"
+              class="bg-white border border-slate-100 rounded-3xl p-5 flex flex-col gap-4 transition-all duration-300"
+            >
               <!-- Order Header -->
               <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
                 <div class="flex items-center gap-3">
@@ -52,10 +59,15 @@
 
               <!-- Order Footer details (Tracking, Summary) -->
               <div class="flex flex-wrap items-center justify-between gap-4 pt-3.5 border-t border-slate-100/50 text-xs">
-                @if (order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled') {
-                  <div class="flex items-center gap-1.5 text-slate-500 font-semibold">
-                    <app-icon name="truck" size="16" class="text-slate-400"></app-icon>
-                    <span>Courier Tracking: <strong class="text-slate-700 font-bold select-all">{{ order.trackingNumber }}</strong></span>
+                 @if (order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled') {
+                  <div class="flex items-center justify-between w-full">
+                    <div class="flex items-center gap-1.5 text-slate-500 font-semibold">
+                      <app-icon name="truck" size="16" class="text-slate-400"></app-icon>
+                      <span>Courier Tracking: <strong class="text-slate-700 font-bold select-all">{{ order.trackingNumber }}</strong></span>
+                    </div>
+                    <span class="text-primary-600 font-bold flex items-center gap-0.5 hover:text-primary-700 transition-colors">
+                      Track <i class="bx bx-chevron-right text-base leading-none"></i>
+                    </span>
                   </div>
                 } @else {
                   <div class="flex items-center">

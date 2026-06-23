@@ -130,6 +130,12 @@ export const routes: Routes = [
         data: { title: 'Order History' }
       },
       {
+        path: 'detail-shipment/:id',
+        loadComponent: () => import('./features/order/detail-shipment/detail-shipment.component').then(c => c.DetailShipmentComponent),
+        canActivate: [authGuard],
+        data: { title: 'Detail Shipment' }
+      },
+      {
         path: 'tracking',
         loadComponent: () => import('./features/tracking/tracking.component').then(c => c.TrackingComponent),
         canActivate: [authGuard],
