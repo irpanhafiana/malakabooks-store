@@ -36,4 +36,8 @@ public class UserRepository : IUserRepository
 
     public async Task<UserEntity?> GetByNameAsync(string username, CancellationToken cancellationToken = default)
         => await _collection.Find(x => x.Phone == username).FirstOrDefaultAsync(cancellationToken);
+
+    public async Task<UserEntity?> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default) =>
+         await _collection.Find(x => x.UserId == userId).FirstOrDefaultAsync(cancellationToken);
+
 }

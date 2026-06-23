@@ -244,10 +244,26 @@ public static class MappingExtensions
         return JsonSerializer.Deserialize<OrderShipmentDetail>(shipmentDetailJson);
     }
 
+    public static OrderUserResponse ToResponse(this OrderUserEntity entity) => new()
+    {
+        UserId = entity.UserId,
+        FirstName = entity.FirstName,
+        LastName = entity.LastName,
+        Phone = entity.Phone
+    };
+
+    public static OrderUserEntity ToEntity(this UserEntity entity) => new()
+    {
+        UserId = entity.UserId.Trim(),
+        FirstName = entity.FirstName.Trim(),
+        LastName = entity.LastName.Trim(),
+        Phone = entity.Phone.Trim()
+    };
+
     public static OrderResponse ToResponse(this OrderEntity entity) => new()
     {
         Id = entity.Id ?? string.Empty,
-        UserId = entity.UserId,
+        User = entity.User.ToResponse(),
         Items = entity.Items.Select(ToResponse).ToList(),
         AddressId = entity.AddressId,
         Status = entity.Status,
@@ -272,18 +288,14 @@ public static class MappingExtensions
         UpdatedAt = entity.UpdatedAt
     };
 
-    public static OrderEntity ToEntity(this CreateOrderRequest request)
+    public static OrderEntity ToEntity(this CreateOrderRequest request, UserEntity user)
     {
         var itemsSubtotal = request.Items.Sum(item => item.Price * item.Quantity);
         var shippingFee = request.ShippingFee;
 
         return new OrderEntity
         {
-            UserId = request.UserId.Trim(),
-            FirstName = request.FirstName.Trim(),
-            LastName = request.LastName.Trim(),
-            Phone = request.Phone.Trim(),
-
+            User = user.ToEntity(),
             AddressId = request.AddressId.Trim(),
             Items = request.Items.Select(ToEntity).ToList(),
             ItemsSubtotal = itemsSubtotal,
@@ -341,7 +353,8 @@ public static class MappingExtensions
         PostalCode = entity.PostalCode,
         Longitude = entity.Longitude,
         Latitude = entity.Latitude,
-        IsDefault = entity.IsDefault
+        IsDefault = entity.IsDefault,
+        AddressCode = entity.AddressCode
     };
 
     public static HomeAddressEntity ToEntity(this CreateHomeAddressRequest request) => new()
@@ -356,7 +369,8 @@ public static class MappingExtensions
         SubDistrict = request.SubDistrict.Trim(),
         PostalCode = request.PostalCode.Trim(),
         Longitude = request.Longitude,
-        Latitude = request.Latitude
+        Latitude = request.Latitude,
+        AddressCode = request.AddressCode.Trim()
     };
 
     public static void UpdateFrom(this HomeAddressEntity entity, UpdateHomeAddressRequest request)
@@ -372,6 +386,7 @@ public static class MappingExtensions
         entity.PostalCode = request.PostalCode.Trim();
         entity.Longitude = request.Longitude;
         entity.Latitude = request.Latitude;
+        entity.AddressCode = request.AddressCode.Trim();
     }
 
     public static AddressEntity ToEntity(this CreateAddressRequest request) => new()
@@ -388,7 +403,8 @@ public static class MappingExtensions
         PostalCode = request.PostalCode.Trim(),
         Longitude = request.Longitude,
         Latitude = request.Latitude,
-        IsDefault = request.IsDefault
+        IsDefault = request.IsDefault,
+        AddressCode = request.AddressCode.Trim(),
     };
 
     public static void UpdateFrom(this AddressEntity entity, UpdateAddressRequest request)
@@ -406,6 +422,7 @@ public static class MappingExtensions
         entity.Longitude = request.Longitude;
         entity.Latitude = request.Latitude;
         entity.IsDefault = request.IsDefault;
+        entity.AddressCode = request.AddressCode.Trim();
     }
 
     public static UserResponse ToResponse(this UserEntity entity) => new()
@@ -493,6 +510,7 @@ public static class MappingExtensions
         SubDistrict = entity.SubDistrict,
         PostalCode = entity.PostalCode,
         Longitude = entity.Longitude,
-        Latitude = entity.Latitude
+        Latitude = entity.Latitude,
+        AddressCode = entity.AddressCode
     };
 }

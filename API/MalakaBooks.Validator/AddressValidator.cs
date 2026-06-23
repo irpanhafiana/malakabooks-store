@@ -15,6 +15,7 @@ public class CreateAddressRequestValidator : AbstractValidator<CreateAddressRequ
         RuleFor(x => x.City).NotEmpty();
         RuleFor(x => x.Province).NotEmpty();
         RuleFor(x => x.PostalCode).NotEmpty();
+        RuleFor(x => x.AddressCode).NotEmpty();
     }
 }
 

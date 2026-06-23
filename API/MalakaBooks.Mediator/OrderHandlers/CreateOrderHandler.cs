@@ -17,6 +17,7 @@ using DokuSetting = ConfigSetting.DokuSetting;
 
 public class CreateOrderHandler(
     IOrderRepository orderRepository,
+    IUserRepository userRepository,
     IOrderEntityValidator validator,
     DokuApiClient dokuApiClient,
     IOptions<DokuSetting> dokuOptions,
@@ -28,7 +29,20 @@ public class CreateOrderHandler(
 
     public async Task<CreateOrderResponse> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var entity = request.Request.ToEntity();
+        var user = await userRepository.GetByUserIdAsync(request.Request.UserId.Trim(), cancellationToken);
+        if (user is null)
+        {
+            return new CreateOrderResponse
+            {
+                IsSuccess = false,
+                Errors = new Dictionary<string, string>
+                {
+                    ["1"] = "User not found."
+                }
+            };
+        }
+
+        var entity = request.Request.ToEntity(user);
         var expirationTimeoutMinutes = Math.Max(1, appSetting.OrderSetting?.ExpirationTimeoutMinutes ?? 60);
 
         entity.Status = "pending_payment";
@@ -36,7 +50,6 @@ public class CreateOrderHandler(
         entity.PaymentGateway = "DOKU";
         entity.PaymentMethod = "QRIS";
         entity.ExpiresAt = DateTime.UtcNow.AddMinutes(expirationTimeoutMinutes);
-
 
         var result = await _validator.CreateValidateAsync(entity);
         if (result is not null)
@@ -100,7 +113,19 @@ public class CreateOrderHandler(
             quantity = item.Quantity,
             price = Convert.ToInt32(item.Price),
             type = "PRODUCT"
-        }).ToArray();
+        }).ToList();
+
+        if (request.ShippingFee > 0)
+        {
+            detail.Add(new Line_Items
+            {
+                id = "LOGISTIC",
+                name = "LOGISTIC",
+                quantity = 1,
+                price = Convert.ToInt32(entity.ShippingFee),
+                type = "LOGISTIC"
+            });
+        }
 
         return new DokuObject
         {
@@ -109,15 +134,15 @@ public class CreateOrderHandler(
                 amount = Convert.ToInt32(entity.GrandTotal),
                 invoice_number = entity.Id,
                 callback_url_result = dokuSetting.PaymentCallbackUrl,
-                line_items = detail
+                line_items = detail.ToArray()
             },
             payment = new Payment(),
             customer = new Customer
             {
                 id = request.Id,
-                name = request.FirstName,
-                last_name = request.LastName,
-                phone = phoneNumberUtil.Format(phoneNumberUtil.Parse(request.Phone, "ID"), PhoneNumberFormat.E164)
+                name = entity.User.FirstName,
+                last_name = entity.User.LastName,
+                phone = phoneNumberUtil.Format(phoneNumberUtil.Parse(entity.User.Phone, "ID"), PhoneNumberFormat.E164)
             },
             additional_info = new Additional_Info
             {

@@ -2,6 +2,14 @@ using Mardika.Simasrim.Service.Model;
 
 namespace MalakaBooks.ViewModel;
 
+public class OrderUserResponse
+{
+    public string UserId { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string Phone { get; set; } = string.Empty;
+}
+
 public class OrderShipmentDetail
 {
     public string Courier { get; set; } = string.Empty;
@@ -69,7 +77,7 @@ public class OrderItemResponse
 public class OrderResponse
 {
     public string Id { get; set; } = string.Empty;
-    public string UserId { get; set; } = string.Empty;
+    public OrderUserResponse User { get; set; } = new();
     public List<OrderItemResponse> Items { get; set; } = [];
     public string AddressId { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
@@ -115,9 +123,6 @@ public class CreateOrderRequest
 {
     public string Id { get; set; } = string.Empty;
     public string UserId { get; set; } = string.Empty;
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Phone { get; set; } = string.Empty;
 
     public List<CreateOrderItemRequest> Items { get; set; } = [];
     public string AddressId { get; set; } = string.Empty;

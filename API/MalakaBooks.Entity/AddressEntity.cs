@@ -5,6 +5,8 @@ public class HomeAddressEntity : BaseObject
 {
     public string Label { get; set; } = string.Empty;
 
+    public string AddressCode { get; set; } = string.Empty;
+
     public string RecipientName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string Street { get; set; } = string.Empty;

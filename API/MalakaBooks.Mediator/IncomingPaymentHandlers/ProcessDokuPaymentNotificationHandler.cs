@@ -97,7 +97,7 @@ public class ProcessDokuPaymentNotificationHandler(
         var incomingPayment = new IncomingPaymentEntity
         {
             OrderId = orderId,
-            UserId = order.UserId,
+            UserId = order.User.UserId,
             Gateway = "DOKU",
             PaymentMethod = paymentMethod,
             Status = "paid",
