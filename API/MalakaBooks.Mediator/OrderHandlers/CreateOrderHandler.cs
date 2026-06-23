@@ -72,7 +72,7 @@ public class CreateOrderHandler(
         }
 
         var shipmentDetail = BuildShipmentDetail(request.Request, user, pickupAddress, pickupAddress, receiverAddress);
-        var entity = request.Request.ToEntity(user, shipmentDetail);
+        var entity = request.Request.ToEntity(user);
         var expirationTimeoutMinutes = Math.Max(1, appSetting.OrderSetting?.ExpirationTimeoutMinutes ?? 60);
 
         entity.Status = "pending_payment";
@@ -101,8 +101,10 @@ public class CreateOrderHandler(
 
         var responseText = JsonConvert.DeserializeObject<DokuResponse>(await dokuResponse.Content.ReadAsStringAsync());
 
+        shipmentDetail.ReferenceNo = entity.Id ?? string.Empty;
         entity.PaymentUrl = responseText!.response.payment!.url!;
         entity.UpdatedAt = DateTime.UtcNow;
+        entity.ShipmentDetailJson = shipmentDetail.ToShipmentDetailJson();
 
         await orderRepository.UpdateAsync(entity.Id!, entity, cancellationToken);
 
@@ -131,7 +133,7 @@ public class CreateOrderHandler(
         {
             Courier = request.ShippingCourier.Trim(),
             PickupName = pickupAddress.RecipientName,
-            PickupDate = DateTime.UtcNow.ToString("yyyy-MM-dd"),
+            PickupDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
             PickupPhoneNumber = pickupAddress.Phone,
             PickupAddress = pickupAddress.Street,
             PickupAddressId = pickupAddress.AddressCode ?? string.Empty,
@@ -153,7 +155,7 @@ public class CreateOrderHandler(
             Insurance = "no",
             ItemValueAmount = request.Items.Sum(item => item.Price * item.Quantity),
             ItemType = "buku",
-            Volume = "10x10x10",
+            Volume = "10x3x10",
             ItemName = string.Join(", ", itemTitles),
             CourierInstruction = request.Note.Trim(),
             PickupZipCode = pickupAddress.PostalCode,
@@ -163,10 +165,7 @@ public class CreateOrderHandler(
             ReceiverLongitude = receiverAddress.Longitude.ToString(),
             ReceiverLatitude = receiverAddress.Latitude.ToString(),
             ItemCode = string.Join(",", request.Items.Select(item => item.BookId.Trim()).Where(id => !string.IsNullOrWhiteSpace(id))),
-            ItemCategory = "buku",
-            Bpik = null,
-            ReceiverNote = "tolong video unboxing",
-            PartnerName = "SIMASRIM"
+            ItemCategory = request.ShippingCourier.ToUpper() == "JNTC" ? "bm000007" : "SHTPC",
         };
     }
 

@@ -11,6 +11,8 @@ using MalakaBooks.Validator;
 using Mardika.Simasrim.Service.Configuration;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Subur.API.SwaggerConfig;
@@ -46,6 +48,12 @@ builder.Configuration
     .AddJsonFile($"easycaching.{environmentName}.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables();
 #endregion
+
+// Register MongoDB DateTime serializer here
+BsonSerializer.RegisterSerializer(
+    typeof(DateTime),
+    new DateTimeSerializer(DateTimeKind.Local)
+);
 
 var apiVersionSection = builder.Configuration.GetSection("ApiVersionSetting");
 var swaggerSection = builder.Configuration.GetSection("SwaggerSetting");
