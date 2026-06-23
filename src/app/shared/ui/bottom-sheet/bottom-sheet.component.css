@@ -1,1 +1,58 @@
-/* Optional bottom sheet specific styles */
+/* Backdrop background and transitions */
+.bottom-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 40;
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+  pointer-events: auto;
+}
+
+.bottom-sheet-backdrop.active {
+  opacity: 1;
+}
+
+/* Bottom Sheet container styling and transitions */
+.bottom-sheet-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 92%;
+  background-color: #ffffff;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  border-top: 1px solid rgba(226, 232, 240, 0.95);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 -10px 30px -5px rgba(15, 23, 42, 0.08);
+  transform: translateY(100%);
+  /* Default exit transition: fast acceleration */
+  transition: transform 280ms cubic-bezier(0.3, 0, 0.8, 0.15);
+  will-change: transform;
+}
+
+/* Enter transition: smooth iOS-like spring deceleration */
+.bottom-sheet-container.active {
+  transform: translateY(0);
+  transition: transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Remove transition during dragging for immediate coordinate updates */
+.bottom-sheet-container.dragging {
+  transition: none !important;
+}
+
+/* Full height bottom sheet modifier */
+.bottom-sheet-container.full-height {
+  height: 100%;
+  max-height: 100%;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { OrderStore } from '../../../../store/order.store';
 import { Order, OrderStatus } from '../../../../core/models';
@@ -23,9 +23,44 @@ export class OrdersListComponent implements OnInit {
   private readonly alertService = inject(AlertService);
 
   protected readonly pagination = createClientPagination(this.orderStore.orders, 10);
+  protected readonly selectedOrderIds = signal<string[]>([]);
 
   ngOnInit() {
     this.orderStore.loadAllOrders();
+  }
+
+  isAllSelected() {
+    const paged = this.pagination.paged();
+    if (paged.length === 0) return false;
+    return paged.every(o => this.selectedOrderIds().includes(o.id));
+  }
+
+  toggleSelectAll() {
+    const paged = this.pagination.paged();
+    const currentSelected = this.selectedOrderIds();
+    const allPagedSelected = paged.every(o => currentSelected.includes(o.id));
+
+    if (allPagedSelected) {
+      const pagedIds = paged.map(o => o.id);
+      this.selectedOrderIds.set(currentSelected.filter(id => !pagedIds.includes(id)));
+    } else {
+      const newSelected = [...currentSelected];
+      paged.forEach(o => {
+        if (!newSelected.includes(o.id)) {
+          newSelected.push(o.id);
+        }
+      });
+      this.selectedOrderIds.set(newSelected);
+    }
+  }
+
+  toggleSelectOrder(orderId: string) {
+    const currentSelected = this.selectedOrderIds();
+    if (currentSelected.includes(orderId)) {
+      this.selectedOrderIds.set(currentSelected.filter(id => id !== orderId));
+    } else {
+      this.selectedOrderIds.set([...currentSelected, orderId]);
+    }
   }
 
   async onStatusChange(orderId: string, status: string, selectElement: HTMLSelectElement, currentStatus: string) {
@@ -61,6 +96,47 @@ export class OrdersListComponent implements OnInit {
       }
     } catch (e: any) {
       const errorMsg = e?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman.';
+      this.alertService.error('Error!', errorMsg);
+    }
+  }
+
+  async onBulkCreateShipment() {
+    const selectedIds = this.selectedOrderIds();
+    if (selectedIds.length === 0) {
+      this.alertService.error('Peringatan!', 'Silakan pilih minimal satu pesanan.');
+      return;
+    }
+
+    const isConfirmed = await this.alertService.confirm(
+      'Buat Pengiriman Massal?',
+      `Apakah Anda yakin ingin memproses pengiriman untuk ${selectedIds.length} pesanan yang dipilih?`
+    );
+    if (!isConfirmed) return;
+
+    try {
+      const results = await this.orderStore.createBulkShipments(selectedIds);
+      const responses = Array.isArray(results) ? results : (results?.results || []);
+      const successCount = responses.filter((r: any) => r.isSuccess || r.shipmentCreated).length;
+      const failCount = selectedIds.length - successCount;
+
+      if (successCount > 0) {
+        this.alertService.success(
+          'Selesai!',
+          `${successCount} pengiriman berhasil diproses.` + (failCount > 0 ? ` ${failCount} gagal.` : '')
+        );
+      } else if (failCount > 0) {
+        this.alertService.error(
+          'Gagal!',
+          `Semua (${failCount}) pengiriman gagal diproses.`
+        );
+      } else {
+        this.alertService.error('Gagal!', 'Gagal memproses pengiriman massal.');
+      }
+
+      this.selectedOrderIds.set([]); // Clear selection
+      this.orderStore.loadAllOrders(); // Refresh order status
+    } catch (e: any) {
+      const errorMsg = e?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman massal.';
       this.alertService.error('Error!', errorMsg);
     }
   }

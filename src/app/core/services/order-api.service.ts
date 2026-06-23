@@ -293,4 +293,17 @@ export class OrderApiService {
       throw e;
     }
   }
+
+  async createBulkShipment(orderIds: string[]): Promise<any> {
+    try {
+      const res = await firstValueFrom(
+        this.http.post<any>(`${this.BASE_URL}/admin/Orders/shipment`, { orderIds })
+      );
+      return res?.data || res || null;
+    } catch (e) {
+      console.error('Gagal membuat bulk shipment:', e);
+      throw e;
+    }
+  }
 }
+

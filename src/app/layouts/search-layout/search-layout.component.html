@@ -89,6 +89,7 @@
       [isOpen]="isDetailOpen()" 
       [title]="productStore.activeProduct()?.name || 'Product Details'" 
       (closed)="closeProductDetails()"
+      [fullHeight]="true"
     >
       <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
     </app-bottom-sheet>

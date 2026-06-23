@@ -125,4 +125,16 @@ export class OrderStore {
       throw e;
     }
   }
+
+  async createBulkShipments(orderIds: string[]): Promise<any> {
+    this.state.update(s => ({ ...s, loading: true }));
+    try {
+      const result = await this.orderApi.createBulkShipment(orderIds);
+      this.state.update(s => ({ ...s, loading: false }));
+      return result;
+    } catch (e) {
+      this.state.update(s => ({ ...s, loading: false }));
+      throw e;
+    }
+  }
 }
