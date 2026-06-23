@@ -127,6 +127,9 @@ public class CreateOrderRequest
     public List<CreateOrderItemRequest> Items { get; set; } = [];
     public string AddressId { get; set; } = string.Empty;
     public string Note { get; set; } = string.Empty;
+    public string ShippingCourier { get; set; } = string.Empty;
+    public string ShippingType { get; set; } = string.Empty;
+    public string ShippingEst { get; set; } = string.Empty;
     public decimal ShippingFee { get; set; }
     public SimasrimCreateResiRequest? SimasrimRequest { get; set; }
 }
