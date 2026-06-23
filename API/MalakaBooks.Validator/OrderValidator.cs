@@ -10,12 +10,12 @@ public class CreateOrderRequestValidator : AbstractValidator<CreateOrderRequest>
     {
         RuleFor(x => x.UserId).NotEmpty();
         RuleFor(x => x.AddressId).NotEmpty();
+        RuleFor(x => x.ShippingCourier).NotEmpty();
+        RuleFor(x => x.ShippingType).NotEmpty();
+        RuleFor(x => x.ShippingEst).NotEmpty();
+        RuleFor(x => x.ShippingFee).GreaterThanOrEqualTo(0);
         RuleFor(x => x.Items).NotEmpty();
         RuleForEach(x => x.Items).SetValidator(new CreateOrderItemRequestValidator());
-        When(x => x.SimasrimRequest is not null, () =>
-        {
-            RuleFor(x => x.SimasrimRequest!).SetValidator(new SimasrimCreateResiRequestValidator());
-        });
     }
 }
 

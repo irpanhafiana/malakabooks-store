@@ -30,7 +30,11 @@ public class OrderEntity : BaseObject
     public string? IncomingPaymentId { get; set; }
 
     public decimal ItemsSubtotal { get; set; }
+    public string ShippingCourier { get; set; } = string.Empty;
+    public string ShippingType { get; set; } = string.Empty;
+    public string ShippingEst { get; set; } = string.Empty;
     public decimal ShippingFee { get; set; }
+
     public decimal GrandTotal { get; set; }
     public decimal TotalPrice { get; set; }
     public string Note { get; set; } = string.Empty;

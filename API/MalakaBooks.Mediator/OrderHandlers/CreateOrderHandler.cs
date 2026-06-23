@@ -8,6 +8,7 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.OrderHandlers;
 
+using MalakaBooks.Entity;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PhoneNumbers;
@@ -18,6 +19,8 @@ using DokuSetting = ConfigSetting.DokuSetting;
 public class CreateOrderHandler(
     IOrderRepository orderRepository,
     IUserRepository userRepository,
+    IAddressRepository addressRepository,
+    IHomeAddressRepository homeAddressRepository,
     IOrderEntityValidator validator,
     DokuApiClient dokuApiClient,
     IOptions<DokuSetting> dokuOptions,
@@ -42,7 +45,34 @@ public class CreateOrderHandler(
             };
         }
 
-        var entity = request.Request.ToEntity(user);
+        var receiverAddress = await addressRepository.GetByIdAsync(request.Request.AddressId.Trim(), cancellationToken);
+        if (receiverAddress is null || !string.Equals(receiverAddress.UserId, user.UserId, StringComparison.OrdinalIgnoreCase))
+        {
+            return new CreateOrderResponse
+            {
+                IsSuccess = false,
+                Errors = new Dictionary<string, string>
+                {
+                    ["1"] = "Address not found for the current user."
+                }
+            };
+        }
+
+        var pickupAddress = (await homeAddressRepository.GetAllAsync(cancellationToken)).FirstOrDefault();
+        if (pickupAddress is null)
+        {
+            return new CreateOrderResponse
+            {
+                IsSuccess = false,
+                Errors = new Dictionary<string, string>
+                {
+                    ["1"] = "Home address is not configured."
+                }
+            };
+        }
+
+        var shipmentDetail = BuildShipmentDetail(request.Request, user, pickupAddress, pickupAddress, receiverAddress);
+        var entity = request.Request.ToEntity(user, shipmentDetail);
         var expirationTimeoutMinutes = Math.Max(1, appSetting.OrderSetting?.ExpirationTimeoutMinutes ?? 60);
 
         entity.Status = "pending_payment";
@@ -81,6 +111,62 @@ public class CreateOrderHandler(
             IsSuccess = true,
             OrderId = entity.Id ?? string.Empty,
             PaymentUrl = entity.PaymentUrl
+        };
+    }
+
+    private static OrderShipmentDetail BuildShipmentDetail(
+        CreateOrderRequest request,
+        UserEntity user,
+        HomeAddressEntity pickupAddress,
+        HomeAddressEntity senderAddress,
+        AddressEntity receiverAddress)
+    {
+        var itemTitles = request.Items
+            .Select(item => string.IsNullOrWhiteSpace(item.BookName) ? item.Title : item.BookName)
+            .Where(title => !string.IsNullOrWhiteSpace(title))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return new OrderShipmentDetail
+        {
+            Courier = request.ShippingCourier.Trim(),
+            PickupName = pickupAddress.RecipientName,
+            PickupDate = DateTime.UtcNow.ToString("yyyy-MM-dd"),
+            PickupPhoneNumber = pickupAddress.Phone,
+            PickupAddress = pickupAddress.Street,
+            PickupAddressId = pickupAddress.AddressCode ?? string.Empty,
+            SenderName = senderAddress.RecipientName,
+            SenderAddress = senderAddress.Street,
+            SenderAddressId = senderAddress.AddressCode ?? string.Empty,
+            SenderPhoneNumber = senderAddress.Phone,
+            ReceiverName = receiverAddress.RecipientName,
+            ReceiverAddress = receiverAddress.Street,
+            ReceiverAddressId = receiverAddress.AddressCode ?? string.Empty,
+            ReceiverPhoneNumber = receiverAddress.Phone,
+            Type = "PICKUP",
+            ItemWeight = "1",
+            ServiceType = request.ShippingType.Trim(),
+            ServicePrice = request.ShippingFee.ToString("0.##"),
+            ServiceEstimate = request.ShippingEst.Trim(),
+            Quantity = request.Items.Sum(item => item.Quantity).ToString(),
+            WoodenPacking = "no",
+            Insurance = "no",
+            ItemValueAmount = request.Items.Sum(item => item.Price * item.Quantity),
+            ItemType = "buku",
+            Volume = "10x10x10",
+            ItemName = string.Join(", ", itemTitles),
+            CourierInstruction = request.Note.Trim(),
+            PickupZipCode = pickupAddress.PostalCode,
+            ReceiverZipCode = receiverAddress.PostalCode,
+            SenderLongitude = senderAddress.Longitude.ToString(),
+            SenderLatitude = senderAddress.Latitude.ToString(),
+            ReceiverLongitude = receiverAddress.Longitude.ToString(),
+            ReceiverLatitude = receiverAddress.Latitude.ToString(),
+            ItemCode = string.Join(",", request.Items.Select(item => item.BookId.Trim()).Where(id => !string.IsNullOrWhiteSpace(id))),
+            ItemCategory = "buku",
+            Bpik = null,
+            ReceiverNote = "tolong video unboxing",
+            PartnerName = "SIMASRIM"
         };
     }
 

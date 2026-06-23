@@ -13,8 +13,8 @@ public class HomeAddressResponse
     public string District { get; set; } = string.Empty;
     public string SubDistrict { get; set; } = string.Empty;
     public string PostalCode { get; set; } = string.Empty;
-    public long Longitude { get; set; }
-    public long Latitude { get; set; }
+    public decimal Longitude { get; set; }
+    public decimal Latitude { get; set; }
 }
 
 public class AddressResponse : HomeAddressResponse
@@ -35,8 +35,8 @@ public class CreateHomeAddressRequest
     public string District { get; set; } = string.Empty;
     public string SubDistrict { get; set; } = string.Empty;
     public string PostalCode { get; set; } = string.Empty;
-    public long Longitude { get; set; }
-    public long Latitude { get; set; }
+    public decimal Longitude { get; set; }
+    public decimal Latitude { get; set; }
 }
 
 public class UpdateHomeAddressRequest : CreateHomeAddressRequest

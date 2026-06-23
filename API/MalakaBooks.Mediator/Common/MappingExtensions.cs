@@ -288,7 +288,7 @@ public static class MappingExtensions
         UpdatedAt = entity.UpdatedAt
     };
 
-    public static OrderEntity ToEntity(this CreateOrderRequest request, UserEntity user)
+    public static OrderEntity ToEntity(this CreateOrderRequest request, UserEntity user, OrderShipmentDetail? shipmentDetail = null)
     {
         var itemsSubtotal = request.Items.Sum(item => item.Price * item.Quantity);
         var shippingFee = request.ShippingFee;
@@ -300,10 +300,13 @@ public static class MappingExtensions
             Items = request.Items.Select(ToEntity).ToList(),
             ItemsSubtotal = itemsSubtotal,
             ShippingFee = shippingFee,
+            ShippingType = request.ShippingType,
+            ShippingEst = request.ShippingEst,
+            ShippingCourier = request.ShippingCourier,
             GrandTotal = itemsSubtotal + shippingFee,
             TotalPrice = itemsSubtotal + shippingFee,
             Note = request.Note.Trim(),
-            ShipmentDetailJson = request.SimasrimRequest.ToShipmentDetail().ToShipmentDetailJson(),
+            ShipmentDetailJson = shipmentDetail.ToShipmentDetailJson(),
             ShipmentRetryCount = 0,
             ShipmentLastError = string.Empty,
             ShipmentCreatedAt = null,
