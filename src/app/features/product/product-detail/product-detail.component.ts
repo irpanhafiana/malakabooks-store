@@ -14,7 +14,7 @@ import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { TextareaComponent } from '../../../shared/ui/textarea/textarea.component';
-import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
+import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 
 import { DiscountBadgeComponent } from '../../../shared/ui/discount-badge/discount-badge.component';
 import { QuantitySelectorComponent } from '../../../shared/ui/quantity-selector/quantity-selector.component';
@@ -31,7 +31,7 @@ import { ToastService } from '../../../core/services/toast.service';
     IconComponent, 
     ButtonComponent, 
     TextareaComponent, 
-    SkeletonComponent, 
+    SpinnerComponent, 
 
     DiscountBadgeComponent, 
     KeyValuePipe, 
@@ -74,6 +74,7 @@ export class ProductDetailComponent implements OnInit {
     effect(() => {
       const id = this.productIdInput();
       if (id) {
+        this.activeTab.set('details');
         this.loadProduct(id);
       }
     });
@@ -111,8 +112,11 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
-  setActiveImage(img: string) {
+  setActiveImage(img: string, scrollContainer?: HTMLElement) {
     this.activeImage.set(img);
+    if (scrollContainer) {
+      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   setActiveTab(tab: 'details' | 'reviews') {
@@ -123,6 +127,12 @@ export class ProductDetailComponent implements OnInit {
     event.stopPropagation();
     this.productStore.setQtyQuantity(1);
     this.productStore.setQtyModalOpen(true);
+  }
+
+  buyNow(event: Event) {
+    // Untuk saat ini, kita gunakan modal quantity yang sama
+    // Logika tambahan untuk "Beli Sekarang" bisa ditambahkan di sini nantinya
+    this.openQuantityModal(event);
   }
 
   hasSpecs(): boolean {

@@ -1,12 +1,8 @@
 <div class="flex flex-col h-full overflow-hidden animate-fade-in">
       @if (loading()) {
-        <div class="grow overflow-y-auto px-5 py-4 flex flex-col gap-6">
-          <app-skeleton type="card"></app-skeleton>
-          <div class="flex flex-col gap-4">
-            <app-skeleton type="text" height="32px" width="80%"></app-skeleton>
-            <app-skeleton type="text" height="20px" width="40%"></app-skeleton>
-            <app-skeleton type="text" height="60px" width="100%"></app-skeleton>
-          </div>
+        <!-- Simple circle loader -->
+        <div class="grow flex flex-col items-center justify-center h-full gap-3 opacity-70">
+          <app-spinner></app-spinner>
         </div>
       } @else if (!product()) {
         <div class="grow overflow-y-auto px-5 py-16 text-center">
@@ -16,7 +12,7 @@
         </div>
       } @else {
         <!-- Scrollable Details area -->
-        <div class="grow overflow-y-auto px-4 pb-5 pt-0 no-scrollbar bg-linear-to-b from-slate-50/50 to-white">
+        <div #scrollContainer class="grow overflow-y-auto px-4 pb-5 pt-0 no-scrollbar bg-linear-to-b from-slate-50/50 to-white">
           <!-- Breadcrumbs -->
           @if (!productIdInput()) {
             <nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-6">
@@ -31,15 +27,15 @@
           <div class="flex flex-col gap-6">
             
             <!-- Image Gallery -->
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-2">
               <!-- Main Image Viewer -->
-              <div class="w-full bg-white relative group">
+              <div class="w-full aspect-square bg-white relative group">
                 <img
                   [src]="activeImage()"
                   [alt]="product()!.name"
-                  class="object-contain w-full h-auto transition-transform duration-500 ease-out"
+                  class="object-contain w-full h-full transition-transform duration-500 ease-out"
                 />
-                <div class="badge-uom-lg shadow-md">{{ product()!.categoryName }}</div>
+                <div class="badge-uom-lg">{{ product()!.categoryName }}</div>
                 <app-discount-badge
                   [price]="product()!.price"
                   [originalPrice]="product()!.originalPrice"
@@ -54,10 +50,10 @@
                   @for (img of product()!.images; track img) {
                     <button
                       type="button"
-                      (click)="setActiveImage(img)"
+                      (click)="setActiveImage(img, scrollContainer)"
                       [class.border-primary-500]="activeImage() === img"
                       [class.border-white]="activeImage() !== img"
-                      class="h-20 w-20 shrink-0 bg-white border-3 overflow-hidden cursor-pointer active:scale-95 transition-all relative"
+                      class="h-14 w-14 shrink-0 bg-white border-3 overflow-hidden cursor-pointer active:scale-95 transition-all relative"
                     >
                       <img [src]="img" [alt]="product()!.name + ' thumbnail'" class="object-cover w-full h-full" />
                     </button>
@@ -69,17 +65,13 @@
             <!-- Product Details Column -->
             <div class="flex flex-col gap-5">
               <!-- Meta & Title -->
-              <div class="flex flex-col gap-3">
-                <h1 class="text-xl font-display font-black text-slate-800 tracking-tight mt-1 leading-[1.15]">{{ product()!.name }}</h1>
-                <div class="w-full flex flex-row justify-between">
-                  <p class="text-[13px] text-slate-500 mt-0.5"><strong class="text-slate-700 font-bold">{{ product()!.author }}</strong></p>
-                    <!-- Ratings Badge -->
-                    <div class="flex items-center gap-1.5 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-100">
-                      <app-icon name="star" size="12" class="text-amber-500 fill-amber-500"></app-icon>
-                      <span class="text-xs font-bold text-amber-700">{{ product()!.rating }}</span>
-                      <span class="text-[10px] text-amber-600 font-medium">({{ product()!.reviewsCount }} reviews)</span>
-                    </div>
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-between w-full mt-1">
+                  <app-price [value]="product()!.price" size="xl" class="text-red-500 font-black"></app-price>
+                  <span class="text-[13px] text-slate-500 font-medium">{{ product()!.reviewsCount * 12 + (product()!.stock % 7) + 5 }} Terjual</span>
                 </div>
+                <h1 class="text-xl font-display font-black text-slate-800 tracking-tight leading-[1.15]">{{ product()!.name }}</h1>
+                <p class="text-[13px] text-slate-500">{{ product()!.author }}</p>
               </div>
             </div>
           </div>
@@ -91,7 +83,6 @@
               <button
                 (click)="setActiveTab('details')"
                 [class.bg-white]="activeTab() === 'details'"
-                [class.shadow-sm]="activeTab() === 'details'"
                 [class.text-slate-800]="activeTab() === 'details'"
                 [class.text-slate-500]="activeTab() !== 'details'"
                 [class.hover:bg-slate-100/50]="activeTab() !== 'details'"
@@ -102,13 +93,12 @@
               <button
                 (click)="setActiveTab('reviews')"
                 [class.bg-white]="activeTab() === 'reviews'"
-                [class.shadow-sm]="activeTab() === 'reviews'"
                 [class.text-slate-800]="activeTab() === 'reviews'"
                 [class.text-slate-500]="activeTab() !== 'reviews'"
                 [class.hover:bg-slate-100/50]="activeTab() !== 'reviews'"
                 class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer"
               >
-                Reviews ({{ reviews().length }})
+                {{ reviews().length }} Reviews ({{ product()!.rating }})
               </button>
             </div>
 
@@ -214,28 +204,26 @@
         </div>
 
         <!-- Sticky Bottom Action Bar -->
-        <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl px-5 py-4 pb-6 flex items-center justify-between gap-4 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.05)] relative z-50">
-          <!-- Price display -->
-          <div class="flex flex-col shrink-0 min-w-[80px] text-left">
-            <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest mb-0.5">Price</span>
-            <app-price [value]="product()!.price" size="lg" class="text-slate-800"></app-price>
-          </div>
-
-          <!-- Actions Wrapper -->
-          <div class="flex grow items-center justify-end gap-3">
-            <div class="grow max-w-[160px]">
-              <app-button
-                (click)="openQuantityModal($event)"
-                [disabled]="product()!.stock <= 0"
-                variant="primary"
-                [fullWidth]="true"
-                class="h-12 border border-primary-700/20 text-sm font-bold rounded-2xl shadow-md shadow-primary-600/20"
-              >
-                <i class="bx bx-shopping-bag text-lg mr-1 -ml-1"></i>
-                Add to Cart
-              </app-button>
-            </div>
-          </div>
+        <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
+          <app-button
+            (click)="openQuantityModal($event)"
+            [disabled]="product()!.stock <= 0"
+            variant="outline"
+            [fullWidth]="true"
+            class="flex-1 h-12 text-sm font-bold rounded-2xl"
+          >
+            Tbh ke Keranjang
+          </app-button>
+          
+          <app-button
+            (click)="buyNow($event)"
+            [disabled]="product()!.stock <= 0"
+            variant="primary"
+            [fullWidth]="true"
+            class="flex-1 h-12 text-sm font-bold rounded-2xl"
+          >
+            Beli Sekarang
+          </app-button>
         </div>
       }
     </div>

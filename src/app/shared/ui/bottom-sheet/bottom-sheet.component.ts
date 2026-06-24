@@ -148,10 +148,12 @@ export class BottomSheetComponent implements OnDestroy {
     if (this.openTimerId) {
       clearTimeout(this.openTimerId);
     }
-    // Clean up document event listeners to avoid leaks
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
-    document.removeEventListener('touchmove', this.onTouchMove);
-    document.removeEventListener('touchend', this.onTouchEnd);
+    // Clean up document event listeners to avoid leaks (only in browser)
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('mousemove', this.onMouseMove);
+      document.removeEventListener('mouseup', this.onMouseUp);
+      document.removeEventListener('touchmove', this.onTouchMove);
+      document.removeEventListener('touchend', this.onTouchEnd);
+    }
   }
 }

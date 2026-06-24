@@ -14,9 +14,9 @@
     [class.full-height]="fullHeight()"
     [style.transform]="isDragging() ? 'translateY(' + dragOffset() + 'px)' : null"
   >
-    <!-- Header with drag indicator & title -->
+    <!-- Header with drag indicator -->
     <div 
-      class="w-full flex flex-col shrink-0 select-none border-b border-slate-100/60 bg-white"
+      class="w-full flex flex-col shrink-0 select-none bg-white"
       (touchstart)="onDragStart($event)"
       (mousedown)="onDragStart($event)"
     >
@@ -24,22 +24,6 @@
       <div class="w-full flex justify-center py-2.5 cursor-grab active:cursor-grabbing">
         <div class="w-10 h-1.25 rounded-full bg-slate-200/80 hover:bg-slate-300 transition-colors"></div>
       </div>
-      
-      <!-- Title & Close Button -->
-      @if (title()) {
-        <div class="flex items-center justify-between px-5 pb-3.5 pt-0.5">
-          <h3 class="text-base font-bold text-slate-800 font-display tracking-tight">{{ title() }}</h3>
-          <button 
-            type="button" 
-            (click)="closeSheet()" 
-            class="p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent"
-            (touchstart)="$event.stopPropagation()"
-            (mousedown)="$event.stopPropagation()"
-          >
-            <i class="bx bx-x text-xl"></i>
-          </button>
-        </div>
-      }
     </div>
 
     <!-- Content Viewport -->
