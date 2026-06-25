@@ -5,7 +5,6 @@ import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     // lazy route chunk in the background so later navigations (cart, checkout,
     // login, admin forms, ...) render instantly instead of waiting on a fetch.
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor, loadingInterceptor])), provideClientHydration(withEventReplay())
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor, loadingInterceptor]))
   ]
 };
 

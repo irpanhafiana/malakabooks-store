@@ -1,59 +1,56 @@
-# Malakabooks
+# Malakabooks Store 📚
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+Platform E-Commerce Modern untuk Penjualan Buku, dibangun menggunakan **Angular 21**.
 
-## Development server
+> Aplikasi ini adalah Single Page Application (SPA) murni dengan **Client-Side Rendering (CSR)** untuk performa optimal dan navigasi instan.
 
-To start a local development server, run:
+## 🚀 Teknologi Utama
 
-```bash
-ng serve
-```
+- **Framework:** Angular 21 (Standalone & Signals)
+- **Styling:** Tailwind CSS v4
+- **Pengujian:** Vitest
+- **Ikon & Font:** Boxicons, Google Fonts (Fraunces, Inter, Poppins, Plus Jakarta Sans)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 📦 Prasyarat
 
-## Code scaffolding
+Pastikan Anda telah menginstal NodeJS (Direkomendasikan v20+) dan `npm` sebelum menjalankan proyek ini.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🛠️ Instalasi & Menjalankan Aplikasi
 
-```bash
-ng generate component component-name
-```
+1. Klon repositori ini atau masuk ke dalam folder proyek.
+2. Instal semua dependensi:
+   ```bash
+   npm install
+   ```
+3. Jalankan server pengembangan lokal:
+   ```bash
+   npm start
+   # atau
+   npm run ng serve
+   ```
+4. Buka browser dan navigasikan ke `http://localhost:4200/`. Aplikasi akan termuat ulang otomatis jika ada perubahan pada kode sumber.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🏗️ Build untuk Production
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Untuk membuat versi produksi (*production bundle*), jalankan:
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
+Hasil kompilasi (*build artifacts*) akan disimpan di direktori `dist/malakabooks`. File-file tersebut siap untuk disajikan (di-host) oleh server statis apa pun (seperti Nginx, Vercel, Netlify, atau Firebase Hosting).
 
-For end-to-end (e2e) testing, run:
+## 🧪 Menjalankan Pengujian (Testing)
 
+Proyek ini telah dikonfigurasi untuk menggunakan **Vitest**.
+
+Jalankan perintah berikut untuk mengeksekusi *unit test*:
 ```bash
-ng e2e
+npm run test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 📖 Dokumentasi Lanjutan
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Untuk developer yang baru bergabung, silakan baca dokumen berikut sebelum mulai berkontribusi:
+- [Arsitektur Proyek (ARCHITECTURE.md)](ARCHITECTURE.md)
+- [Aturan AI (AGENTS.md)](.agents/AGENTS.md)
