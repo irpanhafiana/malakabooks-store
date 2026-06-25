@@ -31,6 +31,7 @@ export class InnerPageLayoutComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
 
   pageTitle = signal<string>('');
+  hideHeader = signal<boolean>(false);
 
   constructor() {
     this.router.events.pipe(
@@ -46,6 +47,7 @@ export class InnerPageLayoutComponent {
       takeUntilDestroyed()
     ).subscribe(data => {
       this.pageTitle.set(data['title'] || '');
+      this.hideHeader.set(data['hideHeader'] || false);
     });
   }
 

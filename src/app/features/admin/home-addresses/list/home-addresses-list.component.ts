@@ -3,7 +3,7 @@ import { AdminHomeAddressStore } from '../../../../store/admin-home-address.stor
 import { HomeAddress } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
 import { AlertService } from '../../../../core/services/alert.service';
@@ -15,7 +15,7 @@ import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home-addresses-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, ButtonComponent, IconComponent, PaginationComponent, HomeAddressesFormComponent, SpinnerComponent],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, HomeAddressesFormComponent, SpinnerComponent],
   templateUrl: './home-addresses-list.component.html'
 })
 export class HomeAddressesListComponent implements OnInit {

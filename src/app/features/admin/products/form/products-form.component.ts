@@ -2,17 +2,17 @@ import { Component, inject, input, output, effect, computed, ChangeDetectionStra
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductStore } from '../../../../store/product.store';
 import { Product } from '../../../../core/models';
-import { InputComponent } from '../../../../shared/ui/input/input.component';
+import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { SelectComponent } from '../../../../shared/ui/select/select.component';
 import { TextareaComponent } from '../../../../shared/ui/textarea/textarea.component';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-form',
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, SelectComponent, TextareaComponent, ButtonComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, SelectComponent, TextareaComponent, AdminButtonComponent],
   templateUrl: './products-form.component.html',
   styleUrl: './products-form.component.css'
 })

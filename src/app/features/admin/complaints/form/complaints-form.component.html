@@ -30,17 +30,17 @@
     ></app-textarea>
 
     <div class="flex gap-3 pt-1">
-      <app-button type="button" variant="outline" class="flex-1" (click)="onCancel.emit()">
+      <app-admin-button type="button" variant="outline" class="flex-1" (click)="onCancel.emit()">
         Batal
-      </app-button>
-      <app-button
+      </app-admin-button>
+      <app-admin-button
         type="submit"
         class="flex-1"
         [disabled]="respondForm.invalid"
         [loading]="submitting()"
       >
         Simpan Respons
-      </app-button>
+      </app-admin-button>
     </div>
   </form>
 </div>

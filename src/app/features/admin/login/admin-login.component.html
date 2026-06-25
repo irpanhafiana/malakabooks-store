@@ -9,26 +9,26 @@
   }
 
   <form [formGroup]="loginForm" (submit)="onSubmit()" class="flex flex-col gap-4">
-    <app-input
+    <app-admin-input
       label="Admin Username"
       type="text"
       placeholder="e.g. admin@malakabooks.local"
       icon="user"
       [control]="usernameControl"
-    ></app-input>
+    ></app-admin-input>
 
     <div class="flex flex-col gap-1.5">
       <label for="password" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Password</label>
-      <app-input
+      <app-admin-input
         type="password"
         placeholder="e.g. ChangeMe123!"
         icon="cog"
         [control]="passwordControl"
-      ></app-input>
+      ></app-admin-input>
     </div>
 
     <div class="mt-2">
-      <app-button
+      <app-admin-button
         type="submit"
         [loading]="isLoading()"
         [disabled]="loginForm.invalid"
@@ -36,7 +36,7 @@
         variant="primary"
       >
         Access Admin Dashboard
-      </app-button>
+      </app-admin-button>
     </div>
   </form>
 

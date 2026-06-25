@@ -1,0 +1,94 @@
+<div class="animate-fade-in px-6 py-8 overflow-y-auto h-full flex flex-col justify-between no-scrollbar bg-slate-50/30">
+  <!-- Top Illustration Area -->
+  <div class="flex flex-col items-center text-center mt-4">
+    <!-- Stack of Books and Waving Character SVG -->
+    <div class="w-32 h-32 rounded-full bg-primary-100/70 flex items-center justify-center mb-8 relative border border-primary-200/50 shadow-inner">
+      <svg class="w-24 h-24 text-primary-600" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" fill="currentColor" fill-opacity="0.1"/>
+        <!-- Book spine and base -->
+        <rect x="35" y="42" width="30" height="24" rx="2" fill="#337eaf" />
+        <rect x="32" y="44" width="36" height="4" rx="1" fill="#ccdfeb" />
+        <rect x="32" y="52" width="36" height="4" rx="1" fill="#ccdfeb" />
+        <rect x="32" y="60" width="36" height="4" rx="1" fill="#ccdfeb" />
+        <!-- Bookmark ribbon -->
+        <path d="M48 42 V54 L52 50 L56 54 V42 Z" fill="#F43F5E" />
+        <!-- Reading Character Profile -->
+        <circle cx="50" cy="30" r="8" fill="currentColor" />
+        <path d="M40 42 C40 38 60 38 60 42 V44 H40 V42 Z" fill="currentColor" />
+      </svg>
+      <!-- Small floating wave hand -->
+      <span class="absolute -top-1 -right-1 text-2xl animate-bounce">👋</span>
+    </div>
+
+    <!-- Title & Subtitle -->
+    <h2 class="text-2xl font-display font-extrabold text-slate-800 tracking-tight mb-2">Welcome to Malaka Books</h2>
+    <p class="text-slate-500 text-xs leading-relaxed max-w-xs px-4">
+      Explore a modern experience built for speed and simplicity.
+    </p>
+  </div>
+
+  <!-- Action & Social Buttons Area -->
+  <div class="flex flex-col gap-6 mt-8">
+    <!-- Primary Get Started Button -->
+    <app-button
+      routerLink="/auth/register"
+      [fullWidth]="true"
+      variant="primary"
+      size="lg"
+    >
+      Get Started
+    </app-button>
+
+    <!-- Or Divider -->
+    <div class="flex items-center gap-3 text-xs font-semibold text-slate-400">
+      <div class="h-px grow bg-slate-200/80"></div>
+      <span>Or</span>
+      <div class="h-px grow bg-slate-200/80"></div>
+    </div>
+
+    <!-- Social Continue Buttons -->
+    <div class="flex flex-col gap-3">
+      <app-button
+        type="button"
+        variant="outline"
+        size="lg"
+        [fullWidth]="true"
+      >
+        <div class="flex items-center justify-center gap-3 w-full">
+          <i class="bx bxl-google text-lg text-rose-500"></i>
+          <span>Continue with Google</span>
+        </div>
+      </app-button>
+
+      <app-button
+        type="button"
+        variant="outline"
+        size="lg"
+        [fullWidth]="true"
+      >
+        <div class="flex items-center justify-center gap-3 w-full">
+          <i class="bx bxl-apple text-lg text-slate-900"></i>
+          <span>Continue with Apple</span>
+        </div>
+      </app-button>
+
+      <app-button
+        type="button"
+        variant="outline"
+        size="lg"
+        [fullWidth]="true"
+      >
+        <div class="flex items-center justify-center gap-3 w-full">
+          <i class="bx bxl-facebook text-lg text-blue-600"></i>
+          <span>Continue with Facebook</span>
+        </div>
+      </app-button>
+    </div>
+  </div>
+
+  <!-- Footer Link -->
+  <div class="mt-8 text-center text-xs text-slate-500 pb-2">
+    <span>Already have an account? </span>
+    <a routerLink="/auth/login" class="text-primary-600 hover:text-primary-700 font-extrabold transition-colors cursor-pointer">Sign In</a>
+  </div>
+</div>

@@ -5,12 +5,13 @@ import { environment } from '../../../../environments/environment';
 import { AuthStore } from '../../../store/auth.store';
 import { InputComponent } from '../../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { CheckboxComponent } from '../../../shared/ui/checkbox/checkbox.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, InputComponent, ButtonComponent],
+  imports: [ReactiveFormsModule, RouterLink, InputComponent, ButtonComponent, CheckboxComponent],
 
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -36,10 +37,12 @@ export class LoginComponent implements OnInit {
 
   usernameControl = new FormControl('', [Validators.required]);
   passwordControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
+  rememberMeControl = new FormControl(false);
 
   loginForm = new FormGroup({
     username: this.usernameControl,
-    password: this.passwordControl
+    password: this.passwordControl,
+    rememberMe: this.rememberMeControl
   });
 
   fillDemoCredentials() {

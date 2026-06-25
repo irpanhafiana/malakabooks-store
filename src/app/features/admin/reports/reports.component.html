@@ -18,10 +18,10 @@
               <p class="text-[10px] text-slate-400 leading-relaxed">Breakdown of total transaction orders, shipping charges, sales taxes, and applied promos.</p>
             </div>
           </div>
-          <app-button (click)="downloadSalesReport()" [loading]="salesLoading()" variant="outline" size="sm" class="self-start">
+          <app-admin-button (click)="downloadSalesReport()" [loading]="salesLoading()" variant="outline" size="sm" class="self-start">
             <app-icon name="chevron-down" size="12"></app-icon>
             Download CSV
-          </app-button>
+          </app-admin-button>
         </div>
 
         <!-- Inventory Report Card -->
@@ -35,10 +35,10 @@
               <p class="text-[10px] text-slate-400 leading-relaxed">Active products counts, available stock logs, prices, average reviews rating and categories.</p>
             </div>
           </div>
-          <app-button (click)="downloadInventoryReport()" [loading]="invLoading()" variant="outline" size="sm" class="self-start">
+          <app-admin-button (click)="downloadInventoryReport()" [loading]="invLoading()" variant="outline" size="sm" class="self-start">
             <app-icon name="chevron-down" size="12"></app-icon>
             Download CSV
-          </app-button>
+          </app-admin-button>
         </div>
       </div>
     </div>

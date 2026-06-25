@@ -1,9 +1,9 @@
 <form [formGroup]="categoryForm" class="flex flex-col gap-4">
-  <app-input label="Category Name" placeholder="e.g. Literature & Fiction" [control]="nameControl"></app-input>
-  <app-input label="Icon Name (e.g. book-open, cpu, pen-tool, headphones, tablet)" placeholder="book-open" [control]="iconControl"></app-input>
+  <app-admin-input label="Category Name" placeholder="e.g. Literature & Fiction" [control]="nameControl"></app-admin-input>
+  <app-admin-input label="Icon Name (e.g. book-open, cpu, pen-tool, headphones, tablet)" placeholder="book-open" [control]="iconControl"></app-admin-input>
   
   <div class="flex justify-end gap-2 mt-4">
-    <app-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Cancel</app-button>
-    <app-button (click)="onSubmitForm()" [disabled]="categoryForm.invalid" type="button" variant="primary" size="sm">Save Category</app-button>
+    <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Cancel</app-admin-button>
+    <app-admin-button (click)="onSubmitForm()" [disabled]="categoryForm.invalid" type="button" variant="primary" size="sm">Save Category</app-admin-button>
   </div>
 </form>

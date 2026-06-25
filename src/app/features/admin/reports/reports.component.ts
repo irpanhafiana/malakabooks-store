@@ -1,7 +1,7 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { OrderApiService } from '../../../core/services/order-api.service';
 import { ProductApiService } from '../../../core/services/product-api.service';
-import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { AdminButtonComponent } from '../../../shared/ui/admin-button/admin-button.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ToastService } from '../../../core/services/toast.service';
 import { buildCsv, downloadCsv } from '../../../shared/util/csv.util';
@@ -10,7 +10,7 @@ import { buildCsv, downloadCsv } from '../../../shared/util/csv.util';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-reports',
   standalone: true,
-  imports: [ButtonComponent, IconComponent],
+  imports: [AdminButtonComponent, IconComponent],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.css'
 })

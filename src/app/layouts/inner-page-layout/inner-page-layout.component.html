@@ -5,20 +5,22 @@
        style="height: calc(100% / clamp(0.5, 100vw / 480, 1)); transform: scale(clamp(0.5, 100vw / 480, 1)); transform-origin: center top;">
     
     <!-- Header with Back Button -->
-    <header class="sticky top-0 z-40 bg-gray-50 px-4 py-3 flex items-center gap-3 h-14 shrink-0 border-b border-gray-100">
-      <button
-        type="button"
-        (click)="goBack()"
-        class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0 transition-all"
-        aria-label="Go Back"
-      >
-        <i class="bx bx-left-arrow-alt text-2xl"></i>
-      </button>
-      
-      @if (pageTitle()) {
-        <h1 class="font-display font-extrabold text-slate-800 text-base flex-1 truncate">{{ pageTitle() }}</h1>
-      }
-    </header>
+    @if (!hideHeader()) {
+      <header class="sticky top-0 z-40 bg-gray-50 px-4 py-3 flex items-center gap-3 h-14 shrink-0 border-b border-gray-100">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0 transition-all"
+          aria-label="Go Back"
+        >
+          <i class="bx bx-left-arrow-alt text-2xl"></i>
+        </button>
+        
+        @if (pageTitle()) {
+          <h1 class="font-display font-extrabold text-slate-800 text-base flex-1 truncate">{{ pageTitle() }}</h1>
+        }
+      </header>
+    }
 
     <!-- Main Content Area (No scrolling here, children must handle it) -->
     <main class="grow flex flex-col bg-gray-50 relative overflow-hidden">

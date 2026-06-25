@@ -2,7 +2,7 @@ import { Component, inject, input, output, signal, effect, ChangeDetectionStrate
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ComplaintStore } from '../../../../store/complaint.store';
 import { Complaint, ComplaintStatus } from '../../../../core/models';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { TextareaComponent } from '../../../../shared/ui/textarea/textarea.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
@@ -10,7 +10,7 @@ import { AlertService } from '../../../../core/services/alert.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-complaints-form',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonComponent, TextareaComponent],
+  imports: [ReactiveFormsModule, AdminButtonComponent, TextareaComponent],
   templateUrl: './complaints-form.component.html',
   styleUrl: './complaints-form.component.css'
 })

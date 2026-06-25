@@ -8,13 +8,14 @@ import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
+import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { ExternalMessageService } from '../../../core/services/external-message.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-order-history',
   standalone: true,
-  imports: [RouterLink, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, StatusBadgeComponent, DatePipe],
+  imports: [RouterLink, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, StatusBadgeComponent, DatePipe, ButtonComponent],
   templateUrl: './order-history.component.html',
   styleUrl: './order-history.component.css'
 })

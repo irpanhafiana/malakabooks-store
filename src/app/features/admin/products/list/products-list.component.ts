@@ -4,7 +4,7 @@ import { ProductStore } from '../../../../store/product.store';
 import { Product } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { BadgeComponent } from '../../../../shared/ui/badge/badge.component';
 import { PriceComponent } from '../../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
@@ -18,7 +18,7 @@ import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule, TableComponent, ModalComponent, ButtonComponent, BadgeComponent, PriceComponent, IconComponent, PaginationComponent, ProductsFormComponent, SpinnerComponent],
+  imports: [CommonModule, TableComponent, ModalComponent, AdminButtonComponent, BadgeComponent, PriceComponent, IconComponent, PaginationComponent, ProductsFormComponent, SpinnerComponent],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.css'
 })

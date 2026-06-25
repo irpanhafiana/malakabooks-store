@@ -3,7 +3,7 @@ import { ProductStore } from '../../../../store/product.store';
 import { Category } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
 import { AlertService } from '../../../../core/services/alert.service';
@@ -15,7 +15,7 @@ import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-categories-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, ButtonComponent, IconComponent, PaginationComponent, CategoriesFormComponent, SpinnerComponent],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, CategoriesFormComponent, SpinnerComponent],
   templateUrl: './categories-list.component.html',
   styleUrl: './categories-list.component.css'
 })

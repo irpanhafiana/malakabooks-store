@@ -1,0 +1,12 @@
+<button
+      [type]="type()"
+      [disabled]="disabled() || loading()"
+      [class]="buttonClass()"
+    >
+      @if (loading()) {
+        <i class="bx bx-loader-alt bx-spin -ml-1 mr-2 text-current text-sm"></i>
+      }
+      <span class="inline-flex items-center justify-center gap-1.5 w-full">
+        <ng-content></ng-content>
+      </span>
+    </button>

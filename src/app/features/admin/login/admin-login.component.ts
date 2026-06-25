@@ -2,15 +2,15 @@ import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@ang
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
-import { InputComponent } from '../../../shared/ui/input/input.component';
-import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { AdminInputComponent } from '../../../shared/ui/admin-input/admin-input.component';
+import { AdminButtonComponent } from '../../../shared/ui/admin-button/admin-button.component';
 import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-admin-login',
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, ButtonComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent],
   templateUrl: './admin-login.component.html'
 })
 export class AdminLoginComponent implements OnInit {

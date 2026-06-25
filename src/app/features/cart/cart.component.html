@@ -39,14 +39,15 @@
                     <!-- Price -->
                     <div class="flex items-center gap-4">
                       <app-price [value]="item.product.price * item.quantity" size="sm" class="text-slate-800"></app-price>
-                      <button
+                      <app-button
                         type="button"
                         [disabled]="cartStore.loading()"
                         (click)="cartStore.removeItem(item.product.id)"
-                        class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer active:scale-90 disabled:opacity-40 disabled:pointer-events-none"
+                        variant="ghost"
+                        customClass="text-slate-400 hover:text-rose-500 hover:bg-rose-50 !p-1.5 rounded-lg active:scale-90 disabled:opacity-40"
                       >
                         <app-icon name="trash" size="16"></app-icon>
-                      </button>
+                      </app-button>
                     </div>
                   </div>
                 </div>

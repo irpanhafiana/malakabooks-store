@@ -2,15 +2,15 @@ import { Component, input, output, effect, inject, ChangeDetectionStrategy } fro
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Category } from '../../../../core/models';
 import { ProductStore } from '../../../../store/product.store';
-import { InputComponent } from '../../../../shared/ui/input/input.component';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-categories-form',
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, ButtonComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent],
   templateUrl: './categories-form.component.html',
   styleUrl: './categories-form.component.css'
 })

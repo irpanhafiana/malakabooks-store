@@ -3,7 +3,7 @@ import { DatePipe } from '@angular/common';
 import { ComplaintStore } from '../../../../store/complaint.store';
 import { Complaint, ComplaintStatus } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
@@ -18,7 +18,7 @@ import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-
   imports: [
     DatePipe,
     TableComponent,
-    ButtonComponent,
+    AdminButtonComponent,
     ModalComponent,
     PaginationComponent,
     ComplaintsFormComponent,

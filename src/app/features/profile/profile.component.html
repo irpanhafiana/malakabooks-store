@@ -33,12 +33,13 @@
       </span>
     </div>
 
-    <button 
+    <app-button 
       (click)="showEditProfile.set(true)"
-      class="flex items-center justify-center gap-2 px-6 py-2.5 bg-linear-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-full text-xs font-bold shadow-md shadow-primary-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+      variant="primary"
+      customClass="!rounded-full px-6 bg-linear-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
     >
-      <i class="bx bx-edit text-sm"></i> Edit Profile
-    </button>
+      <i class="bx bx-edit text-sm mr-1.5"></i> Edit Profile
+    </app-button>
   </div>
 
   <!-- Menu Sections (Generated Dynamically) -->
@@ -154,13 +155,14 @@
       }
     }
 
-    <button 
+    <app-button 
       type="button" 
       (click)="addNewAddress()" 
-      class="w-full mt-2 flex items-center justify-center gap-1.5 p-3 border border-dashed border-slate-200 hover:border-primary-300 rounded-2xl text-xs font-bold text-primary-600 hover:text-primary-700 bg-primary-50/10 hover:bg-primary-50/30 transition-all cursor-pointer"
+      variant="ghost"
+      customClass="w-full mt-2 !p-3 border border-dashed border-slate-200 hover:border-primary-300 rounded-2xl text-primary-600 hover:text-primary-700 bg-primary-50/10 hover:bg-primary-50/30"
     >
-      <i class="bx bx-plus text-sm"></i> Tambah Alamat Baru
-    </button>
+      <i class="bx bx-plus text-sm mr-1.5"></i> Tambah Alamat Baru
+    </app-button>
   </div>
 </app-bottom-sheet>
 

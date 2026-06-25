@@ -43,14 +43,14 @@
                 </td>
                 <td class="px-5 py-4 text-slate-500">{{ user.joinedAt | date: 'mediumDate' }}</td>
                 <td class="px-5 py-4 text-right">
-                  <app-button
+                  <app-admin-button
                     (click)="toggleRole(user)"
                     variant="outline"
                     size="sm"
                     class="py-1 px-2.5 text-[10px] font-semibold"
                   >
                     Change to {{ user.role === 'admin' ? 'Customer' : 'Admin' }}
-                  </app-button>
+                  </app-admin-button>
                 </td>
               </tr>
             } @empty {

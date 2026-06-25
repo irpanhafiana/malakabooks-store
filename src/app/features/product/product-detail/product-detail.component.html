@@ -1,229 +1,191 @@
 <div class="flex flex-col h-full overflow-hidden animate-fade-in">
-      @if (loading()) {
-        <!-- Simple circle loader -->
-        <div class="grow flex flex-col items-center justify-center h-full gap-3 opacity-70">
-          <app-spinner></app-spinner>
+  @if (loading()) {
+  <!-- Simple circle loader -->
+  <div class="grow flex flex-col items-center justify-center h-full gap-3 opacity-70">
+    <app-spinner></app-spinner>
+  </div>
+  } @else if (!product()) {
+  <div class="grow overflow-y-auto px-5 py-16 text-center">
+    <h2 class="text-xl font-display font-extrabold text-slate-800 mb-2">Product Not Found</h2>
+    <p class="text-slate-500 text-xs mb-6">The product you are trying to view does not exist or has been removed.</p>
+    <app-button routerLink="/product" variant="primary">Back to Shop</app-button>
+  </div>
+  } @else {
+  <!-- Scrollable Details area -->
+  <div #scrollContainer
+    class="grow overflow-y-auto px-4 pb-5 pt-0 no-scrollbar bg-linear-to-b from-slate-50/50 to-white">
+    <!-- Breadcrumbs -->
+    @if (!productIdInput()) {
+    <nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-6">
+      <a routerLink="/" class="hover:text-slate-600 transition-colors text-slate-400">Home</a>
+      <app-icon name="chevron-right" size="12"></app-icon>
+      <a routerLink="/product" class="hover:text-slate-600 transition-colors text-slate-400">Shop</a>
+      <app-icon name="chevron-right" size="12"></app-icon>
+      <span class="text-slate-600 truncate max-w-[200px]">{{ product()?.name }}</span>
+    </nav>
+    }
+
+    <div class="flex flex-col gap-6">
+
+      <!-- Image Gallery -->
+      <div class="flex flex-col gap-2">
+        <!-- Main Image Viewer -->
+        <div class="w-full aspect-square bg-white relative group">
+          <img [src]="activeImage()" [alt]="product()!.name"
+            class="object-contain w-full h-full transition-transform duration-500 ease-out" />
+          <div class="badge-uom-lg">{{ product()!.categoryName }}</div>
+          <app-discount-badge [price]="product()!.price" [originalPrice]="product()!.originalPrice" size="md"
+            class="absolute top-4 left-4 z-10"></app-discount-badge>
         </div>
-      } @else if (!product()) {
-        <div class="grow overflow-y-auto px-5 py-16 text-center">
-          <h2 class="text-xl font-display font-extrabold text-slate-800 mb-2">Product Not Found</h2>
-          <p class="text-slate-500 text-xs mb-6">The product you are trying to view does not exist or has been removed.</p>
-          <app-button routerLink="/product" variant="primary">Back to Shop</app-button>
-        </div>
-      } @else {
-        <!-- Scrollable Details area -->
-        <div #scrollContainer class="grow overflow-y-auto px-4 pb-5 pt-0 no-scrollbar bg-linear-to-b from-slate-50/50 to-white">
-          <!-- Breadcrumbs -->
-          @if (!productIdInput()) {
-            <nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-6">
-              <a routerLink="/" class="hover:text-slate-600 transition-colors text-slate-400">Home</a>
-              <app-icon name="chevron-right" size="12"></app-icon>
-              <a routerLink="/product" class="hover:text-slate-600 transition-colors text-slate-400">Shop</a>
-              <app-icon name="chevron-right" size="12"></app-icon>
-              <span class="text-slate-600 truncate max-w-[200px]">{{ product()?.name }}</span>
-            </nav>
+
+        <!-- Image Thumbnails -->
+        @if (product()!.images.length > 1) {
+        <div class="flex gap-1 overflow-x-auto no-scrollbar">
+          @for (img of product()!.images; track img) {
+          <button type="button" (click)="setActiveImage(img, scrollContainer)"
+            [class.border-primary-500]="activeImage() === img" [class.border-white]="activeImage() !== img"
+            class="h-14 w-14 shrink-0 bg-white border-3 overflow-hidden cursor-pointer active:scale-95 transition-all relative">
+            <img [src]="img" [alt]="product()!.name + ' thumbnail'" class="object-cover w-full h-full" />
+          </button>
           }
-
-          <div class="flex flex-col gap-6">
-            
-            <!-- Image Gallery -->
-            <div class="flex flex-col gap-2">
-              <!-- Main Image Viewer -->
-              <div class="w-full aspect-square bg-white relative group">
-                <img
-                  [src]="activeImage()"
-                  [alt]="product()!.name"
-                  class="object-contain w-full h-full transition-transform duration-500 ease-out"
-                />
-                <div class="badge-uom-lg">{{ product()!.categoryName }}</div>
-                <app-discount-badge
-                  [price]="product()!.price"
-                  [originalPrice]="product()!.originalPrice"
-                  size="md"
-                  class="absolute top-4 left-4 z-10"
-                ></app-discount-badge>
-              </div>
-
-              <!-- Image Thumbnails -->
-              @if (product()!.images.length > 1) {
-                <div class="flex gap-1 overflow-x-auto no-scrollbar">
-                  @for (img of product()!.images; track img) {
-                    <button
-                      type="button"
-                      (click)="setActiveImage(img, scrollContainer)"
-                      [class.border-primary-500]="activeImage() === img"
-                      [class.border-white]="activeImage() !== img"
-                      class="h-14 w-14 shrink-0 bg-white border-3 overflow-hidden cursor-pointer active:scale-95 transition-all relative"
-                    >
-                      <img [src]="img" [alt]="product()!.name + ' thumbnail'" class="object-cover w-full h-full" />
-                    </button>
-                  }
-                </div>
-              }
-            </div>
-
-            <!-- Product Details Column -->
-            <div class="flex flex-col gap-5">
-              <!-- Meta & Title -->
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center justify-between w-full mt-1">
-                  <app-price [value]="product()!.price" size="xl" class="text-red-500 font-black"></app-price>
-                  <span class="text-[13px] text-slate-500 font-medium">{{ product()!.reviewsCount * 12 + (product()!.stock % 7) + 5 }} Terjual</span>
-                </div>
-                <h1 class="text-xl font-display font-black text-slate-800 tracking-tight leading-[1.15]">{{ product()!.name }}</h1>
-                <p class="text-[13px] text-slate-500">{{ product()!.author }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Detail Information Tabs -->
-          <div class="mt-8 pb-4">
-            <!-- Segmented Control Tab Headers -->
-            <div class="flex bg-slate-50/80 p-1.5 rounded-2xl gap-1 mb-6 border border-slate-100/50">
-              <button
-                (click)="setActiveTab('details')"
-                [class.bg-white]="activeTab() === 'details'"
-                [class.text-slate-800]="activeTab() === 'details'"
-                [class.text-slate-500]="activeTab() !== 'details'"
-                [class.hover:bg-slate-100/50]="activeTab() !== 'details'"
-                class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer"
-              >
-                Description
-              </button>
-              <button
-                (click)="setActiveTab('reviews')"
-                [class.bg-white]="activeTab() === 'reviews'"
-                [class.text-slate-800]="activeTab() === 'reviews'"
-                [class.text-slate-500]="activeTab() !== 'reviews'"
-                [class.hover:bg-slate-100/50]="activeTab() !== 'reviews'"
-                class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer"
-              >
-                {{ reviews().length }} Reviews ({{ product()!.rating }})
-              </button>
-            </div>
-
-            <!-- Tab Content Views -->
-            <div>
-              @if (activeTab() === 'details') {
-                <div class="flex flex-col gap-4 animate-fade-in">
-                  <div>
-                    <h3 class="font-display font-bold text-slate-800 text-sm mb-2">About the Product</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed font-sans">{{ product()!.description }}</p>
-                  </div>
-                  
-                  @if (hasSpecs()) {
-                    <div>
-                      <h3 class="font-display font-bold text-slate-800 text-sm mb-3">Specifications</h3>
-                      <div class="grid grid-cols-1 gap-x-8 gap-y-2 border border-slate-100 rounded-2xl overflow-hidden">
-                        @for (spec of product()!.specifications | keyvalue; track spec.key) {
-                          <div class="flex justify-between p-3 text-xs border-b border-slate-100 last:border-0">
-                            <span class="text-slate-400 font-semibold uppercase tracking-wider">{{ spec.key }}</span>
-                            <span class="text-slate-700 font-bold text-right">{{ spec.value }}</span>
-                          </div>
-                        }
-                      </div>
-                    </div>
-                  }
-                </div>
-              }
-
-              @if (activeTab() === 'reviews') {
-                <div class="flex flex-col gap-8 animate-fade-in">
-                  <!-- Review List -->
-                  <div class="flex flex-col gap-4">
-                    @if (reviews().length === 0) {
-                      <p class="text-sm text-slate-400 text-center py-6">No reviews yet. Be the first to review this product!</p>
-                    } @else {
-                      @for (rev of reviews(); track rev.id) {
-                        <div class="flex flex-col gap-2 p-4 border border-slate-50 rounded-2xl bg-slate-50/20">
-                          <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-800">{{ rev.userName }}</span>
-                            <span class="text-[10px] text-slate-400">{{ rev.date | date: 'mediumDate' }}</span>
-                          </div>
-                          <div class="flex items-center text-amber-400 gap-0.5">
-                            @for (star of [1,2,3,4,5]; track star) {
-                              <app-icon name="star" size="10" [class]="star <= rev.rating ? 'fill-amber-400' : 'text-slate-200'"></app-icon>
-                            }
-                          </div>
-                          <p class="text-xs text-slate-600 leading-relaxed">{{ rev.comment }}</p>
-                        </div>
-                      }
-                    }
-                  </div>
-
-                  <hr class="border-slate-100" />
-
-                  <!-- Add Review Form -->
-                  <div>
-                    <h3 class="font-display font-bold text-slate-800 text-sm mb-4">Write a Review</h3>
-                    <form [formGroup]="reviewForm" (submit)="onSubmitReview()" class="flex flex-col gap-4 max-w-lg">
-                      <!-- Rating Stars selector -->
-                      <div class="flex flex-col gap-1.5">
-                        <span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Your Rating</span>
-                        <div class="flex gap-1.5 items-center">
-                          @for (star of [1,2,3,4,5]; track star) {
-                            <button
-                              type="button"
-                              (click)="setReviewRating(star)"
-                              class="text-slate-200 hover:text-amber-400 cursor-pointer transition-colors"
-                            >
-                              <app-icon
-                                name="star"
-                                size="24"
-                                [class]="star <= reviewRating() ? 'text-amber-400 fill-amber-400' : 'text-slate-200'"
-                              ></app-icon>
-                            </button>
-                          }
-                        </div>
-                      </div>
-
-                      <app-textarea
-                        label="Review Comment"
-                        placeholder="Write your thoughts and experience about this product..."
-                        [control]="commentControl"
-                        [rows]="4"
-                      ></app-textarea>
-
-                      <div class="flex">
-                        <app-button
-                          type="submit"
-                          [disabled]="reviewForm.invalid || isSubmittingReview()"
-                          [loading]="isSubmittingReview()"
-                          variant="primary"
-                          size="sm"
-                        >
-                          Submit Review
-                        </app-button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              }
-            </div>
-          </div>
         </div>
+        }
+      </div>
 
-        <!-- Sticky Bottom Action Bar -->
-        <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
-          <app-button
-            (click)="openQuantityModal($event)"
-            [disabled]="product()!.stock <= 0"
-            variant="outline"
-            [fullWidth]="true"
-            class="flex-1 h-12 text-sm font-bold rounded-2xl"
-          >
-            Tbh ke Keranjang
-          </app-button>
-          
-          <app-button
-            (click)="buyNow($event)"
-            [disabled]="product()!.stock <= 0"
-            variant="primary"
-            [fullWidth]="true"
-            class="flex-1 h-12 text-sm font-bold rounded-2xl"
-          >
-            Beli Sekarang
-          </app-button>
+      <!-- Product Details Column -->
+      <div class="flex flex-col gap-5">
+        <!-- Meta & Title -->
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between w-full mt-1">
+            <app-price [value]="product()!.price" size="xl" class="text-red-500 font-black"></app-price>
+            <span class="text-[13px] text-slate-500 font-medium">{{ product()!.reviewsCount * 12 + (product()!.stock %
+              7) + 5 }} Terjual</span>
+          </div>
+          <h1 class="text-xl font-display font-black text-slate-800 tracking-tight leading-[1.15]">{{ product()!.name }}
+          </h1>
+          <p class="text-[13px] text-slate-500">{{ product()!.author }}</p>
         </div>
-      }
+      </div>
     </div>
+
+    <!-- Detail Information Tabs -->
+    <div class="mt-8 pb-4">
+      <!-- Segmented Control Tab Headers -->
+      <div class="flex bg-slate-50/80 p-1.5 rounded-2xl gap-1 mb-6 border border-slate-100/50">
+        <button (click)="setActiveTab('details')" [class.bg-white]="activeTab() === 'details'"
+          [class.text-slate-800]="activeTab() === 'details'" [class.text-slate-500]="activeTab() !== 'details'"
+          [class.hover:bg-slate-100/50]="activeTab() !== 'details'"
+          class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer">
+          Description
+        </button>
+        <button (click)="setActiveTab('reviews')" [class.bg-white]="activeTab() === 'reviews'"
+          [class.text-slate-800]="activeTab() === 'reviews'" [class.text-slate-500]="activeTab() !== 'reviews'"
+          [class.hover:bg-slate-100/50]="activeTab() !== 'reviews'"
+          class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer">
+          {{ reviews().length }} Reviews ({{ product()!.rating }})
+        </button>
+      </div>
+
+      <!-- Tab Content Views -->
+      <div>
+        @if (activeTab() === 'details') {
+        <div class="flex flex-col gap-4 animate-fade-in">
+          <div>
+            <h3 class="font-display font-bold text-slate-800 text-sm mb-2">About the Product</h3>
+            <p class="text-sm text-slate-500 leading-relaxed font-sans">{{ product()!.description }}</p>
+          </div>
+
+          @if (hasSpecs()) {
+          <div>
+            <h3 class="font-display font-bold text-slate-800 text-sm mb-3">Specifications</h3>
+            <div class="grid grid-cols-1 gap-x-8 gap-y-2 border border-slate-100 rounded-2xl overflow-hidden">
+              @for (spec of product()!.specifications | keyvalue; track spec.key) {
+              <div class="flex justify-between p-3 text-xs border-b border-slate-100 last:border-0">
+                <span class="text-slate-400 font-semibold uppercase tracking-wider">{{ spec.key }}</span>
+                <span class="text-slate-700 font-bold text-right">{{ spec.value }}</span>
+              </div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        }
+
+        @if (activeTab() === 'reviews') {
+        <div class="flex flex-col gap-8 animate-fade-in">
+          <!-- Review List -->
+          <div class="flex flex-col gap-4">
+            @if (reviews().length === 0) {
+            <p class="text-sm text-slate-400 text-center py-6">No reviews yet. Be the first to review this product!</p>
+            } @else {
+            @for (rev of reviews(); track rev.id) {
+            <div class="flex flex-col gap-2 p-4 border border-slate-50 rounded-2xl bg-slate-50/20">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">{{ rev.userName }}</span>
+                <span class="text-[10px] text-slate-400">{{ rev.date | date: 'mediumDate' }}</span>
+              </div>
+              <div class="flex items-center text-amber-400 gap-0.5">
+                @for (star of [1,2,3,4,5]; track star) {
+                <app-icon name="star" size="10"
+                  [class]="star <= rev.rating ? 'fill-amber-400' : 'text-slate-200'"></app-icon>
+                }
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">{{ rev.comment }}</p>
+            </div>
+            }
+            }
+          </div>
+
+          <hr class="border-slate-100" />
+
+          <!-- Add Review Form -->
+          <div>
+            <h3 class="font-display font-bold text-slate-800 text-sm mb-4">Write a Review</h3>
+            <form [formGroup]="reviewForm" (submit)="onSubmitReview()" class="flex flex-col gap-4 max-w-lg">
+              <!-- Rating Stars selector -->
+              <div class="flex flex-col gap-1.5">
+                <span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Your Rating</span>
+                <div class="flex gap-1.5 items-center">
+                  @for (star of [1,2,3,4,5]; track star) {
+                  <button type="button" (click)="setReviewRating(star)"
+                    class="text-slate-200 hover:text-amber-400 cursor-pointer transition-colors">
+                    <app-icon name="star" size="24"
+                      [class]="star <= reviewRating() ? 'text-amber-400 fill-amber-400' : 'text-slate-200'"></app-icon>
+                  </button>
+                  }
+                </div>
+              </div>
+
+              <app-textarea label="Review Comment"
+                placeholder="Write your thoughts and experience about this product..." [control]="commentControl"
+                [rows]="4"></app-textarea>
+
+              <div class="flex">
+                <app-button type="submit" [disabled]="reviewForm.invalid || isSubmittingReview()"
+                  [loading]="isSubmittingReview()" variant="primary" size="sm">
+                  Submit Review
+                </app-button>
+              </div>
+            </form>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky Bottom Action Bar -->
+  <div
+    class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
+    <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
+      [fullWidth]="true" class="flex-1">
+      + Keranjang
+    </app-button>
+
+    <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg"
+      [fullWidth]="true" class="flex-1">
+      Beli Sekarang
+    </app-button>
+  </div>
+  }
+</div>

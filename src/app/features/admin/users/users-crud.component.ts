@@ -4,7 +4,7 @@ import { UserApiService } from '../../../core/services/user-api.service';
 import { User } from '../../../core/models';
 import { TableComponent } from '../../../shared/ui/table/table.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
-import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { AdminButtonComponent } from '../../../shared/ui/admin-button/admin-button.component';
 import { PaginationComponent } from '../../../shared/ui/pagination/pagination.component';
 import { ToastService } from '../../../core/services/toast.service';
 import { AlertService } from '../../../core/services/alert.service';
@@ -15,7 +15,7 @@ import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-crud',
   standalone: true,
-  imports: [TableComponent, BadgeComponent, ButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent],
+  imports: [TableComponent, BadgeComponent, AdminButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent],
   templateUrl: './users-crud.component.html',
   styleUrl: './users-crud.component.css'
 })

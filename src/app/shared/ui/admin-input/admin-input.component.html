@@ -1,0 +1,27 @@
+<div class="w-full">
+  @if (label()) {
+    <label [for]="id()" class="block text-sm font-medium text-slate-700 mb-1">{{ label() }}</label>
+  }
+  <div class="relative rounded">
+    @if (icon()) {
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+        <app-icon [name]="icon()!" size="16" class="text-slate-400"></app-icon>
+      </div>
+    }
+    <input
+      [id]="id()"
+      [type]="type()"
+      [placeholder]="placeholder()"
+      [formControl]="control()"
+      [class]="inputClass()"
+    />
+  </div>
+  @if (control().invalid && (control().dirty || control().touched)) {
+    <span class="text-red-500 text-xs mt-1 block">
+      @if (control().errors?.['required']) { Field is required. }
+      @else if (control().errors?.['email']) { Please enter a valid email. }
+      @else if (control().errors?.['minlength']) { Must be at least {{ control().errors?.['minlength']?.requiredLength }} characters. }
+      @else { Input is invalid. }
+    </span>
+  }
+</div>

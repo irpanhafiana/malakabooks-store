@@ -10,6 +10,7 @@ import { Address, Order } from '../../core/models';
 import { InputComponent } from '../../shared/ui/input/input.component';
 import { SelectComponent } from '../../shared/ui/select/select.component';
 import { RadioComponent } from '../../shared/ui/radio/radio.component';
+import { RadioIndicatorComponent } from '../../shared/ui/radio-indicator/radio-indicator.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { PriceComponent } from '../../shared/ui/price/price.component';
 import { MapPickerComponent } from '../../shared/ui/map-picker/map-picker.component';
@@ -25,7 +26,7 @@ import { ShippingService } from '../../core/services/shipping.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-checkout',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, InputComponent, SelectComponent, RadioComponent, ButtonComponent, PriceComponent, DecimalPipe, MapPickerComponent],
+  imports: [RouterLink, ReactiveFormsModule, InputComponent, SelectComponent, RadioComponent, RadioIndicatorComponent, ButtonComponent, PriceComponent, DecimalPipe, MapPickerComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
