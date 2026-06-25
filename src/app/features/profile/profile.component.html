@@ -1,14 +1,14 @@
 <div class="relative w-full pb-12 animate-fade-in flex flex-col gap-6">
   <!-- Top soft gradient background overlay -->
-  <div class="absolute top-0 left-0 w-full h-80 bg-linear-to-b from-primary-50 via-primary-50/60 to-transparent -z-10 rounded-b-[40px]"></div>
+  <div
+    class="absolute top-0 left-0 w-full h-80 bg-linear-to-b from-primary-50 via-primary-50/60 to-transparent -z-10 rounded-b-[40px]">
+  </div>
 
   <!-- Header Actions -->
   <div class="flex items-center gap-4 mt-2">
-    <button 
-      (click)="navigateBack()" 
-      class="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm hover:shadow hover:bg-slate-50 transition-all text-slate-700 cursor-pointer"
-      title="Kembali"
-    >
+    <button (click)="navigateBack()"
+      class="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm hover:shadow hover:bg-slate-50  text-slate-700 cursor-pointer"
+      title="Kembali">
       <i class="bx bx-left-arrow-alt text-xl"></i>
     </button>
   </div>
@@ -16,196 +16,175 @@
   <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">Profile</h1>
 
   <!-- Profile Card -->
-  <div class="bg-white border border-slate-100 p-6 rounded-3xl shadow-sm shadow-primary-950/5 flex flex-col items-center text-center gap-4.5">
+  <div
+    class="bg-white border border-slate-100 p-6 rounded-3xl shadow-sm shadow-primary-950/5 flex flex-col items-center text-center gap-4.5">
     <div class="relative">
-      <img 
-        src="/customer_avatar.png" 
-        alt="Avatar" 
-        class="w-24 h-24 rounded-full overflow-hidden border-4 border-white ring-4 ring-primary-100/50 shadow-md object-cover"
-      />
+      <img src="/customer_avatar.png" alt="Avatar"
+        class="w-24 h-24 rounded-full overflow-hidden border-4 border-white ring-4 ring-primary-100/50 shadow-md object-cover" />
     </div>
-    
+
     <div class="flex flex-col gap-1">
-      <h2 class="font-display font-bold text-slate-800 text-sm tracking-tight">{{ authStore.currentUser()?.name || 'Customer' }}</h2>
+      <h2 class="font-display font-bold text-slate-800 text-sm tracking-tight">{{ authStore.currentUser()?.name ||
+        'Customer' }}</h2>
       <span class="text-xs text-slate-400">{{ authStore.currentUser()?.email }}</span>
       <span class="text-[11px] font-semibold text-slate-500 mt-1 flex items-center justify-center gap-1">
         <i class="bx bxs-user-badge text-primary-400"></i> Customer Â· Jakarta, Indonesia
       </span>
     </div>
 
-    <app-button 
-      (click)="showEditProfile.set(true)"
-      variant="primary"
-      customClass="!rounded-full px-6 bg-linear-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
-    >
+    <app-button (click)="showEditProfile.set(true)" variant="primary"
+      customClass="!rounded-full px-6 bg-linear-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700">
       <i class="bx bx-edit text-sm mr-1.5"></i> Edit Profile
     </app-button>
   </div>
 
   <!-- Menu Sections (Generated Dynamically) -->
   @for (section of menuSections; track $index) {
-    <div class="flex flex-col gap-2.5 mt-2">
-      @for (item of section.items; track item.label) {
-        @if (item.route) {
-          <a 
-            [routerLink]="item.route"
-            class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
-          >
-            <div class="flex items-center gap-3">
-              <span class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">
-                <i class="bx {{ item.icon }} text-base"></i>
-              </span>
-              <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 transition-colors">{{ item.label }}</span>
-            </div>
-            <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 transition-colors"></i>
-          </a>
-        } @else {
-          <div 
-            (click)="item.action ? item.action() : null"
-            class="flex items-center justify-between p-3.5 bg-white border rounded-2xl shadow-sm hover:shadow transition-all cursor-pointer group"
-            [class]="item.isDanger ? 'border-rose-50 hover:border-rose-200 mt-2' : 'border-slate-100 hover:border-slate-200/80 hover:shadow-md hover:-translate-y-0.5 duration-200'"
-          >
-            <div class="flex items-center gap-3">
-              <span class="w-9 h-9 rounded-xl flex items-center justify-center transition-colors"
-                    [class]="item.isDanger ? 'bg-rose-50 group-hover:bg-rose-100 text-rose-500' : 'bg-slate-50 group-hover:bg-primary-50 text-slate-600 group-hover:text-primary-500'">
-                <i class="bx {{ item.icon }} text-base"></i>
-              </span>
-              <span class="text-xs font-bold transition-colors"
-                    [class]="item.isDanger ? 'text-slate-700 group-hover:text-rose-600' : 'text-slate-700 group-hover:text-slate-800'">
-                {{ item.label }}
-              </span>
-            </div>
-            <i class="bx bx-chevron-right transition-colors"
-               [class]="item.isDanger ? 'text-slate-300 group-hover:text-rose-400' : 'text-slate-300 group-hover:text-primary-400'"></i>
-          </div>
-        }
-      }
+  <div class="flex flex-col gap-2.5 mt-2">
+    @for (item of section.items; track item.label) {
+    @if (item.route) {
+    <a [routerLink]="item.route"
+      class="flex items-center justify-between p-3.5 bg-white border border-slate-100 hover:border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5   cursor-pointer group">
+      <div class="flex items-center gap-3">
+        <span
+          class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-primary-50 flex items-center justify-center text-slate-600 group-hover:text-primary-500 ">
+          <i class="bx {{ item.icon }} text-base"></i>
+        </span>
+        <span class="text-xs font-bold text-slate-700 group-hover:text-slate-800 ">{{ item.label
+          }}</span>
+      </div>
+      <i class="bx bx-chevron-right text-slate-300 group-hover:text-primary-400 "></i>
+    </a>
+    } @else {
+    <div (click)="item.action ? item.action() : null"
+      class="flex items-center justify-between p-3.5 bg-white border rounded-2xl shadow-sm hover:shadow  cursor-pointer group"
+      [class]="item.isDanger ? 'border-rose-50 hover:border-rose-200 mt-2' : 'border-slate-100 hover:border-slate-200/80 hover:shadow-md hover:-translate-y-0.5 '">
+      <div class="flex items-center gap-3">
+        <span class="w-9 h-9 rounded-xl flex items-center justify-center "
+          [class]="item.isDanger ? 'bg-rose-50 group-hover:bg-rose-100 text-rose-500' : 'bg-slate-50 group-hover:bg-primary-50 text-slate-600 group-hover:text-primary-500'">
+          <i class="bx {{ item.icon }} text-base"></i>
+        </span>
+        <span class="text-xs font-bold "
+          [class]="item.isDanger ? 'text-slate-700 group-hover:text-rose-600' : 'text-slate-700 group-hover:text-slate-800'">
+          {{ item.label }}
+        </span>
+      </div>
+      <i class="bx bx-chevron-right "
+        [class]="item.isDanger ? 'text-slate-300 group-hover:text-rose-400' : 'text-slate-300 group-hover:text-primary-400'"></i>
     </div>
+    }
+    }
+  </div>
   }
 </div>
 
 <!-- ================= BOTTOM SHEETS & MODALS ================= -->
 
 <!-- Edit Profile Bottom Sheet -->
-<app-bottom-sheet 
-  [isOpen]="showEditProfile()" 
-  title="Edit Profile" 
-  (closed)="showEditProfile.set(false)"
->
+<app-bottom-sheet [isOpen]="showEditProfile()" title="Edit Profile" (closed)="showEditProfile.set(false)">
   <form [formGroup]="profileForm" (submit)="onSubmitProfile()" class="flex flex-col gap-4 p-5">
     <app-input label="Nama Lengkap" placeholder="e.g. Hadi Jafri" [control]="nameControl"></app-input>
-    <app-input label="Alamat Email" placeholder="e.g. customer@example.com" type="email" [control]="emailControl" class="bg-slate-50 opacity-70 pointer-events-none"></app-input>
+    <app-input label="Alamat Email" placeholder="e.g. customer@example.com" type="email" [control]="emailControl"
+      class="bg-slate-50 opacity-70 pointer-events-none"></app-input>
     <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="phoneControl"></app-input>
-    
+
     <div class="flex flex-col sm:flex-row justify-end gap-3 mt-4">
-      <app-button type="button" (click)="showEditProfile.set(false)" variant="ghost" size="md" class="w-full sm:w-auto">Batal</app-button>
-      <app-button type="submit" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary" size="md" class="w-full sm:w-auto">Simpan Akun</app-button>
+      <app-button type="button" (click)="showEditProfile.set(false)" variant="ghost" size="md"
+        class="w-full sm:w-auto">Batal</app-button>
+      <app-button type="submit" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary"
+        size="md" class="w-full sm:w-auto">Simpan Akun</app-button>
     </div>
   </form>
 </app-bottom-sheet>
 
 <!-- Saved Addresses Bottom Sheet -->
-<app-bottom-sheet
-  [isOpen]="showSavedAddresses()"
-  title="Daftar Alamat Pengiriman"
-  (closed)="showSavedAddresses.set(false)"
->
+<app-bottom-sheet [isOpen]="showSavedAddresses()" title="Daftar Alamat Pengiriman"
+  (closed)="showSavedAddresses.set(false)">
   <div class="flex flex-col gap-4 p-5 max-h-[60vh] overflow-y-auto">
     @if (isAddressesLoading()) {
-      <!-- Skeleton Screen Loader -->
-      <div class="flex flex-col gap-3 w-full">
-        <div class="border border-slate-100 rounded-2xl p-4 w-full bg-slate-50/10 flex flex-col gap-2.5">
-          <app-skeleton height="14px" width="25%"></app-skeleton>
-          <app-skeleton height="12px" width="33%"></app-skeleton>
-          <app-skeleton height="12px" width="75%"></app-skeleton>
-        </div>
+    <!-- Skeleton Screen Loader -->
+    <div class="flex flex-col gap-3 w-full">
+      <div class="border border-slate-100 rounded-2xl p-4 w-full bg-slate-50/10 flex flex-col gap-2.5">
+        <app-skeleton height="14px" width="25%"></app-skeleton>
+        <app-skeleton height="12px" width="33%"></app-skeleton>
+        <app-skeleton height="12px" width="75%"></app-skeleton>
       </div>
+    </div>
     } @else {
-      @for (addr of addresses(); track addr.id) {
-        <div class="flex items-start justify-between p-4 border border-slate-100 rounded-2xl bg-slate-50/20 text-xs leading-relaxed">
-          <div class="flex flex-col">
-            <strong class="font-bold text-slate-800">
-              {{ addr.name }} 
-              @if (addr.isDefault) { 
-                <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold ml-1">Default</span> 
-              }
-            </strong>
-            <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
-            <span class="text-slate-600 font-semibold">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
-          </div>
-          <div class="flex items-center gap-1 ml-2">
-            <button
-              type="button"
-              (click)="editAddress(addr)"
-              class="p-1.5 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors cursor-pointer"
-            >
-              <app-icon name="edit" size="14"></app-icon>
-            </button>
-            <button
-              type="button"
-              (click)="deleteAddress(addr.id)"
-              class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-            >
-              <app-icon name="trash" size="14"></app-icon>
-            </button>
-          </div>
-        </div>
-      } @empty {
-        <p class="text-xs text-slate-400 text-center py-4">Belum ada alamat pengiriman tersimpan.</p>
-      }
+    @for (addr of addresses(); track addr.id) {
+    <div
+      class="flex items-start justify-between p-4 border border-slate-100 rounded-2xl bg-slate-50/20 text-xs leading-relaxed">
+      <div class="flex flex-col">
+        <strong class="font-bold text-slate-800">
+          {{ addr.name }}
+          @if (addr.isDefault) {
+          <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold ml-1">Default</span>
+          }
+        </strong>
+        <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
+        <span class="text-slate-600 font-semibold">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }}, {{
+          addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
+      </div>
+      <div class="flex items-center gap-1 ml-2">
+        <button type="button" (click)="editAddress(addr)"
+          class="p-1.5 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg  cursor-pointer">
+          <app-icon name="edit" size="14"></app-icon>
+        </button>
+        <button type="button" (click)="deleteAddress(addr.id)"
+          class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg  cursor-pointer">
+          <app-icon name="trash" size="14"></app-icon>
+        </button>
+      </div>
+    </div>
+    } @empty {
+    <p class="text-xs text-slate-400 text-center py-4">Belum ada alamat pengiriman tersimpan.</p>
+    }
     }
 
-    <app-button 
-      type="button" 
-      (click)="addNewAddress()" 
-      variant="ghost"
-      customClass="w-full mt-2 !p-3 border border-dashed border-slate-200 hover:border-primary-300 rounded-2xl text-primary-600 hover:text-primary-700 bg-primary-50/10 hover:bg-primary-50/30"
-    >
+    <app-button type="button" (click)="addNewAddress()" variant="ghost"
+      customClass="w-full mt-2 !p-3 border border-dashed border-slate-200 hover:border-primary-300 rounded-2xl text-primary-600 hover:text-primary-700 bg-primary-50/10 hover:bg-primary-50/30">
       <i class="bx bx-plus text-sm mr-1.5"></i> Tambah Alamat Baru
     </app-button>
   </div>
 </app-bottom-sheet>
 
 <!-- Add/Edit Address Form Bottom Sheet (nested/overlay) -->
-<app-bottom-sheet
-  [isOpen]="showAddressForm()"
-  [title]="editingAddressId() ? 'Edit Alamat' : 'Tambah Alamat Baru'"
-  (closed)="cancelAddressForm()"
->
+<app-bottom-sheet [isOpen]="showAddressForm()" [title]="editingAddressId() ? 'Edit Alamat' : 'Tambah Alamat Baru'"
+  (closed)="cancelAddressForm()">
   <form [formGroup]="addressForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 max-h-[70vh] overflow-y-auto">
     <app-input label="Nama Penerima" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
     <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="addrPhoneControl"></app-input>
     <div class="sm:col-span-2">
       <app-input label="Alamat Lengkap" placeholder="e.g. Jl. Sudirman No. 21" [control]="streetControl"></app-input>
     </div>
-    <app-select label="Provinsi" placeholder="Pilih Provinsi" [control]="provinceControl" [options]="provinceOptions()"></app-select>
-    <app-select label="Kota/Kabupaten" placeholder="Pilih Kota" [control]="cityControl" [options]="cityOptions()"></app-select>
-    <app-select label="Kecamatan" placeholder="Pilih Kecamatan" [control]="districtControl" [options]="districtOptions()"></app-select>
+    <app-select label="Provinsi" placeholder="Pilih Provinsi" [control]="provinceControl"
+      [options]="provinceOptions()"></app-select>
+    <app-select label="Kota/Kabupaten" placeholder="Pilih Kota" [control]="cityControl"
+      [options]="cityOptions()"></app-select>
+    <app-select label="Kecamatan" placeholder="Pilih Kecamatan" [control]="districtControl"
+      [options]="districtOptions()"></app-select>
     <app-input label="Kode Pos" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
-    
+
     <div class="sm:col-span-2 mt-2">
       <label class="block text-sm font-medium text-slate-700 mb-2">Pin Lokasi Peta</label>
-      <app-map-picker 
-        [initialLat]="selectedLat()" 
-        [initialLng]="selectedLng()" 
+      <app-map-picker [initialLat]="selectedLat()" [initialLng]="selectedLng()"
         (locationSelected)="onMapLocationSelected($event)">
       </app-map-picker>
       <p class="text-xs text-slate-500 mt-2">Klik peta atau geser pin untuk menyesuaikan titik koordinat.</p>
     </div>
-    
+
     <div class="sm:col-span-2 flex flex-col sm:flex-row justify-end gap-3 mt-4">
-      <app-button type="button" (click)="cancelAddressForm()" variant="ghost" size="md" class="w-full sm:w-auto">Batal</app-button>
-      <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()" [disabled]="addressForm.invalid" variant="primary" size="md" class="w-full sm:w-auto">Simpan Alamat</app-button>
+      <app-button type="button" (click)="cancelAddressForm()" variant="ghost" size="md"
+        class="w-full sm:w-auto">Batal</app-button>
+      <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()"
+        [disabled]="addressForm.invalid" variant="primary" size="md" class="w-full sm:w-auto">Simpan Alamat</app-button>
     </div>
   </form>
 </app-bottom-sheet>
 
 <!-- Mock Settings Settings Dialog -->
-<app-bottom-sheet
-  [isOpen]="showMockModal() !== null"
-  [title]="showMockModal() || 'Settings'"
-  (closed)="showMockModal.set(null)"
->
+<app-bottom-sheet [isOpen]="showMockModal() !== null" [title]="showMockModal() || 'Settings'"
+  (closed)="showMockModal.set(null)">
   <div class="p-6 text-center flex flex-col items-center gap-4">
     <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center text-primary-500">
       <i class="bx bx-cog text-3xl animate-spin-slow"></i>
@@ -221,4 +200,3 @@
     </app-button>
   </div>
 </app-bottom-sheet>
-

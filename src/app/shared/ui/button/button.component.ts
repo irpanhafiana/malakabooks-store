@@ -18,8 +18,8 @@ export class ButtonComponent {
 
   // Dynamically compute the Tailwind classes for styling
   readonly buttonClass = computed(() => {
-    const base = 'inline-flex items-center justify-center font-semibold transition-all duration-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer text-center';
-    
+    const base = 'inline-flex items-center justify-center font-semibold   rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer text-center';
+
     const variants = {
       primary: 'bg-primary-600 hover:bg-primary-700 text-white shadow-md shadow-primary-600/10 focus:ring-primary-500 border border-transparent',
       secondary: 'bg-slate-100 hover:bg-slate-200 text-slate-800 focus:ring-slate-300 border border-transparent',

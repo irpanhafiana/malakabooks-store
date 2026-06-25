@@ -11,7 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
         type="button"
         (click)="useCurrentLocation()"
         [disabled]="isLocating"
-        class="absolute bottom-4 right-4 z-[1000] flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg shadow border border-slate-200 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+        class="absolute bottom-4 right-4 z-[1000] flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg shadow border border-slate-200  cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
         title="Gunakan Lokasi Sekarang"
       >
         <i class="bx" [class.bx-current-location]="!isLocating" [class.bx-loader-alt]="isLocating" [class.animate-spin]="isLocating" class="text-primary-500 text-base"></i> 
@@ -47,14 +47,14 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
 
   private _lat?: number;
   private _lng?: number;
-  
+
   private map: any;
   private marker: any;
   private L: any;
 
   isLocating = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
   async ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {

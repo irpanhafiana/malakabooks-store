@@ -26,6 +26,6 @@ export class DiscountBadgeComponent {
 
   readonly badgeClass = computed(() => {
     const sizeClasses = this.size() === 'md' ? 'px-3 py-1 text-xs' : 'px-2 py-0.5 text-[10px]';
-    return `font-bold bg-rose-500 text-white rounded-lg select-none transition-all ${sizeClasses} ${this.customClass()}`;
+    return `font-bold bg-rose-500 text-white rounded-lg select-none  ${sizeClasses} ${this.customClass()}`;
   });
 }

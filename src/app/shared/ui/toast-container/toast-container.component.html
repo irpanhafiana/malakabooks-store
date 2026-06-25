@@ -1,32 +1,23 @@
-<div
-      class="fixed top-4 right-4 left-4 sm:left-auto sm:w-80 z-[60] flex flex-col gap-2 pointer-events-none"
-      aria-live="polite"
-      aria-atomic="false"
-    >
-      @for (toast of toastService.toasts(); track toast.id) {
-        <div
-          [class]="toastClass(toast.type)"
-          class="flex items-center gap-2.5 p-3 rounded-xl shadow-md border bg-white animate-slide-down transition-all pointer-events-auto"
-          role="status"
-        >
-          @if (toast.type === 'success') {
-            <i class="bx bx-check text-emerald-500 text-sm"></i>
-          } @else if (toast.type === 'error') {
-            <i class="bx bx-error-circle text-rose-500 text-sm"></i>
-          } @else if (toast.type === 'warning') {
-            <i class="bx bx-error text-amber-500 text-sm"></i>
-          } @else {
-            <i class="bx bx-info-circle text-blue-500 text-sm"></i>
-          }
-          <span class="text-[11px] font-semibold text-slate-800 flex-1">{{ toast.message }}</span>
-          <button
-            type="button"
-            (click)="toastService.remove(toast.id)"
-            aria-label="Dismiss notification"
-            class="text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer"
-          >
-            <i class="bx bx-x text-xs"></i>
-          </button>
-        </div>
-      }
-    </div>
+<div class="fixed top-4 right-4 left-4 sm:left-auto sm:w-80 z-[60] flex flex-col gap-2 pointer-events-none"
+  aria-live="polite" aria-atomic="false">
+  @for (toast of toastService.toasts(); track toast.id) {
+  <div [class]="toastClass(toast.type)"
+    class="flex items-center gap-2.5 p-3 rounded-xl shadow-md border bg-white animate-slide-down  pointer-events-auto"
+    role="status">
+    @if (toast.type === 'success') {
+    <i class="bx bx-check text-emerald-500 text-sm"></i>
+    } @else if (toast.type === 'error') {
+    <i class="bx bx-error-circle text-rose-500 text-sm"></i>
+    } @else if (toast.type === 'warning') {
+    <i class="bx bx-error text-amber-500 text-sm"></i>
+    } @else {
+    <i class="bx bx-info-circle text-blue-500 text-sm"></i>
+    }
+    <span class="text-[11px] font-semibold text-slate-800 flex-1">{{ toast.message }}</span>
+    <button type="button" (click)="toastService.remove(toast.id)" aria-label="Dismiss notification"
+      class="text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer">
+      <i class="bx bx-x text-xs"></i>
+    </button>
+  </div>
+  }
+</div>

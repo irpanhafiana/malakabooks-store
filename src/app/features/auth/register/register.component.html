@@ -1,22 +1,25 @@
-<div class="animate-fade-in px-6 py-6 overflow-y-auto h-full flex flex-col justify-between no-scrollbar bg-slate-50/30">
-  
-  <div class="flex flex-col gap-6">
+<div class="animate-fade-in px-6 py-6 overflow-hidden h-full flex flex-col justify-center no-scrollbar bg-slate-50/30">
+
+  <div class="flex flex-col gap-6 w-full max-w-sm mx-auto">
     <!-- Top Avatar & Header Area -->
     <div class="flex flex-col items-center text-center mt-4">
       <!-- Avatar Upload Simulator Badge -->
       <div class="relative w-20 h-20 mb-4 select-none">
-        <div class="w-20 h-20 rounded-full bg-slate-100/90 flex items-center justify-center text-slate-400 border border-slate-200 shadow-inner">
-          <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
+        <div
+          class="w-20 h-20 rounded-full bg-slate-100/90 flex items-center justify-center text-slate-400 border border-slate-200 shadow-inner">
+          <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
           </svg>
         </div>
         <!-- Plus icon overlay -->
-        <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-primary-600 border-2 border-white flex items-center justify-center text-white text-sm shadow-sm cursor-pointer hover:bg-primary-700 transition-colors">
+        <div
+          class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-primary-600 border-2 border-white flex items-center justify-center text-white text-sm shadow-sm cursor-pointer hover:bg-primary-700 ">
           <span class="font-bold leading-none mb-0.5">+</span>
         </div>
       </div>
-      
+
       <h2 class="text-2xl font-display font-extrabold text-slate-800 tracking-tight">Create Account</h2>
       <p class="text-slate-500 text-xs mt-1">Sign up to get started with your dashboard.</p>
     </div>
@@ -24,47 +27,22 @@
     <!-- Registration Form -->
     <form [formGroup]="registerForm" (submit)="onSubmit()" class="flex flex-col gap-4 mt-2">
       <!-- Full Name Input -->
-      <app-input
-        label="Full Name"
-        type="text"
-        placeholder="Enter your name"
-        [control]="fullNameControl"
-      ></app-input>
+      <app-input label="Full Name" type="text" placeholder="Enter your name" [control]="fullNameControl"></app-input>
 
       <!-- Phone Number Input -->
-      <app-input
-        label="Phone Number"
-        type="tel"
-        placeholder="Enter your phone number"
-        [control]="phoneControl"
-      ></app-input>
+      <app-input label="Phone Number" type="tel" placeholder="Enter your phone number"
+        [control]="phoneControl"></app-input>
 
       <!-- Email Input -->
-      <app-input
-        label="Email"
-        type="email"
-        placeholder="Enter your email"
-        [control]="emailControl"
-      ></app-input>
+      <app-input label="Email" type="email" placeholder="Enter your email" [control]="emailControl"></app-input>
 
       <!-- Password Input -->
-      <app-input
-        label="Password"
-        type="password"
-        placeholder="Create a password"
-        [control]="passwordControl"
-      ></app-input>
+      <app-input label="Password" type="password" placeholder="Create a password"
+        [control]="passwordControl"></app-input>
 
       <!-- Create Account Button -->
-      <app-button
-        type="submit"
-        [loading]="isLoading()"
-        [disabled]="registerForm.invalid"
-        [fullWidth]="true"
-        variant="primary"
-        size="lg"
-        class="mt-2"
-      >
+      <app-button type="submit" [loading]="isLoading()" [disabled]="registerForm.invalid" [fullWidth]="true"
+        variant="primary" size="lg" class="mt-2">
         Create Account
       </app-button>
     </form>
@@ -93,6 +71,7 @@
   <!-- Sign In Action Footer -->
   <div class="mt-8 text-center text-xs text-slate-500 pb-2">
     <span>Already have an account? </span>
-    <a routerLink="/auth/login" class="text-primary-600 hover:text-primary-700 font-extrabold transition-colors cursor-pointer">Sign In</a>
+    <a routerLink="/auth/login" class="text-primary-600 hover:text-primary-700 font-extrabold  cursor-pointer">Sign
+      In</a>
   </div>
 </div>

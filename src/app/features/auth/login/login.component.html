@@ -1,6 +1,16 @@
-<div class="animate-fade-in px-6 py-6 overflow-y-auto h-full flex flex-col justify-between no-scrollbar bg-slate-50/30">
+<div class="animate-fade-in px-6 py-6 overflow-hidden h-full flex flex-col justify-center no-scrollbar bg-slate-50/30">
 
-  <div class="flex flex-col gap-6">
+  <div class="flex flex-col gap-6 w-full max-w-sm mx-auto">
+    <!-- Header Area -->
+    <div class="flex flex-col items-center text-center mt-2">
+      <div
+        class="w-16 h-16 rounded-3xl bg-primary-50 text-primary-600 flex items-center justify-center mb-4 shadow-inner border border-primary-100/50">
+        <i class="bx bx-book-open text-3xl"></i>
+      </div>
+      <h2 class="text-2xl font-display font-extrabold text-slate-800 tracking-tight">Welcome Back!</h2>
+      <p class="text-slate-500 text-xs mt-1">Sign in to continue to your account.</p>
+    </div>
+
     <!-- Session Messages -->
     @if (sessionMessage()) {
     <div
@@ -10,44 +20,20 @@
     </div>
     }
 
-    <!-- Top Illustration Header -->
-    <div class="flex flex-col items-center text-center mt-4">
-      <div
-        class="w-16 h-16 rounded-2xl bg-primary-100/70 flex items-center justify-center text-primary-600 mb-4 shadow-sm border border-primary-200/40">
-        <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2L4 5V11C4 16.52 7.42 21.27 12 22C16.58 21.27 20 16.52 20 11V5L12 2Z" fill="currentColor"
-            fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
-          <path d="M9 11L11 13L15 9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-      </div>
-      <h2 class="text-2xl font-display font-extrabold text-slate-800 tracking-tight">Welcome Back</h2>
-      <p class="text-slate-500 text-xs mt-1">Log in to your account to continue.</p>
-    </div>
-
     <!-- Main Login Form -->
     <form [formGroup]="loginForm" (submit)="onSubmit()" class="flex flex-col gap-4 mt-2">
       <!-- Email Input -->
-      <app-input
-        label="Email"
-        type="text"
-        placeholder="Enter your email"
-        [control]="usernameControl"
-      ></app-input>
+      <app-input label="Email" type="text" placeholder="Enter your email" [control]="usernameControl"></app-input>
 
       <!-- Password Input -->
-      <app-input
-        label="Password"
-        type="password"
-        placeholder="Enter your password"
-        [control]="passwordControl"
-      ></app-input>
+      <app-input label="Password" type="password" placeholder="Enter your password"
+        [control]="passwordControl"></app-input>
 
       <!-- Options Row -->
       <div class="flex items-center justify-between text-xs mt-1 px-1">
         <app-checkbox label="Remember me" [control]="rememberMeControl"></app-checkbox>
-        <a routerLink="/auth/forgot-password"
-          class="text-slate-600 hover:text-primary-600 font-bold transition-colors">Forgot Password?</a>
+        <a routerLink="/auth/forgot-password" class="text-slate-600 hover:text-primary-600 font-bold ">Forgot
+          Password?</a>
       </div>
 
       <!-- Sign In Button -->
@@ -81,7 +67,7 @@
   <!-- Sign Up Action Footer -->
   <div class="mt-8 text-center text-xs text-slate-500 pb-2">
     <span>Don't have an account? </span>
-    <a routerLink="/auth/register"
-      class="text-primary-600 hover:text-primary-700 font-extrabold transition-colors cursor-pointer">Sign Up</a>
+    <a routerLink="/auth/register" class="text-primary-600 hover:text-primary-700 font-extrabold  cursor-pointer">Sign
+      Up</a>
   </div>
 </div>

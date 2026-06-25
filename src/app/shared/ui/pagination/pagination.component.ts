@@ -18,7 +18,7 @@ export class PaginationComponent {
   readonly pages = computed(() => {
     const current = this.currentPage();
     const total = this.totalPages();
-    
+
     if (total <= 5) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
@@ -46,7 +46,7 @@ export class PaginationComponent {
   });
 
   pageButtonClass(page: number): string {
-    const base = 'h-9 w-9 flex items-center justify-center text-sm font-semibold rounded-xl transition-all cursor-pointer active:scale-95 border';
+    const base = 'h-9 w-9 flex items-center justify-center text-sm font-semibold rounded-xl  cursor-pointer active:scale-95 border';
     const active = page === this.currentPage()
       ? 'bg-primary-600 border-primary-600 text-white shadow-sm'
       : 'bg-white border-slate-100 text-slate-600 hover:bg-slate-50 hover:text-slate-800';

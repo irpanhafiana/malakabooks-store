@@ -18,7 +18,7 @@ export class SelectComponent {
   readonly customClass = input<string>('', { alias: 'class' });
 
   readonly selectClass = computed(() => {
-    const base = 'block w-full border rounded-xl py-2.5 pl-4 pr-10 text-sm transition-all focus:outline-none focus:ring-2 text-slate-800 bg-white appearance-none cursor-pointer';
+    const base = 'block w-full border rounded-xl py-2.5 pl-4 pr-10 text-sm  focus:outline-none focus:ring-2 text-slate-800 bg-white appearance-none cursor-pointer';
     const isError = this.control().invalid && (this.control().dirty || this.control().touched);
     const border = isError
       ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-500/10'

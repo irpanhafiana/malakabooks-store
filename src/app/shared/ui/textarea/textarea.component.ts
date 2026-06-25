@@ -18,7 +18,7 @@ export class TextareaComponent {
   readonly customClass = input<string>('', { alias: 'class' });
 
   readonly textareaClass = computed(() => {
-    const base = 'block w-full border rounded-xl py-2.5 px-4 text-sm transition-all focus:outline-none focus:ring-2 placeholder-slate-400 text-slate-800 bg-white resize-y';
+    const base = 'block w-full border rounded-xl py-2.5 px-4 text-sm  focus:outline-none focus:ring-2 placeholder-slate-400 text-slate-800 bg-white resize-y';
     const isError = this.control().invalid && (this.control().dirty || this.control().touched);
     const border = isError
       ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-500/10'

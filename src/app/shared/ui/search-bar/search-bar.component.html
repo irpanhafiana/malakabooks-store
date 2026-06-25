@@ -1,31 +1,22 @@
 <form (submit)="onSubmit($event)" class="w-full relative">
-      <div class="relative flex items-center w-full">
-        <!-- Input search box with inner shadow and focus borders -->
-        <input
-          type="text"
-          [ngModel]="searchQuery"
-          (ngModelChange)="onSearchChange($event)"
-          name="query"
-          [placeholder]="placeholder()"
-          [autofocus]="autofocus()"
-          class="w-full border border-slate-200 bg-gray-50 rounded-full py-3 pl-11 pr-12 text-base placeholder-slate-400 text-slate-800 transition-all duration-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 focus:bg-white"
-        />
-        <!-- Left search glass icon -->
-        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-          <app-icon name="search" size="18"></app-icon>
-        </div>
-        <!-- Right quick action search button -->
-        <div class="absolute right-2 flex items-center">
-          @if (searchQuery) {
-            <button
-              type="button"
-              (click)="clearSearch()"
-              class="p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all cursor-pointer flex items-center justify-center border-0 bg-transparent active:scale-95"
-              aria-label="Clear search"
-            >
-              <i class="bx bx-x text-2xl"></i>
-            </button>
-          }
-        </div>
-      </div>
-    </form>
+  <div class="relative flex items-center w-full">
+    <!-- Input search box with inner shadow and focus borders -->
+    <input type="text" [ngModel]="searchQuery" (ngModelChange)="onSearchChange($event)" name="query"
+      [placeholder]="placeholder()" [autofocus]="autofocus()"
+      class="w-full border border-slate-200 bg-gray-50 rounded-full py-3 pl-11 pr-12 text-base placeholder-slate-400 text-slate-800   focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 focus:bg-white" />
+    <!-- Left search glass icon -->
+    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+      <app-icon name="search" size="18"></app-icon>
+    </div>
+    <!-- Right quick action search button -->
+    <div class="absolute right-2 flex items-center">
+      @if (searchQuery) {
+      <button type="button" (click)="clearSearch()"
+        class="p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100  cursor-pointer flex items-center justify-center border-0 bg-transparent active:scale-95"
+        aria-label="Clear search">
+        <i class="bx bx-x text-2xl"></i>
+      </button>
+      }
+    </div>
+  </div>
+</form>

@@ -1,25 +1,23 @@
 <div class="animate-fade-in flex flex-col gap-6">
-      
+
   <!-- Top Header Action bar -->
   <div class="flex items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
     <div class="flex items-center gap-3">
       <h2 class="font-display font-bold text-slate-800 text-sm">Orders Manager</h2>
       @if (selectedOrderIds().length > 0) {
-        <span class="text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full font-bold">
-          {{ selectedOrderIds().length }} selected
-        </span>
+      <span class="text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full font-bold">
+        {{ selectedOrderIds().length }} selected
+      </span>
       }
     </div>
-    
+
     <div class="flex items-center gap-3">
       @if (selectedOrderIds().length > 0) {
-        <button
-          (click)="onBulkCreateShipment()"
-          class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-1.5 px-4 rounded-xl text-xs cursor-pointer shadow-xs transition-colors flex items-center gap-1.5 animate-fade-in"
-        >
-          <i class="bx bx-package text-sm"></i>
-          Bulk Create Shipment
-        </button>
+      <button (click)="onBulkCreateShipment()"
+        class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-1.5 px-4 rounded-xl text-xs cursor-pointer shadow-xs  flex items-center gap-1.5 animate-fade-in">
+        <i class="bx bx-package text-sm"></i>
+        Bulk Create Shipment
+      </button>
       }
       <span class="text-xs text-slate-400 font-semibold">Total Orders: {{ orderStore.orders().length }}</span>
     </div>
@@ -27,97 +25,82 @@
 
   <!-- Data Table -->
   @if (orderStore.loading()) {
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-xs">
-      <app-spinner text="Loading orders..."></app-spinner>
-    </div>
+  <div class="bg-white rounded-2xl border border-slate-100 shadow-xs">
+    <app-spinner text="Loading orders..."></app-spinner>
+  </div>
   } @else {
-    <app-table>
-      <tr table-headers>
-        <th class="px-5 py-3 w-10 text-center">
-          <input 
-            type="checkbox" 
-            [checked]="isAllSelected()" 
-            (change)="toggleSelectAll()"
-            class="rounded border-slate-300 text-primary-600 focus:ring-primary-500 w-4 h-4 cursor-pointer"
-          >
-        </th>
-        <th class="px-5 py-3">Order ID</th>
-        <th class="px-5 py-3">Customer</th>
-        <th class="px-5 py-3">Date</th>
-        <th class="px-5 py-3">Items</th>
-        <th class="px-5 py-3">Total</th>
-        <th class="px-5 py-3">Status</th>
-        <th class="px-5 py-3 text-right">Update Status</th>
-        <th class="px-5 py-3 text-center">Shipment</th>
+  <app-table>
+    <tr table-headers>
+      <th class="px-5 py-3 w-10 text-center">
+        <input type="checkbox" [checked]="isAllSelected()" (change)="toggleSelectAll()"
+          class="rounded border-slate-300 text-primary-600 focus:ring-primary-500 w-4 h-4 cursor-pointer">
+      </th>
+      <th class="px-5 py-3">Order ID</th>
+      <th class="px-5 py-3">Customer</th>
+      <th class="px-5 py-3">Date</th>
+      <th class="px-5 py-3">Items</th>
+      <th class="px-5 py-3">Total</th>
+      <th class="px-5 py-3">Status</th>
+      <th class="px-5 py-3 text-right">Update Status</th>
+      <th class="px-5 py-3 text-center">Shipment</th>
+    </tr>
+
+    <ng-container table-rows>
+      @for (order of pagination.paged(); track order.id) {
+      <tr class="hover:bg-slate-50/30 text-xs">
+        <td class="px-5 py-4 w-10 text-center">
+          <input type="checkbox" [checked]="selectedOrderIds().includes(order.id)"
+            (change)="toggleSelectOrder(order.id)"
+            class="rounded border-slate-300 text-primary-600 focus:ring-primary-500 w-4 h-4 cursor-pointer">
+        </td>
+        <td class="px-5 py-4 font-bold text-slate-800">#{{ order.id }}</td>
+        <td class="px-5 py-4">
+          <div class="flex flex-col">
+            <span class="font-bold text-slate-800">{{ order.userName }}</span>
+            <span class="text-[10px] text-slate-400">{{ order.userEmail }}</span>
+          </div>
+        </td>
+        <td class="px-5 py-4">{{ order.orderDate | date: 'mediumDate' }}</td>
+        <td class="px-5 py-4 font-semibold text-slate-600">{{ order.items.length }} items</td>
+        <td class="px-5 py-4 font-bold text-slate-800">
+          <app-price [value]="order.total" size="sm"></app-price>
+        </td>
+        <td class="px-5 py-4">
+          <app-status-badge [status]="order.status"></app-status-badge>
+        </td>
+        <td class="px-5 py-4 text-right">
+          <div class="relative inline-flex items-center justify-end">
+            <select #statusSelect [value]="order.status"
+              (change)="onStatusChange(order.id, $any($event.target).value, statusSelect, order.status)"
+              class="border border-slate-200 bg-white text-slate-700 font-semibold py-1.5 px-3 pr-7 rounded-xl focus:outline-none focus:border-primary-500 appearance-none text-[10px] cursor-pointer">
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <div class="absolute right-2.5 pointer-events-none text-slate-400 flex items-center">
+              <i class="bx bx-chevron-down text-[12px]"></i>
+            </div>
+          </div>
+        </td>
+        <td class="px-5 py-4 text-center">
+          <button (click)="onCreateShipment(order.id)"
+            class="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-1.5 px-3 rounded-xl text-[10px] cursor-pointer shadow-xs ">
+            Create Shipment
+          </button>
+        </td>
       </tr>
+      } @empty {
+      <tr>
+        <td colspan="9" class="p-8 text-center text-slate-400">No orders logged yet.</td>
+      </tr>
+      }
+    </ng-container>
+  </app-table>
 
-      <ng-container table-rows>
-        @for (order of pagination.paged(); track order.id) {
-          <tr class="hover:bg-slate-50/30 text-xs">
-            <td class="px-5 py-4 w-10 text-center">
-              <input 
-                type="checkbox" 
-                [checked]="selectedOrderIds().includes(order.id)" 
-                (change)="toggleSelectOrder(order.id)"
-                class="rounded border-slate-300 text-primary-600 focus:ring-primary-500 w-4 h-4 cursor-pointer"
-              >
-            </td>
-            <td class="px-5 py-4 font-bold text-slate-800">#{{ order.id }}</td>
-            <td class="px-5 py-4">
-              <div class="flex flex-col">
-                <span class="font-bold text-slate-800">{{ order.userName }}</span>
-                <span class="text-[10px] text-slate-400">{{ order.userEmail }}</span>
-              </div>
-            </td>
-            <td class="px-5 py-4">{{ order.orderDate | date: 'mediumDate' }}</td>
-            <td class="px-5 py-4 font-semibold text-slate-600">{{ order.items.length }} items</td>
-            <td class="px-5 py-4 font-bold text-slate-800">
-              <app-price [value]="order.total" size="sm"></app-price>
-            </td>
-            <td class="px-5 py-4">
-              <app-status-badge [status]="order.status"></app-status-badge>
-            </td>
-            <td class="px-5 py-4 text-right">
-              <div class="relative inline-flex items-center justify-end">
-                <select
-                  #statusSelect
-                  [value]="order.status"
-                  (change)="onStatusChange(order.id, $any($event.target).value, statusSelect, order.status)"
-                  class="border border-slate-200 bg-white text-slate-700 font-semibold py-1.5 px-3 pr-7 rounded-xl focus:outline-none focus:border-primary-500 appearance-none text-[10px] cursor-pointer"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="processing">Processing</option>
-                  <option value="shipped">Shipped</option>
-                  <option value="completed">Completed</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
-                <div class="absolute right-2.5 pointer-events-none text-slate-400 flex items-center">
-                  <i class="bx bx-chevron-down text-[12px]"></i>
-                </div>
-              </div>
-            </td>
-            <td class="px-5 py-4 text-center">
-              <button
-                (click)="onCreateShipment(order.id)"
-                class="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-1.5 px-3 rounded-xl text-[10px] cursor-pointer shadow-xs transition-colors"
-              >
-                Create Shipment
-              </button>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="9" class="p-8 text-center text-slate-400">No orders logged yet.</td>
-          </tr>
-        }
-      </ng-container>
-    </app-table>
-
-    <app-pagination
-      [currentPage]="pagination.page()"
-      [totalPages]="pagination.totalPages()"
-      (pageChange)="pagination.setPage($event)"
-    ></app-pagination>
+  <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages()"
+    (pageChange)="pagination.setPage($event)"></app-pagination>
   }
 
 </div>

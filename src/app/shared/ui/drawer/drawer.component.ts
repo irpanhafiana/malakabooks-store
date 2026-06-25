@@ -15,8 +15,8 @@ export class DrawerComponent {
   readonly position = input<'bottom' | 'right'>('right');
 
   readonly drawerClass = computed(() => {
-    const base = 'fixed bg-white shadow-2xl flex flex-col transition-transform duration-300 z-10';
-    
+    const base = 'fixed bg-white shadow-2xl flex flex-col   z-10';
+
     if (this.position() === 'bottom') {
       // Bottom slide-up sheet (mobile standard)
       return `${base} bottom-0 left-0 right-0 max-h-[85vh] rounded-t-3xl border-t border-slate-100 animate-slide-up w-full`;

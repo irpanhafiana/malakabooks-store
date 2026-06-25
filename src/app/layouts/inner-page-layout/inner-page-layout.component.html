@@ -1,25 +1,25 @@
-<div class="h-dvh w-full bg-gray-50/50 flex justify-center overflow-hidden inner-root" style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
-  
+<div class="h-dvh w-full bg-gray-50/50 flex justify-center overflow-hidden inner-root"
+  style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
+
   <!-- Mobile App Frame Container (Constrained width, clamp scaling, with simulator borders) -->
-  <div class="w-full max-w-[480px] bg-gray-50 relative flex flex-col md:border-x md:border-gray-200/60 md:shadow-2xl md:shadow-[0_0_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden" 
-       style="height: calc(100% / clamp(0.5, 100vw / 480, 1)); transform: scale(clamp(0.5, 100vw / 480, 1)); transform-origin: center top;">
-    
+  <div
+    class="w-full max-w-[480px] bg-gray-50 relative flex flex-col md:border-x md:border-gray-200/60 md:shadow-2xl md:shadow-[0_0_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden"
+    style="height: calc(100% / clamp(0.5, 100vw / 480, 1)); transform: scale(clamp(0.5, 100vw / 480, 1)); transform-origin: center top;">
+
     <!-- Header with Back Button -->
     @if (!hideHeader()) {
-      <header class="sticky top-0 z-40 bg-gray-50 px-4 py-3 flex items-center gap-3 h-14 shrink-0 border-b border-gray-100">
-        <button
-          type="button"
-          (click)="goBack()"
-          class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0 transition-all"
-          aria-label="Go Back"
-        >
-          <i class="bx bx-left-arrow-alt text-2xl"></i>
-        </button>
-        
-        @if (pageTitle()) {
-          <h1 class="font-display font-extrabold text-slate-800 text-base flex-1 truncate">{{ pageTitle() }}</h1>
-        }
-      </header>
+    <header
+      class="sticky top-0 z-40 bg-gray-50 px-4 py-3 flex items-center gap-3 h-14 shrink-0 border-b border-gray-100">
+      <button type="button" (click)="goBack()"
+        class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0 "
+        aria-label="Go Back">
+        <i class="bx bx-left-arrow-alt text-2xl"></i>
+      </button>
+
+      @if (pageTitle()) {
+      <h1 class="font-display font-extrabold text-slate-800 text-base flex-1 truncate">{{ pageTitle() }}</h1>
+      }
+    </header>
     }
 
     <!-- Main Content Area (No scrolling here, children must handle it) -->
@@ -32,22 +32,21 @@
     <!-- Global Toasts Alert Overlay (relative to phone frame) -->
     <div class="absolute top-16 left-4 right-4 z-[60] flex flex-col gap-2 pointer-events-none">
       @for (toast of toastService.toasts(); track toast.id) {
-        <div
-          [class]="toastClass(toast.type)"
-          class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-white animate-slide-down transition-all pointer-events-auto"
-        >
-          @if (toast.type === 'success') {
-            <i class="bx bx-check text-emerald-500 text-sm"></i>
-          } @else if (toast.type === 'error') {
-            <i class="bx bx-error-circle text-rose-500 text-sm"></i>
-          } @else {
-            <i class="bx bx-info-circle text-blue-500 text-sm"></i>
-          }
-          <span class="text-[10px] font-semibold text-slate-800 flex-1">{{ toast.message }}</span>
-          <button (click)="toastService.remove(toast.id)" class="text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer">
-            <i class="bx bx-x text-xs"></i>
-          </button>
-        </div>
+      <div [class]="toastClass(toast.type)"
+        class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-white animate-slide-down  pointer-events-auto">
+        @if (toast.type === 'success') {
+        <i class="bx bx-check text-emerald-500 text-sm"></i>
+        } @else if (toast.type === 'error') {
+        <i class="bx bx-error-circle text-rose-500 text-sm"></i>
+        } @else {
+        <i class="bx bx-info-circle text-blue-500 text-sm"></i>
+        }
+        <span class="text-[10px] font-semibold text-slate-800 flex-1">{{ toast.message }}</span>
+        <button (click)="toastService.remove(toast.id)"
+          class="text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer">
+          <i class="bx bx-x text-xs"></i>
+        </button>
+      </div>
       }
     </div>
 

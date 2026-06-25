@@ -1,161 +1,149 @@
 <div class="flex flex-col gap-4 animate-fade-in pb-28">
-      <!-- Search Bar & Filter Button -->
-      <div class="sticky top-0 z-10 -mx-4 pb-2 bg-gray-50 backdrop-blur-sm">
-        
-        <!-- Top Row: Search and Filter Button -->
-        <div class="flex items-center gap-3 px-4">
-          <div class="flex-1">
-            <app-search-bar [placeholder]="'Cari buku, penulis...'" [value]="productStore.searchQuery()" [autofocus]="false" (search)="onSearchSubmit($event)"></app-search-bar>
+  <!-- Search Bar & Filter Button -->
+  <div class="sticky top-0 z-10 -mx-4 pb-2 bg-gray-50 backdrop-blur-sm">
+
+    <!-- Top Row: Search and Filter Button -->
+    <div class="flex items-center gap-3 px-4">
+      <div class="flex-1">
+        <app-search-bar [placeholder]="'Cari buku, penulis...'" [value]="productStore.searchQuery()" [autofocus]="false"
+          (search)="onSearchSubmit($event)"></app-search-bar>
+      </div>
+      <button type="button" (click)="openFilters()"
+        class="flex items-center justify-center shrink-0 w-12 h-12 border border-slate-200 bg-white rounded-full text-slate-700 hover:text-primary-600 hover:bg-slate-50 cursor-pointer active:scale-95 "
+        aria-label="More Filters">
+        <app-icon name="filter" size="20"></app-icon>
+      </button>
+    </div>
+
+    <!-- Horizontal Categories (Full Width) -->
+    @if (productStore.searchQuery()) {
+    <div class="mt-3 mb-1 w-full overflow-hidden">
+      <div class="flex gap-2 overflow-x-auto scrollbar-hide no-scrollbar px-4">
+        <button type="button" (click)="onCategorySelect(null)"
+          [class]="productStore.selectedCategoryId() === null ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px]  whitespace-nowrap cursor-pointer' : 'bg-white border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px] text-slate-600  whitespace-nowrap cursor-pointer hover:bg-slate-50'">
+          <i class="bx bx-category text-lg"></i>
+          Semua
+        </button>
+        @for (cat of productStore.activeSearchCategories(); track cat.id) {
+        <button type="button" (click)="onCategorySelect(cat.id)"
+          [class]="productStore.selectedCategoryId() === cat.id ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px]  whitespace-nowrap cursor-pointer' : 'bg-white border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px] text-slate-600  whitespace-nowrap cursor-pointer hover:bg-slate-50'">
+          <app-icon [name]="cat.icon" size="18"></app-icon>
+          {{ cat.name }}
+        </button>
+        }
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Product List (Card-List / Horizontal Row Layout) -->
+  <div class="w-full flex flex-col gap-2">
+    @if (productStore.loading()) {
+    <app-skeleton type="card" [count]="4"></app-skeleton>
+    } @else if (productStore.error()) {
+    <app-empty-state icon="error" title="Gagal Memuat Produk" [description]="productStore.error() || ''"
+      actionText="Coba Lagi" (actionClick)="retryLoading()"></app-empty-state>
+    } @else if (productStore.filteredProducts().length === 0) {
+    <app-empty-state icon="book-open" title="Tidak Ada Produk"
+      description="Kami tidak menemukan produk yang cocok dengan pencarian Anda. Coba ubah kata kunci atau hapus filter."
+      actionText="Reset Semua Filter" (actionClick)="resetAllFilters()"></app-empty-state>
+    } @else {
+    @for (prod of productStore.filteredProducts(); track prod.id) {
+    <div
+      class="card-product !flex-row border border-slate-100/80 shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 cursor-pointer active:scale-[0.99] group"
+      (click)="viewProductDetails(prod.id)">
+      <!-- Thumbnail Image (matching product-card aspect & styling) -->
+      <div class="w-28 min-h-[115px] shrink-0 bg-slate-50 overflow-hidden relative">
+        @if (prod.images[0] && !failedImageIds().has(prod.id)) {
+        <img [src]="prod.images[0]" [alt]="prod.name" (error)="onImageError(prod.id)"
+          class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105  " loading="lazy" />
+        } @else {
+        <div
+          class="absolute inset-0 flex items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-300">
+          <app-icon name="book-open" size="32"></app-icon>
+        </div>
+        }
+        <!-- Category text (plain text over image, no badge box) -->
+        <span
+          class="absolute bottom-2 left-2 text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] z-10">{{
+          prod.categoryName }}</span>
+        <!-- Discount badge (same as product-card) -->
+        @if (prod.originalPrice && prod.originalPrice > prod.price) {
+        <span class="absolute bottom-2 right-2 px-2 py-0.5 text-[10px] font-bold bg-rose-500 text-white rounded-lg">
+          Save {{ Math.round(((prod.originalPrice - prod.price)/prod.originalPrice) * 100) }}%
+        </span>
+        }
+      </div>
+
+      <!-- Info Section -->
+      <div class="flex flex-col flex-1 min-w-0 justify-between px-3 py-3">
+        <!-- Top: Author, Title, Ratings & Love Button -->
+        <div>
+          <div class="flex justify-between items-start gap-2">
+            <div class="flex-1 min-w-0">
+              <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">{{
+                prod.specifications['Author'] }}</span>
+              <h3
+                class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600  leading-tight">
+                {{ prod.name }}</h3>
+            </div>
+
           </div>
-          <button
-            type="button"
-            (click)="openFilters()"
-            class="flex items-center justify-center shrink-0 w-12 h-12 border border-slate-200 bg-white rounded-full text-slate-700 hover:text-primary-600 hover:bg-slate-50 cursor-pointer active:scale-95 transition-all"
-            aria-label="More Filters"
-          >
-            <app-icon name="filter" size="20"></app-icon>
+
+          <!-- Ratings -->
+          <div class="flex items-center gap-1 mt-0.5">
+            <app-icon name="star" size="12" class="text-amber-400 fill-amber-400"></app-icon>
+            <span class="text-xs font-semibold text-slate-700">{{ prod.rating }}</span>
+            <span class="text-[10px] text-slate-400">({{ prod.reviewsCount }})</span>
+          </div>
+        </div>
+
+        <!-- Bottom: Price & Sold (same as product-card pricing row) -->
+        <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-50 mt-2">
+          <div class="flex flex-col">
+            @if (prod.originalPrice && prod.originalPrice > prod.price) {
+            <span class="text-[10px] text-slate-400 line-through leading-none mb-0.5">Rp {{
+              Math.round(prod.originalPrice).toLocaleString('id-ID') }}</span>
+            }
+            <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold"></app-price>
+          </div>
+          <span class="text-[10px] text-slate-500 font-medium">
+            {{ prod.reviewsCount * 12 + (prod.stock % 7) + 5 }} Terjual
+          </span>
+        </div>
+      </div>
+    </div>
+    }
+    }
+  </div>
+
+  <!-- Mobile Filters Sheet Drawer (Shared bottom-sheet) -->
+  <app-bottom-sheet [isOpen]="isFiltersOpen()" title="Filter & Sort" (closed)="closeFilters()">
+    <div class="flex flex-col gap-6 py-2">
+
+      <!-- Sort selector -->
+      <div>
+        <h4 class="font-display font-bold text-slate-700 text-xs uppercase tracking-wider mb-3">Sort By</h4>
+        <div class="flex flex-col gap-2">
+          <button type="button" (click)="onSortChange('featured'); closeFilters()"
+            [class]="productStore.sortBy() === 'featured' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
+            Featured
+          </button>
+          <button type="button" (click)="onSortChange('price-asc'); closeFilters()"
+            [class]="productStore.sortBy() === 'price-asc' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
+            Price: Low to High
+          </button>
+          <button type="button" (click)="onSortChange('price-desc'); closeFilters()"
+            [class]="productStore.sortBy() === 'price-desc' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
+            Price: High to Low
+          </button>
+          <button type="button" (click)="onSortChange('rating'); closeFilters()"
+            [class]="productStore.sortBy() === 'rating' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
+            Top Rated
           </button>
         </div>
-
-        <!-- Horizontal Categories (Full Width) -->
-        @if (productStore.searchQuery()) {
-          <div class="mt-3 mb-1 w-full overflow-hidden">
-            <div class="flex gap-2 overflow-x-auto scrollbar-hide no-scrollbar px-4">
-              <button
-                type="button"
-                (click)="onCategorySelect(null)"
-                [class]="productStore.selectedCategoryId() === null ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px] transition-all whitespace-nowrap cursor-pointer' : 'bg-white border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px] text-slate-600 transition-all whitespace-nowrap cursor-pointer hover:bg-slate-50'"
-              >
-                <i class="bx bx-category text-lg"></i>
-                Semua
-              </button>
-              @for (cat of productStore.activeSearchCategories(); track cat.id) {
-                <button
-                  type="button"
-                  (click)="onCategorySelect(cat.id)"
-                  [class]="productStore.selectedCategoryId() === cat.id ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px] transition-all whitespace-nowrap cursor-pointer' : 'bg-white border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px] text-slate-600 transition-all whitespace-nowrap cursor-pointer hover:bg-slate-50'"
-                >
-                  <app-icon [name]="cat.icon" size="18"></app-icon>
-                  {{ cat.name }}
-                </button>
-              }
-            </div>
-          </div>
-        }
       </div>
-
-      <!-- Product List (Card-List / Horizontal Row Layout) -->
-      <div class="w-full flex flex-col gap-2">
-        @if (productStore.loading()) {
-          <app-skeleton type="card" [count]="4"></app-skeleton>
-        } @else if (productStore.error()) {
-          <app-empty-state
-            icon="error"
-            title="Gagal Memuat Produk"
-            [description]="productStore.error() || ''"
-            actionText="Coba Lagi"
-            (actionClick)="retryLoading()"
-          ></app-empty-state>
-        } @else if (productStore.filteredProducts().length === 0) {
-          <app-empty-state
-            icon="book-open"
-            title="Tidak Ada Produk"
-            description="Kami tidak menemukan produk yang cocok dengan pencarian Anda. Coba ubah kata kunci atau hapus filter."
-            actionText="Reset Semua Filter"
-            (actionClick)="resetAllFilters()"
-          ></app-empty-state>
-        } @else {
-          @for (prod of productStore.filteredProducts(); track prod.id) {
-            <div
-              class="card-product !flex-row border border-slate-100/80 shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 cursor-pointer active:scale-[0.99] group"
-              (click)="viewProductDetails(prod.id)"
-            >
-              <!-- Thumbnail Image (matching product-card aspect & styling) -->
-              <div class="w-28 min-h-[115px] shrink-0 bg-slate-50 overflow-hidden relative">
-                @if (prod.images[0] && !failedImageIds().has(prod.id)) {
-                  <img
-                    [src]="prod.images[0]"
-                    [alt]="prod.name"
-                    (error)="onImageError(prod.id)"
-                    class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                } @else {
-                  <div class="absolute inset-0 flex items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-300">
-                    <app-icon name="book-open" size="32"></app-icon>
-                  </div>
-                }
-                <!-- Category text (plain text over image, no badge box) -->
-                <span class="absolute bottom-2 left-2 text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] z-10">{{ prod.categoryName }}</span>
-                <!-- Discount badge (same as product-card) -->
-                @if (prod.originalPrice && prod.originalPrice > prod.price) {
-                  <span class="absolute bottom-2 right-2 px-2 py-0.5 text-[10px] font-bold bg-rose-500 text-white rounded-lg">
-                    Save {{ Math.round(((prod.originalPrice - prod.price)/prod.originalPrice) * 100) }}%
-                  </span>
-                }
-              </div>
-
-              <!-- Info Section -->
-              <div class="flex flex-col flex-1 min-w-0 justify-between px-3 py-3">
-                <!-- Top: Author, Title, Ratings & Love Button -->
-                <div>
-                  <div class="flex justify-between items-start gap-2">
-                    <div class="flex-1 min-w-0">
-                      <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">{{ prod.specifications['Author'] }}</span>
-                      <h3 class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 transition-colors leading-tight">{{ prod.name }}</h3>
-                    </div>
-                    
-                  </div>
-
-                  <!-- Ratings -->
-                  <div class="flex items-center gap-1 mt-0.5">
-                    <app-icon name="star" size="12" class="text-amber-400 fill-amber-400"></app-icon>
-                    <span class="text-xs font-semibold text-slate-700">{{ prod.rating }}</span>
-                    <span class="text-[10px] text-slate-400">({{ prod.reviewsCount }})</span>
-                  </div>
-                </div>
-
-                <!-- Bottom: Price & Sold (same as product-card pricing row) -->
-                <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-50 mt-2">
-                  <div class="flex flex-col">
-                    @if (prod.originalPrice && prod.originalPrice > prod.price) {
-                      <span class="text-[10px] text-slate-400 line-through leading-none mb-0.5">Rp {{ Math.round(prod.originalPrice).toLocaleString('id-ID') }}</span>
-                    }
-                    <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold"></app-price>
-                  </div>
-                  <span class="text-[10px] text-slate-500 font-medium">
-                    {{ prod.reviewsCount * 12 + (prod.stock % 7) + 5 }} Terjual
-                  </span>
-                </div>
-              </div>
-            </div>
-          }
-        }
-      </div>
-
-      <!-- Mobile Filters Sheet Drawer (Shared bottom-sheet) -->
-      <app-bottom-sheet [isOpen]="isFiltersOpen()" title="Filter & Sort" (closed)="closeFilters()">
-        <div class="flex flex-col gap-6 py-2">
-          
-          <!-- Sort selector -->
-          <div>
-            <h4 class="font-display font-bold text-slate-700 text-xs uppercase tracking-wider mb-3">Sort By</h4>
-            <div class="flex flex-col gap-2">
-              <button type="button" (click)="onSortChange('featured'); closeFilters()" [class]="productStore.sortBy() === 'featured' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
-                Featured
-              </button>
-              <button type="button" (click)="onSortChange('price-asc'); closeFilters()" [class]="productStore.sortBy() === 'price-asc' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
-                Price: Low to High
-              </button>
-              <button type="button" (click)="onSortChange('price-desc'); closeFilters()" [class]="productStore.sortBy() === 'price-desc' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
-                Price: High to Low
-              </button>
-              <button type="button" (click)="onSortChange('rating'); closeFilters()" [class]="productStore.sortBy() === 'rating' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
-                Top Rated
-              </button>
-            </div>
-          </div>
-        </div>
-      </app-bottom-sheet>
-
     </div>
+  </app-bottom-sheet>
+
+</div>

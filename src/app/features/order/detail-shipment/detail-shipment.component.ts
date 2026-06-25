@@ -39,7 +39,7 @@ import { ToastService } from '../../../core/services/toast.service';
           </div>
           <button 
             (click)="retry()"
-            class="px-4 py-2 text-xs font-semibold text-white bg-primary-600 rounded-xl hover:bg-primary-700 active:scale-95 transition-all cursor-pointer shadow-sm shadow-primary-200"
+            class="px-4 py-2 text-xs font-semibold text-white bg-primary-600 rounded-xl hover:bg-primary-700 active:scale-95  cursor-pointer shadow-sm shadow-primary-200"
           >
             Coba Lagi
           </button>
@@ -76,7 +76,7 @@ import { ToastService } from '../../../core/services/toast.service';
                 <strong class="font-bold text-slate-800 select-all">{{ awbNo }}</strong>
                 <button 
                   (click)="copyToClipboard(awbNo)" 
-                  class="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                  class="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50  cursor-pointer"
                   title="Salin Resi"
                 >
                   <i class="bx bx-copy text-base"></i>
@@ -119,7 +119,7 @@ import { ToastService } from '../../../core/services/toast.service';
                   'bg-primary-500 border-4 border-primary-100 ring-2 ring-primary-50/50 ring-offset-0 animate-pulse': first,
                   'bg-slate-300 border-2 border-white': !first
                 }"
-                class="absolute -left-[30px] top-0.5 h-4.5 w-4.5 rounded-full flex items-center justify-center transition-all duration-300"
+                class="absolute -left-[30px] top-0.5 h-4.5 w-4.5 rounded-full flex items-center justify-center  "
               ></div>
 
               <!-- Log Date Time -->
@@ -158,7 +158,7 @@ import { ToastService } from '../../../core/services/toast.service';
       <div class="flex flex-col gap-3">
         <a 
           routerLink="/order-history" 
-          class="w-full text-center py-3 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 active:scale-98 transition-all block cursor-pointer"
+          class="w-full text-center py-3 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 active:scale-98  block cursor-pointer"
         >
           Kembali ke Riwayat Pesanan
         </a>
@@ -175,7 +175,7 @@ export class DetailShipmentComponent implements OnInit {
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
   readonly trackingData = signal<any>(null);
-  
+
   orderIdRouteParam = '';
 
   ngOnInit() {
@@ -263,7 +263,7 @@ export class DetailShipmentComponent implements OnInit {
   get trackingLogs(): any[] {
     const details = this.trackingDetails;
     if (!details) return [];
-    
+
     // Check if logs are wrapped under history_pengiriman or other keys
     const rawList = details.history_pengiriman || details.history || details.histories || details.logs || details.manifests || details.manifest || details.details || [];
 

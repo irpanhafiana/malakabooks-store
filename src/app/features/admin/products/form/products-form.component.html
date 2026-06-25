@@ -1,72 +1,75 @@
 <form [formGroup]="productForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
   <div class="sm:col-span-2">
-    <app-admin-input label="Product Name" placeholder="e.g. The Midnight Library" [control]="nameControl"></app-admin-input>
+    <app-admin-input label="Product Name" placeholder="e.g. The Midnight Library"
+      [control]="nameControl"></app-admin-input>
   </div>
-  
-  <app-select label="Category" placeholder="Select category" [options]="categoryOptions()" [control]="categoryControl"></app-select>
+
+  <app-select label="Category" placeholder="Select category" [options]="categoryOptions()"
+    [control]="categoryControl"></app-select>
   <app-admin-input label="Brand" placeholder="e.g. Canongate Books" [control]="brandControl"></app-admin-input>
 
   <app-admin-input label="Author" placeholder="e.g. Matt Haig" [control]="authorControl"></app-admin-input>
   <app-admin-input label="ISBN" placeholder="e.g. 978-0525559474" [control]="isbnControl"></app-admin-input>
 
-  <app-admin-input label="Published Year" placeholder="e.g. 2020" type="number" [control]="publishedYearControl"></app-admin-input>
+  <app-admin-input label="Published Year" placeholder="e.g. 2020" type="number"
+    [control]="publishedYearControl"></app-admin-input>
   <app-admin-input label="Pages" placeholder="e.g. 304" type="number" [control]="pagesControl"></app-admin-input>
 
-  <app-admin-input label="Weight (kg)" placeholder="e.g. 0.35" type="number" [control]="weightControl"></app-admin-input>
+  <app-admin-input label="Weight (kg)" placeholder="e.g. 0.35" type="number"
+    [control]="weightControl"></app-admin-input>
 
   <app-admin-input label="Price" placeholder="e.g. 14.99" type="number" [control]="priceControl"></app-admin-input>
-  <app-admin-input label="Original Price (Optional)" placeholder="e.g. 19.99" type="number" [control]="origPriceControl"></app-admin-input>
+  <app-admin-input label="Original Price (Optional)" placeholder="e.g. 19.99" type="number"
+    [control]="origPriceControl"></app-admin-input>
 
-  <app-admin-input label="Stock Inventory" placeholder="e.g. 50" type="number" [control]="stockControl"></app-admin-input>
+  <app-admin-input label="Stock Inventory" placeholder="e.g. 50" type="number"
+    [control]="stockControl"></app-admin-input>
   <div class="sm:col-span-2 flex flex-col gap-1.5">
     <label class="text-sm font-bold text-slate-700">Cover Image</label>
     <div class="flex items-center gap-4">
-      <input 
-        type="file" 
-        accept="image/*" 
-        (change)="onCoverImageChange($event)" 
-        class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all cursor-pointer"
-      />
+      <input type="file" accept="image/*" (change)="onCoverImageChange($event)"
+        class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100  cursor-pointer" />
     </div>
     @if (coverImageControl.value) {
-      <img [src]="coverImageControl.value" alt="Cover Preview" class="mt-2 h-24 w-24 object-cover rounded-xl border border-slate-200 shadow-sm" />
+    <img [src]="coverImageControl.value" alt="Cover Preview"
+      class="mt-2 h-24 w-24 object-cover rounded-xl border border-slate-200 shadow-sm" />
     }
   </div>
-  
+
   <div class="sm:col-span-2 flex flex-col gap-2 mt-2">
     <div class="flex justify-between items-center">
       <label class="text-sm font-bold text-slate-700">Additional Images</label>
-      <button type="button" (click)="addAdditionalImage()" class="text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors">
+      <button type="button" (click)="addAdditionalImage()"
+        class="text-xs font-bold text-primary-600 hover:text-primary-700 ">
         + Tambah Gambar
       </button>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       @for (img of additionalImagesControls(); track $index) {
-        <div class="flex flex-col gap-2 p-3 border border-slate-100 rounded-xl bg-slate-50/50">
-          <div class="flex gap-2 items-center">
-            <input 
-              type="file" 
-              accept="image/*"
-              (change)="onAdditionalImageChange($event, $index)"
-              class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-white file:text-slate-700 hover:file:bg-slate-100 cursor-pointer shadow-sm"
-            />
-            <button type="button" (click)="removeAdditionalImage($index)" class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors">
-              <i class="bx bx-trash"></i>
-            </button>
-          </div>
-          @if (img) {
-            <img [src]="img" alt="Additional Preview" class="h-16 w-16 object-cover rounded-lg border border-slate-200" />
-          }
+      <div class="flex flex-col gap-2 p-3 border border-slate-100 rounded-xl bg-slate-50/50">
+        <div class="flex gap-2 items-center">
+          <input type="file" accept="image/*" (change)="onAdditionalImageChange($event, $index)"
+            class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-white file:text-slate-700 hover:file:bg-slate-100 cursor-pointer shadow-sm" />
+          <button type="button" (click)="removeAdditionalImage($index)"
+            class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg ">
+            <i class="bx bx-trash"></i>
+          </button>
         </div>
+        @if (img) {
+        <img [src]="img" alt="Additional Preview" class="h-16 w-16 object-cover rounded-lg border border-slate-200" />
+        }
+      </div>
       }
     </div>
   </div>
   <div class="sm:col-span-2">
-    <app-textarea label="Description" placeholder="Write comprehensive product description..." [control]="descControl" [rows]="3"></app-textarea>
+    <app-textarea label="Description" placeholder="Write comprehensive product description..." [control]="descControl"
+      [rows]="3"></app-textarea>
   </div>
 
   <div class="sm:col-span-2 flex justify-end gap-2 mt-4">
     <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Cancel</app-admin-button>
-    <app-admin-button (click)="onSubmitForm()" [disabled]="productForm.invalid" type="button" variant="primary" size="sm">Save Product</app-admin-button>
+    <app-admin-button (click)="onSubmitForm()" [disabled]="productForm.invalid" type="button" variant="primary"
+      size="sm">Save Product</app-admin-button>
   </div>
 </form>

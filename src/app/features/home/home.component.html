@@ -1,128 +1,112 @@
 <div class="flex flex-col gap-8 animate-fade-in pb-28">
-      
-      <!-- Hero Banner Carousel (Swipeable, looping, with dot indicators) -->
-      <section class="relative group">
-        <!-- Embla viewport -->
-        <div
-          #carouselViewport
-          class="overflow-hidden -mx-4 px-4 h-[180px]"
-        >
-          <!-- Embla container -->
-          <div class="flex -ml-3 items-center h-full">
-          @for (slide of slides; track $index) {
-            <div class="flex-[0_0_90%] min-w-0 pl-3">
+
+  <!-- Hero Banner Carousel (Swipeable, looping, with dot indicators) -->
+  <section class="relative group">
+    <!-- Embla viewport -->
+    <div #carouselViewport class="overflow-hidden -mx-4 px-4 h-[180px]">
+      <!-- Embla container -->
+      <div class="flex -ml-3 items-center h-full">
+        @for (slide of slides; track $index) {
+        <div class="flex-[0_0_90%] min-w-0 pl-3">
+          <div
+            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between  "
+            [style.height.px]="$index === currentSlide() ? 168 : 140" [class.opacity-60]="$index !== currentSlide()">
+            <!-- Background Image overlay -->
+            <div class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
+              [style.backgroundImage]="'url(' + slide.imageUrl + ')'"></div>
+
+            <!-- Background glow vectors -->
+            <div class="absolute -right-16 -top-16 w-56 h-56 bg-white/10 rounded-full blur-2xl pointer-events-none">
+            </div>
             <div
-              class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between transition-all duration-300"
-              [style.height.px]="$index === currentSlide() ? 168 : 140"
-              [class.opacity-60]="$index !== currentSlide()"
-            >
-              <!-- Background Image overlay -->
-              <div 
-                class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
-                [style.backgroundImage]="'url(' + slide.imageUrl + ')'"
-              ></div>
-              
-              <!-- Background glow vectors -->
-              <div class="absolute -right-16 -top-16 w-56 h-56 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-              <div class="absolute -left-16 -bottom-16 w-56 h-56 bg-rose-500/15 rounded-full blur-2xl pointer-events-none"></div>
-
-              <div class="relative z-10 flex flex-col items-start gap-1 max-w-xl">
-                <span class="px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-[8px] font-bold uppercase tracking-wider">
-                  {{ slide.badge }}
-                </span>
-                <h1 class="text-base font-display font-extrabold tracking-tight leading-tight line-clamp-1">
-                  {{ slide.title }}
-                </h1>
-                <p class="text-[10px] text-primary-100/90 max-w-sm leading-relaxed line-clamp-1">
-                  {{ slide.description }}
-                </p>
-              </div>
-
-              <div class="relative z-10 flex items-center justify-between gap-3 mt-2 w-full">
-                <a 
-                  [routerLink]="slide.buttonLink" 
-                  class="px-3.5 py-1.5 rounded-lg bg-white text-primary-700 font-bold text-[9px] hover:bg-slate-50 transition-all border border-slate-200 cursor-pointer active:scale-95 shadow-sm"
-                >
-                  {{ slide.buttonText }}
-                </a>
-                @if (slide.promoCode) {
-                  <span class="text-[8px] text-white/95 bg-black/15 backdrop-blur-sm px-2 py-1 rounded-md border border-white/5 font-medium">
-                    Use Code <strong class="text-white font-bold underline">{{ slide.promoCode }}</strong>
-                  </span>
-                }
-              </div>
+              class="absolute -left-16 -bottom-16 w-56 h-56 bg-rose-500/15 rounded-full blur-2xl pointer-events-none">
             </div>
+
+            <div class="relative z-10 flex flex-col items-start gap-1 max-w-xl">
+              <span
+                class="px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-[8px] font-bold uppercase tracking-wider">
+                {{ slide.badge }}
+              </span>
+              <h1 class="text-base font-display font-extrabold tracking-tight leading-tight line-clamp-1">
+                {{ slide.title }}
+              </h1>
+              <p class="text-[10px] text-primary-100/90 max-w-sm leading-relaxed line-clamp-1">
+                {{ slide.description }}
+              </p>
             </div>
-          }
+
+            <div class="relative z-10 flex items-center justify-between gap-3 mt-2 w-full">
+              <a [routerLink]="slide.buttonLink"
+                class="px-3.5 py-1.5 rounded-lg bg-white text-primary-700 font-bold text-[9px] hover:bg-slate-50  border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
+                {{ slide.buttonText }}
+              </a>
+              @if (slide.promoCode) {
+              <span
+                class="text-[8px] text-white/95 bg-black/15 backdrop-blur-sm px-2 py-1 rounded-md border border-white/5 font-medium">
+                Use Code <strong class="text-white font-bold underline">{{ slide.promoCode }}</strong>
+              </span>
+              }
+            </div>
           </div>
         </div>
-
-        <!-- Dot Indicators -->
-        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
-          @for (slide of slides; track $index) {
-            <button
-              type="button"
-              (click)="scrollToSlide($index)"
-              [class]="$index === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"
-              class="transition-all duration-300 cursor-pointer hover:bg-white/80"
-              [attr.aria-label]="'Go to slide ' + ($index + 1)"
-            ></button>
-          }
-        </div>
-      </section>
-
-      <!-- Recommended/Featured Products grid -->
-      <section class="flex flex-col gap-4">
-        <div class="flex flex-col gap-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h2 class="font-display font-extrabold text-slate-800 text-base">Featured Publications</h2>
-              <p class="text-[12px] text-slate-400 mt-0.5">Handpicked premium titles & accessories</p>
-            </div>
-            <a routerLink="/product" class="text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors flex items-center gap-1">
-              View All
-              <app-icon name="chevron-right" size="12"></app-icon>
-            </a>
-          </div>
-  
-          <section class="flex flex-col gap-2">
-            <div class="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4">
-              <button
-                type="button"
-                (click)="filterByCategory(null)"
-                [class]="productStore.selectedCategoryId() === null ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] transition-all whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] text-slate-600 transition-all whitespace-nowrap cursor-pointer'"
-              >
-                <i class="bx bx-category text-lg"></i>
-                Semua
-              </button>
-              @for (cat of productStore.categories(); track cat.id) {
-                <button
-                  type="button"
-                  (click)="filterByCategory(cat.id)"
-                  [class]="productStore.selectedCategoryId() === cat.id ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] transition-all whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] text-slate-600 transition-all whitespace-nowrap cursor-pointer'"
-                >
-                  <app-icon [name]="cat.icon" size="18"></app-icon>
-                  {{ cat.name }}
-                </button>
-              }   
-            </div>
-          </section>
-        </div>
-
-        @if (productStore.loading()) {
-          <div class="grid grid-cols-2 gap-2">
-            <app-skeleton type="card" [count]="2"></app-skeleton>
-          </div>
-        } @else {
-          <app-masonry-grid [items]="productStore.filteredProducts()">
-            <ng-template let-prod>
-              <app-product-card
-                [product]="prod"
-                (addToCart)="openQtyModal($event)"
-              ></app-product-card>
-            </ng-template>
-          </app-masonry-grid>
         }
-      </section>
-
+      </div>
     </div>
+
+    <!-- Dot Indicators -->
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+      @for (slide of slides; track $index) {
+      <button type="button" (click)="scrollToSlide($index)"
+        [class]="$index === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"
+        class="  cursor-pointer hover:bg-white/80" [attr.aria-label]="'Go to slide ' + ($index + 1)"></button>
+      }
+    </div>
+  </section>
+
+  <!-- Recommended/Featured Products grid -->
+  <section class="flex flex-col gap-4">
+    <div class="flex flex-col gap-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-display font-extrabold text-slate-800 text-base">Featured Publications</h2>
+          <p class="text-[12px] text-slate-400 mt-0.5">Handpicked premium titles & accessories</p>
+        </div>
+        <a routerLink="/product"
+          class="text-xs font-bold text-primary-600 hover:text-primary-700  flex items-center gap-1">
+          View All
+          <app-icon name="chevron-right" size="12"></app-icon>
+        </a>
+      </div>
+
+      <section class="flex flex-col gap-2">
+        <div class="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4">
+          <button type="button" (click)="filterByCategory(null)"
+            [class]="productStore.selectedCategoryId() === null ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px]  whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] text-slate-600  whitespace-nowrap cursor-pointer'">
+            <i class="bx bx-category text-lg"></i>
+            Semua
+          </button>
+          @for (cat of productStore.categories(); track cat.id) {
+          <button type="button" (click)="filterByCategory(cat.id)"
+            [class]="productStore.selectedCategoryId() === cat.id ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px]  whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] text-slate-600  whitespace-nowrap cursor-pointer'">
+            <app-icon [name]="cat.icon" size="18"></app-icon>
+            {{ cat.name }}
+          </button>
+          }
+        </div>
+      </section>
+    </div>
+
+    @if (productStore.loading()) {
+    <div class="grid grid-cols-2 gap-2">
+      <app-skeleton type="card" [count]="2"></app-skeleton>
+    </div>
+    } @else {
+    <app-masonry-grid [items]="productStore.filteredProducts()">
+      <ng-template let-prod>
+        <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+      </ng-template>
+    </app-masonry-grid>
+    }
+  </section>
+
+</div>

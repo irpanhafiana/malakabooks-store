@@ -1,5 +1,5 @@
 <div class="animate-fade-in flex flex-col gap-6">
-  
+
   <!-- Top Action bar -->
   <div class="flex items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
     <h2 class="font-display font-bold text-slate-800 text-sm">Pengaturan Alamat Pengiriman Toko</h2>
@@ -12,58 +12,55 @@
 
   <!-- Data Table -->
   @if (store.loading()) {
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-xs">
-      <app-spinner text="Loading home addresses..."></app-spinner>
-    </div>
+  <div class="bg-white rounded-2xl border border-slate-100 shadow-xs">
+    <app-spinner text="Loading home addresses..."></app-spinner>
+  </div>
   } @else {
-    <app-table>
-      <tr table-headers>
-        <th class="px-5 py-3">Label Alamat</th>
-        <th class="px-5 py-3">Nama Penerima</th>
-        <th class="px-5 py-3">Telepon</th>
-        <th class="px-5 py-3">Alamat Lengkap</th>
-        <th class="px-5 py-3 text-right">Actions</th>
+  <app-table>
+    <tr table-headers>
+      <th class="px-5 py-3">Label Alamat</th>
+      <th class="px-5 py-3">Nama Penerima</th>
+      <th class="px-5 py-3">Telepon</th>
+      <th class="px-5 py-3">Alamat Lengkap</th>
+      <th class="px-5 py-3 text-right">Actions</th>
+    </tr>
+
+    <ng-container table-rows>
+      @for (addr of pagination.paged(); track addr.id) {
+      <tr class="hover:bg-slate-50/30">
+        <td class="px-5 py-4 font-bold text-slate-800 text-xs">{{ addr.label }}</td>
+        <td class="px-5 py-4 text-xs font-semibold text-slate-500">{{ addr.recipientName }}</td>
+        <td class="px-5 py-4 text-xs text-slate-500">{{ addr.phone }}</td>
+        <td class="px-5 py-4 text-xs text-slate-500">{{ addr.street }}, {{ addr.city }}, {{ addr.province }} {{
+          addr.postalCode }}</td>
+        <td class="px-5 py-4 text-right">
+          <div class="flex justify-end gap-1.5">
+            <button (click)="openEditModal(addr)"
+              class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700  cursor-pointer">
+              <app-icon name="edit" size="14"></app-icon>
+            </button>
+            <button (click)="onDelete(addr.id)"
+              class="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600  cursor-pointer">
+              <app-icon name="trash" size="14"></app-icon>
+            </button>
+          </div>
+        </td>
       </tr>
+      } @empty {
+      <tr>
+        <td colspan="5" class="p-8 text-center text-slate-400">Belum ada alamat pengiriman.</td>
+      </tr>
+      }
+    </ng-container>
+  </app-table>
 
-      <ng-container table-rows>
-        @for (addr of pagination.paged(); track addr.id) {
-          <tr class="hover:bg-slate-50/30">
-            <td class="px-5 py-4 font-bold text-slate-800 text-xs">{{ addr.label }}</td>
-            <td class="px-5 py-4 text-xs font-semibold text-slate-500">{{ addr.recipientName }}</td>
-            <td class="px-5 py-4 text-xs text-slate-500">{{ addr.phone }}</td>
-            <td class="px-5 py-4 text-xs text-slate-500">{{ addr.street }}, {{ addr.city }}, {{ addr.province }} {{ addr.postalCode }}</td>
-            <td class="px-5 py-4 text-right">
-              <div class="flex justify-end gap-1.5">
-                <button (click)="openEditModal(addr)" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors cursor-pointer">
-                  <app-icon name="edit" size="14"></app-icon>
-                </button>
-                <button (click)="onDelete(addr.id)" class="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer">
-                  <app-icon name="trash" size="14"></app-icon>
-                </button>
-              </div>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="5" class="p-8 text-center text-slate-400">Belum ada alamat pengiriman.</td>
-          </tr>
-        }
-      </ng-container>
-    </app-table>
-
-    <app-pagination
-      [currentPage]="pagination.page()"
-      [totalPages]="pagination.totalPages()"
-      (pageChange)="pagination.setPage($event)"
-    ></app-pagination>
+  <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages()"
+    (pageChange)="pagination.setPage($event)"></app-pagination>
   }
 
   <!-- Add/Edit Modal Form -->
   <app-modal [isOpen]="isModalOpen()" [title]="editAddress() ? 'Edit Alamat' : 'Tambah Alamat Baru'">
-    <app-home-addresses-form 
-      [address]="editAddress()" 
-      (onCancel)="closeModal()" 
-      (onSave)="closeModal()">
+    <app-home-addresses-form [address]="editAddress()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-home-addresses-form>
   </app-modal>
 

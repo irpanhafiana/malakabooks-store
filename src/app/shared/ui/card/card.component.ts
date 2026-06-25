@@ -14,7 +14,7 @@ export class CardComponent {
   readonly customClass = input<string>('', { alias: 'class' });
 
   readonly cardClass = computed(() => {
-    const base = 'bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden transition-all duration-200';
+    const base = 'bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden  ';
     const hover = this.hoverable() ? 'hover:shadow-md hover:border-slate-200/80 hover:-translate-y-0.5' : '';
     return `${base} ${hover} ${this.customClass()}`;
   });
