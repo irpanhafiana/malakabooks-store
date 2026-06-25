@@ -104,6 +104,25 @@ public class OrdersController(IMediator mediator) : ApiControllerBase
     }
 
     /// <summary>
+    /// Cancels an already-created Simasrim shipment AWB for the specified order.
+    /// </summary>
+    /// <param name="id">The unique identifier of the order.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the shipment cancellation outcome.</returns>
+    [HttpPost("{id}/shipment/cancel")]
+    public async Task<IActionResult> CancelShipment(string id, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CancelOrderShipmentCommand(id), cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Success(result);
+        }
+
+        return Fail(result.Message, result, "ShipmentCancelFailed", StatusCodes.Status400BadRequest);
+    }
+
+    /// <summary>
     /// Rechecks and reconciles the local shipment state for multiple orders.
     /// </summary>
     /// <param name="request">The batch request containing order identifiers.</param>

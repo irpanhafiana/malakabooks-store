@@ -36,6 +36,8 @@ namespace MalakaBooks.ConfigSetting
         public int ExpirationStartupDelaySeconds { get; set; }
         public string SimasrimRecheckPath { get; set; } = string.Empty;
         public string SimasrimRecheckMethod { get; set; } = "GET";
+        public string SimasrimCancelPath { get; set; } = string.Empty;
+        public string SimasrimCancelMethod { get; set; } = "POST";
     }
 
     public class ImageSetting
