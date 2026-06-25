@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (typeof window === 'undefined') return;
     this.embla = EmblaCarousel(
       this.carouselViewport.nativeElement,
-      { loop: true, align: 'center', duration: 25 },
+      { loop: true, align: 'center', duration: 40 },
       [Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })]
     );
 
@@ -86,6 +86,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Invoked when user taps on dot indicators
   scrollToSlide(index: number) {
     this.embla?.scrollTo(index);
+  }
+
+  scrollPrev() {
+    this.embla?.scrollPrev();
+  }
+
+  scrollNext() {
+    this.embla?.scrollNext();
   }
 
   filterByCategory(catId: string | null) {

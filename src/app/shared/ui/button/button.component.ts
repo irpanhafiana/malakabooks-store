@@ -30,9 +30,9 @@ export class ButtonComponent {
     };
 
     const sizes = {
-      sm: 'py-2 px-3 text-xs rounded-lg',
-      md: 'py-2.5 px-4 text-sm',
-      lg: 'py-3.5 px-6 text-base rounded-2xl'
+      sm: 'py-1.5 px-3 text-[11px] rounded-lg',
+      md: 'py-2 px-4 text-xs',
+      lg: 'py-3 px-5 text-sm rounded-2xl'
     };
 
     const width = this.fullWidth() ? 'w-full' : '';

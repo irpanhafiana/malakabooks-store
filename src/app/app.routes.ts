@@ -68,6 +68,10 @@ export const routes: Routes = [
       {
         path: 'auth/login',
         loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
+      },
+      {
+        path: 'auth/register',
+        loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent)
       }
     ]
   },
@@ -88,7 +92,7 @@ export const routes: Routes = [
     ]
   },
 
-  // Inner page layout (without bottom nav, with back button)
+    // Inner page layout (without bottom nav, with back button)
   {
     path: '',
     loadComponent: () => import('./layouts/inner-page-layout/inner-page-layout.component').then(c => c.InnerPageLayoutComponent),
@@ -100,11 +104,6 @@ export const routes: Routes = [
             path: 'welcome',
             loadComponent: () => import('./features/auth/welcome/welcome.component').then(c => c.WelcomeComponent),
             data: { title: 'Welcome', hideHeader: true }
-          },
-          {
-            path: 'register',
-            loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent),
-            data: { title: 'Daftar Akun Baru', hideHeader: true }
           },
           {
             path: 'forgot-password',

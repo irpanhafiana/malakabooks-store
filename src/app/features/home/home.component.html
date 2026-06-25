@@ -9,7 +9,7 @@
         @for (slide of slides; track $index) {
         <div class="flex-[0_0_90%] min-w-0 pl-3">
           <div
-            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between  "
+            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out"
             [style.height.px]="$index === currentSlide() ? 168 : 140" [class.opacity-60]="$index !== currentSlide()">
             <!-- Background Image overlay -->
             <div class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
@@ -37,7 +37,7 @@
 
             <div class="relative z-10 flex items-center justify-between gap-3 mt-2 w-full">
               <a [routerLink]="slide.buttonLink"
-                class="px-3.5 py-1.5 rounded-lg bg-white text-primary-700 font-bold text-[9px] hover:bg-slate-50  border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
+                class="px-3.5 py-1.5 rounded-lg bg-white text-primary-700 font-bold text-[9px] hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
                 {{ slide.buttonText }}
               </a>
               @if (slide.promoCode) {
@@ -58,9 +58,17 @@
       @for (slide of slides; track $index) {
       <button type="button" (click)="scrollToSlide($index)"
         [class]="$index === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"
-        class="  cursor-pointer hover:bg-white/80" [attr.aria-label]="'Go to slide ' + ($index + 1)"></button>
+        class="transition-all duration-500 ease-in-out cursor-pointer hover:bg-white/80" [attr.aria-label]="'Go to slide ' + ($index + 1)"></button>
       }
     </div>
+
+    <!-- Navigation Arrows -->
+    <button type="button" (click)="scrollPrev()" class="absolute left-1 top-[42%] -translate-y-1/2 w-8 h-8 rounded-full bg-white/30 backdrop-blur-md border border-white/40 text-white flex items-center justify-center transition-all duration-300 z-20 hover:bg-white/50 cursor-pointer shadow-sm">
+      <i class="bx bx-chevron-left text-2xl"></i>
+    </button>
+    <button type="button" (click)="scrollNext()" class="absolute right-1 top-[42%] -translate-y-1/2 w-8 h-8 rounded-full bg-white/30 backdrop-blur-md border border-white/40 text-white flex items-center justify-center transition-all duration-300 z-20 hover:bg-white/50 cursor-pointer shadow-sm">
+      <i class="bx bx-chevron-right text-2xl"></i>
+    </button>
   </section>
 
   <!-- Recommended/Featured Products grid -->
