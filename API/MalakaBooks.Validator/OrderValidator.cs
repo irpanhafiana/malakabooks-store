@@ -10,12 +10,19 @@ public class CreateOrderRequestValidator : AbstractValidator<CreateOrderRequest>
     {
         RuleFor(x => x.UserId).NotEmpty();
         RuleFor(x => x.AddressId).NotEmpty();
+        RuleFor(x => x.PaymentId).NotEmpty();
         RuleFor(x => x.ShippingCourier).NotEmpty();
         RuleFor(x => x.ShippingType).NotEmpty();
         RuleFor(x => x.ShippingEst).NotEmpty();
         RuleFor(x => x.ShippingFee).GreaterThanOrEqualTo(0);
+        RuleFor(x => x.ShippingInsurance).GreaterThanOrEqualTo(0);
         RuleFor(x => x.Items).NotEmpty();
         RuleForEach(x => x.Items).SetValidator(new CreateOrderItemRequestValidator());
+
+        When(x => !x.Insurance, () =>
+        {
+            RuleFor(x => x.ShippingInsurance).Equal(0);
+        });
     }
 }
 
@@ -138,11 +145,8 @@ public class SimasrimBpikRequestValidator : AbstractValidator<SimasrimBpikReques
 {
     public SimasrimBpikRequestValidator()
     {
-        RuleFor(x => x.ItemValue).NotNull();
-        RuleFor(x => x.ItemType).NotEmpty();
-        RuleFor(x => x.SerialNumber).NotEmpty();
-        RuleFor(x => x.InsuranceAmount).NotNull();
-        RuleFor(x => x.Color).NotEmpty();
-        RuleFor(x => x.Condition).NotEmpty();
+        RuleFor(x => x.GoodsName).NotNull();
+        RuleFor(x => x.GoodsType).NotEmpty();
+        RuleFor(x => x.Quantity).GreaterThan(0);
     }
 }

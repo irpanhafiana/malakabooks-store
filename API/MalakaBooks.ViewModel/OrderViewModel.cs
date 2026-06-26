@@ -57,12 +57,9 @@ public class OrderShipmentDetail
 
 public class OrderShipmentBpikDetail
 {
-    public decimal? ItemValue { get; set; }
-    public string? ItemType { get; set; }
-    public string? SerialNumber { get; set; }
-    public decimal? InsuranceAmount { get; set; }
-    public string? Color { get; set; }
-    public string? Condition { get; set; }
+    public string? GoodsName { get; set; }
+    public string? GoodsType { get; set; }
+    public int? Quantity { get; set; }
 }
 
 public class OrderItemResponse
@@ -71,6 +68,7 @@ public class OrderItemResponse
     public string Title { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public int Quantity { get; set; }
+    public required string CoverImage { get; set; }
 }
 
 public class OrderResponse
@@ -81,6 +79,7 @@ public class OrderResponse
     public string AddressId { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
     public string PaymentStatus { get; set; } = string.Empty;
+    public string PaymentId { get; set; } = string.Empty;
     public string PaymentMethod { get; set; } = string.Empty;
     public string PaymentGateway { get; set; } = string.Empty;
     public string PaymentUrl { get; set; } = string.Empty;
@@ -91,6 +90,7 @@ public class OrderResponse
     public string Note { get; set; } = string.Empty;
 
     public decimal ShippingFee { get; set; }
+    public decimal ShippingInsurance { get; set; }
     public int ShipmentRetryCount { get; set; }
     public string ShipmentLastError { get; set; } = string.Empty;
     public string ShippingCourier { get; set; } = string.Empty;
@@ -115,9 +115,29 @@ public class AdminOrderResponse : OrderResponse
 public class CreateOrderResponse
 {
     public bool IsSuccess { get; set; }
+    public string Message { get; set; } = string.Empty;
     public Dictionary<string, string> Errors { get; set; } = [];
     public string OrderId { get; set; } = string.Empty;
     public string PaymentUrl { get; set; } = string.Empty;
+}
+
+public class SimasrimInsuranceRequest
+{
+    public decimal NilaiBarang { get; set; }
+}
+
+public class SimasrimInsuranceResponse
+{
+    public string Code { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
+    public SimasrimInsuranceData Data { get; set; } = new();
+}
+
+public class SimasrimInsuranceData
+{
+    public string Ket { get; set; } = string.Empty;
+    public decimal NilaiBarang { get; set; }
+    public decimal NilaiAsuransi { get; set; }
 }
 
 public class CreateOrderItemRequest
@@ -136,11 +156,14 @@ public class CreateOrderRequest
 
     public List<CreateOrderItemRequest> Items { get; set; } = [];
     public string AddressId { get; set; } = string.Empty;
+    public string PaymentId { get; set; } = string.Empty;
     public string Note { get; set; } = string.Empty;
     public string ShippingCourier { get; set; } = string.Empty;
     public string ShippingType { get; set; } = string.Empty;
     public string ShippingEst { get; set; } = string.Empty;
     public decimal ShippingFee { get; set; }
+    public bool Insurance { get; set; } = false;
+    public decimal ShippingInsurance { get; set; }
 }
 
 public class UpdateOrderStatusRequest

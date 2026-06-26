@@ -1,5 +1,6 @@
 using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.Mediator.SimasrimHandlers;
+using MalakaBooks.ViewModel;
 using Mardika.Portfolio.AppsSetting;
 using Mardika.Simasrim.Service.Model;
 using MediatR;
@@ -117,6 +118,17 @@ public class SimasrimController : ApiControllerBase
     [Route("Tarif")]
     public async Task<IActionResult> GetSimasrimTarif([FromBody] TariffModel model, CancellationToken cancellationToken)
       => Success(await mediator.Send(new GetSimasrimTariffQuery(model), cancellationToken));
+
+    /// <summary>
+    /// Retrieves shipping insurance information from the Simasrim service based on the declared item value.
+    /// </summary>
+    /// <param name="model">The insurance request payload containing the declared item value.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the Simasrim insurance response.</returns>
+    [HttpPost]
+    [Route("Insurance")]
+    public async Task<IActionResult> GetSimasrimInsurance([FromBody] SimasrimInsuranceRequest model, CancellationToken cancellationToken)
+      => Success(await mediator.Send(new GetSimasrimInsuranceQuery(model), cancellationToken));
 
     /// <summary>
     /// Tracks shipment status for a customer order using the stored AWB number and courier.

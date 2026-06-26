@@ -21,8 +21,10 @@ public class CreateOrderHandler(
     IUserRepository userRepository,
     IAddressRepository addressRepository,
     IHomeAddressRepository homeAddressRepository,
+    IPaymentRepository paymentRepository,
     IOrderEntityValidator validator,
     DokuApiClient dokuApiClient,
+    SimasrimApiClient simasrimApiClient,
     IOptions<DokuSetting> dokuOptions,
     IOptions<AppSetting> appOptions) : IRequestHandler<CreateOrderCommand, CreateOrderResponse>
 {
@@ -71,14 +73,70 @@ public class CreateOrderHandler(
             };
         }
 
+        var payment = await paymentRepository.GetByIdAsync(request.Request.PaymentId.Trim(), cancellationToken);
+        if (payment is null)
+        {
+            return new CreateOrderResponse
+            {
+                IsSuccess = false,
+                Errors = new Dictionary<string, string>
+                {
+                    ["1"] = "Payment method not found."
+                }
+            };
+        }
+
         var shipmentDetail = BuildShipmentDetail(request.Request, user, pickupAddress, pickupAddress, receiverAddress);
         var entity = request.Request.ToEntity(user);
         var expirationTimeoutMinutes = Math.Max(1, appSetting.OrderSetting?.ExpirationTimeoutMinutes ?? 60);
 
+        if (request.Request.Insurance)
+        {
+            var insuranceResponse = await simasrimApiClient.PostAsync<SimasrimInsuranceResponse>(
+                "api/b2b/pengiriman/asuransi",
+                new SimasrimInsuranceRequest
+                {
+                    NilaiBarang = entity.ItemsSubtotal
+                },
+                cancellationToken);
+
+            if (insuranceResponse?.Data is null)
+            {
+                return new CreateOrderResponse
+                {
+                    IsSuccess = false,
+                    Message = "Failed to calculate shipping insurance.",
+                    Errors = new Dictionary<string, string>
+                    {
+                        ["1"] = "Failed to calculate shipping insurance."
+                    }
+                };
+            }
+
+            var recalculatedInsurance = insuranceResponse.Data.NilaiAsuransi;
+            if (request.Request.ShippingInsurance != recalculatedInsurance)
+            {
+                return new CreateOrderResponse
+                {
+                    IsSuccess = false,
+                    Message = "insurance value no longer valid",
+                    Errors = new Dictionary<string, string>
+                    {
+                        ["1"] = "insurance value no longer valid"
+                    }
+                };
+            }
+
+            entity.ShippingInsurance = recalculatedInsurance;
+            entity.GrandTotal = entity.ItemsSubtotal + entity.ShippingFee + entity.ShippingInsurance;
+            entity.TotalPrice = entity.GrandTotal;
+        }
+
         entity.Status = "pending_payment";
         entity.PaymentStatus = "unpaid";
         entity.PaymentGateway = "DOKU";
-        entity.PaymentMethod = "QRIS";
+        entity.PaymentId = payment.Id ?? string.Empty;
+        entity.PaymentMethod = payment.MethodType;
         entity.ExpiresAt = DateTime.UtcNow.AddMinutes(expirationTimeoutMinutes);
 
         var result = await _validator.CreateValidateAsync(entity);
@@ -111,6 +169,7 @@ public class CreateOrderHandler(
         return new CreateOrderResponse
         {
             IsSuccess = true,
+            Message = "OK",
             OrderId = entity.Id ?? string.Empty,
             PaymentUrl = entity.PaymentUrl
         };
@@ -128,6 +187,16 @@ public class CreateOrderHandler(
             .Where(title => !string.IsNullOrWhiteSpace(title))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
+
+        var insuranceEnabled = request.Insurance;
+        var bpik = insuranceEnabled
+            ? request.Items.Select(item => new OrderShipmentBpikDetail
+            {
+                GoodsName = item.BookName,
+                GoodsType = "buku",
+                Quantity = item.Quantity
+            }).ToList()
+            : [];
 
         return new OrderShipmentDetail
         {
@@ -152,7 +221,7 @@ public class CreateOrderHandler(
             ServiceEstimate = request.ShippingEst.Trim(),
             Quantity = request.Items.Sum(item => item.Quantity).ToString(),
             WoodenPacking = "no",
-            Insurance = "no",
+            Insurance = insuranceEnabled ? "yes" : "no",
             ItemValueAmount = request.Items.Sum(item => item.Price * item.Quantity),
             ItemType = "buku",
             Volume = "10x3x10",
@@ -166,6 +235,7 @@ public class CreateOrderHandler(
             ReceiverLatitude = receiverAddress.Latitude.ToString(),
             ItemCode = string.Join(",", request.Items.Select(item => item.BookId.Trim()).Where(id => !string.IsNullOrWhiteSpace(id))),
             ItemCategory = request.ShippingCourier.ToUpper() == "JNTC" ? "bm000007" : "SHTPC",
+            Bpik = bpik,
         };
     }
 

@@ -22,6 +22,10 @@ public class OrderEntity : BaseObject
 
     public string Status { get; set; } = "pending";
     public string PaymentStatus { get; set; } = "unpaid";
+
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string PaymentId { get; set; } = string.Empty;
+
     public string PaymentMethod { get; set; } = string.Empty;
     public string PaymentGateway { get; set; } = string.Empty;
     public string PaymentUrl { get; set; } = string.Empty;
@@ -34,6 +38,7 @@ public class OrderEntity : BaseObject
     public string ShippingType { get; set; } = string.Empty;
     public string ShippingEst { get; set; } = string.Empty;
     public decimal ShippingFee { get; set; }
+    public decimal ShippingInsurance { get; set; }
 
     public decimal GrandTotal { get; set; }
     public decimal TotalPrice { get; set; }

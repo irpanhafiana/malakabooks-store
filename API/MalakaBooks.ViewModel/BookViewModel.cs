@@ -5,6 +5,7 @@ public class BookResponse
     public string Id { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string AuthorId { get; set; } = string.Empty;
+    public AuthorResponse? Author { get; set; }
     public string Isbn { get; set; } = string.Empty;
     public string CategoryId { get; set; } = string.Empty;
     public decimal Price { get; set; }

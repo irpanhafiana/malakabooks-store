@@ -25,7 +25,7 @@ public class OrdersController(IMediator mediator) : ApiControllerBase
         var result = await mediator.Send(new CreateOrderCommand(request), cancellationToken);
         if (!result.IsSuccess)
         {
-            return Fail("Validation failed", result.Errors, "ValidationError", StatusCodes.Status400BadRequest);
+            return Fail(string.IsNullOrWhiteSpace(result.Message) ? "Validation failed" : result.Message, result.Errors, "ValidationError", StatusCodes.Status400BadRequest);
         }
 
         return Success(result);
