@@ -77,8 +77,19 @@ export class CustomerLayoutComponent {
     this.productStore.setSearchQuery('');
   }
 
-  closeQty() {
+  closeQty(fromConfirm: boolean = false) {
     this.productStore.setQtyModalOpen(false);
+    
+    // If buying, we navigate away so don't reopen detail
+    if (!fromConfirm || this.productStore.qtyAction() === 'cart') {
+      if (this.productStore.reopenDetailOnQtyClose()) {
+        const activeProd = this.productStore.activeProduct();
+        if (activeProd) {
+          this.productStore.setSelectedProductId(activeProd.id);
+        }
+      }
+    }
+    this.productStore.setReopenDetailOnQtyClose(false);
   }
 
   onQtyChange(newQty: number) {
@@ -88,11 +99,16 @@ export class CustomerLayoutComponent {
   confirmAddToCart() {
     const prod = this.productStore.activeProduct();
     const qty = this.productStore.qtyQuantity();
+    const action = this.productStore.qtyAction();
     if (prod) {
       this.cartStore.addItem(prod, qty);
-      this.toastService.success('Added to cart!');
+      if (action === 'buy') {
+        this.router.navigate(['/checkout']);
+      } else {
+        this.toastService.success('Added to cart!');
+      }
     }
-    this.productStore.setQtyModalOpen(false);
+    this.closeQty(true);
   }
 
   toastClass(type: string): string {

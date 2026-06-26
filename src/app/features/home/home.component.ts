@@ -102,8 +102,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openQtyModal(product: any) {
     this.productStore.setActiveProduct(product);
-    this.productStore.setSelectedProductId(product.id);
     this.productStore.setQtyQuantity(1);
+    this.productStore.setQtyAction('cart');
     this.productStore.setQtyModalOpen(true);
   }
 }

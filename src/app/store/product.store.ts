@@ -16,6 +16,8 @@ interface ProductState {
   activeProduct: Product | null;
   isQtyModalOpen: boolean;
   qtyQuantity: number;
+  qtyAction: 'cart' | 'buy';
+  reopenDetailOnQtyClose: boolean;
 }
 
 @Injectable({
@@ -37,7 +39,9 @@ export class ProductStore {
     error: null,
     activeProduct: null,
     isQtyModalOpen: false,
-    qtyQuantity: 1
+    qtyQuantity: 1,
+    qtyAction: 'cart',
+    reopenDetailOnQtyClose: false
   });
 
   // Selectors
@@ -52,6 +56,8 @@ export class ProductStore {
   readonly activeProduct = computed(() => this.state().activeProduct);
   readonly isQtyModalOpen = computed(() => this.state().isQtyModalOpen);
   readonly qtyQuantity = computed(() => this.state().qtyQuantity);
+  readonly qtyAction = computed(() => this.state().qtyAction);
+  readonly reopenDetailOnQtyClose = computed(() => this.state().reopenDetailOnQtyClose);
 
   readonly activeSearchCategories = computed(() => {
     const query = this.searchQuery().toLowerCase().trim();
@@ -178,6 +184,14 @@ export class ProductStore {
 
   setQtyQuantity(quantity: number) {
     this.state.update(s => ({ ...s, qtyQuantity: quantity }));
+  }
+
+  setQtyAction(action: 'cart' | 'buy') {
+    this.state.update(s => ({ ...s, qtyAction: action }));
+  }
+
+  setReopenDetailOnQtyClose(reopen: boolean) {
+    this.state.update(s => ({ ...s, reopenDetailOnQtyClose: reopen }));
   }
 
   async saveProduct(product: Product) {

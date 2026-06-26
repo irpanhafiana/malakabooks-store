@@ -176,15 +176,21 @@
   <!-- Sticky Bottom Action Bar -->
   <div
     class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
-    <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
-      [fullWidth]="true" class="flex-1">
-      + Keranjang
-    </app-button>
+    @if (authStore.isLoggedIn()) {
+      <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
+        [fullWidth]="true" class="flex-1">
+        + Keranjang
+      </app-button>
 
-    <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg"
-      [fullWidth]="true" class="flex-1">
-      Beli Sekarang
-    </app-button>
+      <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg"
+        [fullWidth]="true" class="flex-1">
+        Beli Sekarang
+      </app-button>
+    } @else {
+      <app-button routerLink="/auth/login" (click)="goToLogin($event)" variant="primary" size="lg" [fullWidth]="true" class="flex-1">
+        Login untuk Membeli
+      </app-button>
+    }
   </div>
   }
 </div>

@@ -126,13 +126,23 @@ export class ProductDetailComponent implements OnInit {
   openQuantityModal(event: Event) {
     event.stopPropagation();
     this.productStore.setQtyQuantity(1);
+    this.productStore.setQtyAction('cart');
+    this.productStore.setReopenDetailOnQtyClose(true);
     this.productStore.setQtyModalOpen(true);
+    this.productStore.setSelectedProductId(null);
   }
 
   buyNow(event: Event) {
-    // Untuk saat ini, kita gunakan modal quantity yang sama
-    // Logika tambahan untuk "Beli Sekarang" bisa ditambahkan di sini nantinya
-    this.openQuantityModal(event);
+    event.stopPropagation();
+    this.productStore.setQtyQuantity(1);
+    this.productStore.setQtyAction('buy');
+    this.productStore.setReopenDetailOnQtyClose(true);
+    this.productStore.setQtyModalOpen(true);
+    this.productStore.setSelectedProductId(null);
+  }
+
+  goToLogin(event: Event) {
+    this.productStore.setSelectedProductId(null);
   }
 
   hasSpecs(): boolean {
