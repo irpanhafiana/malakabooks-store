@@ -12,6 +12,29 @@ public static class MappingExtensions
         Id = entity.Id ?? string.Empty,
         Title = entity.Title,
         AuthorId = entity.AuthorId,
+        Author = null,
+        Isbn = entity.Isbn,
+        CategoryId = entity.CategoryId,
+        Price = entity.Price,
+        Description = entity.Description,
+        CoverImage = entity.CoverImage,
+        Publisher = entity.Publisher,
+        PublishedYear = entity.PublishedYear,
+        Pages = entity.Pages,
+        Weight = entity.Weight,
+        Stock = entity.Stock,
+        AverageRating = entity.AverageRating,
+        TotalReviews = entity.TotalReviews,
+        CreatedAt = entity.CreatedAt,
+        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList()
+    };
+
+    public static BookResponse ToResponse(this BookEntity entity, AuthorEntity? author) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        Title = entity.Title,
+        AuthorId = entity.AuthorId,
+        Author = author?.ToResponse(),
         Isbn = entity.Isbn,
         CategoryId = entity.CategoryId,
         Price = entity.Price,
@@ -105,8 +128,7 @@ public static class MappingExtensions
         Id = entity.Id ?? string.Empty,
         Name = entity.Name,
         MethodType = entity.MethodType,
-        AdditionalFeePercentage = entity.AdditionalFeePercentage,
-        AdditionalFeeAmount = entity.AdditionalFeeAmount,
+        Fees = entity.Fees.Select(ToResponse).ToList(),
         Alias = entity.Alias ?? string.Empty
     };
 
@@ -114,17 +136,51 @@ public static class MappingExtensions
     {
         Name = request.Name.Trim(),
         MethodType = request.MethodType.Trim(),
-        AdditionalFeePercentage = request.AdditionalFeePercentage,
-        AdditionalFeeAmount = request.AdditionalFeeAmount
+        Fees = request.Fees.Select(ToEntity).ToList()
     };
 
     public static void UpdateFrom(this PaymentEntity entity, UpdatePaymentRequest request)
     {
         entity.Name = request.Name.Trim();
         entity.MethodType = request.MethodType.Trim();
-        entity.AdditionalFeePercentage = request.AdditionalFeePercentage;
-        entity.AdditionalFeeAmount = request.AdditionalFeeAmount;
+        entity.Fees = request.Fees.Select(ToEntity).ToList();
     }
+
+    public static PaymentFeeResponse ToResponse(this PaymentFeeEntity entity) => new()
+    {
+        Code = entity.Code,
+        Name = entity.Name,
+        Type = entity.Type,
+        Value = entity.Value
+    };
+
+    public static PaymentFeeEntity ToEntity(this PaymentFeeRequest request) => new()
+    {
+        Code = request.Code.Trim(),
+        Name = request.Name.Trim(),
+        Type = request.Type.Trim(),
+        Value = request.Value
+    };
+
+    public static OrderFeeResponse ToResponse(this OrderFeeEntity entity) => new()
+    {
+        Code = entity.Code,
+        Name = entity.Name,
+        Type = entity.Type,
+        Value = entity.Value,
+        Amount = entity.Amount
+    };
+
+    public static OrderFeeEntity ToEntity(this PaymentFeeEntity entity, decimal itemsSubtotal) => new()
+    {
+        Code = entity.Code,
+        Name = entity.Name,
+        Type = entity.Type,
+        Value = entity.Value,
+        Amount = string.Equals(entity.Type, "percentage", StringComparison.OrdinalIgnoreCase)
+            ? Math.Round(itemsSubtotal * entity.Value / 100m, 2, MidpointRounding.AwayFromZero)
+            : entity.Value
+    };
 
     public static CategoryResponse ToResponse(this CategoryEntity entity) => new()
     {
@@ -156,6 +212,7 @@ public static class MappingExtensions
     {
         BookId = entity.BookId,
         Title = entity.Title,
+        CoverImage = string.Empty,
         Price = entity.Price,
         Quantity = entity.Quantity
     };
@@ -167,6 +224,15 @@ public static class MappingExtensions
         Title = request.Title.Trim(),
         Price = request.Price,
         Quantity = request.Quantity
+    };
+
+    public static OrderItemResponse ToResponse(this OrderItemEntity entity, IReadOnlyDictionary<string, string> coverImagesByBookId) => new()
+    {
+        BookId = entity.BookId,
+        Title = entity.Title,
+        CoverImage = coverImagesByBookId.TryGetValue(entity.BookId, out var coverImage) ? coverImage : string.Empty,
+        Price = entity.Price,
+        Quantity = entity.Quantity
     };
 
     public static OrderShipmentDetail? ToShipmentDetail(this SimasrimCreateResiRequest? request) => request is null
@@ -215,12 +281,9 @@ public static class MappingExtensions
             ReceiverNote = request.ReceiverNote,
             Bpik = request.Bpik?.Select(item => new OrderShipmentBpikDetail
             {
-                ItemValue = item.ItemValue,
-                ItemType = item.ItemType,
-                SerialNumber = item.SerialNumber,
-                InsuranceAmount = item.InsuranceAmount,
-                Color = item.Color,
-                Condition = item.Condition
+                Quantity = item.Quantity,
+                GoodsType = item.GoodsType,
+                GoodsName = item.GoodsName
             }).ToList(),
             PartnerName = request.PartnerName
         };
@@ -269,12 +332,9 @@ public static class MappingExtensions
         ReceiverNote = detail.ReceiverNote,
         Bpik = detail.Bpik?.Select(item => new SimasrimBpikRequest
         {
-            ItemValue = item.ItemValue,
-            ItemType = item.ItemType,
-            SerialNumber = item.SerialNumber,
-            InsuranceAmount = item.InsuranceAmount,
-            Color = item.Color,
-            Condition = item.Condition
+            GoodsName = item.GoodsName,
+            GoodsType = item.GoodsType,
+            Quantity = item.Quantity!.Value,
         }).ToList(),
         PartnerName = string.IsNullOrWhiteSpace(detail.PartnerName) ? "SIMASRIM" : detail.PartnerName,
         ReferenceNo = detail.ReferenceNo
@@ -324,6 +384,43 @@ public static class MappingExtensions
         IncomingPaymentId = entity.IncomingPaymentId ?? string.Empty,
         ItemsSubtotal = entity.ItemsSubtotal,
         ShippingFee = entity.ShippingFee,
+        ShippingInsurance = entity.ShippingInsurance,
+        Fees = entity.Fees.Select(ToResponse).ToList(),
+        GrandTotal = entity.GrandTotal,
+        TotalPrice = entity.TotalPrice,
+        Note = entity.Note,
+
+        ShippingCourier = entity.ShippingCourier,
+        ShippingEst = entity.ShippingEst,
+        ShippingType = entity.ShippingType,
+        AWBNo = entity.AWBNo,
+
+        ShipmentRetryCount = entity.ShipmentRetryCount,
+        ShipmentLastError = entity.ShipmentLastError,
+        ShipmentCreatedAt = entity.ShipmentCreatedAt,
+        ShipmentLastAttemptAt = entity.ShipmentLastAttemptAt,
+        PaidAt = entity.PaidAt,
+        ExpiresAt = entity.ExpiresAt,
+        CreatedAt = entity.CreatedAt,
+        UpdatedAt = entity.UpdatedAt
+    };
+
+    public static OrderResponse ToResponse(this OrderEntity entity, IReadOnlyDictionary<string, string> coverImagesByBookId) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        User = entity.User.ToResponse(),
+        Items = entity.Items.Select(item => item.ToResponse(coverImagesByBookId)).ToList(),
+        AddressId = entity.AddressId,
+        Status = entity.Status,
+        PaymentStatus = entity.PaymentStatus,
+        PaymentMethod = entity.PaymentMethod,
+        PaymentGateway = entity.PaymentGateway,
+        PaymentUrl = entity.PaymentUrl,
+        IncomingPaymentId = entity.IncomingPaymentId ?? string.Empty,
+        ItemsSubtotal = entity.ItemsSubtotal,
+        ShippingFee = entity.ShippingFee,
+        ShippingInsurance = entity.ShippingInsurance,
+        Fees = entity.Fees.Select(ToResponse).ToList(),
         GrandTotal = entity.GrandTotal,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
@@ -357,6 +454,8 @@ public static class MappingExtensions
         IncomingPaymentId = entity.IncomingPaymentId ?? string.Empty,
         ItemsSubtotal = entity.ItemsSubtotal,
         ShippingFee = entity.ShippingFee,
+        ShippingInsurance = entity.ShippingInsurance,
+        Fees = entity.Fees.Select(ToResponse).ToList(),
         GrandTotal = entity.GrandTotal,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
@@ -390,6 +489,7 @@ public static class MappingExtensions
             Items = request.Items.Select(ToEntity).ToList(),
             ItemsSubtotal = itemsSubtotal,
             ShippingFee = shippingFee,
+            ShippingInsurance = 0,
             ShippingType = request.ShippingType,
             ShippingEst = request.ShippingEst,
             ShippingCourier = request.ShippingCourier,

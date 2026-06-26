@@ -5,8 +5,30 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.OrderHandlers;
 
-public class GetOrdersByUserHandler(IOrderRepository orderRepository) : IRequestHandler<GetOrdersByUserQuery, IReadOnlyCollection<OrderResponse>>
+public class GetOrdersByUserHandler(IOrderRepository orderRepository, IBookRepository bookRepository) : IRequestHandler<GetOrdersByUserQuery, IReadOnlyCollection<OrderResponse>>
 {
-    public async Task<IReadOnlyCollection<OrderResponse>> Handle(GetOrdersByUserQuery request, CancellationToken cancellationToken) =>
-        (await orderRepository.GetByUserIdAsync(request.UserId, cancellationToken)).Select(orderEntity => orderEntity.ToResponse()).ToArray();
+    public async Task<IReadOnlyCollection<OrderResponse>> Handle(GetOrdersByUserQuery request, CancellationToken cancellationToken)
+    {
+        var orders = await orderRepository.GetByUserIdAsync(request.UserId, cancellationToken);
+        var bookIds = orders.SelectMany(order => order.Items).Select(item => item.BookId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToArray();
+        var coverImagesByBookId = await LoadCoverImagesByBookIdAsync(bookRepository, bookIds, cancellationToken);
+
+        return orders.Select(orderEntity => orderEntity.ToResponse(coverImagesByBookId)).ToArray();
+    }
+
+    private static async Task<IReadOnlyDictionary<string, string>> LoadCoverImagesByBookIdAsync(IBookRepository bookRepository, IEnumerable<string> bookIds, CancellationToken cancellationToken)
+    {
+        var coverImagesByBookId = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var bookId in bookIds)
+        {
+            var book = await bookRepository.GetByIdAsync(bookId, cancellationToken);
+            if (book is not null)
+            {
+                coverImagesByBookId[bookId] = book.CoverImage;
+            }
+        }
+
+        return coverImagesByBookId;
+    }
 }

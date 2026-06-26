@@ -138,11 +138,8 @@ public class SimasrimBpikRequestValidator : AbstractValidator<SimasrimBpikReques
 {
     public SimasrimBpikRequestValidator()
     {
-        RuleFor(x => x.ItemValue).NotNull();
-        RuleFor(x => x.ItemType).NotEmpty();
-        RuleFor(x => x.SerialNumber).NotEmpty();
-        RuleFor(x => x.InsuranceAmount).NotNull();
-        RuleFor(x => x.Color).NotEmpty();
-        RuleFor(x => x.Condition).NotEmpty();
+        RuleFor(x => x.GoodsName).NotNull();
+        RuleFor(x => x.GoodsType).NotEmpty();
+        RuleFor(x => x.Quantity).GreaterThan(0);
     }
 }

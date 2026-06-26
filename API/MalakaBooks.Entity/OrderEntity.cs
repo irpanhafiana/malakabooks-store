@@ -11,6 +11,15 @@ public class OrderUserEntity
     public string Phone { get; set; } = string.Empty;
 }
 
+public class OrderFeeEntity
+{
+    public string Code { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Type { get; set; } = string.Empty;
+    public decimal Value { get; set; }
+    public decimal Amount { get; set; }
+}
+
 public class OrderEntity : BaseObject
 {
     public OrderUserEntity User { get; set; } = new();
@@ -34,6 +43,8 @@ public class OrderEntity : BaseObject
     public string ShippingType { get; set; } = string.Empty;
     public string ShippingEst { get; set; } = string.Empty;
     public decimal ShippingFee { get; set; }
+    public decimal ShippingInsurance { get; set; }
+    public List<OrderFeeEntity> Fees { get; set; } = [];
 
     public decimal GrandTotal { get; set; }
     public decimal TotalPrice { get; set; }

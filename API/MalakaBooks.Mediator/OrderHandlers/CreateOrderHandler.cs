@@ -23,6 +23,7 @@ public class CreateOrderHandler(
     IHomeAddressRepository homeAddressRepository,
     IOrderEntityValidator validator,
     DokuApiClient dokuApiClient,
+    SimasrimApiClient simasrimApiClient,
     IOptions<DokuSetting> dokuOptions,
     IOptions<AppSetting> appOptions) : IRequestHandler<CreateOrderCommand, CreateOrderResponse>
 {
@@ -74,6 +75,21 @@ public class CreateOrderHandler(
         var shipmentDetail = BuildShipmentDetail(request.Request, user, pickupAddress, pickupAddress, receiverAddress);
         var entity = request.Request.ToEntity(user);
         var expirationTimeoutMinutes = Math.Max(1, appSetting.OrderSetting?.ExpirationTimeoutMinutes ?? 60);
+
+        if (request.Request.Insurance)
+        {
+            var insuranceResponse = await simasrimApiClient.PostAsync<SimasrimInsuranceResponse>(
+                "api/b2b/pengiriman/ekspedisi/cek-asuransi",
+                new SimasrimInsuranceRequest
+                {
+                    NilaiBarang = entity.ItemsSubtotal
+                },
+                cancellationToken);
+
+            entity.ShippingInsurance = insuranceResponse?.Data?.NilaiAsuransi ?? 0;
+            entity.GrandTotal = entity.ItemsSubtotal + entity.ShippingFee + entity.ShippingInsurance;
+            entity.TotalPrice = entity.GrandTotal;
+        }
 
         entity.Status = "pending_payment";
         entity.PaymentStatus = "unpaid";
@@ -129,6 +145,16 @@ public class CreateOrderHandler(
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
+        var insuranceEnabled = request.Insurance;
+        var bpik = insuranceEnabled
+            ? request.Items.Select(item => new OrderShipmentBpikDetail
+            {
+                GoodsName = item.BookName,
+                GoodsType = "buku",
+                Quantity = item.Quantity
+            }).ToList()
+            : [];
+
         return new OrderShipmentDetail
         {
             Courier = request.ShippingCourier.Trim(),
@@ -152,7 +178,7 @@ public class CreateOrderHandler(
             ServiceEstimate = request.ShippingEst.Trim(),
             Quantity = request.Items.Sum(item => item.Quantity).ToString(),
             WoodenPacking = "no",
-            Insurance = "no",
+            Insurance = insuranceEnabled ? "yes" : "no",
             ItemValueAmount = request.Items.Sum(item => item.Price * item.Quantity),
             ItemType = "buku",
             Volume = "10x3x10",
@@ -166,6 +192,7 @@ public class CreateOrderHandler(
             ReceiverLatitude = receiverAddress.Latitude.ToString(),
             ItemCode = string.Join(",", request.Items.Select(item => item.BookId.Trim()).Where(id => !string.IsNullOrWhiteSpace(id))),
             ItemCategory = request.ShippingCourier.ToUpper() == "JNTC" ? "bm000007" : "SHTPC",
+            Bpik = bpik,
         };
     }
 
