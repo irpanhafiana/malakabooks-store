@@ -1,20 +1,22 @@
-import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import { ProductStore } from '../../store/product.store';
 import { CartStore } from '../../store/cart.store';
+import { AuthorStore } from '../../store/author.store';
 import { UserStore } from '../../store/user.store';
 import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
+import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent],
+  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -22,6 +24,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly productStore = inject(ProductStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
+  protected readonly authorStore = inject(AuthorStore);
 
   slides = [
     {
@@ -62,8 +65,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('carouselViewport') carouselViewport!: ElementRef<HTMLElement>;
 
+  isAuthorSheetOpen = signal(false);
+  selectedAuthorName = signal<string>('');
+  selectedAuthorProducts = signal<any[]>([]);
+
   ngOnInit() {
     this.productStore.loadAll();
+    this.authorStore.loadAuthors();
   }
 
   ngAfterViewInit() {
@@ -105,5 +113,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.productStore.setQtyQuantity(1);
     this.productStore.setQtyAction('cart');
     this.productStore.setQtyModalOpen(true);
+  }
+
+  openAuthorSheet(author: any) {
+    this.selectedAuthorName.set(author.name);
+    this.selectedAuthorProducts.set(this.productStore.products().filter(p => p.authorId === author.id));
+    this.isAuthorSheetOpen.set(true);
+  }
+
+  closeAuthorSheet() {
+    this.isAuthorSheetOpen.set(false);
   }
 }
