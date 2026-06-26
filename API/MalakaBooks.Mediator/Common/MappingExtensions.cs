@@ -162,26 +162,6 @@ public static class MappingExtensions
         Value = request.Value
     };
 
-    public static OrderFeeResponse ToResponse(this OrderFeeEntity entity) => new()
-    {
-        Code = entity.Code,
-        Name = entity.Name,
-        Type = entity.Type,
-        Value = entity.Value,
-        Amount = entity.Amount
-    };
-
-    public static OrderFeeEntity ToEntity(this PaymentFeeEntity entity, decimal itemsSubtotal) => new()
-    {
-        Code = entity.Code,
-        Name = entity.Name,
-        Type = entity.Type,
-        Value = entity.Value,
-        Amount = string.Equals(entity.Type, "percentage", StringComparison.OrdinalIgnoreCase)
-            ? Math.Round(itemsSubtotal * entity.Value / 100m, 2, MidpointRounding.AwayFromZero)
-            : entity.Value
-    };
-
     public static CategoryResponse ToResponse(this CategoryEntity entity) => new()
     {
         Id = entity.Id ?? string.Empty,
@@ -378,6 +358,7 @@ public static class MappingExtensions
         AddressId = entity.AddressId,
         Status = entity.Status,
         PaymentStatus = entity.PaymentStatus,
+        PaymentId = entity.PaymentId,
         PaymentMethod = entity.PaymentMethod,
         PaymentGateway = entity.PaymentGateway,
         PaymentUrl = entity.PaymentUrl,
@@ -385,7 +366,6 @@ public static class MappingExtensions
         ItemsSubtotal = entity.ItemsSubtotal,
         ShippingFee = entity.ShippingFee,
         ShippingInsurance = entity.ShippingInsurance,
-        Fees = entity.Fees.Select(ToResponse).ToList(),
         GrandTotal = entity.GrandTotal,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
@@ -413,6 +393,7 @@ public static class MappingExtensions
         AddressId = entity.AddressId,
         Status = entity.Status,
         PaymentStatus = entity.PaymentStatus,
+        PaymentId = entity.PaymentId,
         PaymentMethod = entity.PaymentMethod,
         PaymentGateway = entity.PaymentGateway,
         PaymentUrl = entity.PaymentUrl,
@@ -420,7 +401,6 @@ public static class MappingExtensions
         ItemsSubtotal = entity.ItemsSubtotal,
         ShippingFee = entity.ShippingFee,
         ShippingInsurance = entity.ShippingInsurance,
-        Fees = entity.Fees.Select(ToResponse).ToList(),
         GrandTotal = entity.GrandTotal,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
@@ -448,6 +428,7 @@ public static class MappingExtensions
         AddressId = entity.AddressId,
         Status = entity.Status,
         PaymentStatus = entity.PaymentStatus,
+        PaymentId = entity.PaymentId,
         PaymentMethod = entity.PaymentMethod,
         PaymentGateway = entity.PaymentGateway,
         PaymentUrl = entity.PaymentUrl,
@@ -455,7 +436,6 @@ public static class MappingExtensions
         ItemsSubtotal = entity.ItemsSubtotal,
         ShippingFee = entity.ShippingFee,
         ShippingInsurance = entity.ShippingInsurance,
-        Fees = entity.Fees.Select(ToResponse).ToList(),
         GrandTotal = entity.GrandTotal,
         TotalPrice = entity.TotalPrice,
         Note = entity.Note,
@@ -487,6 +467,7 @@ public static class MappingExtensions
             User = user.ToEntity(),
             AddressId = request.AddressId.Trim(),
             Items = request.Items.Select(ToEntity).ToList(),
+            PaymentId = request.PaymentId.Trim(),
             ItemsSubtotal = itemsSubtotal,
             ShippingFee = shippingFee,
             ShippingInsurance = 0,

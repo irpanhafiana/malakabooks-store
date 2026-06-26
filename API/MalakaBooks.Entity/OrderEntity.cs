@@ -11,15 +11,6 @@ public class OrderUserEntity
     public string Phone { get; set; } = string.Empty;
 }
 
-public class OrderFeeEntity
-{
-    public string Code { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
-    public string Type { get; set; } = string.Empty;
-    public decimal Value { get; set; }
-    public decimal Amount { get; set; }
-}
-
 public class OrderEntity : BaseObject
 {
     public OrderUserEntity User { get; set; } = new();
@@ -31,6 +22,10 @@ public class OrderEntity : BaseObject
 
     public string Status { get; set; } = "pending";
     public string PaymentStatus { get; set; } = "unpaid";
+
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string PaymentId { get; set; } = string.Empty;
+
     public string PaymentMethod { get; set; } = string.Empty;
     public string PaymentGateway { get; set; } = string.Empty;
     public string PaymentUrl { get; set; } = string.Empty;
@@ -44,7 +39,6 @@ public class OrderEntity : BaseObject
     public string ShippingEst { get; set; } = string.Empty;
     public decimal ShippingFee { get; set; }
     public decimal ShippingInsurance { get; set; }
-    public List<OrderFeeEntity> Fees { get; set; } = [];
 
     public decimal GrandTotal { get; set; }
     public decimal TotalPrice { get; set; }

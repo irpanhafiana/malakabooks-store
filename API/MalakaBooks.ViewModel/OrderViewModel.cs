@@ -62,15 +62,6 @@ public class OrderShipmentBpikDetail
     public int? Quantity { get; set; }
 }
 
-public class OrderFeeResponse
-{
-    public string Code { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
-    public string Type { get; set; } = string.Empty;
-    public decimal Value { get; set; }
-    public decimal Amount { get; set; }
-}
-
 public class OrderItemResponse
 {
     public string BookId { get; set; } = string.Empty;
@@ -88,6 +79,7 @@ public class OrderResponse
     public string AddressId { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
     public string PaymentStatus { get; set; } = string.Empty;
+    public string PaymentId { get; set; } = string.Empty;
     public string PaymentMethod { get; set; } = string.Empty;
     public string PaymentGateway { get; set; } = string.Empty;
     public string PaymentUrl { get; set; } = string.Empty;
@@ -99,7 +91,6 @@ public class OrderResponse
 
     public decimal ShippingFee { get; set; }
     public decimal ShippingInsurance { get; set; }
-    public List<OrderFeeResponse> Fees { get; set; } = [];
     public int ShipmentRetryCount { get; set; }
     public string ShipmentLastError { get; set; } = string.Empty;
     public string ShippingCourier { get; set; } = string.Empty;
@@ -124,6 +115,7 @@ public class AdminOrderResponse : OrderResponse
 public class CreateOrderResponse
 {
     public bool IsSuccess { get; set; }
+    public string Message { get; set; } = string.Empty;
     public Dictionary<string, string> Errors { get; set; } = [];
     public string OrderId { get; set; } = string.Empty;
     public string PaymentUrl { get; set; } = string.Empty;
@@ -164,12 +156,14 @@ public class CreateOrderRequest
 
     public List<CreateOrderItemRequest> Items { get; set; } = [];
     public string AddressId { get; set; } = string.Empty;
+    public string PaymentId { get; set; } = string.Empty;
     public string Note { get; set; } = string.Empty;
     public string ShippingCourier { get; set; } = string.Empty;
     public string ShippingType { get; set; } = string.Empty;
     public string ShippingEst { get; set; } = string.Empty;
     public decimal ShippingFee { get; set; }
     public bool Insurance { get; set; } = false;
+    public decimal ShippingInsurance { get; set; }
 }
 
 public class UpdateOrderStatusRequest

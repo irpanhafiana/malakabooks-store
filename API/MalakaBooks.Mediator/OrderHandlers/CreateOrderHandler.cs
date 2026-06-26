@@ -21,6 +21,7 @@ public class CreateOrderHandler(
     IUserRepository userRepository,
     IAddressRepository addressRepository,
     IHomeAddressRepository homeAddressRepository,
+    IPaymentRepository paymentRepository,
     IOrderEntityValidator validator,
     DokuApiClient dokuApiClient,
     SimasrimApiClient simasrimApiClient,
@@ -72,6 +73,19 @@ public class CreateOrderHandler(
             };
         }
 
+        var payment = await paymentRepository.GetByIdAsync(request.Request.PaymentId.Trim(), cancellationToken);
+        if (payment is null)
+        {
+            return new CreateOrderResponse
+            {
+                IsSuccess = false,
+                Errors = new Dictionary<string, string>
+                {
+                    ["1"] = "Payment method not found."
+                }
+            };
+        }
+
         var shipmentDetail = BuildShipmentDetail(request.Request, user, pickupAddress, pickupAddress, receiverAddress);
         var entity = request.Request.ToEntity(user);
         var expirationTimeoutMinutes = Math.Max(1, appSetting.OrderSetting?.ExpirationTimeoutMinutes ?? 60);
@@ -79,14 +93,41 @@ public class CreateOrderHandler(
         if (request.Request.Insurance)
         {
             var insuranceResponse = await simasrimApiClient.PostAsync<SimasrimInsuranceResponse>(
-                "api/b2b/pengiriman/ekspedisi/cek-asuransi",
+                "api/b2b/pengiriman/asuransi",
                 new SimasrimInsuranceRequest
                 {
                     NilaiBarang = entity.ItemsSubtotal
                 },
                 cancellationToken);
 
-            entity.ShippingInsurance = insuranceResponse?.Data?.NilaiAsuransi ?? 0;
+            if (insuranceResponse?.Data is null)
+            {
+                return new CreateOrderResponse
+                {
+                    IsSuccess = false,
+                    Message = "Failed to calculate shipping insurance.",
+                    Errors = new Dictionary<string, string>
+                    {
+                        ["1"] = "Failed to calculate shipping insurance."
+                    }
+                };
+            }
+
+            var recalculatedInsurance = insuranceResponse.Data.NilaiAsuransi;
+            if (request.Request.ShippingInsurance != recalculatedInsurance)
+            {
+                return new CreateOrderResponse
+                {
+                    IsSuccess = false,
+                    Message = "insurance value no longer valid",
+                    Errors = new Dictionary<string, string>
+                    {
+                        ["1"] = "insurance value no longer valid"
+                    }
+                };
+            }
+
+            entity.ShippingInsurance = recalculatedInsurance;
             entity.GrandTotal = entity.ItemsSubtotal + entity.ShippingFee + entity.ShippingInsurance;
             entity.TotalPrice = entity.GrandTotal;
         }
@@ -94,7 +135,8 @@ public class CreateOrderHandler(
         entity.Status = "pending_payment";
         entity.PaymentStatus = "unpaid";
         entity.PaymentGateway = "DOKU";
-        entity.PaymentMethod = "QRIS";
+        entity.PaymentId = payment.Id ?? string.Empty;
+        entity.PaymentMethod = payment.MethodType;
         entity.ExpiresAt = DateTime.UtcNow.AddMinutes(expirationTimeoutMinutes);
 
         var result = await _validator.CreateValidateAsync(entity);
@@ -127,6 +169,7 @@ public class CreateOrderHandler(
         return new CreateOrderResponse
         {
             IsSuccess = true,
+            Message = "OK",
             OrderId = entity.Id ?? string.Empty,
             PaymentUrl = entity.PaymentUrl
         };

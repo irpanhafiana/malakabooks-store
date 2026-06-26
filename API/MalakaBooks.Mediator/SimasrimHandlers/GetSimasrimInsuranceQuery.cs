@@ -17,7 +17,7 @@ namespace MalakaBooks.Mediator.SimasrimHandlers
         public async Task<SimasrimInsuranceResponse?> Handle(GetSimasrimInsuranceQuery request, CancellationToken cancellationToken)
         {
             return await simasrimApiClient.PostAsync<SimasrimInsuranceResponse>(
-                "api/b2b/pengiriman/ekspedisi/cek-asuransi",
+                "api/b2b/pengiriman/asuransi",
                 request.Model,
                 cancellationToken);
         }

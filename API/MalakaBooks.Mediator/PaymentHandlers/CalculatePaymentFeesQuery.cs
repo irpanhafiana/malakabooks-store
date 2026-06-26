@@ -18,7 +18,16 @@ public class CalculatePaymentFeesHandler(IPaymentRepository paymentRepository) :
         }
 
         var fees = payment.Fees
-            .Select(fee => fee.ToEntity(request.Request.ItemsSubtotal))
+            .Select(fee => new CalculatedPaymentFeeItemResponse
+            {
+                Code = fee.Code,
+                Name = fee.Name,
+                Type = fee.Type,
+                Value = fee.Value,
+                Amount = string.Equals(fee.Type, "percentage", StringComparison.OrdinalIgnoreCase)
+                    ? Math.Round(request.Request.ItemsSubtotal * fee.Value / 100m, 2, MidpointRounding.AwayFromZero)
+                    : fee.Value
+            })
             .ToList();
 
         return new CalculatedPaymentFeeResponse
@@ -28,14 +37,7 @@ public class CalculatePaymentFeesHandler(IPaymentRepository paymentRepository) :
             MethodType = payment.MethodType,
             ItemsSubtotal = request.Request.ItemsSubtotal,
             TotalFeeAmount = fees.Sum(fee => fee.Amount),
-            Fees = fees.Select(fee => new CalculatedPaymentFeeItemResponse
-            {
-                Code = fee.Code,
-                Name = fee.Name,
-                Type = fee.Type,
-                Value = fee.Value,
-                Amount = fee.Amount
-            }).ToList()
+            Fees = fees
         };
     }
 }
