@@ -1,6 +1,7 @@
 import { Component, inject, input, output, effect, computed, ChangeDetectionStrategy, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductStore } from '../../../../store/product.store';
+import { AuthorStore } from '../../../../store/author.store';
 import { Product } from '../../../../core/models';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { SelectComponent } from '../../../../shared/ui/select/select.component';
@@ -22,6 +23,7 @@ export class ProductsFormComponent {
   onSave = output<void>();
 
   private readonly productStore = inject(ProductStore);
+  private readonly authorStore = inject(AuthorStore);
   private readonly alertService = inject(AlertService);
 
   nameControl = new FormControl('', [Validators.required]);
@@ -56,6 +58,10 @@ export class ProductsFormComponent {
 
   categoryOptions = computed(() => {
     return this.productStore.categories().map(c => ({ value: c.id, label: c.name }));
+  });
+
+  authorOptions = computed(() => {
+    return this.authorStore.authors().map(a => ({ value: a.id, label: a.name }));
   });
 
   additionalImagesControls = signal<string[]>([]);
@@ -111,6 +117,7 @@ export class ProductsFormComponent {
   }
 
   constructor() {
+    this.authorStore.loadAuthors();
     effect(() => {
       const prod = this.product();
       if (prod) {
@@ -123,7 +130,7 @@ export class ProductsFormComponent {
         this.coverImageControl.setValue(prod.images[0] || '');
         this.additionalImagesControls.set(prod.images.slice(1));
         this.descControl.setValue(prod.description);
-        this.authorControl.setValue(prod.specifications?.['Author'] || '');
+        this.authorControl.setValue(prod.authorId || '');
         this.isbnControl.setValue(prod.specifications?.['ISBN'] || '');
         const pubYear = parseInt(prod.specifications?.['Published Year'] || '') || new Date().getFullYear();
         this.publishedYearControl.setValue(pubYear);
@@ -167,7 +174,7 @@ export class ProductsFormComponent {
     const pData: Product = {
       id: this.product()?.id || '',
       name: this.nameControl.value || '',
-      author: this.authorControl.value || '',
+      authorId: this.authorControl.value || '',
       description: this.descControl.value || '',
       price: this.priceControl.value || 0,
       originalPrice: this.origPriceControl.value || undefined,
@@ -180,7 +187,6 @@ export class ProductsFormComponent {
       featured: this.product()?.featured || false,
       brand: this.brandControl.value || '',
       specifications: {
-        'Author': this.authorControl.value || '',
         'ISBN': this.isbnControl.value || '',
         'Published Year': (this.publishedYearControl.value || new Date().getFullYear()).toString(),
         'Pages': (this.pagesControl.value || 1).toString(),

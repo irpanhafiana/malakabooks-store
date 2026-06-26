@@ -12,7 +12,8 @@ export interface Product {
   reviewsCount: number;
   featured: boolean;
   brand: string;
-  author: string;
+  authorId: string;
+  authorName?: string;
   specifications: Record<string, string>;
   createdAt: string;
 }

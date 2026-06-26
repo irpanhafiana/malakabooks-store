@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { isAdminSession } from '../auth/session.util';
 import { CategoryApiService } from './category-api.service';
+import { AuthorApiService } from './author-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,15 @@ import { CategoryApiService } from './category-api.service';
 export class ProductApiService {
   private readonly http = inject(HttpClient);
   private readonly categoryApi = inject(CategoryApiService);
+  private readonly authorApi = inject(AuthorApiService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
   private mapBookToProduct(book: BookDto): Product {
     return {
       id: book.id,
       name: book.title,
-      author: book.author || '',
+      authorId: book.authorId || book.author?.id || '',
+      authorName: book.author?.name || '',
       description: book.description || '',
       price: book.price,
       categoryId: book.categoryId,
@@ -30,7 +33,6 @@ export class ProductApiService {
       brand: book.publisher || '',
       featured: false,
       specifications: {
-        'Author': book.author || '',
         'ISBN': book.isbn || '',
         'Published Year': book.publishedYear?.toString() || '',
         'Pages': book.pages?.toString() || '',
@@ -98,7 +100,7 @@ export class ProductApiService {
 
     const body = {
       title: product.name,
-      author: product.specifications['Author'] || '',
+      authorId: product.authorId || '',
       isbn: product.specifications['ISBN'] || '',
       categoryId: product.categoryId,
       price: product.price,

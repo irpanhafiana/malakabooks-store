@@ -14,3 +14,4 @@ export * from './dashboard-metrics.model';
 export * from './home-address.model';
 export * from './api-response.model';
 export * from './book-dto.model';
+export * from './author.model';

@@ -15,7 +15,14 @@ export interface BookDto {
   coverImage?: string;
   additionalImages?: AdditionalImageDto[];
   publisher?: string;
-  author?: string;
+  authorId?: string;
+  author?: {
+    id: string;
+    name: string;
+    biography: string;
+    photoUrl: string;
+    alias?: string;
+  };
   isbn?: string;
   publishedYear?: number;
   pages?: number;

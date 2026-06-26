@@ -8,7 +8,8 @@
     [control]="categoryControl"></app-select>
   <app-admin-input label="Brand" placeholder="e.g. Canongate Books" [control]="brandControl"></app-admin-input>
 
-  <app-admin-input label="Author" placeholder="e.g. Matt Haig" [control]="authorControl"></app-admin-input>
+  <app-select label="Author" placeholder="Select author" [options]="authorOptions()"
+    [control]="authorControl"></app-select>
   <app-admin-input label="ISBN" placeholder="e.g. 978-0525559474" [control]="isbnControl"></app-admin-input>
 
   <app-admin-input label="Published Year" placeholder="e.g. 2020" type="number"
