@@ -7,7 +7,9 @@
       "ExpirationCheckIntervalMinutes": 1,
       "ExpirationStartupDelaySeconds": 0,
       "SimasrimRecheckPath": "",
-      "SimasrimRecheckMethod": "GET"
+      "SimasrimRecheckMethod": "GET",
+      "SimasrimCancelPath": "",
+      "SimasrimCancelMethod": "POST"
     }
   },
   "DokuSetting": {

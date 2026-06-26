@@ -6,7 +6,10 @@ namespace MalakaBooks.Entity;
 public class BookEntity : BaseObject
 {
     public string Title { get; set; } = string.Empty;
-    public string Author { get; set; } = string.Empty;
+
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string AuthorId { get; set; } = string.Empty;
+
     public string Isbn { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]

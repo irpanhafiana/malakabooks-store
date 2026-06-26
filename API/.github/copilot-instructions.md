@@ -14,4 +14,5 @@
 - In MalakaBooks, Simasrim create-resi must be triggered from the Admin/CMS fulfillment flow and be safely re-triggerable to recover from connection loss, similar to DOKU status recheck.
 - In MalakaBooks, keep fulfillment statuses simplified for now: pending_payment, ready_to_ship, shipped, expired, and cancelled; do not add detailed processing/delivered steps yet, and add a Simasrim reconcile/recheck flow.
 - In MalakaBooks order creation, Simasrim shipment data should be built by the API: Courier maps from ShippingCourier; pickup fields come from HomeAddress; sender fields come from the current user's Address; ItemWeight is hardcoded to 1; Volume to '10x10x10'; ItemCategory to 'buku'; ReceiverNote to 'tolong video unboxing'; BPIK is null; long/lat and postal codes come from the respective address entities.
+- Prefer strongly typed Simasrim response models over JObject when the API contract is known.
 - Continue implementation through the approved plan without waiting for additional prompts or check-ins between steps.

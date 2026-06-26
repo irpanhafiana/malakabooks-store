@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace MalakaBooks.API.Controllers.Customer;
 
@@ -116,6 +117,36 @@ public class SimasrimController : ApiControllerBase
     [Route("Tarif")]
     public async Task<IActionResult> GetSimasrimTarif([FromBody] TariffModel model, CancellationToken cancellationToken)
       => Success(await mediator.Send(new GetSimasrimTariffQuery(model), cancellationToken));
+
+    /// <summary>
+    /// Tracks shipment status for a customer order using the stored AWB number and courier.
+    /// </summary>
+    /// <param name="orderId">The unique identifier of the order to track.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the Simasrim AWB tracking response.</returns>
+    [HttpGet]
+    [Route("TrackAwb/{orderId}")]
+    public async Task<IActionResult> TrackAwb(string orderId, CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirstValue("sub")
+            ?? User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? User.Identity?.Name
+            ?? string.Empty;
+
+        var result = await mediator.Send(new GetSimasrimTrackAwbQuery(orderId, userId), cancellationToken);
+
+        if (result is null)
+        {
+            return Fail("Failed to track AWB.", null, "ShipmentTrackingFailed", StatusCodes.Status502BadGateway);
+        }
+
+        if (!string.Equals(result.Status, "Success", StringComparison.OrdinalIgnoreCase))
+        {
+            return Fail(result.Data?.Description ?? "Failed to track AWB.", result, "ShipmentTrackingFailed", StatusCodes.Status400BadRequest);
+        }
+
+        return Success(result);
+    }
 
     #endregion
 }

@@ -175,6 +175,19 @@ public class RecheckOrderShipmentResponse
     public DateTime? ShipmentLastAttemptAt { get; set; }
 }
 
+public class CancelOrderShipmentResponse
+{
+    public string OrderId { get; set; } = string.Empty;
+    public bool IsSuccess { get; set; }
+    public bool ShipmentCancelled { get; set; }
+    public bool RequiresRetry { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public string AwbNo { get; set; } = string.Empty;
+    public string ShipmentLastError { get; set; } = string.Empty;
+    public DateTime? ShipmentCreatedAt { get; set; }
+    public DateTime? ShipmentLastAttemptAt { get; set; }
+}
+
 public class BatchOrderShipmentResponse<TItem>
 {
     public int TotalOrders { get; set; }

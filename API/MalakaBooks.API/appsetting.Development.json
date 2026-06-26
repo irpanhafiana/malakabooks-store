@@ -28,7 +28,9 @@
             "ExpirationCheckIntervalMinutes": 1,
             "ExpirationStartupDelaySeconds": 0,
             "SimasrimRecheckPath": "/api/b2b/pengiriman/ekspedisi/cek-resi",
-            "SimasrimRecheckMethod": "GET"
+            "SimasrimRecheckMethod": "GET",
+            "SimasrimCancelPath": "/api/b2b/pengiriman/ekspedisi/cancel-resi",
+            "SimasrimCancelMethod": "POST"
         }
     },
     "Logging": {
