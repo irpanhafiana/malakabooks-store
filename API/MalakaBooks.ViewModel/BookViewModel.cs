@@ -4,7 +4,7 @@ public class BookResponse
 {
     public string Id { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
-    public string Author { get; set; } = string.Empty;
+    public string AuthorId { get; set; } = string.Empty;
     public string Isbn { get; set; } = string.Empty;
     public string CategoryId { get; set; } = string.Empty;
     public decimal Price { get; set; }
@@ -24,7 +24,7 @@ public class BookResponse
 public class CreateBookRequest
 {
     public string Title { get; set; } = string.Empty;
-    public string Author { get; set; } = string.Empty;
+    public string AuthorId { get; set; } = string.Empty;
     public string Isbn { get; set; } = string.Empty;
     public string CategoryId { get; set; } = string.Empty;
     public decimal Price { get; set; }

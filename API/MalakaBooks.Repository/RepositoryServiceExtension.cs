@@ -8,6 +8,8 @@ public static class RepositoryServiceExtension
     public static IServiceCollection RegisterRepositoryService(this IServiceCollection services)
     {
         services.AddScoped<IBookRepository, BookRepository>();
+        services.AddScoped<IAuthorRepository, AuthorRepository>();
+        services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IIncomingPaymentRepository, IncomingPaymentRepository>();

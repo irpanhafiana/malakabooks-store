@@ -11,7 +11,7 @@ public static class MappingExtensions
     {
         Id = entity.Id ?? string.Empty,
         Title = entity.Title,
-        Author = entity.Author,
+        AuthorId = entity.AuthorId,
         Isbn = entity.Isbn,
         CategoryId = entity.CategoryId,
         Price = entity.Price,
@@ -31,7 +31,7 @@ public static class MappingExtensions
     public static BookEntity ToEntity(this CreateBookRequest request) => new()
     {
         Title = request.Title.Trim(),
-        Author = request.Author.Trim(),
+        AuthorId = request.AuthorId.Trim(),
         Isbn = request.Isbn.Trim(),
         CategoryId = request.CategoryId.Trim(),
         Price = request.Price,
@@ -51,7 +51,7 @@ public static class MappingExtensions
     public static void UpdateFrom(this BookEntity entity, UpdateBookRequest request)
     {
         entity.Title = request.Title.Trim();
-        entity.Author = request.Author.Trim();
+        entity.AuthorId = request.AuthorId.Trim();
         entity.Isbn = request.Isbn.Trim();
         entity.CategoryId = request.CategoryId.Trim();
         entity.Price = request.Price;
@@ -76,6 +76,55 @@ public static class MappingExtensions
         No = request.No,
         Image = request.Image.Trim()
     };
+
+    public static AuthorResponse ToResponse(this AuthorEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        Name = entity.Name,
+        Biography = entity.Biography,
+        PhotoUrl = entity.PhotoUrl,
+        Alias = entity.Alias ?? string.Empty
+    };
+
+    public static AuthorEntity ToEntity(this CreateAuthorRequest request) => new()
+    {
+        Name = request.Name.Trim(),
+        Biography = request.Biography.Trim(),
+        PhotoUrl = request.PhotoUrl.Trim()
+    };
+
+    public static void UpdateFrom(this AuthorEntity entity, UpdateAuthorRequest request)
+    {
+        entity.Name = request.Name.Trim();
+        entity.Biography = request.Biography.Trim();
+        entity.PhotoUrl = request.PhotoUrl.Trim();
+    }
+
+    public static PaymentResponse ToResponse(this PaymentEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        Name = entity.Name,
+        MethodType = entity.MethodType,
+        AdditionalFeePercentage = entity.AdditionalFeePercentage,
+        AdditionalFeeAmount = entity.AdditionalFeeAmount,
+        Alias = entity.Alias ?? string.Empty
+    };
+
+    public static PaymentEntity ToEntity(this CreatePaymentRequest request) => new()
+    {
+        Name = request.Name.Trim(),
+        MethodType = request.MethodType.Trim(),
+        AdditionalFeePercentage = request.AdditionalFeePercentage,
+        AdditionalFeeAmount = request.AdditionalFeeAmount
+    };
+
+    public static void UpdateFrom(this PaymentEntity entity, UpdatePaymentRequest request)
+    {
+        entity.Name = request.Name.Trim();
+        entity.MethodType = request.MethodType.Trim();
+        entity.AdditionalFeePercentage = request.AdditionalFeePercentage;
+        entity.AdditionalFeeAmount = request.AdditionalFeeAmount;
+    }
 
     public static CategoryResponse ToResponse(this CategoryEntity entity) => new()
     {
