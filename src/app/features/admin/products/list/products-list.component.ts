@@ -1,9 +1,9 @@
 import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ProductStore } from '../../../../store/product.store';
 import { Product } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
-import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { BadgeComponent } from '../../../../shared/ui/badge/badge.component';
 import { PriceComponent } from '../../../../shared/ui/price/price.component';
@@ -11,24 +11,22 @@ import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
-import { ProductsFormComponent } from '../form/products-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule, TableComponent, ModalComponent, AdminButtonComponent, BadgeComponent, PriceComponent, IconComponent, PaginationComponent, ProductsFormComponent, SpinnerComponent],
+  imports: [CommonModule, TableComponent, AdminButtonComponent, BadgeComponent, PriceComponent, IconComponent, PaginationComponent, SpinnerComponent],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.css'
 })
 export class ProductsListComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
   private readonly alertService = inject(AlertService);
+  private readonly router = inject(Router);
 
   searchQuery = signal<string>('');
-  isModalOpen = signal<boolean>(false);
-  editProduct = signal<Product | null>(null);
 
   filteredList = computed(() => {
     const query = this.searchQuery().toLowerCase().trim();
@@ -49,17 +47,11 @@ export class ProductsListComponent implements OnInit {
   }
 
   openAddModal() {
-    this.editProduct.set(null);
-    this.isModalOpen.set(true);
+    this.router.navigate(['/admin/products/new']);
   }
 
   openEditModal(product: Product) {
-    this.editProduct.set(product);
-    this.isModalOpen.set(true);
-  }
-
-  closeModal() {
-    this.isModalOpen.set(false);
+    this.router.navigate(['/admin/products/edit', product.id]);
   }
 
   async onDelete(id: string) {

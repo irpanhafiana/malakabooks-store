@@ -29,6 +29,14 @@ export const routes: Routes = [
         path: 'products',
         loadComponent: () => import('./features/admin/products/list/products-list.component').then(c => c.ProductsListComponent)
       },
+      {
+        path: 'products/new',
+        loadComponent: () => import('./features/admin/products/form-page/products-form-page.component').then(c => c.ProductsFormPageComponent)
+      },
+      {
+        path: 'products/edit/:id',
+        loadComponent: () => import('./features/admin/products/form-page/products-form-page.component').then(c => c.ProductsFormPageComponent)
+      },
       { path: 'categories', loadComponent: () => import('./features/admin/categories/list/categories-list.component').then(m => m.CategoriesListComponent) },
       { path: 'authors', loadComponent: () => import('./features/admin/authors/list/authors-list.component').then(m => m.AuthorsListComponent) },
       { path: 'home-addresses', loadComponent: () => import('./features/admin/home-addresses/list/home-addresses-list.component').then(m => m.HomeAddressesListComponent) },

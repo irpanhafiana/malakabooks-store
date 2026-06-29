@@ -83,7 +83,7 @@
   }
 
   <!-- Add/Edit Modal Form -->
-  <app-modal [isOpen]="isModalOpen()" [title]="editAddress() ? 'Edit Alamat' : 'Tambah Alamat Baru'">
+  <app-modal [(isOpen)]="isModalOpen" [title]="editAddress() ? 'Edit Alamat' : 'Tambah Alamat Baru'">
     <app-home-addresses-form [address]="editAddress()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-home-addresses-form>
   </app-modal>

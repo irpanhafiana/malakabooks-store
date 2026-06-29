@@ -1,0 +1,21 @@
+<div class="animate-fade-in flex flex-col gap-6 pb-20">
+  <!-- Header -->
+  <div class="flex items-center gap-4">
+    <button type="button" (click)="onCancel()" class="p-2 rounded-xl text-slate-500 hover:bg-white hover:text-slate-800 border border-transparent hover:border-slate-200 transition-all cursor-pointer active:scale-95 shadow-xs">
+      <app-icon name="chevron-left" size="20"></app-icon>
+    </button>
+    <div>
+      <h2 class="font-display font-bold text-slate-800 text-xl">{{ isEditing() ? 'Edit Product' : 'Add New Product' }}</h2>
+      <p class="text-xs text-slate-500 mt-1">{{ isEditing() ? 'Update the details of the selected product below.' : 'Fill in the form below to publish a new product to the store.' }}</p>
+    </div>
+  </div>
+
+  <!-- Form Container -->
+  <div class="bg-white p-6 rounded-2xl border border-slate-200">
+    <app-products-form 
+      [product]="editProduct()" 
+      (onCancel)="onCancel()" 
+      (onSave)="onSave()">
+    </app-products-form>
+  </div>
+</div>

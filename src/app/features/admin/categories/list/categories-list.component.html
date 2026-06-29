@@ -89,7 +89,7 @@
   }
 
   <!-- Add/Edit Category Modal Form -->
-  <app-modal [isOpen]="isModalOpen()" [title]="editCategory() ? 'Edit Kategori' : 'Tambah Kategori Baru'">
+  <app-modal [(isOpen)]="isModalOpen" [title]="editCategory() ? 'Edit Kategori' : 'Tambah Kategori Baru'">
     <app-categories-form [category]="editCategory()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-categories-form>
   </app-modal>

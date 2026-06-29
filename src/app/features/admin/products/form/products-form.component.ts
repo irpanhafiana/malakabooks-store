@@ -5,7 +5,7 @@ import { AuthorStore } from '../../../../store/author.store';
 import { Product } from '../../../../core/models';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { SelectComponent } from '../../../../shared/ui/select/select.component';
-import { TextareaComponent } from '../../../../shared/ui/textarea/textarea.component';
+import { EditorComponent } from '../../../../shared/ui/editor/editor.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
@@ -13,7 +13,7 @@ import { AlertService } from '../../../../core/services/alert.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, SelectComponent, TextareaComponent, AdminButtonComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, SelectComponent, EditorComponent, AdminButtonComponent],
   templateUrl: './products-form.component.html',
   styleUrl: './products-form.component.css'
 })

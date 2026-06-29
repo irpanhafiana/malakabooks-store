@@ -88,7 +88,7 @@
   }
 
   <!-- Add/Edit Author Modal Form -->
-  <app-modal [isOpen]="isModalOpen()" [title]="editAuthor() ? 'Edit Author' : 'Add New Author'">
+  <app-modal [(isOpen)]="isModalOpen" [title]="editAuthor() ? 'Edit Author' : 'Add New Author'">
     <app-authors-form [author]="editAuthor()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-authors-form>
   </app-modal>

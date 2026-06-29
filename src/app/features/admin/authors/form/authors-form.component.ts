@@ -4,13 +4,14 @@ import { Author } from '../../../../core/models';
 import { AuthorStore } from '../../../../store/author.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
+import { EditorComponent } from '../../../../shared/ui/editor/editor.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-authors-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, EditorComponent],
   template: `
     <form [formGroup]="authorForm" (ngSubmit)="onSubmitForm()" class="flex flex-col gap-5">
       <app-admin-input
@@ -20,12 +21,10 @@ import { AlertService } from '../../../../core/services/alert.service';
         placeholder="e.g. Tere Liye">
       </app-admin-input>
 
-      <app-admin-input
-        label="Biography"
-        id="biography"
-        [control]="biographyControl"
-        placeholder="Brief biography">
-      </app-admin-input>
+      <div class="flex flex-col gap-1.5">
+        <label class="font-semibold text-slate-700 text-sm">Biography</label>
+        <app-editor [formControl]="biographyControl"></app-editor>
+      </div>
 
       <div class="flex flex-col gap-2">
         <label class="font-semibold text-slate-700 text-sm">Author Photo</label>

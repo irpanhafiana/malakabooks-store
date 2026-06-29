@@ -63,9 +63,9 @@
       }
     </div>
   </div>
-  <div class="sm:col-span-2">
-    <app-textarea label="Description" placeholder="Write comprehensive product description..." [control]="descControl"
-      [rows]="3"></app-textarea>
+  <div class="sm:col-span-2 flex flex-col gap-1.5">
+    <label class="text-sm font-bold text-slate-700">Description</label>
+    <app-editor [formControl]="descControl"></app-editor>
   </div>
 
   <div class="sm:col-span-2 flex justify-end gap-2 mt-4">

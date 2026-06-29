@@ -99,10 +99,4 @@
   </div>
   }
 
-  <!-- Add/Edit Product Modal Form -->
-  <app-modal [isOpen]="isModalOpen()" [title]="editProduct() ? 'Edit Product' : 'Add New Product'">
-    <app-products-form [product]="editProduct()" (onCancel)="closeModal()" (onSave)="closeModal()">
-    </app-products-form>
-  </app-modal>
-
 </div>
