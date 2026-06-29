@@ -1,30 +1,32 @@
 <form [formGroup]="productForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
   <div class="sm:col-span-2">
-    <app-admin-input label="Product Name" placeholder="e.g. The Midnight Library"
+    <app-admin-input label="Nama Produk" placeholder="Masukkan Nama Produk ..."
       [control]="nameControl"></app-admin-input>
   </div>
 
-  <app-select label="Category" placeholder="Select category" [options]="categoryOptions()"
+  <app-select label="Kategori" placeholder="Pilih Kategori" [options]="categoryOptions()"
     [control]="categoryControl"></app-select>
-  <app-admin-input label="Brand" placeholder="e.g. Canongate Books" [control]="brandControl"></app-admin-input>
 
-  <app-select label="Author" placeholder="Select author" [options]="authorOptions()"
+  <app-admin-input label="Brand atau Merek" placeholder="Masukkan Brand atau Merek"
+    [control]="brandControl"></app-admin-input>
+
+  <app-select label="Penulis" placeholder="Pilih Penulis " [options]="authorOptions()"
     [control]="authorControl"></app-select>
   <app-admin-input label="ISBN" placeholder="e.g. 978-0525559474" [control]="isbnControl"></app-admin-input>
 
-  <app-admin-input label="Published Year" placeholder="e.g. 2020" type="number"
+  <app-admin-input label="Tahun Diterbitkan" placeholder="e.g. 2020" type="number"
     [control]="publishedYearControl"></app-admin-input>
-  <app-admin-input label="Pages" placeholder="e.g. 304" type="number" [control]="pagesControl"></app-admin-input>
 
-  <app-admin-input label="Weight (kg)" placeholder="e.g. 0.35" type="number"
-    [control]="weightControl"></app-admin-input>
+  <app-admin-input label="Jumlah Halaman" placeholder="e.g. 304" type="number"
+    [control]="pagesControl"></app-admin-input>
 
-  <app-admin-input label="Price" placeholder="e.g. 14.99" type="number" [control]="priceControl"></app-admin-input>
-  <app-admin-input label="Original Price (Optional)" placeholder="e.g. 19.99" type="number"
+  <app-admin-input label="Berat" placeholder="e.g. 0.35" type="number" [control]="weightControl"></app-admin-input>
+
+  <app-admin-input label="Harga Jual" placeholder="e.g. 14.99" type="number" [control]="priceControl"></app-admin-input>
+  <app-admin-input label="Harga Modal" placeholder="e.g. 19.99" type="number"
     [control]="origPriceControl"></app-admin-input>
 
-  <app-admin-input label="Stock Inventory" placeholder="e.g. 50" type="number"
-    [control]="stockControl"></app-admin-input>
+  <app-admin-input label="Jumlah Stok" placeholder="e.g. 50" type="number" [control]="stockControl"></app-admin-input>
   <div class="sm:col-span-2 flex flex-col gap-1.5">
     <label class="text-sm font-bold text-slate-700">Cover Image</label>
     <div class="flex items-center gap-4">

@@ -4,12 +4,13 @@ import { ProductStore } from '../../../../store/product.store';
 import { Product } from '../../../../core/models';
 import { ProductsFormComponent } from '../form/products-form.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-form-page',
   standalone: true,
-  imports: [ProductsFormComponent, IconComponent],
+  imports: [ProductsFormComponent, IconComponent, AdminButtonComponent],
   templateUrl: './products-form-page.component.html',
   styleUrl: './products-form-page.component.css'
 })

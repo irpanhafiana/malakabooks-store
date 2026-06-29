@@ -58,40 +58,42 @@
       @for (slide of slides; track $index) {
       <button type="button" (click)="scrollToSlide($index)"
         [class]="$index === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"
-        class="transition-all duration-500 ease-in-out cursor-pointer hover:bg-white/80" [attr.aria-label]="'Go to slide ' + ($index + 1)"></button>
+        class="transition-all duration-500 ease-in-out cursor-pointer hover:bg-white/80"
+        [attr.aria-label]="'Go to slide ' + ($index + 1)"></button>
       }
     </div>
-
-    <!-- Navigation Arrows -->
-    <button type="button" (click)="scrollPrev()" class="absolute left-1 top-[42%] -translate-y-1/2 w-8 h-8 rounded-full bg-white/30 backdrop-blur-md border border-white/40 text-white flex items-center justify-center transition-all duration-300 z-20 hover:bg-white/50 cursor-pointer shadow-sm">
-      <i class="bx bx-chevron-left text-2xl"></i>
-    </button>
-    <button type="button" (click)="scrollNext()" class="absolute right-1 top-[42%] -translate-y-1/2 w-8 h-8 rounded-full bg-white/30 backdrop-blur-md border border-white/40 text-white flex items-center justify-center transition-all duration-300 z-20 hover:bg-white/50 cursor-pointer shadow-sm">
-      <i class="bx bx-chevron-right text-2xl"></i>
-    </button>
   </section>
 
   <!-- Author Slideshow -->
-  <section class="flex flex-col gap-4">
+  <section class="flex flex-col gap-5 mt-2">
     <div class="px-4">
-      <h2 class="font-display font-extrabold text-slate-800 text-base">Penulis Terkemuka</h2>
-      <p class="text-[12px] text-slate-400 mt-0.5">Kenali lebih dekat penulis favorit Anda</p>
+      <h2 class="font-display font-black text-slate-800 text-2xl tracking-tight flex items-center gap-2">
+        Popular Author 🔥
+      </h2>
     </div>
-    
-    <div class="flex gap-3 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-2 snap-x snap-mandatory">
-      @for (author of authorStore.authors(); track author.id) {
-        <div class="flex-[0_0_85%] min-w-0 snap-start bg-white border border-slate-100 rounded-2xl p-4 shadow-sm flex flex-col gap-3">
-          <div class="flex items-center gap-3">
-             <img [src]="author.photoUrl" class="w-12 h-12 rounded-full object-cover border border-slate-200">
-             <div>
-               <h3 class="font-bold text-sm text-slate-800">{{ author.name }}</h3>
-               <p class="text-[10px] text-slate-500 line-clamp-2 mt-0.5">{{ author.biography }}</p>
-             </div>
+
+    <div class="flex gap-4 overflow-x-auto scrollbar-hide px-4 pb-4 snap-x snap-mandatory">
+      @for (author of authorStore.authors(); track author.id; let i = $index) {
+      <div
+        class="relative snap-center flex-[0_0_80%] min-w-[280px] h-[380px] rounded-[40px] p-6 cursor-pointer overflow-hidden group shadow-md transition-transform active:scale-[0.98] bg-slate-900"
+        (click)="openAuthorSheet(author)">
+
+        <!-- Image fading to bottom -->
+        <img [src]="author.photoUrl"
+          class="absolute top-0 left-0 w-full h-[80%] object-cover object-top grayscale transition-transform duration-700 group-hover:scale-105"
+          style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
+
+        <!-- Content (relative z-10) -->
+        <div class="relative z-10 flex flex-col h-full">
+          <!-- Bottom Text -->
+          <div class="mt-auto flex flex-col gap-3">
+            <h3 class="text-[32px] font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">{{
+              author.name }}</h3>
+            <p class="text-white/95 text-xs leading-relaxed line-clamp-4 font-medium drop-shadow-md">{{ author.biography
+              || 'Penulis buku terkemuka dengan karya-karya best-seller yang menginspirasi banyak orang.' }}</p>
           </div>
-          <button type="button" (click)="openAuthorSheet(author)" class="text-xs font-bold text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-lg py-2 text-center w-full transition-colors cursor-pointer border-0 mt-1">
-             Lihat Selengkapnya
-          </button>
         </div>
+      </div>
       }
     </div>
   </section>
@@ -145,9 +147,11 @@
   <!-- Bottom Sheet for Author Products -->
   <app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true">
     <div class="flex flex-col h-full bg-slate-50">
-      <div class="px-5 py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0 rounded-t-2xl">
+      <div
+        class="px-5 py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0 rounded-t-2xl">
         <h3 class="font-display font-bold text-slate-800 text-base">{{ selectedAuthorName() }}</h3>
-        <button (click)="closeAuthorSheet()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 cursor-pointer border-0">
+        <button (click)="closeAuthorSheet()"
+          class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 cursor-pointer border-0">
           <app-icon name="x" size="18"></app-icon>
         </button>
       </div>
