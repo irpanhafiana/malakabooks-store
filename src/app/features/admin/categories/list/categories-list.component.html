@@ -1,29 +1,29 @@
 <div class="animate-fade-in flex flex-col gap-6">
 
   <!-- Top Action bar & Search -->
-  <div class="flex items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200">
-    <div class="flex items-center gap-4 flex-1">
-      <h2 class="font-display font-bold text-slate-800 text-sm whitespace-nowrap">Categories Manager</h2>
+  <div class="flex items-center justify-between">
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Kategori Produk</h2>
+
+    <div class="flex flex-row gap-2 justify-center items-center">
       <!-- Search Input -->
-      <div class="relative w-full max-w-md hidden sm:block">
+      <div class="relative w-full hidden sm:block">
         <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
-        <input type="text" placeholder="Search categories..."
-          [value]="searchQuery()" (input)="onSearch($event)"
-          class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
+        <input type="text" placeholder="Cari Kategori ..." [value]="searchQuery()" (input)="onSearch($event)"
+          class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
       </div>
+
+      <app-admin-button (click)="openAddModal()" variant="primary" size="md" class="shrink-0">
+        <app-icon name="plus" size="14"></app-icon>
+        Add Category
+      </app-admin-button>
     </div>
-    
-    <app-admin-button (click)="openAddModal()" variant="primary" size="sm" class="shrink-0">
-      <app-icon name="plus" size="14"></app-icon>
-      Add Category
-    </app-admin-button>
+
   </div>
-  
+
   <!-- Mobile Search (visible only on small screens) -->
   <div class="sm:hidden relative w-full">
     <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
-    <input type="text" placeholder="Search categories..."
-      [value]="searchQuery()" (input)="onSearch($event)"
+    <input type="text" placeholder="Search categories..." [value]="searchQuery()" (input)="onSearch($event)"
       class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
   </div>
 
@@ -33,63 +33,63 @@
     <app-spinner text="Loading categories..."></app-spinner>
   </div>
   } @else {
-  <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col">
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse text-left text-xs text-slate-600">
-        <thead class="bg-transparent text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200">
-          <tr>
-            <th class="px-5 py-4">Category Name</th>
-            <th class="px-5 py-4">Slug</th>
-            <th class="px-5 py-4">Icon Name</th>
-            <th class="px-5 py-4 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 bg-white">
-          @for (cat of pagination.paged(); track cat.id) {
-          <tr class="hover:bg-slate-50/50 transition-colors">
-            <td class="px-5 py-4 font-bold text-slate-800 text-xs">
-              <div class="flex items-center gap-3">
-                <div class="p-1.5 bg-slate-50 text-slate-500 rounded-lg border border-slate-100">
-                  <app-icon [name]="cat.icon" size="16"></app-icon>
-                </div>
-                <span>{{ cat.name }}</span>
-              </div>
-            </td>
-            <td class="px-5 py-4 text-xs font-semibold text-slate-500">{{ cat.slug }}</td>
-            <td class="px-5 py-4 text-xs text-slate-500">
-              <code class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-primary-600 font-mono">{{ cat.icon }}</code>
-            </td>
-            <td class="px-5 py-4 text-right">
-              <div class="flex justify-end gap-1.5">
-                <button (click)="openEditModal(cat)"
-                  class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer transition-colors">
-                  <app-icon name="edit" size="14"></app-icon>
-                </button>
-                <button (click)="onDelete(cat.id)"
-                  class="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors">
-                  <app-icon name="trash" size="14"></app-icon>
-                </button>
-              </div>
-            </td>
-          </tr>
-          } @empty {
-          <tr>
-            <td colspan="4" class="p-8 text-center text-slate-400">No categories found.</td>
-          </tr>
-          }
-        </tbody>
-      </table>
+  <app-table>
+    <tr table-headers>
+      <th class="px-5 py-4">Category Name</th>
+      <th class="px-5 py-4">Slug</th>
+      <th class="px-5 py-4">Icon Name</th>
+      <th class="px-5 py-4 text-right">Actions</th>
+    </tr>
+
+    <ng-container table-rows>
+      @for (cat of pagination.paged(); track cat.id) {
+      <tr class="hover:bg-slate-50/50 transition-colors">
+        <td class="px-5 py-4 font-bold text-slate-800 text-xs">
+          <div class="flex items-center gap-3">
+            <div class="p-1.5 bg-slate-50 text-slate-500 rounded-lg border border-slate-100">
+              <app-icon [name]="cat.icon" size="16"></app-icon>
+            </div>
+            <span>{{ cat.name }}</span>
+          </div>
+        </td>
+        <td class="px-5 py-4 text-xs font-semibold text-slate-500">{{ cat.slug }}</td>
+        <td class="px-5 py-4 text-xs text-slate-500">
+          <code
+            class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-primary-600 font-mono">{{ cat.icon }}</code>
+        </td>
+        <td class="px-5 py-4 text-right">
+          <div class="flex justify-end gap-1.5">
+            <button (click)="openEditModal(cat)"
+              class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer transition-colors">
+              <app-icon name="edit" size="14"></app-icon>
+            </button>
+            <button (click)="onDelete(cat.id)"
+              class="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors">
+              <app-icon name="trash" size="14"></app-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="4" class="p-8 text-center text-slate-400">No categories found.</td>
+      </tr>
+      }
+    </ng-container>
+
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+      Showing {{ pagination.paged().length }} / {{ pagination.totalItems() }} data
     </div>
-    
-    <div class="p-4 border-t border-slate-100 bg-slate-50/30">
-      <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages() || 1"
-        (pageChange)="pagination.setPage($event)"></app-pagination>
-    </div>
+  </app-table>
+
+  <div class="flex justify-center w-full">
+    <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages() || 1"
+      (pageChange)="pagination.setPage($event)"></app-pagination>
   </div>
   }
 
   <!-- Add/Edit Category Modal Form -->
-  <app-modal [isOpen]="isModalOpen()" [title]="editCategory() ? 'Edit Category' : 'Add New Category'">
+  <app-modal [isOpen]="isModalOpen()" [title]="editCategory() ? 'Edit Kategori' : 'Tambah Kategori Baru'">
     <app-categories-form [category]="editCategory()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-categories-form>
   </app-modal>

@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, UpperCasePipe } from '@angular/common';
 import { UserApiService } from '../../../core/services/user-api.service';
 import { User } from '../../../core/models';
@@ -10,12 +10,13 @@ import { ToastService } from '../../../core/services/toast.service';
 import { AlertService } from '../../../core/services/alert.service';
 import { createClientPagination } from '../../../shared/util/pagination.util';
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
+import { IconComponent } from '../../../shared/ui/icon/icon.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-crud',
   standalone: true,
-  imports: [TableComponent, BadgeComponent, AdminButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent],
+  imports: [TableComponent, BadgeComponent, AdminButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent, IconComponent],
   templateUrl: './users-crud.component.html',
   styleUrl: './users-crud.component.css'
 })
@@ -27,10 +28,25 @@ export class UsersCrudComponent implements OnInit {
   usersList = signal<User[]>([]);
   loading = signal<boolean>(true);
 
-  protected readonly pagination = createClientPagination(this.usersList, 10);
+  searchQuery = signal<string>('');
+
+  filteredUsers = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    const users = this.usersList();
+    if (!query) return users;
+    return users.filter(u => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query));
+  });
+
+  protected readonly pagination = createClientPagination(this.filteredUsers, 10);
 
   ngOnInit() {
     this.loadUsers();
+  }
+
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery.set(target.value);
+    this.pagination.setPage(1);
   }
 
   async loadUsers() {

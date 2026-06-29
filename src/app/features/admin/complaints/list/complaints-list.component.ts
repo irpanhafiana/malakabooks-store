@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { DatePipe } from '@angular/common';
 import { ComplaintStore } from '../../../../store/complaint.store';
 import { Complaint, ComplaintStatus } from '../../../../core/models';
@@ -23,7 +24,8 @@ import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-
     PaginationComponent,
     ComplaintsFormComponent,
     SpinnerComponent,
-    StatusBadgeComponent
+    StatusBadgeComponent,
+    IconComponent
   ],
   templateUrl: './complaints-list.component.html',
   styleUrl: './complaints-list.component.css'
@@ -31,9 +33,26 @@ import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-
 export class ComplaintsListComponent implements OnInit {
   protected readonly complaintStore = inject(ComplaintStore);
 
-  protected readonly pagination = createClientPagination(this.complaintStore.complaints, 10);
+  protected readonly searchQuery = signal('');
+  protected readonly filteredComplaints = computed(() => {
+    const q = this.searchQuery().toLowerCase();
+    const all = this.complaintStore.complaints();
+    if (!q) return all;
+    return all.filter(c => 
+      c.userId.toLowerCase().includes(q) ||
+      c.orderId.toLowerCase().includes(q) ||
+      c.subject.toLowerCase().includes(q)
+    );
+  });
+
+  protected readonly pagination = createClientPagination(this.filteredComplaints, 10);
   protected isModalOpen = false;
   protected readonly selected = signal<Complaint | null>(null);
+
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery.set(target.value);
+  }
 
   ngOnInit() {
     this.complaintStore.loadAll();

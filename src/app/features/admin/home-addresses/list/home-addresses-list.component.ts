@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AdminHomeAddressStore } from '../../../../store/admin-home-address.store';
 import { HomeAddress } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
@@ -22,13 +22,32 @@ export class HomeAddressesListComponent implements OnInit {
   protected readonly store = inject(AdminHomeAddressStore);
   private readonly alertService = inject(AlertService);
 
-  protected readonly pagination = createClientPagination(this.store.addresses, 10);
+  searchQuery = signal<string>('');
+
+  filteredAddresses = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    const addresses = this.store.addresses() || [];
+    if (!query) return addresses;
+    return addresses.filter(a => 
+      a.label.toLowerCase().includes(query) || 
+      a.recipientName.toLowerCase().includes(query) ||
+      a.street.toLowerCase().includes(query)
+    );
+  });
+
+  protected readonly pagination = createClientPagination(this.filteredAddresses, 10);
 
   isModalOpen = signal<boolean>(false);
   editAddress = signal<HomeAddress | null>(null);
 
   ngOnInit() {
     this.store.loadAddresses();
+  }
+
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery.set(target.value);
+    this.pagination.setPage(1);
   }
 
   openAddModal() {

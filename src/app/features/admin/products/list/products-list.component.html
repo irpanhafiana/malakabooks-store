@@ -1,41 +1,52 @@
 <div class="animate-fade-in flex flex-col gap-6">
 
-  <!-- Top Action bar -->
-  <div class="flex items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
-    <div class="relative max-w-xs w-full">
-      <input type="text" placeholder="Search products..." [value]="searchQuery()"
-        (input)="onSearchInput($any($event.target).value)"
-        class="w-full border border-slate-200 bg-slate-50/50 focus:bg-white rounded-xl py-2 px-3 pl-10 text-xs focus:outline-none focus:border-primary-500 " />
-      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-        <app-icon name="search" size="14"></app-icon>
-      </div>
-    </div>
+  <!-- Top Action bar & Search -->
+  <div class="flex items-center justify-between">
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Products Manager</h2>
 
-    <app-admin-button (click)="openAddModal()" variant="primary" size="sm">
-      <app-icon name="plus" size="14"></app-icon>
-      Add Product
-    </app-admin-button>
+    <div class="flex flex-row gap-2 justify-center items-center">
+      <!-- Search Input -->
+      <div class="relative w-full hidden sm:block">
+        <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
+        <input type="text" placeholder="Search products..." [value]="searchQuery()"
+          (input)="onSearchInput($any($event.target).value)"
+          class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
+      </div>
+
+      <app-admin-button (click)="openAddModal()" variant="primary" size="md" class="shrink-0">
+        <app-icon name="plus" size="14"></app-icon>
+        Add Product
+      </app-admin-button>
+    </div>
+  </div>
+  
+  <!-- Mobile Search (visible only on small screens) -->
+  <div class="sm:hidden relative w-full">
+    <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
+    <input type="text" placeholder="Search products..." [value]="searchQuery()"
+      (input)="onSearchInput($any($event.target).value)"
+      class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
   </div>
 
   <!-- Data Table -->
   @if (productStore.loading()) {
-  <div class="bg-white rounded-2xl border border-slate-100 shadow-xs">
+  <div class="bg-white rounded-2xl border border-slate-200">
     <app-spinner text="Loading products list..."></app-spinner>
   </div>
   } @else {
   <app-table>
     <tr table-headers>
-      <th class="px-5 py-3">Product</th>
-      <th class="px-5 py-3">Category</th>
-      <th class="px-5 py-3">Price</th>
-      <th class="px-5 py-3">Stock</th>
-      <th class="px-5 py-3">Rating</th>
-      <th class="px-5 py-3 text-right">Actions</th>
+      <th class="px-5 py-4">Product</th>
+      <th class="px-5 py-4">Category</th>
+      <th class="px-5 py-4">Price</th>
+      <th class="px-5 py-4">Stock</th>
+      <th class="px-5 py-4">Rating</th>
+      <th class="px-5 py-4 text-right">Actions</th>
     </tr>
 
     <ng-container table-rows>
       @for (prod of pagination.paged(); track prod.id) {
-      <tr class="hover:bg-slate-50/30">
+      <tr class="hover:bg-slate-50/50 transition-colors">
         <td class="px-5 py-4">
           <div class="flex items-center gap-3">
             <div class="h-10 w-8 bg-slate-50 rounded overflow-hidden shrink-0 border border-slate-100">
@@ -76,10 +87,16 @@
       </tr>
       }
     </ng-container>
+
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+      Showing {{ pagination.paged().length }} / {{ pagination.totalItems() }} data
+    </div>
   </app-table>
 
-  <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages()"
-    (pageChange)="pagination.setPage($event)"></app-pagination>
+  <div class="flex justify-center w-full">
+    <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages() || 1"
+      (pageChange)="pagination.setPage($event)"></app-pagination>
+  </div>
   }
 
   <!-- Add/Edit Product Modal Form -->

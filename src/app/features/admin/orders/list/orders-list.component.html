@@ -1,9 +1,9 @@
 <div class="animate-fade-in flex flex-col gap-6">
 
-  <!-- Top Header Action bar -->
-  <div class="flex items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200/50 shadow-xs">
+  <!-- Top Action bar & Search -->
+  <div class="flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <h2 class="font-display font-bold text-slate-800 text-sm">Orders Manager</h2>
+      <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Orders Manager</h2>
       @if (selectedOrderIds().length > 0) {
       <span class="text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full font-bold">
         {{ selectedOrderIds().length }} selected
@@ -11,21 +11,34 @@
       }
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex flex-row gap-2 justify-center items-center">
       @if (selectedOrderIds().length > 0) {
       <button (click)="onBulkCreateShipment()"
-        class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-1.5 px-4 rounded-xl text-xs cursor-pointer shadow-xs  flex items-center gap-1.5 animate-fade-in">
+        class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded-xl text-sm cursor-pointer flex items-center gap-1.5 animate-fade-in shrink-0">
         <i class="bx bx-package text-sm"></i>
-        Bulk Create Shipment
+        Bulk Shipment
       </button>
       }
-      <span class="text-xs text-slate-400 font-semibold">Total Orders: {{ orderStore.orders().length }}</span>
+      
+      <!-- Search Input -->
+      <div class="relative w-full hidden sm:block">
+        <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
+        <input type="text" placeholder="Search orders..." [value]="searchQuery()" (input)="onSearch($event)"
+          class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
+      </div>
     </div>
+  </div>
+
+  <!-- Mobile Search (visible only on small screens) -->
+  <div class="sm:hidden relative w-full">
+    <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
+    <input type="text" placeholder="Search orders..." [value]="searchQuery()" (input)="onSearch($event)"
+      class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
   </div>
 
   <!-- Data Table -->
   @if (orderStore.loading()) {
-  <div class="bg-white rounded-2xl border border-slate-100 shadow-xs">
+  <div class="bg-white rounded-2xl border border-slate-200">
     <app-spinner text="Loading orders..."></app-spinner>
   </div>
   } @else {
@@ -86,7 +99,7 @@
         </td>
         <td class="px-5 py-4 text-center">
           <button (click)="onCreateShipment(order.id)"
-            class="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-1.5 px-3 rounded-xl text-[10px] cursor-pointer shadow-xs ">
+            class="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-1.5 px-3 rounded-xl text-[10px] cursor-pointer">
             Create Shipment
           </button>
         </td>
@@ -97,10 +110,15 @@
       </tr>
       }
     </ng-container>
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+      Showing {{ pagination.paged().length }} / {{ pagination.totalItems() }} data
+    </div>
   </app-table>
 
-  <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages()"
-    (pageChange)="pagination.setPage($event)"></app-pagination>
+  <div class="flex justify-center w-full">
+    <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages() || 1"
+      (pageChange)="pagination.setPage($event)"></app-pagination>
+  </div>
   }
 
 </div>

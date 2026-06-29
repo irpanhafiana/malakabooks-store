@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AuthorStore } from '../../../../store/author.store';
 import { Author } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
@@ -22,13 +22,28 @@ export class AuthorsListComponent implements OnInit {
   protected readonly authorStore = inject(AuthorStore);
   private readonly alertService = inject(AlertService);
 
-  protected readonly pagination = createClientPagination(this.authorStore.authors, 10);
+  searchQuery = signal<string>('');
+
+  filteredAuthors = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    const authors = this.authorStore.authors() || [];
+    if (!query) return authors;
+    return authors.filter(a => a.name.toLowerCase().includes(query));
+  });
+
+  protected readonly pagination = createClientPagination(this.filteredAuthors, 10);
 
   isModalOpen = signal<boolean>(false);
   editAuthor = signal<Author | null>(null);
 
   ngOnInit() {
     this.authorStore.loadAuthors();
+  }
+
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery.set(target.value);
+    this.pagination.setPage(1);
   }
 
   openAddModal() {

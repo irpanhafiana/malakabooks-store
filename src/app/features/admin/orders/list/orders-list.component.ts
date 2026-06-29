@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { DatePipe } from '@angular/common';
 import { OrderStore } from '../../../../store/order.store';
 import { Order, OrderStatus } from '../../../../core/models';
@@ -14,7 +15,7 @@ import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-orders-list',
   standalone: true,
-  imports: [TableComponent, PriceComponent, DatePipe, PaginationComponent, SpinnerComponent, StatusBadgeComponent],
+  imports: [TableComponent, PriceComponent, DatePipe, PaginationComponent, SpinnerComponent, StatusBadgeComponent, IconComponent],
   templateUrl: './orders-list.component.html',
   styleUrl: './orders-list.component.css'
 })
@@ -22,8 +23,25 @@ export class OrdersListComponent implements OnInit {
   protected readonly orderStore = inject(OrderStore);
   private readonly alertService = inject(AlertService);
 
-  protected readonly pagination = createClientPagination(this.orderStore.orders, 10);
+  protected readonly searchQuery = signal('');
+  protected readonly filteredOrders = computed(() => {
+    const q = this.searchQuery().toLowerCase();
+    const all = this.orderStore.orders();
+    if (!q) return all;
+    return all.filter(o => 
+      o.id.toLowerCase().includes(q) ||
+      o.userName?.toLowerCase().includes(q) ||
+      o.userEmail?.toLowerCase().includes(q)
+    );
+  });
+
+  protected readonly pagination = createClientPagination(this.filteredOrders, 10);
   protected readonly selectedOrderIds = signal<string[]>([]);
+
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery.set(target.value);
+  }
 
   ngOnInit() {
     this.orderStore.loadAllOrders();
