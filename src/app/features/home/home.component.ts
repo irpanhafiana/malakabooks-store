@@ -62,8 +62,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   currentSlide = signal<number>(0);
 
   private embla?: EmblaCarouselType;
+  private authorEmbla?: EmblaCarouselType;
 
   @ViewChild('carouselViewport') carouselViewport!: ElementRef<HTMLElement>;
+  @ViewChild('authorCarouselViewport') authorCarouselViewport?: ElementRef<HTMLElement>;
 
   isAuthorSheetOpen = signal(false);
   selectedAuthorName = signal<string>('');
@@ -85,10 +87,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const onSelect = () => this.currentSlide.set(this.embla!.selectedScrollSnap());
     this.embla.on('select', onSelect);
     onSelect();
+
+    if (this.authorCarouselViewport) {
+      this.authorEmbla = EmblaCarousel(
+        this.authorCarouselViewport.nativeElement,
+        { loop: true, align: 'center', duration: 40 },
+        [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
+      );
+    }
   }
 
   ngOnDestroy() {
     this.embla?.destroy();
+    this.authorEmbla?.destroy();
   }
 
   // Invoked when user taps on dot indicators

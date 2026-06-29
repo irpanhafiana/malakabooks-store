@@ -72,11 +72,13 @@
       </h2>
     </div>
 
-    <div class="flex gap-4 overflow-x-auto scrollbar-hide px-4 pb-4 snap-x snap-mandatory">
-      @for (author of authorStore.authors(); track author.id; let i = $index) {
-      <div
-        class="relative snap-center flex-[0_0_80%] min-w-[280px] h-[380px] rounded-[40px] p-6 cursor-pointer overflow-hidden group shadow-md transition-transform active:scale-[0.98] bg-slate-900"
-        (click)="openAuthorSheet(author)">
+    <div #authorCarouselViewport class="overflow-hidden -mx-4 px-4 h-[380px] cursor-grab active:cursor-grabbing pb-2">
+      <div class="flex -ml-4 items-center h-full">
+        @for (author of authorStore.authors(); track author.id; let i = $index) {
+        <div class="flex-[0_0_80%] min-w-[280px] pl-4 h-full">
+          <div
+            class="relative w-full h-full rounded-[40px] p-6 cursor-pointer overflow-hidden group shadow-md transition-transform active:scale-[0.98] bg-primary-600"
+            (click)="openAuthorSheet(author)">
 
         <!-- Image fading to bottom -->
         <img [src]="author.photoUrl"
@@ -93,8 +95,10 @@
               || 'Penulis buku terkemuka dengan karya-karya best-seller yang menginspirasi banyak orang.' }}</p>
           </div>
         </div>
+        </div>
       </div>
       }
+      </div>
     </div>
   </section>
 
