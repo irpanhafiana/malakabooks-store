@@ -72,12 +72,13 @@
       </h2>
     </div>
 
-    <div #authorCarouselViewport class="overflow-hidden -mx-4 px-4 h-[380px] cursor-grab active:cursor-grabbing pb-2">
+    <div #authorCarouselViewport class="overflow-hidden -mx-4 px-4 h-95 cursor-grab active:cursor-grabbing pb-2">
       <div class="flex -ml-4 items-center h-full">
         @for (author of authorStore.authors(); track author.id; let i = $index) {
-        <div class="flex-[0_0_80%] min-w-[280px] pl-4 h-full">
+        <div class="flex-[0_0_80%] min-w-70 pl-3 h-full flex items-center justify-center">
           <div
-            class="relative w-ful l h-full rounded-[40px] p-6 cursor-pointer overflow-hidden group shadow-md transition-transform active:scale-[0.98] bg-primary-600"
+            class="relative w-full  p-6 cursor-pointer overflow-hidden group transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
+            [style.height.px]="i === currentAuthorSlide() ? 380 : 320" [class.opacity-60]="i !== currentAuthorSlide()"
             (click)="openAuthorSheet(author)">
 
             <!-- Image fading to bottom -->

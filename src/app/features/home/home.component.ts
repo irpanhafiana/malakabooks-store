@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   currentSlide = signal<number>(0);
+  currentAuthorSlide = signal<number>(0);
 
   private embla?: EmblaCarouselType;
   private authorEmbla?: EmblaCarouselType;
@@ -94,6 +95,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         { loop: true, align: 'center', duration: 40 },
         [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
       );
+      const onAuthorSelect = () => this.currentAuthorSlide.set(this.authorEmbla!.selectedScrollSnap());
+      this.authorEmbla.on('select', onAuthorSelect);
+      onAuthorSelect();
     }
   }
 
