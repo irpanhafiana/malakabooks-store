@@ -77,27 +77,30 @@
         @for (author of authorStore.authors(); track author.id; let i = $index) {
         <div class="flex-[0_0_80%] min-w-[280px] pl-4 h-full">
           <div
-            class="relative w-full h-full rounded-[40px] p-6 cursor-pointer overflow-hidden group shadow-md transition-transform active:scale-[0.98] bg-primary-600"
+            class="relative w-ful l h-full rounded-[40px] p-6 cursor-pointer overflow-hidden group shadow-md transition-transform active:scale-[0.98] bg-primary-600"
             (click)="openAuthorSheet(author)">
 
-        <!-- Image fading to bottom -->
-        <img [src]="author.photoUrl"
-          class="absolute top-0 left-0 w-full h-[80%] object-cover object-top grayscale transition-transform duration-700 group-hover:scale-105"
-          style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
+            <!-- Image fading to bottom -->
+            <img [src]="author.photoUrl"
+              class="absolute top-0 left-0 w-full h-[80%] object-cover object-top grayscale transition-transform duration-700 group-hover:scale-105"
+              style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
 
-        <!-- Content (relative z-10) -->
-        <div class="relative z-10 flex flex-col h-full">
-          <!-- Bottom Text -->
-          <div class="mt-auto flex flex-col gap-3">
-            <h3 class="text-[32px] font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">{{
-              author.name }}</h3>
-            <p class="text-white/95 text-xs leading-relaxed line-clamp-4 font-medium drop-shadow-md">{{ author.biography
-              || 'Penulis buku terkemuka dengan karya-karya best-seller yang menginspirasi banyak orang.' }}</p>
+            <!-- Content (relative z-10) -->
+            <div class="relative z-10 flex flex-col h-full">
+              <!-- Bottom Text -->
+              <div class="mt-auto flex flex-col gap-3">
+                <h3
+                  class="text-[32px] font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
+                  {{
+                  author.name }}</h3>
+                <p class="text-white/95 text-xs leading-relaxed line-clamp-4 font-medium drop-shadow-md">{{
+                  author.biography
+                  || 'Penulis buku terkemuka dengan karya-karya best-seller yang menginspirasi banyak orang.' }}</p>
+              </div>
+            </div>
           </div>
         </div>
-        </div>
-      </div>
-      }
+        }
       </div>
     </div>
   </section>
