@@ -1,23 +1,53 @@
-<div class="min-h-screen bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-  <!-- Decorative background blur elements -->
-  <div class="absolute -top-40 -left-40 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl pointer-events-none"></div>
-  <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-accent-600/10 rounded-full blur-3xl pointer-events-none"></div>
-
-  <div class="sm:mx-auto sm:w-full sm:max-w-md text-center z-10">
-    <!-- Logo -->
-    <a routerLink="/"
-      class="inline-flex items-center gap-3 text-white font-display font-extrabold text-2xl tracking-tight hover:opacity-90  select-none">
-      <div
-        class="px-2.5 py-2 rounded-xl bg-linear-to-tr from-primary-500 to-primary-600 shadow-lg shadow-primary-600/20 flex items-center justify-center h-10 w-10">
-        <img src="/malaka-books.svg" alt="Malaka Books Logo" class="h-6 w-6">
-      </div>
-      malakabooks
-    </a>
+<div class="min-h-screen w-full flex bg-white">
+  <!-- Left Side: Form Container -->
+  <div class="w-full lg:w-1/2 flex flex-col justify-center">
+    <router-outlet></router-outlet>
   </div>
 
-  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0 z-10 animate-fade-in">
-    <div class="bg-white/95 backdrop-blur-md py-8 px-6 shadow-2xl border border-slate-100/55 rounded-3xl sm:px-10">
-      <router-outlet></router-outlet>
+  <!-- Right Side: Branding Container -->
+  <div class="hidden lg:flex lg:w-1/2 bg-primary-600 relative overflow-hidden flex-col justify-between p-12 lg:p-20">
+    <!-- Abstract Background Graphics -->
+    <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 w-[800px] h-[800px] bg-primary-700/50 rounded-full translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-primary-800/40 rounded-full translate-x-1/4 translate-y-1/4 pointer-events-none"></div>
+
+    <!-- Top Text -->
+    <div class="relative z-10 max-w-lg mt-8 text-white">
+      <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
+        Turn Books<br />
+        Into Inspiration<br />
+        <span class="text-primary-100 font-light">Effortlessly</span>
+      </h1>
+    </div>
+
+    <!-- Bottom Testimonial Card -->
+    <div class="relative z-10 w-full max-w-lg mt-12">
+      <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl">
+        <div class="flex gap-1 mb-4 text-amber-400">
+          <i class='bx bxs-star text-xl'></i>
+          <i class='bx bxs-star text-xl'></i>
+          <i class='bx bxs-star text-xl'></i>
+          <i class='bx bxs-star text-xl'></i>
+          <i class='bx bxs-star text-xl'></i>
+        </div>
+        <p class="text-white/90 font-medium text-lg mb-6 leading-relaxed">
+          "The robust management system of Malakabooks gives us peace of mind. We trust the platform to safeguard our book inventory, ensuring smooth operations and great customer service."
+        </p>
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-white font-bold">Admin Team</p>
+            <p class="text-primary-200 text-sm">Store Management</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="w-10 h-10 rounded-full flex items-center justify-center border border-white/30 text-white hover:bg-white/10 transition-colors cursor-pointer">
+              <i class='bx bx-left-arrow-alt text-xl'></i>
+            </button>
+            <button class="w-10 h-10 rounded-full flex items-center justify-center border border-white/30 text-white hover:bg-white/10 transition-colors cursor-pointer">
+              <i class='bx bx-right-arrow-alt text-xl'></i>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

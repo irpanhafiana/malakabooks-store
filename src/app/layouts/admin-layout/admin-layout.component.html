@@ -1,124 +1,162 @@
-<div class="min-h-screen bg-slate-100 flex flex-col md:flex-row relative">
+<div class="min-h-screen bg-slate-50 flex flex-col md:flex-row relative overflow-hidden">
+
   <!-- Mobile Top Bar -->
-  <header class="md:hidden bg-slate-900 text-white flex items-center justify-between px-4 py-3.5 z-40 shadow-md">
-    <a routerLink="/" class="flex items-center gap-2 font-display font-extrabold text-base tracking-tight">
-      <div class="px-1.5 py-1 rounded bg-primary-600 flex items-center justify-center h-6 w-6">
+  <header
+    class="md:hidden bg-white border-b border-slate-200/60 flex items-center justify-between px-4 py-3.5 z-40 shrink-0">
+    <a routerLink="/"
+      class="flex items-center gap-2 font-display font-extrabold text-base tracking-tight text-slate-800">
+      <div class="px-1.5 py-1 rounded-lg bg-primary-600 flex items-center justify-center h-6 w-6">
         <img src="/malaka-books.svg" alt="Malaka Books Logo" class="h-3.5 w-3.5">
       </div>
       malakabooks
     </a>
     <button type="button" (click)="toggleSidebar()" aria-label="Toggle navigation menu"
-      [attr.aria-expanded]="isSidebarOpen()" class="p-1 rounded hover:bg-slate-800  cursor-pointer">
-      <app-icon name="menu" size="20" class="text-white"></app-icon>
+      [attr.aria-expanded]="isSidebarOpen()"
+      class="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 cursor-pointer">
+      <app-icon name="menu" size="20"></app-icon>
     </button>
   </header>
 
-  <!-- Sidebar Area -->
+  <!-- Desktop Left Sidebar -->
   <aside [class.translate-x-0]="isSidebarOpen()" [class.-translate-x-full]="!isSidebarOpen()"
-    class="fixed md:static inset-y-0 left-0 w-64 bg-slate-950 text-slate-300 z-50 flex flex-col justify-between   md:translate-x-0 shadow-xl h-screen md:h-auto">
-    <div>
-      <!-- Sidebar Brand Header -->
-      <div class="p-5 border-b border-slate-900 hidden md:block">
-        <a routerLink="/"
-          class="flex items-center gap-2.5 text-white font-display font-extrabold text-xl tracking-tight select-none">
-          <div
-            class="px-2 py-1.5 rounded-xl bg-linear-to-tr from-primary-500 to-rose-600 shadow-md shadow-primary-500/10 flex items-center justify-center h-9 w-9">
-            <img src="/malaka-books.svg" alt="Malaka Books Logo" class="h-5.5 w-5.5">
-          </div>
-          malakabooks
-        </a>
+    class="fixed md:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200/60 z-50 flex flex-col justify-between h-screen shrink-0 transition-transform duration-300 ease-in-out md:translate-x-0">
+
+    <!-- Top Brand & Navigation -->
+    <div class="flex flex-col gap-8 p-6 w-full shrink-0">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 px-1">
+        <div
+          class="w-10 h-10 rounded-[12px] bg-linear-to-br from-primary-500 to-primary-600 flex items-center justify-center hover:scale-105 transition-transform duration-200 shrink-0">
+          <img src="/malaka-books.svg" alt="Malaka Books" class="h-5 w-5">
+        </div>
+        <div class="flex flex-col">
+          <span
+            class="font-display font-extrabold text-base tracking-tight text-slate-800 leading-none">malakabooks</span>
+          <span class="text-[9px] font-bold text-slate-400 tracking-wider uppercase mt-1">Admin Panel</span>
+        </div>
       </div>
 
-      <!-- Navigation Links -->
-      <nav class="p-4 flex flex-col gap-1.5">
-        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2 block">Management</span>
-
+      <!-- Vertical Navigation -->
+      <nav class="flex flex-col gap-1 w-full overflow-y-auto no-scrollbar max-h-[calc(100vh-380px)]">
+        <!-- Dashboard -->
         <a routerLink="/admin" [routerLinkActiveOptions]="{exact: true}"
-          routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
-          (click)="closeSidebar()"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white  text-sm group cursor-pointer border-l-4 border-transparent">
-          <app-icon name="dashboard" size="18" class="text-slate-400 group-hover:text-primary-500"></app-icon>
-          Dashboard
+          routerLinkActive="!bg-primary-600 !text-white active-link" (click)="closeSidebar()"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+          <app-icon name="dashboard" size="20"
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+          <span>Dashboard</span>
         </a>
 
-        <a routerLink="/admin/products"
-          routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
+        <!-- Products -->
+        <a routerLink="/admin/products" routerLinkActive="!bg-primary-600 !text-white active-link"
           (click)="closeSidebar()"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white  text-sm group cursor-pointer border-l-4 border-transparent">
-          <app-icon name="book-open" size="18" class="text-slate-400 group-hover:text-primary-500"></app-icon>
-          Products
+          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+          <app-icon name="book-open" size="20"
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+          <span>Products</span>
         </a>
 
-        <a routerLink="/admin/categories"
-          routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
+        <!-- Categories -->
+        <a routerLink="/admin/categories" routerLinkActive="!bg-primary-600 !text-white active-link"
           (click)="closeSidebar()"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white  text-sm group cursor-pointer border-l-4 border-transparent">
-          <app-icon name="filter" size="18" class="text-slate-400 group-hover:text-primary-500"></app-icon>
-          Categories
+          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+          <app-icon name="category" size="20"
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+          <span>Categories</span>
         </a>
 
-        <a routerLink="/admin/authors"
-          routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
+        <!-- Authors -->
+        <a routerLink="/admin/authors" routerLinkActive="!bg-primary-600 !text-white active-link"
           (click)="closeSidebar()"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white  text-sm group cursor-pointer border-l-4 border-transparent">
-          <app-icon name="pen-tool" size="18" class="text-slate-400 group-hover:text-primary-500"></app-icon>
-          Authors
+          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+          <app-icon name="user" size="20"
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+          <span>Authors</span>
         </a>
 
-        <a routerLink="/admin/orders"
-          routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
+        <!-- Orders -->
+        <a routerLink="/admin/orders" routerLinkActive="!bg-primary-600 !text-white active-link"
           (click)="closeSidebar()"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white  text-sm group cursor-pointer border-l-4 border-transparent">
-          <app-icon name="shopping-bag" size="18" class="text-slate-400 group-hover:text-primary-500"></app-icon>
-          Orders
+          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+          <app-icon name="shopping-bag" size="20"
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+          <span>Orders</span>
         </a>
 
-        <a routerLink="/admin/users"
-          routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
-          (click)="closeSidebar()"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white  text-sm group cursor-pointer border-l-4 border-transparent">
-          <app-icon name="users" size="18" class="text-slate-400 group-hover:text-primary-500"></app-icon>
-          Users
+        <!-- Users -->
+        <a routerLink="/admin/users" routerLinkActive="!bg-primary-600 !text-white active-link" (click)="closeSidebar()"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+          <app-icon name="users" size="20"
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+          <span>Users</span>
         </a>
 
-        <a routerLink="/admin/complaints"
-          routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
+        <!-- Addresses -->
+        <a routerLink="/admin/home-addresses" routerLinkActive="!bg-primary-600 !text-white active-link"
           (click)="closeSidebar()"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white  text-sm group cursor-pointer border-l-4 border-transparent">
-          <app-icon name="message-square" size="18" class="text-slate-400 group-hover:text-primary-500"></app-icon>
-          Complaints
+          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+          <app-icon name="map-pin" size="20"
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+          <span>Addresses</span>
         </a>
 
-        <a routerLink="/admin/reports"
-          routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
+        <!-- Complaints -->
+        <a routerLink="/admin/complaints" routerLinkActive="!bg-primary-600 !text-white active-link"
           (click)="closeSidebar()"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white  text-sm group cursor-pointer border-l-4 border-transparent">
-          <app-icon name="bar-chart" size="18" class="text-slate-400 group-hover:text-primary-500"></app-icon>
-          Reports
+          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+          <app-icon name="message-square" size="20"
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+          <span>Complaints</span>
         </a>
 
-        <a routerLink="/admin/home-addresses"
-          routerLinkActive="bg-primary-600/10 text-primary-500 border-l-4 border-primary-500 font-semibold"
+        <!-- Reports -->
+        <a routerLink="/admin/reports" routerLinkActive="!bg-primary-600 !text-white active-link"
           (click)="closeSidebar()"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white  text-sm group cursor-pointer border-l-4 border-transparent">
-          <app-icon name="map-pin" size="18" class="text-slate-400 group-hover:text-primary-500"></app-icon>
-          Toko Addresses
+          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+          <app-icon name="bar-chart" size="20"
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+          <span>Reports</span>
         </a>
       </nav>
     </div>
 
-    <!-- Sidebar footer area -->
-    <div class="p-4 border-t border-slate-900 flex flex-col gap-2 bg-slate-950/60">
-      <a routerLink="/"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white  text-sm group cursor-pointer">
-        <app-icon name="home" size="18" class="text-slate-400 group-hover:text-white"></app-icon>
-        Back to Shop
+    <!-- Bottom Actions -->
+    <div class="flex flex-col gap-3 shrink-0 w-full mt-auto p-6 border-t border-slate-100 bg-white">
+
+
+      <!-- Storefront Link -->
+      <a routerLink="/" (click)="closeSidebar()"
+        class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+        <app-icon name="home" size="20" class="text-slate-400 group-hover:text-slate-600"></app-icon>
+        <span>Storefront</span>
       </a>
-      <button (click)="onSignOut()"
-        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-950/20 text-rose-400 hover:text-rose-300  text-sm group text-left cursor-pointer">
-        <app-icon name="log-out" size="18" class="text-rose-400/80 group-hover:text-rose-300"></app-icon>
-        Sign Out
+
+      <!-- Settings Link -->
+      <a routerLink="/admin" (click)="closeSidebar()"
+        class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+        <app-icon name="cog" size="20" class="text-slate-400 group-hover:text-slate-600"></app-icon>
+        <span>Settings</span>
+      </a>
+
+      <!-- Sign Out Button -->
+      <button (click)="onSignOut(); closeSidebar()"
+        class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-red-500 hover:bg-red-50/50 hover:text-red-600 transition-all duration-200 cursor-pointer group w-full text-left">
+        <app-icon name="log-out" size="20" class="text-red-400 group-hover:text-red-500"></app-icon>
+        <span>Sign Out</span>
       </button>
+
+      <!-- Profile Indicator -->
+      <div class="flex items-center gap-3 px-3 py-2.5 mt-1 border-t border-slate-100">
+        <div
+          class="h-8 w-8 rounded-full bg-linear-to-br from-primary-500 to-primary-600 text-white font-extrabold flex items-center justify-center text-xs shrink-0">
+          {{ authStore.currentUser()?.name?.substring(0, 2)?.toUpperCase() }}
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="text-xs font-bold text-slate-800 truncate leading-none mb-0.5">{{ authStore.currentUser()?.name
+            }}</span>
+          <span class="text-[10px] text-slate-400 truncate leading-none">{{ authStore.currentUser()?.email }}</span>
+        </div>
+      </div>
     </div>
   </aside>
 
@@ -129,34 +167,13 @@
   }
 
   <!-- Main Dashboard Content viewport -->
-  <div class="flex-1 flex flex-col overflow-x-hidden min-h-screen">
-    <!-- Top Navbar (Desktop only) -->
-    <header
-      class="bg-white border-b border-slate-200/60 h-16 hidden md:flex items-center justify-between px-6 shadow-xs">
-      <!-- Left side: Breadcrumb tracker -->
-      <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
-        <span>Admin</span>
-        <app-icon name="chevron-right" size="12" class="text-slate-400"></app-icon>
-        <span class="text-slate-800 capitalize font-bold text-sm">{{ activeRouteName() }}</span>
-      </div>
-
-      <!-- Right side: Profile indicator -->
-      <div class="flex items-center gap-3">
-        <span class="text-xs text-slate-400">Logged in as <strong class="text-slate-800 font-semibold">{{
-            authStore.currentUser()?.name }}</strong></span>
-        <div
-          class="h-8 w-8 rounded-full bg-primary-50 text-primary-700 font-extrabold flex items-center justify-center border border-primary-100 text-xs">
-          {{ authStore.currentUser()?.name?.substring(0, 2)?.toUpperCase() }}
-        </div>
-      </div>
-    </header>
-
+  <div class="flex-1 flex flex-col h-screen overflow-hidden relative w-full">
     <!-- Main Dashboard content body -->
-    <main class="grow p-6">
+    <main class="grow p-6 md:p-10 overflow-y-auto bg-slate-50 animate-page-fade">
       <router-outlet></router-outlet>
     </main>
   </div>
 
-  <!-- Global toast outlet (previously missing in admin → silent failures) -->
+  <!-- Global toast outlet -->
   <app-toast-container></app-toast-container>
 </div>

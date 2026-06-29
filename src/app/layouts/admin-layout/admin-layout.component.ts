@@ -16,7 +16,7 @@ import { ToastContainerComponent } from '../../shared/ui/toast-container/toast-c
 })
 export class AdminLayoutComponent {
   protected readonly authStore = inject(AuthStore);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
 
   isSidebarOpen = signal<boolean>(false);
   activeRouteName = signal<string>('Dashboard');

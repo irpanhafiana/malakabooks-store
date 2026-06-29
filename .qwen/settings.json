@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Agent(Explore)",
+      "Bash(type *)",
+      "Bash(findstr *)",
+      "Bash(get-content *)",
+      "Bash(npx *)",
+      "Bash(git checkout *)"
+    ]
+  },
+  "$version": 4
+}

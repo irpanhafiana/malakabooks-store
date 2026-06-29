@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ProductStore } from '../../../../store/product.store';
 import { Category } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
@@ -23,13 +23,31 @@ export class CategoriesListComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
   private readonly alertService = inject(AlertService);
 
-  protected readonly pagination = createClientPagination(this.productStore.categories, 10);
+  searchQuery = signal<string>('');
+
+  filteredCategories = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    const categories = this.productStore.categories() || [];
+    if (!query) return categories;
+    return categories.filter(c => 
+      c.name.toLowerCase().includes(query) || 
+      c.slug.toLowerCase().includes(query)
+    );
+  });
+
+  protected readonly pagination = createClientPagination(this.filteredCategories, 10);
 
   isModalOpen = signal<boolean>(false);
   editCategory = signal<Category | null>(null);
 
   ngOnInit() {
     this.productStore.loadCategories();
+  }
+
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery.set(target.value);
+    this.pagination.setPage(1);
   }
 
   openAddModal() {

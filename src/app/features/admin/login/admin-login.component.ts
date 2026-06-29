@@ -22,6 +22,10 @@ export class AdminLoginComponent implements OnInit {
   isLoading = signal<boolean>(false);
   sessionMessage = signal<string>('');
 
+  clearSessionMessage() {
+    this.sessionMessage.set('');
+  }
+
   ngOnInit() {
     const reason = this.route.snapshot.queryParamMap.get('reason');
     if (reason === 'session_expired') {
