@@ -115,9 +115,9 @@
           Payment Method
         </h2>
 
-        <app-radio [options]="paymentOptions" [control]="paymentControl" direction="col"></app-radio>
+        <app-radio [options]="paymentOptions()" [control]="paymentControl" direction="col"></app-radio>
 
-        @if (paymentControl.value === 'credit_card') {
+        @if (isCreditCardSelected()) {
         <div
           class="mt-4 p-4 border border-slate-100 bg-slate-50/50 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fade-in">
           <div class="sm:col-span-3">
@@ -168,6 +168,12 @@
           <span>Tax</span>
           <app-price [value]="checkoutTax()" [bold]="false" size="sm"></app-price>
         </div>
+        @if (paymentFee() > 0) {
+        <div class="flex justify-between text-slate-600">
+          <span>Payment Fee</span>
+          <app-price [value]="paymentFee()" [bold]="false" size="sm"></app-price>
+        </div>
+        }
         <div class="flex justify-between">
           <span>Shipping Cost</span>
           @if (shippingCost() === 0) {

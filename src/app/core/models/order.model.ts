@@ -9,12 +9,13 @@ export interface Order {
   userEmail: string;
   items: CartItem[];
   shippingAddress: Address;
-  paymentMethod: 'credit_card' | 'bank_transfer' | 'e_wallet' | 'cod' | 'doku';
+  paymentMethod: string;
   paymentDetails?: {
     cardLast4?: string;
     bankName?: string;
     walletType?: string;
   };
+  paymentFee?: number;
   status: OrderStatus;
   subtotal: number;
   shippingCost: number;

@@ -241,6 +241,7 @@ export class OrderApiService {
         quantity: item.quantity
       })),
       addressId: order.shippingAddress.id,
+      paymentId: order.paymentMethod,
       note: '',
       shippingFee: order.shippingCost || 0,
       shippingCourier: order.shippingCourier || '',

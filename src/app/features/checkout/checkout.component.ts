@@ -1,12 +1,12 @@
 import { Component, inject, signal, computed, OnInit, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
 import { OrderStore } from '../../store/order.store';
-import { Address, Order } from '../../core/models';
+import { Address, Order, Payment } from '../../core/models';
 import { InputComponent } from '../../shared/ui/input/input.component';
 import { SelectComponent } from '../../shared/ui/select/select.component';
 import { RadioComponent } from '../../shared/ui/radio/radio.component';
@@ -21,6 +21,7 @@ import { UserApiService } from '../../core/services/user-api.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ShippingService } from '../../core/services/shipping.service';
+import { PaymentApiService } from '../../core/services/payment-api.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +42,7 @@ export class CheckoutComponent implements OnInit {
   private readonly externalMessageService = inject(ExternalMessageService);
   private readonly userApi = inject(UserApiService);
   private readonly shippingService = inject(ShippingService);
+  private readonly paymentApi = inject(PaymentApiService);
 
   isLoading = signal<boolean>(false);
   showAddressForm = signal<boolean>(false);
@@ -82,8 +84,12 @@ export class CheckoutComponent implements OnInit {
   });
 
   checkoutTax = computed(() => this.cartStore.subtotal() * 0.10);
+  
+  payments = signal<Payment[]>([]);
+  paymentFee = signal<number>(0);
+  
   checkoutTotal = computed(() => {
-    return Math.max(0, this.cartStore.subtotal() + this.checkoutTax() + this.shippingCost() - this.cartStore.discount());
+    return Math.max(0, this.cartStore.subtotal() + this.checkoutTax() + this.shippingCost() + this.paymentFee() - this.cartStore.discount());
   });
 
   // Address inputs
@@ -109,14 +115,15 @@ export class CheckoutComponent implements OnInit {
   courierServiceControl = new FormControl('', [Validators.required]);
 
   // Payment inputs
-  paymentOptions = [
-    { value: 'doku', label: 'Jokul Checkout (Doku)' },
-    { value: 'credit_card', label: 'Credit or Debit Card' },
-    { value: 'bank_transfer', label: 'Bank Transfer (BCA, Mandiri, BNI)' },
-    { value: 'e_wallet', label: 'GoPay / OVO E-Wallet' },
-    { value: 'cod', label: 'Cash on Delivery (COD)' }
-  ];
-  paymentControl = new FormControl('credit_card', [Validators.required]);
+  paymentOptions = computed(() => this.payments().map(p => ({ value: p.id, label: p.name })));
+  paymentControl = new FormControl('', [Validators.required]);
+  paymentControlValue = toSignal(this.paymentControl.valueChanges, { initialValue: this.paymentControl.value });
+
+  isCreditCardSelected = computed(() => {
+    const val = this.paymentControlValue();
+    const p = this.payments().find(x => x.id === val);
+    return p?.methodType === 'credit_card';
+  });
 
   // Card details
   cardNumControl = new FormControl('', [Validators.required]);
@@ -153,10 +160,11 @@ export class CheckoutComponent implements OnInit {
     }
     this.isLoading.set(false);
 
-    // Load provinces & couriers
+    // Load provinces, couriers, and payments
     await Promise.all([
       this.shippingService.loadProvinces(),
-      this.loadCouriers()
+      this.loadCouriers(),
+      this.loadPayments()
     ]);
 
     // Listen to province changes
@@ -226,6 +234,47 @@ export class CheckoutComponent implements OnInit {
         this.shippingService.shippingCost.set(0);
       }
     });
+
+    // Listen to payment changes
+    this.paymentControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((paymentId) => {
+      this.calculatePaymentFee(paymentId);
+    });
+  }
+
+  async loadPayments() {
+    try {
+      const res = await this.paymentApi.getPayments();
+      if (res && res.length > 0) {
+        this.payments.set(res);
+        this.paymentControl.setValue(res[0].id, { emitEvent: true });
+      }
+    } catch (err) {
+      console.error('Failed to load payments:', err);
+    }
+  }
+
+  calculatePaymentFee(paymentId: string | null) {
+    if (!paymentId) {
+      this.paymentFee.set(0);
+      return;
+    }
+    const payment = this.payments().find(p => p.id === paymentId);
+    if (!payment || !payment.fees) {
+      this.paymentFee.set(0);
+      return;
+    }
+    
+    let totalFee = 0;
+    const subtotal = this.cartStore.subtotal();
+    
+    for (const fee of payment.fees) {
+      if (fee.type === 'PERCENTAGE') {
+        totalFee += subtotal * (fee.value / 100);
+      } else {
+        totalFee += fee.value;
+      }
+    }
+    this.paymentFee.set(totalFee);
   }
 
   async loadCouriers() {
@@ -370,7 +419,9 @@ export class CheckoutComponent implements OnInit {
       this.toastService.error('Please select a shipping service');
       return true;
     }
-    if (this.paymentControl.value === 'credit_card') {
+    const selectedPayment = this.payments().find(p => p.id === this.paymentControl.value);
+    
+    if (selectedPayment?.methodType === 'credit_card') {
       if (this.cardNumControl.invalid || this.cardExpiryControl.invalid || this.cardCvcControl.invalid) {
         this.toastService.error('Please complete your credit card details');
         return true;
@@ -396,15 +447,16 @@ export class CheckoutComponent implements OnInit {
     this.isLoading.set(true);
 
     const paymentDetails: Record<string, string> = {};
-    const method = this.paymentControl.value as any;
+    const method = this.paymentControl.value || '';
+    const selectedPayment = this.payments().find(p => p.id === method);
 
-    if (method === 'credit_card') {
+    if (selectedPayment?.methodType === 'credit_card') {
       const card = this.cardNumControl.value || '';
       paymentDetails['cardLast4'] = card.slice(-4) || '4321';
-    } else if (method === 'bank_transfer') {
-      paymentDetails['bankName'] = 'Bank BCA (Virtual Account)';
-    } else if (method === 'e_wallet') {
-      paymentDetails['walletType'] = 'GoPay E-Wallet';
+    } else if (selectedPayment?.methodType === 'bank_transfer') {
+      paymentDetails['bankName'] = selectedPayment.name || 'Bank Transfer';
+    } else if (selectedPayment?.methodType === 'e_wallet') {
+      paymentDetails['walletType'] = selectedPayment.name || 'E-Wallet';
     }
 
     const selectedCourier = this.courierControl.value || 'jne';
@@ -425,6 +477,7 @@ export class CheckoutComponent implements OnInit {
       shippingAddress: addr,
       paymentMethod: method,
       paymentDetails,
+      paymentFee: this.paymentFee(),
       subtotal: this.cartStore.subtotal(),
       shippingCost: this.shippingCost(),
       tax: this.checkoutTax(),
@@ -438,7 +491,7 @@ export class CheckoutComponent implements OnInit {
     this.isLoading.set(false);
 
     if (placed) {
-      if (method === 'doku') {
+      if (selectedPayment?.methodType === 'doku') {
         const checkoutUrl = placed.paymentUrl;
         
         if (checkoutUrl) {

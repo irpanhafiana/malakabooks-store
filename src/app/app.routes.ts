@@ -38,6 +38,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/products/form-page/products-form-page.component').then(c => c.ProductsFormPageComponent)
       },
       { path: 'categories', loadComponent: () => import('./features/admin/categories/list/categories-list.component').then(m => m.CategoriesListComponent) },
+      { path: 'payment-methods', loadComponent: () => import('./features/admin/payment-methods/list/payment-methods-list.component').then(m => m.PaymentMethodsListComponent) },
       { path: 'authors', loadComponent: () => import('./features/admin/authors/list/authors-list.component').then(m => m.AuthorsListComponent) },
       { path: 'home-addresses', loadComponent: () => import('./features/admin/home-addresses/list/home-addresses-list.component').then(m => m.HomeAddressesListComponent) },
       {

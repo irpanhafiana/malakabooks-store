@@ -33,6 +33,8 @@ export class AdminLayoutComponent {
           this.activeRouteName.set('Products Manager');
         } else if (url.includes('/categories')) {
           this.activeRouteName.set('Categories Manager');
+        } else if (url.includes('/payment-methods')) {
+          this.activeRouteName.set('Payment Methods Manager');
         } else if (url.includes('/authors')) {
           this.activeRouteName.set('Authors Manager');
         } else if (url.includes('/orders')) {
