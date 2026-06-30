@@ -88,7 +88,7 @@
     </div>
 
     <!-- Best Seller Carousel -->
-    <div #bestSellerCarouselViewport class="overflow-hidden">
+    <div #bestSellerCarouselViewport class="overflow-hidden pl-2">
       <div class="flex -ml-3 cursor-grab active:cursor-grabbing">
         @for (prod of productStore.products(); track prod.id) {
         <div class="flex-[0_0_165px] min-w-0 pl-2">
@@ -124,7 +124,7 @@
     </div>
 
     <!-- Best Seller Carousel -->
-    <div #merchandiseCarouselViewport class="overflow-hidden">
+    <div #merchandiseCarouselViewport class="overflow-hidden pl-2">
       <div class="flex -ml-3 cursor-grab active:cursor-grabbing">
         @for (prod of productStore.products(); track prod.id) {
         <div class="flex-[0_0_165px] min-w-0 pl-2">
@@ -159,7 +159,7 @@
       </a>
     </div>
 
-    <div #authorCarouselViewport class="overflow-hidden cursor-grab active:cursor-grabbing pb-2">
+    <div #authorCarouselViewport class="overflow-hidden pl-2 pb-2">
       <div class="flex -ml-3 items-center h-full">
         @for (author of authorStore.authors(); track author.id) {
         <div class="flex-[0_0_165px] pl-2 h-full flex items-center justify-center">
@@ -289,25 +289,25 @@
     }
   </section>
 
-  <!-- Bottom Sheet for Author Products -->
-  <app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true">
-    <div class="flex flex-col h-full bg-slate-50">
-      <div
-        class="px-5 py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0 rounded-t-2xl">
-        <h3 class="font-display font-bold text-slate-800 text-base">{{ selectedAuthorName() }}</h3>
-        <button (click)="closeAuthorSheet()"
-          class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 cursor-pointer border-0">
-          <app-icon name="x" size="18"></app-icon>
-        </button>
-      </div>
-      <div class="p-4 overflow-y-auto grow">
-        <app-masonry-grid [items]="selectedAuthorProducts()">
-          <ng-template let-prod>
-            <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
-          </ng-template>
-        </app-masonry-grid>
-      </div>
-    </div>
-  </app-bottom-sheet>
-
 </div>
+
+<!-- Bottom Sheet for Author Products -->
+<app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true">
+  <div class="flex flex-col h-full bg-slate-50">
+    <div
+      class="px-5 py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0 rounded-t-2xl">
+      <h3 class="font-display font-bold text-slate-800 text-base">{{ selectedAuthorName() }}</h3>
+      <button (click)="closeAuthorSheet()"
+        class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 cursor-pointer border-0">
+        <app-icon name="x" size="18"></app-icon>
+      </button>
+    </div>
+    <div class="p-4 overflow-y-auto grow">
+      <app-masonry-grid [items]="selectedAuthorProducts()">
+        <ng-template let-prod>
+          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+        </ng-template>
+      </app-masonry-grid>
+    </div>
+  </div>
+</app-bottom-sheet>

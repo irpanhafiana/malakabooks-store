@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-4 animate-fade-in pb-28">
+<div class="flex flex-col gap-2 animate-fade-in pb-28">
   <!-- Search Bar & Filter Button -->
   <div class="sticky top-0 z-10 -mx-4 pb-2 bg-gray-50 backdrop-blur-sm">
 
@@ -9,7 +9,7 @@
           (search)="onSearchSubmit($event)"></app-search-bar>
       </div>
       <button type="button" (click)="openFilters()"
-        class="flex items-center justify-center shrink-0 w-12 h-12 border border-slate-200 bg-white rounded-full text-slate-700 hover:text-primary-600 hover:bg-slate-50 cursor-pointer active:scale-95 "
+        class="flex items-center justify-center shrink-0 w-11 h-11 border border-slate-200 bg-white rounded-full text-slate-700 hover:text-primary-600 hover:bg-slate-50 cursor-pointer active:scale-95 "
         aria-label="More Filters">
         <app-icon name="filter" size="20"></app-icon>
       </button>
@@ -37,7 +37,7 @@
   </div>
 
   <!-- Product List (Card-List / Horizontal Row Layout) -->
-  <div class="w-full flex flex-col gap-2">
+  <div class="w-full flex flex-col gap-1.5">
     @if (productStore.loading()) {
     <app-skeleton type="card" [count]="4"></app-skeleton>
     } @else if (productStore.error()) {
@@ -117,33 +117,82 @@
     }
   </div>
 
-  <!-- Mobile Filters Sheet Drawer (Shared bottom-sheet) -->
-  <app-bottom-sheet [isOpen]="isFiltersOpen()" title="Filter & Sort" (closed)="closeFilters()">
-    <div class="flex flex-col gap-6 py-2">
+</div>
 
-      <!-- Sort selector -->
-      <div>
-        <h4 class="font-display font-bold text-slate-700 text-xs uppercase tracking-wider mb-3">Sort By</h4>
-        <div class="flex flex-col gap-2">
-          <button type="button" (click)="onSortChange('featured'); closeFilters()"
-            [class]="productStore.sortBy() === 'featured' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
-            Featured
-          </button>
-          <button type="button" (click)="onSortChange('price-asc'); closeFilters()"
-            [class]="productStore.sortBy() === 'price-asc' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
-            Price: Low to High
-          </button>
-          <button type="button" (click)="onSortChange('price-desc'); closeFilters()"
-            [class]="productStore.sortBy() === 'price-desc' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
-            Price: High to Low
-          </button>
-          <button type="button" (click)="onSortChange('rating'); closeFilters()"
-            [class]="productStore.sortBy() === 'rating' ? 'bg-primary-50 text-primary-700 border-primary-600 font-bold border-l-4 px-4 py-3 text-left rounded-r-xl' : 'text-slate-600 border-transparent hover:bg-slate-50 border-l-4 px-4 py-3 text-left rounded-r-xl'">
-            Top Rated
-          </button>
-        </div>
+<!-- Mobile Filters Sheet Drawer (Shared bottom-sheet) -->
+<app-bottom-sheet [isOpen]="isFiltersOpen()" title="Urutkan & Filter" (closed)="closeFilters()">
+  <div class="flex flex-col gap-6 py-2">
+
+    <!-- Sort selector -->
+    <div>
+      <h4 class="font-display font-bold text-slate-700 text-base  text-center mb-3 px-1">Urutkan
+        Berdasarkan
+      </h4>
+      <div class="flex flex-col">
+        <!-- Featured -->
+        <button type="button" (click)="onSortChange('featured'); closeFilters()"
+          class="flex items-center justify-between w-full py-1.5 px-4 rounded-2xl transition-all duration-200 active:scale-[0.98]"
+          [class]="productStore.sortBy() === 'featured' ? 'text-primary-700' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-50'">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full"
+              [class]="productStore.sortBy() === 'featured' ? 'bg-slate-100 text-primary-600' : 'bg-slate-100 text-slate-500'">
+              <i class="bx bx-slider-alt text-lg"></i>
+            </div>
+            <span class="font-medium text-[13px]">Paling Sesuai</span>
+          </div>
+          @if (productStore.sortBy() === 'featured') {
+          <i class="bx bxs-check-circle text-xl text-primary-600"></i>
+          }
+        </button>
+
+        <!-- Price Low to High -->
+        <button type="button" (click)="onSortChange('price-asc'); closeFilters()"
+          class="flex items-center justify-between w-full py-1.5 px-4 rounded-2xl transition-all duration-200 active:scale-[0.98]"
+          [class]="productStore.sortBy() === 'price-asc' ? 'text-primary-700' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-50'">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full"
+              [class]="productStore.sortBy() === 'price-asc' ? 'bg-slate-100 text-primary-600' : 'bg-slate-100 text-slate-500'">
+              <i class="bx bx-sort-down text-lg"></i>
+            </div>
+            <span class="font-medium text-[13px]">Harga Terendah</span>
+          </div>
+          @if (productStore.sortBy() === 'price-asc') {
+          <i class="bx bxs-check-circle text-xl text-primary-600"></i>
+          }
+        </button>
+
+        <!-- Price High to Low -->
+        <button type="button" (click)="onSortChange('price-desc'); closeFilters()"
+          class="flex items-center justify-between w-full py-1.5 px-4 rounded-2xl transition-all duration-200 active:scale-[0.98]"
+          [class]="productStore.sortBy() === 'price-desc' ? 'text-primary-700' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-50'">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full"
+              [class]="productStore.sortBy() === 'price-desc' ? 'bg-slate-100 text-primary-600' : 'bg-slate-100 text-slate-500'">
+              <i class="bx bx-sort-up text-lg"></i>
+            </div>
+            <span class="font-medium text-[13px]">Harga Tertinggi</span>
+          </div>
+          @if (productStore.sortBy() === 'price-desc') {
+          <i class="bx bxs-check-circle text-xl text-primary-600"></i>
+          }
+        </button>
+
+        <!-- Top Rated -->
+        <button type="button" (click)="onSortChange('rating'); closeFilters()"
+          class="flex items-center justify-between w-full py-1.5 px-4 rounded-2xl transition-all duration-200 active:scale-[0.98]"
+          [class]="productStore.sortBy() === 'rating' ? 'text-primary-700' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-50'">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full"
+              [class]="productStore.sortBy() === 'rating' ? 'bg-slate-100 text-primary-600' : 'bg-slate-100 text-slate-500'">
+              <i class="bx bx-star text-lg"></i>
+            </div>
+            <span class="font-medium text-[13px]">Rating Tertinggi</span>
+          </div>
+          @if (productStore.sortBy() === 'rating') {
+          <i class="bx bxs-check-circle text-xl text-primary-600"></i>
+          }
+        </button>
       </div>
     </div>
-  </app-bottom-sheet>
-
-</div>
+  </div>
+</app-bottom-sheet>

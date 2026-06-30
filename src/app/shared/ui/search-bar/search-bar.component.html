@@ -3,7 +3,7 @@
     <!-- Input search box with inner shadow and focus borders -->
     <input type="text" [ngModel]="searchQuery" (ngModelChange)="onSearchChange($event)" name="query"
       [placeholder]="placeholder()" [autofocus]="autofocus()"
-      class="w-full border border-slate-200 bg-gray-50 rounded-full py-3 pl-11 pr-12 text-base placeholder-slate-400 text-slate-800   focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 focus:bg-white" />
+      class="w-full border border-slate-200 bg-white rounded-full py-2.5 pl-11 pr-12 text-sm placeholder-slate-400 text-slate-800   focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 focus:bg-white" />
     <!-- Left search glass icon -->
     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
       <app-icon name="search" size="18"></app-icon>

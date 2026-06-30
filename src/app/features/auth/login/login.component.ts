@@ -1,6 +1,7 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { AuthStore } from '../../../store/auth.store';
 import { InputComponent } from '../../../shared/ui/input/input.component';
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
   private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly location = inject(Location);
 
   protected readonly isProduction = environment.production;
 
@@ -52,6 +54,15 @@ export class LoginComponent implements OnInit {
     this.passwordControl.markAsDirty();
     this.usernameControl.markAsTouched();
     this.passwordControl.markAsTouched();
+  }
+
+  goBack() {
+    const state = this.location.getState() as { navigationId?: number };
+    if (state && state.navigationId && state.navigationId > 1) {
+      this.location.back();
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
   async onSubmit() {

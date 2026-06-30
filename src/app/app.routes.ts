@@ -73,14 +73,6 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
         canActivate: [authGuard]
-      },
-      {
-        path: 'auth/login',
-        loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
-      },
-      {
-        path: 'auth/register',
-        loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent)
       }
     ]
   },
@@ -113,6 +105,16 @@ export const routes: Routes = [
             path: 'welcome',
             loadComponent: () => import('./features/auth/welcome/welcome.component').then(c => c.WelcomeComponent),
             data: { title: 'Welcome', hideHeader: true }
+          },
+          {
+            path: 'login',
+            loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent),
+            data: { title: 'Login', hideHeader: true }
+          },
+          {
+            path: 'register',
+            loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent),
+            data: { title: 'Register', hideHeader: true }
           },
           {
             path: 'forgot-password',
