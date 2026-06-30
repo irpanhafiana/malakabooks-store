@@ -1,25 +1,15 @@
 <div class="flex flex-col gap-4 animate-fade-in pb-28">
 
-  <!-- Header Quotes
-  <section>
-    <div class="flex flex-col gap-0">
-      <h1 class="text-2xl mb-0">Selama toko buku ada..</h1>
-      <h1 class="text-2xl mb-0">Selama itu pustaka bisa dibentuk kembali.</h1>
-    </div>
-    <p>Tan Malaka</p>
-    <p>Tan Malaka</p>
-  </section> -->
-
   <!-- Hero Banner Carousel (Swipeable, looping, with dot indicators) -->
   <section class="relative group">
     <!-- Embla viewport -->
-    <div #carouselViewport class="overflow-hidden h-[180px]">
+    <div #carouselViewport class="overflow-hidden h-45">
       <!-- Embla container -->
       <div class="flex -ml-3 items-center h-full">
         @for (slide of slides; track $index) {
         <div class="flex-[0_0_100%] min-w-0 pl-3">
           <div
-            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out h-[168px]">
+            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out h-42">
             <!-- Background Image overlay -->
             <div class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
               [style.backgroundImage]="'url(' + slide.imageUrl + ')'"></div>
@@ -294,8 +284,7 @@
 <!-- Bottom Sheet for Author Products -->
 <app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true">
   <div class="flex flex-col h-full bg-slate-50">
-    <div
-      class="px-5 py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0 rounded-t-2xl">
+    <div class="px-5 py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0 rounded-t-2xl">
       <h3 class="font-display font-bold text-slate-800 text-base">{{ selectedAuthorName() }}</h3>
       <button (click)="closeAuthorSheet()"
         class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 cursor-pointer border-0">

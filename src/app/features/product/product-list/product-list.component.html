@@ -50,10 +50,10 @@
     } @else {
     @for (prod of productStore.filteredProducts(); track prod.id) {
     <div
-      class="card-product !flex-row border border-slate-100/80 shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 cursor-pointer active:scale-[0.99] group"
+      class="card-product flex-row! border border-slate-100/80 shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 cursor-pointer active:scale-[0.99] group"
       (click)="viewProductDetails(prod.id)">
       <!-- Thumbnail Image (matching product-card aspect & styling) -->
-      <div class="aspect-square min-h-[130px] shrink-0 bg-slate-50 overflow-hidden relative">
+      <div class="aspect-square min-h-32.5 shrink-0 bg-slate-50 overflow-hidden relative">
         @if (prod.images[0] && !failedImageIds().has(prod.id)) {
         <img [src]="prod.images[0]" [alt]="prod.name" (error)="onImageError(prod.id)"
           class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105  " loading="lazy" />

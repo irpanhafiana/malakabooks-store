@@ -67,12 +67,6 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () => import('./features/home/home.component').then(c => c.HomeComponent)
-      },
-
-      {
-        path: 'profile',
-        loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
-        canActivate: [authGuard]
       }
     ]
   },
@@ -98,6 +92,12 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./layouts/inner-page-layout/inner-page-layout.component').then(c => c.InnerPageLayoutComponent),
     children: [
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
+        canActivate: [authGuard],
+        data: { title: 'Profile' }
+      },
       {
         path: 'auth',
         children: [

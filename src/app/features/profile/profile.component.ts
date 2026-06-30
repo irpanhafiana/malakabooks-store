@@ -35,13 +35,13 @@ interface MenuSection {
   selector: 'app-profile',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    RouterLink, 
-    InputComponent, 
-    SelectComponent, 
-    ButtonComponent, 
-    IconComponent, 
-    BottomSheetComponent, 
+    ReactiveFormsModule,
+    RouterLink,
+    InputComponent,
+    SelectComponent,
+    ButtonComponent,
+    IconComponent,
+    BottomSheetComponent,
     SkeletonComponent,
     MapPickerComponent
   ],
@@ -73,25 +73,10 @@ export class ProfileComponent implements OnInit {
   menuSections: MenuSection[] = [
     {
       items: [
-        { icon: 'bx-globe', label: 'Language', action: () => this.showMockModal.set('Language') },
-        { icon: 'bx-wallet', label: 'Currencies', action: () => this.showMockModal.set('Currencies') },
-        { icon: 'bx-palette', label: 'Appearance', action: () => this.showMockModal.set('Appearance') }
-      ]
-    },
-    {
-      items: [
-        { icon: 'bx-map', label: 'Daftar Alamat Saya', action: () => this.showSavedAddresses.set(true) },
-        { icon: 'bx-shield-quarter', label: 'Application Security', action: () => this.showMockModal.set('Application Security') },
-        { icon: 'bx-devices', label: 'Manage Devices', action: () => this.showMockModal.set('Manage Devices') },
-        { icon: 'bx-key', label: 'Change Password', action: () => this.showMockModal.set('Change Password') }
-      ]
-    },
-    {
-      items: [
-        { icon: 'bx-car', label: 'Tracking Pesanan', route: '/tracking' },
-        { icon: 'bx-message-square-error', label: 'Komplain Saya', route: '/complaints' },
-        { icon: 'bx-package', label: 'Lacak Pesanan / Riwayat', route: '/order-history' },
-        { icon: 'bx-log-out', label: 'Keluar (Logout)', action: () => this.logout(), isDanger: true }
+        { icon: 'bx-map', label: 'Alamat Saya', action: () => this.showSavedAddresses.set(true) },
+        { icon: 'bx-key', label: 'Ganti Password', action: () => this.showMockModal.set('Change Password') },
+        { icon: 'bx-message-square-error', label: 'Komplain', route: '/complaints' },
+        { icon: 'bx-package', label: 'Lacak Pesanan', route: '/order-history' }
       ]
     }
   ];
@@ -310,11 +295,11 @@ export class ProfileComponent implements OnInit {
 
         const targetDistrict = addr.district?.toLowerCase();
         const targetSubDistrict = addr.subDistrict?.toLowerCase();
-        
+
         let dist = undefined;
         if (targetDistrict) {
-          dist = dsts.find(d => 
-            d.district_name.toLowerCase() === targetDistrict && 
+          dist = dsts.find(d =>
+            d.district_name.toLowerCase() === targetDistrict &&
             (targetSubDistrict ? d.subdistrict_name.toLowerCase() === targetSubDistrict : true)
           );
         }
@@ -347,7 +332,7 @@ export class ProfileComponent implements OnInit {
     const provName = this.provinceControl.value || '';
     const cityName = this.cityControl.value || '';
     const distCode = this.districtControl.value;
-    
+
     const distObj = this.districts().find(d => d.region_code === distCode);
     const districtName = distObj ? distObj.district_name : '';
     const subDistrictName = distObj ? distObj.subdistrict_name : '';
@@ -388,7 +373,7 @@ export class ProfileComponent implements OnInit {
       // The store already updates the address list, so we just reset the form
       this.editingAddressId.set(null);
       this.showAddressForm.set(false);
-      
+
       // Update local copy
       const latestUser = this.authStore.currentUser();
       if (latestUser) {
