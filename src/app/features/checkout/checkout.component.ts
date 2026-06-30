@@ -491,7 +491,7 @@ export class CheckoutComponent implements OnInit {
     this.isLoading.set(false);
 
     if (placed) {
-      if (selectedPayment?.methodType === 'doku') {
+      if (selectedPayment?.methodType === 'jokul_checkout' || selectedPayment?.methodType === 'doku') {
         const checkoutUrl = placed.paymentUrl;
         
         if (checkoutUrl) {
