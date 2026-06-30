@@ -104,6 +104,7 @@ public static class MappingExtensions
     {
         Id = entity.Id ?? string.Empty,
         Name = entity.Name,
+        Role = entity.Role,
         Biography = entity.Biography,
         PhotoUrl = entity.PhotoUrl,
         Alias = entity.Alias ?? string.Empty
@@ -112,6 +113,7 @@ public static class MappingExtensions
     public static AuthorEntity ToEntity(this CreateAuthorRequest request) => new()
     {
         Name = request.Name.Trim(),
+        Role = request.Role.Trim(),
         Biography = request.Biography.Trim(),
         PhotoUrl = request.PhotoUrl.Trim()
     };
@@ -119,6 +121,7 @@ public static class MappingExtensions
     public static void UpdateFrom(this AuthorEntity entity, UpdateAuthorRequest request)
     {
         entity.Name = request.Name.Trim();
+        entity.Role = request.Role.Trim();
         entity.Biography = request.Biography.Trim();
         entity.PhotoUrl = request.PhotoUrl.Trim();
     }
