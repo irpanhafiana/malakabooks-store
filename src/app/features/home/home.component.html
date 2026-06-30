@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-8 animate-fade-in pb-28">
+<div class="flex flex-col gap-4 animate-fade-in pb-28">
 
   <!-- Header Quotes
   <section>
@@ -13,11 +13,11 @@
   <!-- Hero Banner Carousel (Swipeable, looping, with dot indicators) -->
   <section class="relative group">
     <!-- Embla viewport -->
-    <div #carouselViewport class="overflow-hidden -mx-4 px-4 h-[180px]">
+    <div #carouselViewport class="overflow-hidden h-[180px]">
       <!-- Embla container -->
       <div class="flex -ml-3 items-center h-full">
         @for (slide of slides; track $index) {
-        <div class="flex-[0_0_90%] min-w-0 pl-3">
+        <div class="flex-[0_0_100%] min-w-0 pl-3">
           <div
             class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out h-[168px]">
             <!-- Background Image overlay -->
@@ -88,7 +88,43 @@
     </div>
 
     <!-- Best Seller Carousel -->
-    <div #bestSellerCarouselViewport class="overflow-hidden -mx-4 px-4 pb-4">
+    <div #bestSellerCarouselViewport class="overflow-hidden">
+      <div class="flex -ml-3 cursor-grab active:cursor-grabbing">
+        @for (prod of productStore.products(); track prod.id) {
+        <div class="flex-[0_0_165px] min-w-0 pl-2">
+          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+        </div>
+        }
+        @for (prod of productStore.products(); track prod.id + '-clone1') {
+        <div class="flex-[0_0_165px] min-w-0 pl-2" aria-hidden="true">
+          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+        </div>
+        }
+        @for (prod of productStore.products(); track prod.id + '-clone2') {
+        <div class="flex-[0_0_165px] min-w-0 pl-2" aria-hidden="true">
+          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Best seller product -->
+  <section class="flex flex-col gap-4 mt-2">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="font-display font-extrabold text-slate-800 text-base">Merchandise Set</h2>
+        <p class="text-[12px] text-slate-400 mt-0.5">Handpicked premium titles & accessories</p>
+      </div>
+      <a routerLink="/product"
+        class="text-xs font-bold text-primary-600 hover:text-primary-700  flex items-center gap-1">
+        View All
+        <app-icon name="chevron-right" size="12"></app-icon>
+      </a>
+    </div>
+
+    <!-- Best Seller Carousel -->
+    <div #merchandiseCarouselViewport class="overflow-hidden">
       <div class="flex -ml-3 cursor-grab active:cursor-grabbing">
         @for (prod of productStore.products(); track prod.id) {
         <div class="flex-[0_0_165px] min-w-0 pl-2">
@@ -123,32 +159,81 @@
       </a>
     </div>
 
-    <div #authorCarouselViewport class="overflow-hidden -mx-4 px-4 h-95 cursor-grab active:cursor-grabbing pb-2">
-      <div class="flex -ml-4 items-center h-full">
-        @for (author of authorStore.authors(); track author.id; let i = $index) {
-        <div class="flex-[0_0_80%] min-w-70 pl-3 h-full flex items-center justify-center">
+    <div #authorCarouselViewport class="overflow-hidden cursor-grab active:cursor-grabbing pb-2">
+      <div class="flex -ml-3 items-center h-full">
+        @for (author of authorStore.authors(); track author.id) {
+        <div class="flex-[0_0_165px] pl-2 h-full flex items-center justify-center">
           <div
-            class="relative w-full h-[380px] rounded-lg p-6 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
-            [class.scale-105]="i === currentAuthorSlide()" [class.scale-95]="i !== currentAuthorSlide()"
-            [class.opacity-70]="i !== currentAuthorSlide()" (click)="openAuthorSheet(author)">
+            class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
+            (click)="openAuthorSheet(author)">
 
             <!-- Image fading to bottom -->
             <img [src]="author.photoUrl"
               class="absolute top-0 left-0 w-full h-[80%] object-cover object-top transition-all duration-700 group-hover:scale-105"
-              [class.grayscale]="i !== currentAuthorSlide()"
               style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
 
             <!-- Content (relative z-10) -->
             <div class="relative z-10 flex flex-col h-full">
               <!-- Bottom Text -->
-              <div class="mt-auto flex flex-col gap-3">
-                <h3
-                  class="text-[32px] font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
+              <div class="mt-auto flex flex-col gap-1.5">
+                <h3 class="text-lg font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
                   {{
                   author.name }}</h3>
-                <p class="text-white/95 text-xs leading-relaxed line-clamp-4 font-medium drop-shadow-md">{{
-                  author.biography
-                  || 'Penulis buku terkemuka dengan karya-karya best-seller yang menginspirasi banyak orang.' }}</p>
+                <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
+                  Content Creator
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+        @for (author of authorStore.authors(); track author.id + '-clone1') {
+        <div class="flex-[0_0_165px] pl-2 h-full flex items-center justify-center">
+          <div
+            class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
+            (click)="openAuthorSheet(author)">
+
+            <!-- Image fading to bottom -->
+            <img [src]="author.photoUrl"
+              class="absolute top-0 left-0 w-full h-[80%] object-cover object-top transition-all duration-700 group-hover:scale-105"
+              style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
+
+            <!-- Content (relative z-10) -->
+            <div class="relative z-10 flex flex-col h-full">
+              <!-- Bottom Text -->
+              <div class="mt-auto flex flex-col gap-1.5">
+                <h3 class="text-lg font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
+                  {{
+                  author.name }}</h3>
+                <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
+                  Content Creator
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+        @for (author of authorStore.authors(); track author.id + '-clone2') {
+        <div class="flex-[0_0_165px] pl-2 h-full flex items-center justify-center">
+          <div
+            class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
+            (click)="openAuthorSheet(author)">
+
+            <!-- Image fading to bottom -->
+            <img [src]="author.photoUrl"
+              class="absolute top-0 left-0 w-full h-[80%] object-cover object-top transition-all duration-700 group-hover:scale-105"
+              style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
+
+            <!-- Content (relative z-10) -->
+            <div class="relative z-10 flex flex-col h-full">
+              <!-- Bottom Text -->
+              <div class="mt-auto flex flex-col gap-1.5">
+                <h3 class="text-lg font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
+                  {{
+                  author.name }}</h3>
+                <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
+                  Content Creator
+                </p>
               </div>
             </div>
           </div>

@@ -69,6 +69,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('carouselViewport') carouselViewport!: ElementRef<HTMLElement>;
   @ViewChild('authorCarouselViewport') authorCarouselViewport?: ElementRef<HTMLElement>;
   @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport?: ElementRef<HTMLElement>;
+  @ViewChild('merchandiseCarouselViewport') merchandiseCarouselViewport?: ElementRef<HTMLElement>;
 
   isAuthorSheetOpen = signal(false);
   selectedAuthorName = signal<string>('');
@@ -84,6 +85,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             if (autoplay) {
               autoplay.reset();
               autoplay.play();
+            }
+          }
+          if (this.authorEmbla) {
+            this.authorEmbla.reInit();
+            const authAutoplay = this.authorEmbla.plugins()['autoplay'];
+            if (authAutoplay) {
+              authAutoplay.reset();
+              authAutoplay.play();
             }
           }
         }, 100);
@@ -111,7 +120,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.authorCarouselViewport) {
       this.authorEmbla = EmblaCarousel(
         this.authorCarouselViewport.nativeElement,
-        { loop: true, align: 'center', duration: 40 },
+        { loop: true, align: 'start', duration: 40 },
+        [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
+      );
+      const onAuthorSelect = () => this.currentAuthorSlide.set(this.authorEmbla!.selectedScrollSnap());
+      this.authorEmbla.on('select', onAuthorSelect);
+      onAuthorSelect();
+    }
+
+    if (this.merchandiseCarouselViewport) {
+      this.authorEmbla = EmblaCarousel(
+        this.merchandiseCarouselViewport.nativeElement,
+        { loop: true, align: 'start', duration: 40 },
         [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
       );
       const onAuthorSelect = () => this.currentAuthorSlide.set(this.authorEmbla!.selectedScrollSnap());
