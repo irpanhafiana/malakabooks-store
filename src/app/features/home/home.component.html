@@ -1,5 +1,15 @@
 <div class="flex flex-col gap-8 animate-fade-in pb-28">
 
+  <!-- Header Quotes
+  <section>
+    <div class="flex flex-col gap-0">
+      <h1 class="text-2xl mb-0">Selama toko buku ada..</h1>
+      <h1 class="text-2xl mb-0">Selama itu pustaka bisa dibentuk kembali.</h1>
+    </div>
+    <p>Tan Malaka</p>
+    <p>Tan Malaka</p>
+  </section> -->
+
   <!-- Hero Banner Carousel (Swipeable, looping, with dot indicators) -->
   <section class="relative group">
     <!-- Embla viewport -->
@@ -9,8 +19,7 @@
         @for (slide of slides; track $index) {
         <div class="flex-[0_0_90%] min-w-0 pl-3">
           <div
-            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out"
-            [style.height.px]="$index === currentSlide() ? 168 : 140" [class.opacity-60]="$index !== currentSlide()">
+            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out h-[168px]">
             <!-- Background Image overlay -->
             <div class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
               [style.backgroundImage]="'url(' + slide.imageUrl + ')'"></div>
@@ -61,6 +70,42 @@
         class="transition-all duration-500 ease-in-out cursor-pointer hover:bg-white/80"
         [attr.aria-label]="'Go to slide ' + ($index + 1)"></button>
       }
+    </div>
+  </section>
+
+  <!-- Best seller product -->
+  <section class="flex flex-col gap-4 mt-2">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="font-display font-extrabold text-slate-800 text-base">Best Seller Product</h2>
+        <p class="text-[12px] text-slate-400 mt-0.5">Handpicked premium titles & accessories</p>
+      </div>
+      <a routerLink="/product"
+        class="text-xs font-bold text-primary-600 hover:text-primary-700  flex items-center gap-1">
+        View All
+        <app-icon name="chevron-right" size="12"></app-icon>
+      </a>
+    </div>
+
+    <!-- Best Seller Carousel -->
+    <div #bestSellerCarouselViewport class="overflow-hidden -mx-4 px-4 pb-4">
+      <div class="flex -ml-3 cursor-grab active:cursor-grabbing">
+        @for (prod of productStore.products(); track prod.id) {
+        <div class="flex-[0_0_165px] min-w-0 pl-2">
+          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+        </div>
+        }
+        @for (prod of productStore.products(); track prod.id + '-clone1') {
+        <div class="flex-[0_0_165px] min-w-0 pl-2" aria-hidden="true">
+          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+        </div>
+        }
+        @for (prod of productStore.products(); track prod.id + '-clone2') {
+        <div class="flex-[0_0_165px] min-w-0 pl-2" aria-hidden="true">
+          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+        </div>
+        }
+      </div>
     </div>
   </section>
 

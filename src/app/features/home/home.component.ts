@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, computed, ChangeDetectionStrategy, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
@@ -64,13 +64,32 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private embla?: EmblaCarouselType;
   private authorEmbla?: EmblaCarouselType;
+  private bestSellerEmbla?: EmblaCarouselType;
 
   @ViewChild('carouselViewport') carouselViewport!: ElementRef<HTMLElement>;
   @ViewChild('authorCarouselViewport') authorCarouselViewport?: ElementRef<HTMLElement>;
+  @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport?: ElementRef<HTMLElement>;
 
   isAuthorSheetOpen = signal(false);
   selectedAuthorName = signal<string>('');
   selectedAuthorProducts = signal<any[]>([]);
+
+  constructor() {
+    effect(() => {
+      if (this.productStore.products().length > 0) {
+        setTimeout(() => {
+          if (this.bestSellerEmbla) {
+            this.bestSellerEmbla.reInit();
+            const autoplay = this.bestSellerEmbla.plugins()['autoplay'];
+            if (autoplay) {
+              autoplay.reset();
+              autoplay.play();
+            }
+          }
+        }, 100);
+      }
+    });
+  }
 
   ngOnInit() {
     this.productStore.loadAll();
@@ -81,7 +100,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (typeof window === 'undefined') return;
     this.embla = EmblaCarousel(
       this.carouselViewport.nativeElement,
-      { loop: true, align: 'center', duration: 40 },
+      { loop: true, align: 'start', duration: 40 },
       [Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })]
     );
 
@@ -99,11 +118,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.authorEmbla.on('select', onAuthorSelect);
       onAuthorSelect();
     }
+
+    if (this.bestSellerCarouselViewport) {
+      this.bestSellerEmbla = EmblaCarousel(
+        this.bestSellerCarouselViewport.nativeElement,
+        { loop: true, align: 'start', duration: 40 },
+        [Autoplay({ delay: 4000, stopOnInteraction: false, stopOnMouseEnter: true })]
+      );
+    }
   }
 
   ngOnDestroy() {
     this.embla?.destroy();
     this.authorEmbla?.destroy();
+    this.bestSellerEmbla?.destroy();
   }
 
   // Invoked when user taps on dot indicators
