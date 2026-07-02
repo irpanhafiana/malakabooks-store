@@ -1,3 +1,4 @@
+using MalakaBooks.Entity;
 using MalakaBooks.IRepository;
 using MalakaBooks.Mediator.Common;
 using MalakaBooks.ViewModel;
@@ -14,7 +15,17 @@ public class GetBooksHandler(IBookRepository bookRepository, IAuthorRepository a
         var authorsById = authors.ToDictionary(author => author.Id ?? string.Empty, StringComparer.OrdinalIgnoreCase);
 
         return books
-            .Select(bookEntity => bookEntity.ToResponse(authorsById.TryGetValue(bookEntity.AuthorId, out var author) ? author : null))
+            .Select(bookEntity =>
+            {
+                var bookAuthors = bookEntity.AuthorIds
+                    .Where(authorId => !string.IsNullOrWhiteSpace(authorId))
+                    .Select(authorId => authorsById.TryGetValue(authorId, out var foundAuthor) ? foundAuthor : null)
+                    .Where(author => author is not null)
+                    .Cast<AuthorEntity>()
+                    .ToList();
+
+                return bookEntity.ToResponse(bookAuthors);
+            })
             .ToArray();
     }
 }

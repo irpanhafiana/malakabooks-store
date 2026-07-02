@@ -11,10 +11,11 @@ public static class MappingExtensions
     {
         Id = entity.Id ?? string.Empty,
         Title = entity.Title,
-        AuthorId = entity.AuthorId,
-        Author = null,
+        SAPCode = entity.SAPCode,
+        AuthorIds = entity.AuthorIds.ToList(),
+        Authors = [],
         Isbn = entity.Isbn,
-        CategoryId = entity.CategoryId,
+        CategoryId = entity.CategoryId ?? string.Empty,
         Price = entity.Price,
         Description = entity.Description,
         CoverImage = entity.CoverImage,
@@ -29,14 +30,15 @@ public static class MappingExtensions
         AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList()
     };
 
-    public static BookResponse ToResponse(this BookEntity entity, AuthorEntity? author) => new()
+    public static BookResponse ToResponse(this BookEntity entity, IEnumerable<AuthorEntity> authors) => new()
     {
         Id = entity.Id ?? string.Empty,
         Title = entity.Title,
-        AuthorId = entity.AuthorId,
-        Author = author?.ToResponse(),
+        SAPCode = entity.SAPCode,
+        AuthorIds = entity.AuthorIds.ToList(),
+        Authors = authors.Select(ToResponse).ToList(),
         Isbn = entity.Isbn,
-        CategoryId = entity.CategoryId,
+        CategoryId = entity.CategoryId ?? string.Empty,
         Price = entity.Price,
         Description = entity.Description,
         CoverImage = entity.CoverImage,
@@ -54,9 +56,14 @@ public static class MappingExtensions
     public static BookEntity ToEntity(this CreateBookRequest request) => new()
     {
         Title = request.Title.Trim(),
-        AuthorId = request.AuthorId.Trim(),
+        SAPCode = request.SAPCode.Trim(),
+        AuthorIds = request.AuthorIds
+            .Where(authorId => !string.IsNullOrWhiteSpace(authorId))
+            .Select(authorId => authorId.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList(),
         Isbn = request.Isbn.Trim(),
-        CategoryId = request.CategoryId.Trim(),
+        CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim(),
         Price = request.Price,
         Description = request.Description.Trim(),
         CoverImage = request.CoverImage.Trim(),
@@ -74,9 +81,14 @@ public static class MappingExtensions
     public static void UpdateFrom(this BookEntity entity, UpdateBookRequest request)
     {
         entity.Title = request.Title.Trim();
-        entity.AuthorId = request.AuthorId.Trim();
+        entity.SAPCode = request.SAPCode.Trim();
+        entity.AuthorIds = request.AuthorIds
+            .Where(authorId => !string.IsNullOrWhiteSpace(authorId))
+            .Select(authorId => authorId.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
         entity.Isbn = request.Isbn.Trim();
-        entity.CategoryId = request.CategoryId.Trim();
+        entity.CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim();
         entity.Price = request.Price;
         entity.Description = request.Description.Trim();
         entity.CoverImage = request.CoverImage.Trim();

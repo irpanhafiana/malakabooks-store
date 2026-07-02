@@ -113,7 +113,7 @@ public class CancelOrderShipmentHandler(
         {
             order.ShipmentLastAttemptAt = DateTime.UtcNow;
 
-            var remoteResponse = await CancelShipmentAsync(cancelPath, awbNo, ekspedisi, cancellationToken);
+            var remoteResponse = await CancelShipmentAsync(cancelPath, ekspedisi, awbNo, cancellationToken);
             if (!IsCancelSuccessful(remoteResponse))
             {
                 order.ShipmentLastError = ExtractErrorMessage(remoteResponse, "Simasrim shipment cancellation failed.");

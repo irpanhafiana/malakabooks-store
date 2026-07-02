@@ -15,10 +15,16 @@ public class GetBookByIdHandler(IBookRepository bookRepository, IAuthorRepositor
             return null;
         }
 
-        var author = string.IsNullOrWhiteSpace(book.AuthorId)
-            ? null
-            : await authorRepository.GetByIdAsync(book.AuthorId, cancellationToken);
+        var authors = new List<MalakaBooks.Entity.AuthorEntity>();
+        foreach (var authorId in book.AuthorIds)
+        {
+            var author = await authorRepository.GetByIdAsync(authorId, cancellationToken);
+            if (author is not null)
+            {
+                authors.Add(author);
+            }
+        }
 
-        return book.ToResponse(author);
+        return book.ToResponse(authors);
     }
 }
