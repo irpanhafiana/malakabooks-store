@@ -134,7 +134,7 @@ export class ProductsFormComponent {
         this.sapCodeControl.setValue(prod.sapCode || '');
         this.publishedYearControl.setValue(prod.publishedYear || new Date().getFullYear());
         this.pagesControl.setValue(prod.pages || 0);
-        this.weightControl.setValue(prod.weight || 0);
+        this.weightControl.setValue(prod.weight ? prod.weight * 1000 : 0);
       } else {
         this.productForm.reset();
         this.priceControl.setValue(0);
@@ -169,6 +169,8 @@ export class ProductsFormComponent {
         image: img.image
       }));
 
+    const unformat = (v: any) => parseFloat(String(v || '0').replace(/\./g, ''));
+
     const pData: Product = {
       id: this.product()?.id || '',
       title: this.titleControl.value || '',
@@ -177,14 +179,14 @@ export class ProductsFormComponent {
       author: null,
       isbn: this.isbnControl.value || '',
       categoryId: catId,
-      price: this.priceControl.value || 0,
+      price: unformat(this.priceControl.value),
       description: this.descControl.value || '',
       coverImage: this.coverImageControl.value || '',
       publisher: this.publisherControl.value || '',
       publishedYear: this.publishedYearControl.value || 0,
-      pages: this.pagesControl.value || 0,
-      weight: this.weightControl.value || 0,
-      stock: this.stockControl.value || 0,
+      pages: unformat(this.pagesControl.value),
+      weight: unformat(this.weightControl.value) / 1000,
+      stock: unformat(this.stockControl.value),
       averageRating: this.product()?.averageRating || 0,
       totalReviews: this.product()?.totalReviews || 0,
       createdAt: this.product()?.createdAt || new Date().toISOString(),

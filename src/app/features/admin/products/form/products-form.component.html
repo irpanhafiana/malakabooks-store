@@ -1,5 +1,5 @@
-<form [formGroup]="productForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-  <div class="sm:col-span-2">
+<form [formGroup]="productForm" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <div class="sm:col-span-3">
     <app-admin-input label="Judul Buku" placeholder="Masukkan Judul Buku ..."
       [control]="titleControl"></app-admin-input>
   </div>
@@ -17,61 +17,99 @@
   <app-admin-input label="Tahun Diterbitkan" placeholder="e.g. 2020" type="number"
     [control]="publishedYearControl"></app-admin-input>
 
-  <app-admin-input label="Jumlah Halaman" placeholder="e.g. 304" type="number"
-    [control]="pagesControl"></app-admin-input>
+  <app-admin-input label="Jumlah Halaman" placeholder="e.g. 304" type="text" [control]="pagesControl"
+    [formatNumber]="true"></app-admin-input>
 
-  <app-admin-input label="Berat (kg)" placeholder="e.g. 0.35" type="number" [control]="weightControl"></app-admin-input>
+  <app-admin-input label="Berat (gram)" placeholder="e.g. 500" type="text" [control]="weightControl"
+    [formatNumber]="true"></app-admin-input>
 
-  <app-admin-input label="Harga Jual" placeholder="e.g. 14.99" type="number" [control]="priceControl"></app-admin-input>
+  <app-admin-input label="Harga Jual" placeholder="e.g. 14999" type="text" [control]="priceControl"
+    [formatNumber]="true"></app-admin-input>
 
-  <app-admin-input label="Jumlah Stok" placeholder="e.g. 50" type="number" [control]="stockControl"></app-admin-input>
+  <app-admin-input label="Jumlah Stok" placeholder="e.g. 50" type="text" [control]="stockControl"
+    [formatNumber]="true"></app-admin-input>
 
-  <div class="sm:col-span-2 flex flex-col gap-1.5">
+  <div class="sm:col-span-3 flex flex-col gap-3">
     <label class="text-sm font-bold text-slate-700">Cover Image</label>
-    <div class="flex items-center gap-4">
-      <input type="file" accept="image/*" (change)="onCoverImageChange($event)"
-        class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100  cursor-pointer" />
-    </div>
-    @if (coverImageControl.value) {
-    <img [src]="coverImageControl.value" alt="Cover Preview"
-      class="mt-2 h-24 w-24 object-cover rounded-xl border border-slate-200 shadow-sm" />
-    }
-  </div>
 
-  <div class="sm:col-span-2 flex flex-col gap-2 mt-2">
-    <div class="flex justify-between items-center">
-      <label class="text-sm font-bold text-slate-700">Additional Images</label>
-      <button type="button" (click)="addAdditionalImage()"
-        class="text-xs font-bold text-primary-600 hover:text-primary-700 ">
-        + Tambah Gambar
-      </button>
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      @for (img of additionalImagesControls(); track $index) {
-      <div class="flex flex-col gap-2 p-3 border border-slate-100 rounded-xl bg-slate-50/50">
-        <div class="flex gap-2 items-center">
-          <input type="file" accept="image/*" (change)="onAdditionalImageChange($event, $index)"
-            class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-white file:text-slate-700 hover:file:bg-slate-100 cursor-pointer shadow-sm" />
-          <button type="button" (click)="removeAdditionalImage($index)"
-            class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg ">
-            <i class="bx bx-trash"></i>
-          </button>
+    <!-- Dropzone -->
+    <div (click)="coverInput.click()"
+      class="relative flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50/50 hover:bg-slate-100 hover:border-primary-400 transition-all cursor-pointer min-h-[200px] group">
+      <input #coverInput type="file" accept="image/*" (change)="onCoverImageChange($event)" class="hidden" />
+
+      @if (coverImageControl.value) {
+      <!-- Preview -->
+      <div class="relative w-full h-full flex items-center justify-center p-4">
+        <img [src]="coverImageControl.value" alt="Cover Preview"
+          class="max-h-[200px] w-auto object-contain rounded-xl shadow-md" />
+        <button type="button" (click)="$event.stopPropagation(); coverImageControl.setValue('')"
+          class="absolute top-2 right-2 p-1.5 bg-white/90 rounded-full text-slate-500 hover:text-rose-600 hover:bg-white shadow-sm border border-slate-200 cursor-pointer">
+          <i class="bx bx-x text-lg"></i>
+        </button>
+      </div>
+      } @else {
+      <!-- Placeholder -->
+      <div class="flex flex-col items-center gap-2 py-8 px-4">
+        <div class="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">
+          <i class="bx bx-image text-2xl"></i>
         </div>
-        @if (img.image) {
-        <img [src]="img.image" alt="Additional Preview"
-          class="h-16 w-16 object-cover rounded-lg border border-slate-200" />
-        }
+        <p class="text-sm font-medium text-slate-500">Seret gambar ke sini atau klik untuk pilih</p>
+        <p class="text-[11px] text-slate-400">Format: JPG, PNG — Maksimal 5MB</p>
       </div>
       }
     </div>
   </div>
 
-  <div class="sm:col-span-2 flex flex-col gap-1.5">
+  <div class="sm:col-span-3 flex flex-col gap-3 mt-2">
+    <div class="flex justify-between items-center">
+      <label class="text-sm font-bold text-slate-700">Additional Images</label>
+      <button type="button" (click)="addAdditionalImage()"
+        class="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-primary-50 transition-colors">
+        <i class="bx bx-plus text-sm"></i>
+        Tambah Gambar
+      </button>
+    </div>
+
+    @if (additionalImagesControls().length === 0) {
+    <div class="text-center py-6 border border-dashed border-slate-200 rounded-2xl bg-slate-50/30">
+      <p class="text-xs text-slate-400">Belum ada gambar tambahan. Klik "Tambah Gambar" untuk menambahkan.</p>
+    </div>
+    }
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      @for (imgCtrl of additionalImagesControls(); track $index) {
+      <div class="flex gap-3 p-3 border border-slate-200 rounded-xl bg-white hover:border-slate-300 transition-colors">
+        <!-- Preview -->
+        <div
+          class="w-20 h-28 shrink-0 bg-slate-50 rounded-lg overflow-hidden border border-slate-100 flex items-center justify-center">
+          @if (imgCtrl.image) {
+          <img [src]="imgCtrl.image" alt="Additional Image" class="w-full h-full object-cover" />
+          } @else {
+          <i class="bx bx-image text-2xl text-slate-300"></i>
+          }
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-col gap-2 flex-1 min-w-0">
+          <input type="file" accept="image/*" (change)="onAdditionalImageChange($event, $index)"
+            class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer" />
+          <button type="button" (click)="removeAdditionalImage($index)"
+            class="self-start text-[11px] font-medium text-slate-400 hover:text-rose-600 flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-rose-50 transition-colors">
+            <i class="bx bx-trash text-xs"></i>
+            Hapus
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="sm:col-span-3 flex flex-col gap-1.5">
     <label class="text-sm font-bold text-slate-700">Description</label>
     <app-editor [formControl]="descControl"></app-editor>
   </div>
 
-  <div class="sm:col-span-2 flex justify-end gap-2 mt-4">
+  <div class="sm:col-span-3 flex justify-end gap-2 mt-4">
     <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Cancel</app-admin-button>
     <app-admin-button (click)="onSubmitForm()" [disabled]="productForm.invalid" type="button" variant="primary"
       size="sm">Save Product</app-admin-button>
