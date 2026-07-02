@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, OnInit, input, effect, DestroyRef,
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { KeyValuePipe, DatePipe } from '@angular/common';
+import { KeyValuePipe, DatePipe, Location } from '@angular/common';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { ReviewApiService } from '../../../core/services/review-api.service';
 import { CartStore } from '../../../store/cart.store';
@@ -52,6 +52,7 @@ export class ProductDetailComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
   private readonly toastService = inject(ToastService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly location = inject(Location);
 
   loading = signal<boolean>(true);
   product = signal<Product | null>(null);
@@ -59,6 +60,7 @@ export class ProductDetailComponent implements OnInit {
   activeTab = signal<'details' | 'reviews'>('details');
   reviews = signal<Review[]>([]);
   isSubmittingReview = signal<boolean>(false);
+  isWishlisted = signal<boolean>(false);
 
   // Review Form controls
   reviewRating = signal<number>(5);
@@ -143,6 +145,23 @@ export class ProductDetailComponent implements OnInit {
 
   goToLogin(event: Event) {
     this.productStore.setSelectedProductId(null);
+  }
+
+  goBack() {
+    if (this.productIdInput()) {
+      this.productStore.setSelectedProductId(null);
+    } else {
+      this.location.back();
+    }
+  }
+
+  toggleWishlist() {
+    this.isWishlisted.update(v => !v);
+    if (this.isWishlisted()) {
+      this.toastService.success('Produk ditambahkan ke wishlist');
+    } else {
+      this.toastService.info('Produk dihapus dari wishlist');
+    }
   }
 
   hasSpecs(): boolean {

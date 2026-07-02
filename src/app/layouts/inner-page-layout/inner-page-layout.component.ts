@@ -1,9 +1,10 @@
 import { Component, inject, signal, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd, ActivatedRoute, ChildrenOutletContexts } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastService } from '../../core/services/toast.service';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { routeTransitionAnimations } from '../../core/animations/route.animations';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class InnerPageLayoutComponent {
   @ViewChild('routeContainer') routeContainer!: ElementRef;
+  private contexts = inject(ChildrenOutletContexts);
 
   onRouteActivate() {
     if (this.routeContainer) {

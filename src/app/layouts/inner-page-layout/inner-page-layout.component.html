@@ -3,13 +3,12 @@
 
   <!-- Mobile App Frame Container (Constrained width, clamp scaling, with simulator borders) -->
   <div
-    class="w-full max-w-[480px] bg-gray-50 relative flex flex-col md:border-x md:border-gray-200/60 md:shadow-2xl md:shadow-[0_0_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden"
+    class="w-full max-w-120 bg-gray-50 relative flex flex-col md:border-x md:border-gray-200/60 md:shadow-2xl md:shadow-[0_0_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden"
     style="height: calc(100% / clamp(0.5, 100vw / 480, 1)); transform: scale(clamp(0.5, 100vw / 480, 1)); transform-origin: center top;">
 
     <!-- Header with Back Button -->
     @if (!hideHeader()) {
-    <header
-      class="sticky top-0 z-40 bg-gray-50 px-4 py-3 flex items-center gap-3 h-14 shrink-0 border-b border-gray-100">
+    <header class="sticky top-0 z-40 bg-gray-50 px-4 py-3 flex items-center gap-2 h-14 shrink-0">
       <button type="button" (click)="goBack()"
         class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0 "
         aria-label="Go Back">
@@ -23,14 +22,14 @@
     }
 
     <!-- Main Content Area (No scrolling here, children must handle it) -->
-    <main class="grow flex flex-col bg-gray-50 relative overflow-hidden">
-      <div #routeContainer class="w-full h-full flex flex-col grow">
-        <router-outlet (activate)="onRouteActivate()"></router-outlet>
+    <main class="grow flex flex-col bg-gray-50 relative overflow-hidden z-50">
+      <div #routeContainer class="w-full h-full flex flex-col grow relative">
+        <router-outlet></router-outlet>
       </div>
     </main>
 
     <!-- Global Toasts Alert Overlay (relative to phone frame) -->
-    <div class="absolute top-16 left-4 right-4 z-[60] flex flex-col gap-2 pointer-events-none">
+    <div class="absolute top-16 left-4 right-4 z-60 flex flex-col gap-2 pointer-events-none">
       @for (toast of toastService.toasts(); track toast.id) {
       <div [class]="toastClass(toast.type)"
         class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-white animate-slide-down  pointer-events-auto">

@@ -4,9 +4,9 @@
   <!-- Clickable details container -->
   <div (click)="viewProductDetails()" class="block grow cursor-pointer">
     <!-- Image Container -->
-    <div class="w-full bg-slate-50 overflow-hidden mb-3 relative flex items-center justify-center">
+    <div class="w-full bg-slate-50 overflow-hidden mb-3 relative flex items-center justify-center aspect-square">
       @if (prod.images[0] && !imageError()) {
-      <img [src]="prod.images[0]" [alt]="prod.name" (error)="onImageError()" class="w-full h-auto object-contain"
+      <img [src]="prod.images[0]" [alt]="prod.name" (error)="onImageError()" class="w-full h-full object-contain p-3"
         loading="lazy" />
       } @else {
       <div

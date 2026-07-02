@@ -1,4 +1,17 @@
-<div class="flex flex-col h-full overflow-hidden animate-fade-in">
+<div class="flex flex-col h-full overflow-hidden animate-fade-in bg-white relative">
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-50 bg-white px-4 py-0 flex items-center justify-between h-14 shrink-0">
+    <button type="button" (click)="goBack()"
+      class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0">
+      <i class="bx bx-left-arrow-alt text-2xl"></i>
+    </button>
+    <h1 class="font-display font-extrabold text-slate-800 text-base flex-1 text-center truncate px-2">Detail Produk</h1>
+    <button type="button" (click)="toggleWishlist()"
+      class="p-2 -mr-2 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 cursor-pointer active:scale-95 flex items-center justify-center transition-colors border-0">
+      <i class="bx text-2xl" [class.bxs-heart]="isWishlisted()" [class.bx-heart]="!isWishlisted()"
+        [class.text-rose-500]="isWishlisted()"></i>
+    </button>
+  </header>
   @if (loading()) {
   <!-- Simple circle loader -->
   <div class="grow flex flex-col items-center justify-center h-full gap-3 opacity-70">
@@ -21,7 +34,7 @@
       <app-icon name="chevron-right" size="12"></app-icon>
       <a routerLink="/product" class="hover:text-slate-600  text-slate-400">Shop</a>
       <app-icon name="chevron-right" size="12"></app-icon>
-      <span class="text-slate-600 truncate max-w-[200px]">{{ product()?.name }}</span>
+      <span class="text-slate-600 truncate max-w-50">{{ product()?.name }}</span>
     </nav>
     }
 
@@ -177,19 +190,20 @@
   <div
     class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
     @if (authStore.isLoggedIn()) {
-      <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
-        [fullWidth]="true" class="flex-1">
-        + Keranjang
-      </app-button>
+    <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
+      [fullWidth]="true" class="flex-1">
+      + Keranjang
+    </app-button>
 
-      <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg"
-        [fullWidth]="true" class="flex-1">
-        Beli Sekarang
-      </app-button>
+    <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg"
+      [fullWidth]="true" class="flex-1">
+      Beli Sekarang
+    </app-button>
     } @else {
-      <app-button routerLink="/auth/login" (click)="goToLogin($event)" variant="primary" size="lg" [fullWidth]="true" class="flex-1">
-        Login untuk Membeli
-      </app-button>
+    <app-button routerLink="/auth/login" (click)="goToLogin($event)" variant="primary" size="lg" [fullWidth]="true"
+      class="flex-1">
+      Login untuk Membeli
+    </app-button>
     }
   </div>
   }
