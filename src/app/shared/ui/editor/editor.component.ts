@@ -30,6 +30,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy, AfterViewInit {
   @ViewChild('editor', { static: true }) editorRef!: ElementRef<HTMLDivElement>;
   @ViewChild('textarea', { static: true }) textareaRef!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('imageInput', { static: true }) imageInputRef!: ElementRef<HTMLInputElement>;
 
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -55,8 +56,8 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
   readonly activeHiliteColor = signal('');
 
   // ControlValueAccessor Callbacks
-  onChange: (value: string) => void = () => {};
-  onTouched: () => void = () => {};
+  onChange: (value: string) => void = () => { };
+  onTouched: () => void = () => { };
   isDisabled = false;
 
   private selectionChangeHandler = () => this.updateToolbarState();
@@ -80,10 +81,19 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
   writeValue(value: any): void {
     const val = value || '';
     if (this.editorRef) {
-      this.editorRef.nativeElement.innerHTML = val;
+      this.editorRef.nativeElement.innerHTML = val || '<p><br></p>';
     }
     if (this.textareaRef) {
       this.textareaRef.nativeElement.value = val;
+    }
+  }
+
+  /** Ensure editor has at least an empty paragraph so block-level commands work */
+  private ensureEditorContent() {
+    const editor = this.editorRef?.nativeElement;
+    if (!editor) return;
+    if (!editor.innerHTML || editor.innerHTML === '' || editor.innerHTML === '<br>') {
+      editor.innerHTML = '<p><br></p>';
     }
   }
 
@@ -124,11 +134,16 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
 
   // --- Rich Text Commands ---
   execCommand(command: string, value: string = '') {
+    // Block-level commands need content to work on
+    if (['insertUnorderedList', 'insertOrderedList', 'formatBlock'].includes(command)) {
+      this.ensureEditorContent();
+    }
+
     // Focus the editor if we are in rich text mode
     if (!this.isCodeView()) {
       this.editorRef.nativeElement.focus();
     }
-    
+
     document.execCommand(command, false, value);
     this.onContentChange();
     this.updateToolbarState();
@@ -172,10 +187,26 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
   }
 
   insertImage() {
-    const url = prompt('Masukkan URL Gambar:', 'https://');
-    if (url && url !== 'https://') {
-      this.execCommand('insertImage', url);
-    }
+    this.imageInputRef.nativeElement.click();
+  }
+
+  onImageSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || !input.files[0]) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      this.editorRef.nativeElement.focus();
+      document.execCommand('insertImage', false, base64);
+      this.onContentChange();
+      this.updateToolbarState();
+    };
+    reader.onerror = () => {
+      console.error('Gagal membaca file gambar.');
+    };
+    reader.readAsDataURL(input.files[0]);
+    input.value = ''; // reset so same file can be picked again
   }
 
   // --- View Code Mode Toggle ---
@@ -185,7 +216,7 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
       const val = this.textareaRef.nativeElement.value;
       this.editorRef.nativeElement.innerHTML = val;
       this.isCodeView.set(false);
-      
+
       // Delay focus to let browser render the editor div
       setTimeout(() => this.editorRef.nativeElement.focus(), 50);
     } else {
@@ -193,7 +224,7 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
       const val = this.editorRef.nativeElement.innerHTML;
       this.textareaRef.nativeElement.value = val;
       this.isCodeView.set(true);
-      
+
       setTimeout(() => this.textareaRef.nativeElement.focus(), 50);
     }
     this.showForeColorPicker.set(false);
@@ -220,8 +251,8 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
       let back = '';
       try {
         back = document.queryCommandValue('hiliteColor') || document.queryCommandValue('backColor');
-      } catch {}
-      
+      } catch { }
+
       if (back && back !== 'rgba(0, 0, 0, 0)' && back !== 'transparent') {
         this.activeHiliteColor.set(this.rgbToHex(back));
       } else {
@@ -229,13 +260,13 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
       }
 
       this.cdr.markForCheck();
-    } catch {}
+    } catch { }
   }
 
   private rgbToHex(rgb: string): string {
     if (!rgb) return '';
     if (rgb.startsWith('#')) return rgb;
-    
+
     const match = rgb.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
     if (!match) return rgb;
 

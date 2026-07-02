@@ -26,7 +26,7 @@ export class ReportsComponent {
     this.salesLoading.set(true);
     try {
       const orders = await this.orderApi.getOrders();
-      
+
       // Build CSV Content — every cell is escaped + formula-injection-safe.
       const headers = ['Order ID', 'Customer Name', 'Customer Email', 'Subtotal', 'Tax', 'Shipping', 'Total', 'Status', 'Date'];
       const rows = orders.map(o => [
@@ -55,17 +55,16 @@ export class ReportsComponent {
     try {
       const products = await this.productApi.getProducts();
 
-      const headers = ['Product ID', 'Name', 'Brand', 'Category', 'Price', 'Original Price', 'Stock Level', 'Rating', 'Reviews Count'];
+      const headers = ['Product ID', 'Name', 'Publisher', 'Category', 'Price', 'Stock Level', 'Rating', 'Reviews Count'];
       const rows = products.map(p => [
         p.id,
-        p.name,
-        p.brand,
+        p.title,
+        p.publisher,
         p.categoryName,
         p.price.toFixed(2),
-        (p.originalPrice || p.price).toFixed(2),
         p.stock,
-        p.rating,
-        p.reviewsCount
+        p.averageRating,
+        p.totalReviews
       ]);
 
       downloadCsv(buildCsv(headers, rows), 'products-inventory-report.csv');

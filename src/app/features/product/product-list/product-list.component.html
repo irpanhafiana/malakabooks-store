@@ -54,8 +54,8 @@
       (click)="viewProductDetails(prod.id)">
       <!-- Thumbnail Image (matching product-card aspect & styling) -->
       <div class="aspect-square min-h-32.5 shrink-0 bg-slate-50 overflow-hidden relative">
-        @if (prod.images[0] && !failedImageIds().has(prod.id)) {
-        <img [src]="prod.images[0]" [alt]="prod.name" (error)="onImageError(prod.id)"
+        @if (prod.coverImage && !failedImageIds().has(prod.id)) {
+        <img [src]="prod.coverImage" [alt]="prod.title" (error)="onImageError(prod.id)"
           class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105  " loading="lazy" />
         } @else {
         <div
@@ -67,12 +67,6 @@
         <span
           class="absolute bottom-2 left-2 text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] z-10">{{
           prod.categoryName }}</span>
-        <!-- Discount badge (same as product-card) -->
-        @if (prod.originalPrice && prod.originalPrice > prod.price) {
-        <span class="absolute bottom-2 right-2 px-2 py-0.5 text-[10px] font-bold bg-rose-500 text-white rounded-lg">
-          Save {{ Math.round(((prod.originalPrice - prod.price)/prod.originalPrice) * 100) }}%
-        </span>
-        }
       </div>
 
       <!-- Info Section -->
@@ -82,10 +76,10 @@
           <div class="flex justify-between items-start gap-2">
             <div class="flex-1 min-w-0">
               <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">{{
-                prod.specifications['Author'] }}</span>
+                prod.author?.name }}</span>
               <h3
                 class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600  leading-tight">
-                {{ prod.name }}</h3>
+                {{ prod.title }}</h3>
             </div>
 
           </div>
@@ -93,22 +87,18 @@
           <!-- Ratings -->
           <div class="flex items-center gap-1 mt-0.5">
             <app-icon name="star" size="12" class="text-amber-400 fill-amber-400"></app-icon>
-            <span class="text-xs font-semibold text-slate-700">{{ prod.rating }}</span>
-            <span class="text-[10px] text-slate-400">({{ prod.reviewsCount }})</span>
+            <span class="text-xs font-semibold text-slate-700">{{ prod.averageRating }}</span>
+            <span class="text-[10px] text-slate-400">({{ prod.totalReviews }})</span>
           </div>
         </div>
 
         <!-- Bottom: Price & Sold (same as product-card pricing row) -->
         <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-50 mt-2">
           <div class="flex flex-col">
-            @if (prod.originalPrice && prod.originalPrice > prod.price) {
-            <span class="text-[10px] text-slate-400 line-through leading-none mb-0.5">Rp {{
-              Math.round(prod.originalPrice).toLocaleString('id-ID') }}</span>
-            }
             <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold"></app-price>
           </div>
           <span class="text-[10px] text-slate-500 font-medium">
-            {{ prod.reviewsCount * 12 + (prod.stock % 7) + 5 }} Terjual
+            {{ prod.totalReviews * 12 + (prod.stock % 7) + 5 }} Terjual
           </span>
         </div>
       </div>

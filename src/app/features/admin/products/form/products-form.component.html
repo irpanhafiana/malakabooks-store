@@ -1,17 +1,17 @@
 <form [formGroup]="productForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
   <div class="sm:col-span-2">
-    <app-admin-input label="Nama Produk" placeholder="Masukkan Nama Produk ..."
-      [control]="nameControl"></app-admin-input>
+    <app-admin-input label="Judul Buku" placeholder="Masukkan Judul Buku ..."
+      [control]="titleControl"></app-admin-input>
   </div>
 
   <app-select label="Kategori" placeholder="Pilih Kategori" [options]="categoryOptions()"
     [control]="categoryControl"></app-select>
 
-  <app-admin-input label="Brand atau Merek" placeholder="Masukkan Brand atau Merek"
-    [control]="brandControl"></app-admin-input>
+  <app-admin-input label="Penerbit" placeholder="Masukkan Penerbit" [control]="publisherControl"></app-admin-input>
 
   <app-select label="Penulis" placeholder="Pilih Penulis " [options]="authorOptions()"
     [control]="authorControl"></app-select>
+
   <app-admin-input label="ISBN" placeholder="e.g. 978-0525559474" [control]="isbnControl"></app-admin-input>
 
   <app-admin-input label="Tahun Diterbitkan" placeholder="e.g. 2020" type="number"
@@ -20,13 +20,12 @@
   <app-admin-input label="Jumlah Halaman" placeholder="e.g. 304" type="number"
     [control]="pagesControl"></app-admin-input>
 
-  <app-admin-input label="Berat" placeholder="e.g. 0.35" type="number" [control]="weightControl"></app-admin-input>
+  <app-admin-input label="Berat (kg)" placeholder="e.g. 0.35" type="number" [control]="weightControl"></app-admin-input>
 
   <app-admin-input label="Harga Jual" placeholder="e.g. 14.99" type="number" [control]="priceControl"></app-admin-input>
-  <app-admin-input label="Harga Modal" placeholder="e.g. 19.99" type="number"
-    [control]="origPriceControl"></app-admin-input>
 
   <app-admin-input label="Jumlah Stok" placeholder="e.g. 50" type="number" [control]="stockControl"></app-admin-input>
+
   <div class="sm:col-span-2 flex flex-col gap-1.5">
     <label class="text-sm font-bold text-slate-700">Cover Image</label>
     <div class="flex items-center gap-4">
@@ -58,13 +57,15 @@
             <i class="bx bx-trash"></i>
           </button>
         </div>
-        @if (img) {
-        <img [src]="img" alt="Additional Preview" class="h-16 w-16 object-cover rounded-lg border border-slate-200" />
+        @if (img.image) {
+        <img [src]="img.image" alt="Additional Preview"
+          class="h-16 w-16 object-cover rounded-lg border border-slate-200" />
         }
       </div>
       }
     </div>
   </div>
+
   <div class="sm:col-span-2 flex flex-col gap-1.5">
     <label class="text-sm font-bold text-slate-700">Description</label>
     <app-editor [formControl]="descControl"></app-editor>

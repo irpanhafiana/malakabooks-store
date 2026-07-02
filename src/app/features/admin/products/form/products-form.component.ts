@@ -2,7 +2,7 @@ import { Component, inject, input, output, effect, computed, ChangeDetectionStra
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductStore } from '../../../../store/product.store';
 import { AuthorStore } from '../../../../store/author.store';
-import { Product } from '../../../../core/models';
+import { Product, AdditionalImage } from '../../../../core/models';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { SelectComponent } from '../../../../shared/ui/select/select.component';
 import { EditorComponent } from '../../../../shared/ui/editor/editor.component';
@@ -26,31 +26,31 @@ export class ProductsFormComponent {
   private readonly authorStore = inject(AuthorStore);
   private readonly alertService = inject(AlertService);
 
-  nameControl = new FormControl('', [Validators.required]);
+  titleControl = new FormControl('', [Validators.required]);
   categoryControl = new FormControl('', [Validators.required]);
-  brandControl = new FormControl('', [Validators.required]);
+  publisherControl = new FormControl('');
   priceControl = new FormControl<number>(0, [Validators.required, Validators.min(0.01)]);
-  origPriceControl = new FormControl<number | null>(null);
   stockControl = new FormControl<number>(0, [Validators.required, Validators.min(0)]);
-  coverImageControl = new FormControl('', [Validators.required]);
+  coverImageControl = new FormControl('');
   descControl = new FormControl('', [Validators.required]);
   authorControl = new FormControl('', [Validators.required]);
-  isbnControl = new FormControl('', [Validators.required]);
-  publishedYearControl = new FormControl<number>(new Date().getFullYear(), [Validators.required, Validators.min(1800), Validators.max(new Date().getFullYear() + 1)]);
-  pagesControl = new FormControl<number>(1, [Validators.required, Validators.min(1)]);
-  weightControl = new FormControl<number>(0.1, [Validators.required, Validators.min(0)]);
+  isbnControl = new FormControl('');
+  sapCodeControl = new FormControl({ value: '', disabled: true });
+  publishedYearControl = new FormControl<number>(new Date().getFullYear());
+  pagesControl = new FormControl<number>(0);
+  weightControl = new FormControl<number>(0);
 
   productForm = new FormGroup({
-    name: this.nameControl,
+    title: this.titleControl,
     category: this.categoryControl,
-    brand: this.brandControl,
+    publisher: this.publisherControl,
     price: this.priceControl,
-    originalPrice: this.origPriceControl,
     stock: this.stockControl,
-    image: this.coverImageControl,
+    coverImage: this.coverImageControl,
     description: this.descControl,
     author: this.authorControl,
     isbn: this.isbnControl,
+    sapCode: this.sapCodeControl,
     publishedYear: this.publishedYearControl,
     pages: this.pagesControl,
     weight: this.weightControl
@@ -64,16 +64,16 @@ export class ProductsFormComponent {
     return this.authorStore.authors().map(a => ({ value: a.id, label: a.name }));
   });
 
-  additionalImagesControls = signal<string[]>([]);
+  additionalImagesControls = signal<AdditionalImage[]>([]);
 
   addAdditionalImage() {
-    this.additionalImagesControls.update(imgs => [...imgs, '']);
+    this.additionalImagesControls.update(imgs => [...imgs, { no: imgs.length + 1, image: '' }]);
   }
 
   updateAdditionalImage(index: number, value: string) {
     this.additionalImagesControls.update(imgs => {
       const newImgs = [...imgs];
-      newImgs[index] = value;
+      newImgs[index] = { ...newImgs[index], image: value };
       return newImgs;
     });
   }
@@ -121,23 +121,20 @@ export class ProductsFormComponent {
     effect(() => {
       const prod = this.product();
       if (prod) {
-        this.nameControl.setValue(prod.name);
+        this.titleControl.setValue(prod.title);
         this.categoryControl.setValue(prod.categoryId);
-        this.brandControl.setValue(prod.brand);
+        this.publisherControl.setValue(prod.publisher);
         this.priceControl.setValue(prod.price);
-        this.origPriceControl.setValue(prod.originalPrice || null);
         this.stockControl.setValue(prod.stock);
-        this.coverImageControl.setValue(prod.images[0] || '');
-        this.additionalImagesControls.set(prod.images.slice(1));
+        this.coverImageControl.setValue(prod.coverImage || '');
+        this.additionalImagesControls.set(prod.additionalImages?.length > 0 ? prod.additionalImages : []);
         this.descControl.setValue(prod.description);
         this.authorControl.setValue(prod.authorId || '');
-        this.isbnControl.setValue(prod.specifications?.['ISBN'] || '');
-        const pubYear = parseInt(prod.specifications?.['Published Year'] || '') || new Date().getFullYear();
-        this.publishedYearControl.setValue(pubYear);
-        const pgs = parseInt(prod.specifications?.['Pages'] || '') || 1;
-        this.pagesControl.setValue(pgs);
-        const wgt = parseFloat(prod.specifications?.['Weight'] || '') || 0.1;
-        this.weightControl.setValue(wgt);
+        this.isbnControl.setValue(prod.isbn || '');
+        this.sapCodeControl.setValue(prod.sapCode || '');
+        this.publishedYearControl.setValue(prod.publishedYear || new Date().getFullYear());
+        this.pagesControl.setValue(prod.pages || 0);
+        this.weightControl.setValue(prod.weight || 0);
       } else {
         this.productForm.reset();
         this.priceControl.setValue(0);
@@ -145,8 +142,8 @@ export class ProductsFormComponent {
         this.coverImageControl.setValue('');
         this.additionalImagesControls.set([]);
         this.publishedYearControl.setValue(new Date().getFullYear());
-        this.pagesControl.setValue(1);
-        this.weightControl.setValue(0.1);
+        this.pagesControl.setValue(0);
+        this.weightControl.setValue(0);
       }
     });
   }
@@ -164,37 +161,34 @@ export class ProductsFormComponent {
     if (!isConfirmed) return;
 
     const catId = this.categoryControl.value || '';
-    const catName = this.productStore.categories().find(c => c.id === catId)?.name || 'Other';
 
-    const allImages = [
-      this.coverImageControl.value || '',
-      ...this.additionalImagesControls()
-    ].filter(img => img.trim() !== '');
+    const allAdditionalImages = this.additionalImagesControls()
+      .filter(img => img.image.trim() !== '')
+      .map((img, index) => ({
+        no: index + 1,
+        image: img.image
+      }));
 
     const pData: Product = {
       id: this.product()?.id || '',
-      name: this.nameControl.value || '',
+      title: this.titleControl.value || '',
+      sapCode: this.sapCodeControl.value || '',
       authorId: this.authorControl.value || '',
-      description: this.descControl.value || '',
-      price: this.priceControl.value || 0,
-      originalPrice: this.origPriceControl.value || undefined,
-      images: allImages,
+      author: null,
+      isbn: this.isbnControl.value || '',
       categoryId: catId,
-      categoryName: catName,
+      price: this.priceControl.value || 0,
+      description: this.descControl.value || '',
+      coverImage: this.coverImageControl.value || '',
+      publisher: this.publisherControl.value || '',
+      publishedYear: this.publishedYearControl.value || 0,
+      pages: this.pagesControl.value || 0,
+      weight: this.weightControl.value || 0,
       stock: this.stockControl.value || 0,
-      rating: this.product()?.rating || 5.0,
-      reviewsCount: this.product()?.reviewsCount || 0,
-      featured: this.product()?.featured || false,
-      brand: this.brandControl.value || '',
-      specifications: {
-        'ISBN': this.isbnControl.value || '',
-        'Published Year': (this.publishedYearControl.value || new Date().getFullYear()).toString(),
-        'Pages': (this.pagesControl.value || 1).toString(),
-        'Weight': (this.weightControl.value || 0.1).toString(),
-        'Language': this.product()?.specifications?.['Language'] || 'English',
-        'Format': this.product()?.specifications?.['Format'] || 'Hardcover'
-      },
-      createdAt: this.product()?.createdAt || new Date().toISOString()
+      averageRating: this.product()?.averageRating || 0,
+      totalReviews: this.product()?.totalReviews || 0,
+      createdAt: this.product()?.createdAt || new Date().toISOString(),
+      additionalImages: allAdditionalImages
     };
 
     await this.productStore.saveProduct(pData);

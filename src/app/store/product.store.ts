@@ -34,7 +34,7 @@ export class ProductStore {
     selectedCategoryId: null,
     selectedProductId: null,
     searchQuery: '',
-    sortBy: (typeof localStorage !== 'undefined' && 'sortBy' in localStorage) ? (localStorage.getItem('sortBy') as any) : 'featured', // Keep existing sort logic if any
+    sortBy: (typeof localStorage !== 'undefined' && 'sortBy' in localStorage) ? (localStorage.getItem('sortBy') as any) : 'featured',
     loading: false,
     error: null,
     activeProduct: null,
@@ -63,10 +63,10 @@ export class ProductStore {
     const query = this.searchQuery().toLowerCase().trim();
     if (!query) return [];
 
-    const matchingProducts = this.products().filter(p => 
-      p.name.toLowerCase().includes(query) || 
+    const matchingProducts = this.products().filter(p =>
+      p.title.toLowerCase().includes(query) ||
       p.description.toLowerCase().includes(query) ||
-      p.brand.toLowerCase().includes(query)
+      p.publisher.toLowerCase().includes(query)
     );
 
     const categoryIds = new Set(matchingProducts.map(p => p.categoryId));
@@ -74,10 +74,8 @@ export class ProductStore {
   });
 
   readonly featuredProducts = computed(() => {
-    const featured = this.products().filter(p => p.featured);
-    // API buku tidak punya flag "featured"; jika tidak ada yang ditandai,
-    // tampilkan seluruh katalog (perilaku umum home e-commerce).
-    return featured.length > 0 ? featured : this.products();
+    // API buku tidak punya flag "featured"; tampilkan seluruh katalog
+    return this.products();
   });
 
   // Compute filters and sorting in real-time reactively
@@ -94,10 +92,11 @@ export class ProductStore {
 
     // 2. Filter by search query
     if (query) {
-      list = list.filter(p => 
-        p.name.toLowerCase().includes(query) || 
+      list = list.filter(p =>
+        p.title.toLowerCase().includes(query) ||
         p.description.toLowerCase().includes(query) ||
-        p.brand.toLowerCase().includes(query)
+        p.publisher.toLowerCase().includes(query) ||
+        p.author?.name.toLowerCase().includes(query)
       );
     }
 
@@ -107,20 +106,16 @@ export class ProductStore {
     } else if (sort === 'price-desc') {
       list.sort((a, b) => b.price - a.price);
     } else if (sort === 'rating') {
-      list.sort((a, b) => b.rating - a.rating);
+      list.sort((a, b) => b.averageRating - a.averageRating);
     } else {
-      // Default: featured first, then newest
-      list.sort((a, b) => {
-        if (a.featured && !b.featured) return -1;
-        if (!a.featured && b.featured) return 1;
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      });
+      // Default: newest first
+      list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     }
 
     return list;
   });
 
-  constructor() {}
+  constructor() { }
 
   async loadAll() {
     this.state.update(s => ({ ...s, loading: true, error: null }));
@@ -199,7 +194,7 @@ export class ProductStore {
     try {
       const saved = await this.productApi.saveProduct(product);
       await this.loadProducts(); // Re-seed client list
-      this.toastService.success(`Product "${saved.name}" saved successfully!`);
+      this.toastService.success(`Product "${saved.title}" saved successfully!`);
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       this.toastService.error('Failed to save product.');

@@ -14,7 +14,7 @@ export class ShippingService {
   readonly cities = signal<any[]>([]);
   readonly districts = signal<any[]>([]);
   readonly courierServices = signal<any[]>([]);
-  
+
   readonly shippingCost = signal<number>(0);
   readonly shippingLoading = signal<boolean>(false);
 
@@ -57,8 +57,7 @@ export class ShippingService {
       const items = this.cartStore.items();
       let totalWeight = 0;
       for (const item of items) {
-        const specWeight = item.product.specifications?.['weight'];
-        const itemWeight = specWeight ? parseFloat(specWeight) : 500;
+        const itemWeight = item.product.weight || 500;
         totalWeight += itemWeight * item.quantity;
       }
       if (totalWeight <= 0) totalWeight = 1000;
@@ -74,15 +73,15 @@ export class ShippingService {
       let services = [];
       if (tariffRes) {
         if (tariffRes[courier] && Array.isArray(tariffRes[courier])) {
-           services = tariffRes[courier];
+          services = tariffRes[courier];
         } else if (tariffRes.data && tariffRes.data[courier] && Array.isArray(tariffRes.data[courier])) {
-           services = tariffRes.data[courier];
+          services = tariffRes.data[courier];
         } else if (Array.isArray(tariffRes)) {
-           services = tariffRes; 
+          services = tariffRes;
         } else if (tariffRes.costs && Array.isArray(tariffRes.costs)) {
-           services = tariffRes.costs;
+          services = tariffRes.costs;
         } else if (tariffRes.rajaongkir?.results?.[0]?.costs) {
-           services = tariffRes.rajaongkir.results[0].costs;
+          services = tariffRes.rajaongkir.results[0].costs;
         }
       }
 
@@ -114,7 +113,7 @@ export class ShippingService {
         cost = service.cost.value || 0;
       }
     }
-    
+
     if (cost > 0) {
       this.shippingCost.set(cost);
     } else {

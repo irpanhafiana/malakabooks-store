@@ -5,7 +5,6 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { isAdminSession } from '../auth/session.util';
 import { CategoryApiService } from './category-api.service';
-import { AuthorApiService } from './author-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,45 +12,40 @@ import { AuthorApiService } from './author-api.service';
 export class ProductApiService {
   private readonly http = inject(HttpClient);
   private readonly categoryApi = inject(CategoryApiService);
-  private readonly authorApi = inject(AuthorApiService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
   private mapBookToProduct(book: BookDto): Product {
     return {
       id: book.id,
-      name: book.title,
+      title: book.title,
+      sapCode: book.sapCode || '',
       authorId: book.authorId || book.author?.id || '',
-      authorName: book.author?.name || '',
-      description: book.description || '',
-      price: book.price,
+      author: book.author
+        ? {
+          id: book.author.id,
+          name: book.author.name,
+          role: book.author.role || '',
+          biography: book.author.biography || '',
+          photoUrl: book.author.photoUrl || ''
+        }
+        : null,
+      isbn: book.isbn || '',
       categoryId: book.categoryId,
-      categoryName: '',
+      price: book.price,
+      description: book.description || '',
+      coverImage: book.coverImage || '',
+      publisher: book.publisher || '',
+      publishedYear: book.publishedYear || 0,
+      pages: book.pages || 0,
+      weight: book.weight || 0,
       stock: book.stock ?? 0,
-      rating: book.averageRating ?? 0,
-      reviewsCount: book.totalReviews ?? 0,
-      images: this.buildImagesArray(book),
-      brand: book.publisher || '',
-      featured: false,
-      specifications: {
-        'ISBN': book.isbn || '',
-        'Published Year': book.publishedYear?.toString() || '',
-        'Pages': book.pages?.toString() || '',
-        'Weight': book.weight ? `${book.weight} kg` : ''
-      },
-      createdAt: book.createdAt || new Date().toISOString()
+      averageRating: book.averageRating ?? 0,
+      totalReviews: book.totalReviews ?? 0,
+      createdAt: book.createdAt || new Date().toISOString(),
+      additionalImages: book.additionalImages
+        ? [...book.additionalImages].sort((a, b) => a.no - b.no)
+        : []
     };
-  }
-
-  private buildImagesArray(book: BookDto): string[] {
-    const allImages: string[] = [];
-    if (book.coverImage) {
-      allImages.push(book.coverImage);
-    }
-    if (book.additionalImages && book.additionalImages.length > 0) {
-      const sorted = [...book.additionalImages].sort((a, b) => a.no - b.no);
-      allImages.push(...sorted.map(a => a.image));
-    }
-    return allImages;
   }
 
   async getProducts(): Promise<Product[]> {
@@ -61,7 +55,7 @@ export class ProductApiService {
       const books = envelope?.data || [];
       const categories = await this.categoryApi.getCategories();
       const catMap = new Map(categories.map(c => [c.id, c.name]));
-      
+
       return books.map((b: BookDto) => ({
         ...this.mapBookToProduct(b),
         categoryName: catMap.get(b.categoryId) || 'Other'
@@ -78,12 +72,7 @@ export class ProductApiService {
       const envelope = await firstValueFrom(this.http.get<ApiResponse<BookDto>>(endpoint));
       const book = envelope?.data;
       if (!book) return undefined;
-      const categories = await this.categoryApi.getCategories();
-      const category = categories.find(c => c.id === book.categoryId);
-      return {
-        ...this.mapBookToProduct(book),
-        categoryName: category?.name || 'Other'
-      };
+      return this.mapBookToProduct(book);
     } catch (e) {
       console.error(`Gagal mengambil detail produk ${id}:`, e);
       return undefined;
@@ -92,26 +81,25 @@ export class ProductApiService {
 
   async saveProduct(product: Product): Promise<Product> {
     const isNew = !product.id || product.id.startsWith('prod-');
-    
-    const additionalImagesArray = product.images.slice(1).map((img, index) => ({
-      no: index + 1,
-      image: img
-    }));
 
     const body = {
-      title: product.name,
+      title: product.title,
       authorId: product.authorId || '',
-      isbn: product.specifications['ISBN'] || '',
+      isbn: product.isbn || '',
       categoryId: product.categoryId,
       price: product.price,
       description: product.description,
-      coverImage: product.images[0] || '',
-      additionalImages: additionalImagesArray,
-      publisher: product.brand || product.specifications['Publisher'] || '',
-      publishedYear: parseInt(product.specifications['Published Year']) || new Date().getFullYear(),
-      pages: parseInt(product.specifications['Pages']) || 0,
-      weight: parseFloat(product.specifications['Weight']) || 0.0,
-      stock: product.stock
+      coverImage: product.coverImage || '',
+      additionalImages: product.additionalImages.map((img, index) => ({
+        no: img.no || index + 1,
+        image: img.image
+      })),
+      publisher: product.publisher,
+      publishedYear: product.publishedYear,
+      pages: product.pages,
+      weight: product.weight,
+      stock: product.stock,
+      sapCode: product.sapCode
     };
 
     try {

@@ -97,9 +97,9 @@ export class OrderApiService {
       const ordersResRaw = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Orders/user/${userId}`));
       const ordersRes = ordersResRaw?.data || [];
       const addresses = await this.userApi.getAddressesByUserId(userId);
-      
+
       const addrMap = new Map(addresses.map(a => [a.id, a]));
-      
+
       return (ordersRes || []).map((res: any) => {
         const shippingAddress = addrMap.get(res.addressId) || {
           id: res.addressId,
@@ -111,7 +111,7 @@ export class OrderApiService {
           postalCode: '',
           isDefault: false
         };
-        
+
         return {
           id: res.id,
           userId: res.userId,
@@ -235,8 +235,8 @@ export class OrderApiService {
       phone,
       items: order.items.map(item => ({
         bookId: item.product.id,
-        bookName: item.product.name,
-        title: item.product.name,
+        bookName: item.product.title,
+        title: item.product.title,
         price: item.product.price,
         quantity: item.quantity
       })),
@@ -255,12 +255,12 @@ export class OrderApiService {
 
     try {
       const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Orders`, body));
-      
+
       const responseData = res?.data || {};
       const placedOrderId = responseData.orderId;
-      
+
       if (!placedOrderId) {
-         throw new Error('Order berhasil dibuat tapi gagal mengambil ID order dari server');
+        throw new Error('Order berhasil dibuat tapi gagal mengambil ID order dari server');
       }
 
       return {

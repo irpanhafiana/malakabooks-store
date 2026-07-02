@@ -99,7 +99,7 @@
     </div>
 
     <!-- Product Detail Bottom Sheet (Height ~85%, constrained inside the mobile container) -->
-    <app-bottom-sheet [isOpen]="isDetailOpen()" [title]="productStore.activeProduct()?.name || 'Product Details'"
+    <app-bottom-sheet [isOpen]="isDetailOpen()" [title]="productStore.activeProduct()?.title || 'Product Details'"
       (closed)="closeProductDetails()" [fullHeight]="true">
       <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
     </app-bottom-sheet>

@@ -1,19 +1,33 @@
+export interface AdditionalImage {
+  no: number;
+  image: string;
+}
+
 export interface Product {
   id: string;
-  name: string;
-  description: string;
-  price: number;
-  originalPrice?: number;
-  images: string[];
-  categoryId: string;
-  categoryName: string;
-  stock: number;
-  rating: number;
-  reviewsCount: number;
-  featured: boolean;
-  brand: string;
+  title: string;
+  sapCode: string;
   authorId: string;
-  authorName?: string;
-  specifications: Record<string, string>;
+  author: {
+    id: string;
+    name: string;
+    role: string;
+    biography: string;
+    photoUrl: string;
+  } | null;
+  isbn: string;
+  categoryId: string;
+  price: number;
+  description: string;
+  coverImage: string;
+  publisher: string;
+  publishedYear: number;
+  pages: number;
+  weight: number;
+  stock: number;
+  categoryName?: string;
+  averageRating: number;
+  totalReviews: number;
   createdAt: string;
+  additionalImages: AdditionalImage[];
 }

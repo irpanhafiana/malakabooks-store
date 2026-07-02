@@ -47,7 +47,7 @@
     </header>
 
     <!-- Scrollable Contents Area -->
-    <main class="grow overflow-y-auto overflow-x-hidden px-4 py-4 pb-24 no-scrollbar bg-gray-50">
+    <main class="grow overflow-y-auto overflow-x-hidden px-4 pt-0 pb-24 no-scrollbar bg-gray-50">
       <div #routeContainer class="w-full h-full relative">
         <router-outlet></router-outlet>
       </div>
@@ -137,7 +137,7 @@
     </div>
 
     <!-- Product Detail Bottom Sheet (Height ~85%, constrained inside the mobile container) -->
-    <app-bottom-sheet [isOpen]="isDetailOpen()" [title]="productStore.activeProduct()?.name || 'Product Details'"
+    <app-bottom-sheet [isOpen]="isDetailOpen()" [title]="productStore.activeProduct()?.title || 'Product Details'"
       (closed)="closeProductDetails()" [fullHeight]="true">
       <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
     </app-bottom-sheet>

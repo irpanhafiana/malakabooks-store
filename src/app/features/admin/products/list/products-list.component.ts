@@ -32,7 +32,7 @@ export class ProductsListComponent implements OnInit {
     const query = this.searchQuery().toLowerCase().trim();
     const list = this.productStore.products();
     if (!query) return list;
-    return list.filter(p => p.name.toLowerCase().includes(query) || p.brand.toLowerCase().includes(query));
+    return list.filter(p => p.title.toLowerCase().includes(query) || p.publisher.toLowerCase().includes(query));
   });
 
   protected readonly pagination = createClientPagination(this.filteredList, 10);

@@ -15,14 +15,14 @@
         <!-- Item Image -->
         <div (click)="productStore.setSelectedProductId(item.product.id)"
           class="h-20 w-16 bg-slate-50 rounded-lg overflow-hidden shrink-0 cursor-pointer relative">
-          <img [src]="item.product.images[0]" [alt]="item.product.name" class="object-cover w-full h-full" />
+          <img [src]="item.product.coverImage" [alt]="item.product.title" class="object-cover w-full h-full" />
         </div>
 
         <!-- Details & Remove -->
         <div class="grow flex flex-col">
           <div (click)="productStore.setSelectedProductId(item.product.id)"
             class="text-sm font-semibold text-slate-800 hover:text-primary-600  line-clamp-1 mb-0.5 cursor-pointer">{{
-            item.product.name }}</div>
+            item.product.title }}</div>
           <span class="text-[10px] text-slate-400 font-semibold mb-1">{{ item.product.categoryName }}</span>
           <div class="flex items-center justify-between mt-1">
 

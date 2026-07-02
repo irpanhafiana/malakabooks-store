@@ -131,7 +131,7 @@ export class CartStore {
     }
 
     this.persistLocal(currentItems);
-    this.toastService.success(`Added "${product.name}" to cart.`);
+    this.toastService.success(`Added "${product.title}" to cart.`);
 
     // Sync ke backend
     const userId = this.getCurrentUserId();

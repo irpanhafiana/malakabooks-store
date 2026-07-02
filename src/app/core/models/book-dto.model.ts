@@ -6,26 +6,27 @@ export interface AdditionalImageDto {
 export interface BookDto {
   id: string;
   title: string;
-  description?: string;
-  price: number;
-  categoryId: string;
-  stock?: number;
-  averageRating?: number;
-  totalReviews?: number;
-  coverImage?: string;
-  additionalImages?: AdditionalImageDto[];
-  publisher?: string;
+  sapCode?: string;
   authorId?: string;
   author?: {
     id: string;
     name: string;
-    biography: string;
-    photoUrl: string;
-    alias?: string;
+    role?: string;
+    biography?: string;
+    photoUrl?: string;
   };
   isbn?: string;
+  categoryId: string;
+  price: number;
+  description?: string;
+  coverImage?: string;
+  publisher?: string;
   publishedYear?: number;
   pages?: number;
   weight?: number;
+  stock?: number;
+  averageRating?: number;
+  totalReviews?: number;
   createdAt?: string;
+  additionalImages?: AdditionalImageDto[];
 }

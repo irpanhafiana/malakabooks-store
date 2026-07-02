@@ -5,8 +5,8 @@
   <div (click)="viewProductDetails()" class="block grow cursor-pointer">
     <!-- Image Container -->
     <div class="w-full bg-slate-50 overflow-hidden mb-3 relative flex items-center justify-center aspect-square">
-      @if (prod.images[0] && !imageError()) {
-      <img [src]="prod.images[0]" [alt]="prod.name" (error)="onImageError()" class="w-full h-full object-contain p-3"
+      @if (prod.coverImage && !imageError()) {
+      <img [src]="prod.coverImage" [alt]="prod.title" (error)="onImageError()" class="w-full h-full object-contain"
         loading="lazy" />
       } @else {
       <div
@@ -15,27 +15,21 @@
       </div>
       }
       <div class="badge-uom">{{ prod.categoryName }}</div>
-      <app-discount-badge [price]="prod.price" [originalPrice]="prod.originalPrice" size="sm"
-        class="absolute bottom-2 right-2"></app-discount-badge>
     </div>
 
     <!-- Meta info, Title & Ratings Wrapper -->
     <div class="flex flex-col pb-2">
       <!-- Meta info -->
       <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">{{
-        prod.authorName }}</span>
+        prod.author?.name }}</span>
 
       <!-- Title -->
       <h3
         class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600  leading-tight">
-        {{ prod.name }}</h3>
+        {{ prod.title }}</h3>
 
       <!-- Price -->
       <div class="flex flex-col">
-        @if (prod.originalPrice && prod.originalPrice > prod.price) {
-        <span class="text-[10px] text-slate-400 line-through leading-none mb-0.5">Rp {{
-          Math.round(prod.originalPrice).toLocaleString('id-ID') }}</span>
-        }
         <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold text-base"></app-price>
       </div>
     </div>
@@ -46,11 +40,12 @@
     <!-- Ratings Badge -->
     <div class="flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-100">
       <app-icon name="star" size="10" class="text-amber-500 fill-amber-500"></app-icon>
-      <span class="text-[10px] font-bold text-amber-700">{{ prod.rating }}</span>
+      <span class="text-[10px] font-bold text-amber-700">{{ prod.averageRating }}</span>
     </div>
 
     <!-- Total Sold -->
     <span class="text-[10px] text-slate-500 font-medium">
-      {{ prod.reviewsCount * 12 + (prod.stock % 7) + 5 }} Terjual
+      {{ prod.totalReviews * 12 + (prod.stock % 7) + 5 }} Terjual
     </span>
   </div>
+</div>

@@ -4,13 +4,11 @@ import { Product } from '../../../core/models';
 import { IconComponent } from '../icon/icon.component';
 import { PriceComponent } from '../price/price.component';
 
-import { DiscountBadgeComponent } from '../discount-badge/discount-badge.component';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-card',
   standalone: true,
-  imports: [IconComponent, PriceComponent, DiscountBadgeComponent],
+  imports: [IconComponent, PriceComponent],
 
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css'
@@ -19,7 +17,7 @@ export class ProductCardComponent {
   private readonly productStore = inject(ProductStore);
 
   readonly product = input.required<Product>();
-  
+
   readonly addToCart = output<Product>();
 
   protected readonly Math = Math;

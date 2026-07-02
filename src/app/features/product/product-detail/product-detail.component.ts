@@ -15,8 +15,6 @@ import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { TextareaComponent } from '../../../shared/ui/textarea/textarea.component';
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
-
-import { DiscountBadgeComponent } from '../../../shared/ui/discount-badge/discount-badge.component';
 import { QuantitySelectorComponent } from '../../../shared/ui/quantity-selector/quantity-selector.component';
 import { ToastService } from '../../../core/services/toast.service';
 
@@ -25,16 +23,13 @@ import { ToastService } from '../../../core/services/toast.service';
   selector: 'app-product-detail',
   standalone: true,
   imports: [
-    RouterLink, 
-    ReactiveFormsModule, 
-    PriceComponent, 
-    IconComponent, 
-    ButtonComponent, 
-    TextareaComponent, 
-    SpinnerComponent, 
-
-    DiscountBadgeComponent, 
-    KeyValuePipe, 
+    RouterLink,
+    ReactiveFormsModule,
+    PriceComponent,
+    IconComponent,
+    ButtonComponent,
+    TextareaComponent,
+    SpinnerComponent,
     DatePipe
   ],
   templateUrl: './product-detail.component.html',
@@ -91,6 +86,17 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
+  getAllImages(): string[] {
+    const prod = this.product();
+    if (!prod) return [];
+    const images: string[] = [];
+    if (prod.coverImage) images.push(prod.coverImage);
+    if (prod.additionalImages) {
+      images.push(...prod.additionalImages.map(a => a.image));
+    }
+    return images;
+  }
+
   async loadProduct(id: string) {
     this.loading.set(true);
     try {
@@ -102,7 +108,7 @@ export class ProductDetailComponent implements OnInit {
       if (prod) {
         this.product.set(prod);
         this.productStore.setActiveProduct(prod);
-        this.activeImage.set(prod.images[0]);
+        this.activeImage.set(prod.coverImage);
         this.reviews.set(revs || []);
       } else {
         this.product.set(null);
@@ -165,8 +171,9 @@ export class ProductDetailComponent implements OnInit {
   }
 
   hasSpecs(): boolean {
-    const specs = this.product()?.specifications;
-    return specs ? Object.keys(specs).length > 0 : false;
+    const prod = this.product();
+    if (!prod) return false;
+    return !!(prod.isbn || prod.publisher || prod.publishedYear || prod.pages || prod.weight || prod.sapCode);
   }
 
   setReviewRating(rating: number) {
@@ -192,17 +199,17 @@ export class ProductDetailComponent implements OnInit {
 
     try {
       await this.reviewApi.addReview(newReview);
-      
+
       // refresh reviews
       const updatedRevs = await this.reviewApi.getReviewsByProductId(prodId);
       this.reviews.set(updatedRevs);
-      
+
       // update product rating local display
       const prod = this.product();
       if (prod) {
         const total = updatedRevs.reduce((sum, r) => sum + r.rating, 0);
-        prod.rating = parseFloat((total / updatedRevs.length).toFixed(1));
-        prod.reviewsCount = updatedRevs.length;
+        prod.averageRating = parseFloat((total / updatedRevs.length).toFixed(1));
+        prod.totalReviews = updatedRevs.length;
         this.product.set({ ...prod });
       }
 

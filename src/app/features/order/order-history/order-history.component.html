@@ -42,10 +42,10 @@
         @for (item of order.items; track item.product.id) {
         <div class="flex items-center gap-4 text-xs">
           <div class="h-12 w-10 bg-slate-50 border border-slate-100 rounded overflow-hidden shrink-0 relative">
-            <img [src]="item.product.images[0]" [alt]="item.product.name" class="object-cover w-full h-full" />
+            <img [src]="item.product.coverImage" [alt]="item.product.title" class="object-cover w-full h-full" />
           </div>
           <div class="grow min-w-0">
-            <h4 class="font-bold text-slate-800 truncate">{{ item.product.name }}</h4>
+            <h4 class="font-bold text-slate-800 truncate">{{ item.product.title }}</h4>
             <span class="text-slate-400">Quantity: {{ item.quantity }} × $ {{ item.product.price }}</span>
           </div>
         </div>
