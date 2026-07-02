@@ -28,7 +28,7 @@ export class OrdersListComponent implements OnInit {
     const q = this.searchQuery().toLowerCase();
     const all = this.orderStore.orders();
     if (!q) return all;
-    return all.filter(o => 
+    return all.filter(o =>
       o.id.toLowerCase().includes(q) ||
       o.userName?.toLowerCase().includes(q) ||
       o.userEmail?.toLowerCase().includes(q)
@@ -155,6 +155,27 @@ export class OrdersListComponent implements OnInit {
       this.orderStore.loadAllOrders(); // Refresh order status
     } catch (e: any) {
       const errorMsg = e?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman massal.';
+      this.alertService.error('Error!', errorMsg);
+    }
+  }
+
+  async onCancelShipment(order: Order) {
+    const isConfirmed = await this.alertService.confirm(
+      'Batalkan Resi?',
+      `Apakah Anda yakin ingin membatalkan resi pengiriman untuk pesanan #${order.id}? Tindakan ini tidak dapat dibatalkan.`
+    );
+    if (!isConfirmed) return;
+
+    try {
+      const res = await this.orderStore.cancelShipment(order.id);
+      if (res?.isSuccess || res?.shipmentCancelled) {
+        this.alertService.success('Berhasil!', 'Resi pengiriman berhasil dibatalkan.');
+        this.orderStore.loadAllOrders();
+      } else {
+        this.alertService.error('Gagal!', res?.message || 'Gagal membatalkan resi.');
+      }
+    } catch (e: any) {
+      const errorMsg = e?.error?.statusMessage || e?.error?.message || 'Terjadi kesalahan sistem saat membatalkan resi.';
       this.alertService.error('Error!', errorMsg);
     }
   }

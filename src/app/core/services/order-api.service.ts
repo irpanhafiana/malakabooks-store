@@ -80,7 +80,7 @@ export class OrderApiService {
             tax: 0,
             total: res.totalPrice,
             orderDate: res.createdAt,
-            trackingNumber: res.awbNo || res.awbNo || res.trackingNumber
+            trackingNumber: res.awbNo || res.aWBNo || res.AWBNo || res.trackingNumber
           };
         });
       } catch (e) {
@@ -144,7 +144,7 @@ export class OrderApiService {
           tax: 0,
           total: res.totalPrice,
           orderDate: res.createdAt,
-          trackingNumber: res.awbNo || res.awbNo || res.trackingNumber
+          trackingNumber: res.awbNo || res.aWBNo || res.AWBNo || res.trackingNumber
         };
       });
     } catch (e) {
@@ -306,6 +306,18 @@ export class OrderApiService {
       return res?.data || res || null;
     } catch (e) {
       console.error('Gagal membuat bulk shipment:', e);
+      throw e;
+    }
+  }
+
+  async cancelShipment(id: string): Promise<any> {
+    try {
+      const res = await firstValueFrom(
+        this.http.post<any>(`${this.BASE_URL}/admin/Orders/${id}/shipment/cancel`, {})
+      );
+      return res?.data || res || null;
+    } catch (e) {
+      console.error(`Gagal membatalkan shipment untuk order ${id}:`, e);
       throw e;
     }
   }

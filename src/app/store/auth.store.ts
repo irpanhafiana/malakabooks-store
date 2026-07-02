@@ -6,7 +6,7 @@ import { ProductApiService } from '../core/services/product-api.service';
 import { ToastService } from '../core/services/toast.service';
 import { CartStore } from './cart.store';
 import { decodeJwt, isTokenExpired, jwtHasAdminRole, mapJwtToUser } from '../core/auth/jwt.util';
-import { SESSION_TOKEN_KEY, SESSION_USER_KEY } from '../core/auth/session.util';
+import { SESSION_TOKEN_KEY, SESSION_USER_KEY, SESSION_REFRESH_KEY } from '../core/auth/session.util';
 
 interface AuthState {
   user: User | null;
@@ -35,30 +35,39 @@ export class AuthStore {
   readonly isLoggedIn = computed(() => this.state().user !== null);
   readonly isAdmin = computed(() => this.state().user?.role === 'admin');
 
+  private _refreshToken: string | null = null;
+
   constructor() {
     this.loadSession();
+  }
+
+  getRefreshToken(): string | null {
+    return this._refreshToken;
   }
 
   private loadSession() {
     if (typeof localStorage === 'undefined') return;
     const savedUser = localStorage.getItem(SESSION_USER_KEY);
     const savedToken = localStorage.getItem(SESSION_TOKEN_KEY);
+    const savedRefresh = localStorage.getItem(SESSION_REFRESH_KEY);
     if (!savedUser || !savedToken) return;
 
-    // Reject restored sessions whose token is missing/expired so the UI never
-    // renders authenticated (or admin) state behind a dead token.
-    if (isTokenExpired(savedToken)) {
-      localStorage.removeItem(SESSION_USER_KEY);
-      localStorage.removeItem(SESSION_TOKEN_KEY);
+    // If token is expired and we have no refresh token, clear session
+    if (isTokenExpired(savedToken) && !savedRefresh) {
+      this.clearPersistedSession();
       return;
     }
 
+    // If token is expired but refresh token exists, store refresh token for later use
+    // The interceptor will handle refresh on the next API call
+    if (savedRefresh) {
+      this._refreshToken = savedRefresh;
+    }
+
+    // If token is expired, still restore the user so the UI doesn't flash,
+    // the interceptor will refresh before the first real API call
     try {
       const persisted = JSON.parse(savedUser) as User;
-      // Re-derive the role from the token rather than trusting the persisted
-      // JSON blob (which a user could edit in localStorage). The token claim is
-      // the authority for what the UI may render; the backend stays the real
-      // security boundary.
       const decoded = decodeJwt(savedToken);
       const role: User['role'] = jwtHasAdminRole(decoded) ? 'admin' : 'customer';
       this.state.set({
@@ -66,31 +75,73 @@ export class AuthStore {
         token: savedToken
       });
     } catch {
-      localStorage.removeItem(SESSION_USER_KEY);
-      localStorage.removeItem(SESSION_TOKEN_KEY);
+      this.clearPersistedSession();
+    }
+  }
+
+  private persistSession(token: string, userWithToken: User, refreshToken?: string) {
+    localStorage.setItem(SESSION_TOKEN_KEY, token);
+    localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
+    if (refreshToken) {
+      localStorage.setItem(SESSION_REFRESH_KEY, refreshToken);
+      this._refreshToken = refreshToken;
+    }
+  }
+
+  private clearPersistedSession() {
+    localStorage.removeItem(SESSION_USER_KEY);
+    localStorage.removeItem(SESSION_TOKEN_KEY);
+    localStorage.removeItem(SESSION_REFRESH_KEY);
+    this._refreshToken = null;
+  }
+
+  async refreshToken(): Promise<boolean> {
+    const refreshToken = this._refreshToken;
+    if (!refreshToken) return false;
+
+    try {
+      const result = await this.authApi.refreshToken(refreshToken);
+      if (!result) return false;
+
+      // Update the stored token
+      localStorage.setItem(SESSION_TOKEN_KEY, result.accessToken);
+
+      // Update refresh token if a new one was issued
+      if (result.refreshToken) {
+        localStorage.setItem(SESSION_REFRESH_KEY, result.refreshToken);
+        this._refreshToken = result.refreshToken;
+      }
+
+      // Update the user object with the new token
+      const currentUser = this.state().user;
+      if (currentUser) {
+        const userWithToken = { ...currentUser, token: result.accessToken };
+        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
+        this.state.set({ user: userWithToken, token: result.accessToken });
+      } else {
+        this.state.update(s => ({ ...s, token: result.accessToken }));
+      }
+
+      return true;
+    } catch {
+      return false;
     }
   }
 
   async login(username: string, password: string): Promise<boolean> {
     try {
-      const token = await this.authApi.loginAndGetToken(username, password);
-      if (token) {
-        // IdentityServer4 sub claim stores the UserId; mapJwtToUser returns null
-        // when the token lacks a usable id.
-        const user = mapJwtToUser(decodeJwt(token));
+      const result = await this.authApi.loginAndGetToken(username, password);
+      if (result) {
+        const { accessToken, refreshToken } = result;
+        const user = mapJwtToUser(decodeJwt(accessToken));
         if (!user) {
           this.toastService.error('Token tidak valid: User ID tidak ditemukan.');
           return false;
         }
 
-        // Persist the token first so the interceptor can attach the Bearer
-        // header to the subsequent requests below.
-        localStorage.setItem(SESSION_TOKEN_KEY, token);
-
-        const userWithToken = { ...user, token };
-        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
-
-        this.state.set({ user: userWithToken, token });
+        const userWithToken = { ...user, token: accessToken };
+        this.persistSession(accessToken, userWithToken, refreshToken);
+        this.state.set({ user: userWithToken, token: accessToken });
 
         // Sync cart guest ke backend
         const products = await this.productApi.getProducts();
@@ -108,8 +159,7 @@ export class AuthStore {
   }
 
   logout() {
-    localStorage.removeItem(SESSION_USER_KEY);
-    localStorage.removeItem(SESSION_TOKEN_KEY);
+    this.clearPersistedSession();
     this.cartStore.clearOnLogout();
     this.state.set({ user: null, token: null });
     this.toastService.info('Anda telah keluar.');

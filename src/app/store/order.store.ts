@@ -137,4 +137,16 @@ export class OrderStore {
       throw e;
     }
   }
+
+  async cancelShipment(orderId: string): Promise<any> {
+    this.state.update(s => ({ ...s, loading: true }));
+    try {
+      const result = await this.orderApi.cancelShipment(orderId);
+      this.state.update(s => ({ ...s, loading: false }));
+      return result;
+    } catch (e) {
+      this.state.update(s => ({ ...s, loading: false }));
+      throw e;
+    }
+  }
 }
