@@ -15,20 +15,21 @@ export class ProductApiService {
   private readonly BASE_URL = environment.apiBaseUrl;
 
   private mapBookToProduct(book: BookDto): Product {
+    const authors = book.authors?.map(a => ({
+      id: a.id,
+      name: a.name,
+      role: a.role || '',
+      biography: a.biography || '',
+      photoUrl: a.photoUrl || ''
+    })) || [];
+
     return {
       id: book.id,
       title: book.title,
       sapCode: book.sapCode || '',
-      authorId: book.authorId || book.author?.id || '',
-      author: book.author
-        ? {
-          id: book.author.id,
-          name: book.author.name,
-          role: book.author.role || '',
-          biography: book.author.biography || '',
-          photoUrl: book.author.photoUrl || ''
-        }
-        : null,
+      authorIds: book.authorIds || [],
+      authors,
+      authorNames: authors.map(a => a.name).join(', '),
       isbn: book.isbn || '',
       categoryId: book.categoryId,
       price: book.price,
@@ -84,7 +85,7 @@ export class ProductApiService {
 
     const body = {
       title: product.title,
-      authorId: product.authorId || '',
+      authorIds: product.authorIds || [],
       isbn: product.isbn || '',
       categoryId: product.categoryId,
       price: product.price,

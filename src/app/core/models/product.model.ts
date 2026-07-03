@@ -7,14 +7,15 @@ export interface Product {
   id: string;
   title: string;
   sapCode: string;
-  authorId: string;
-  author: {
+  authorIds: string[];
+  authors: {
     id: string;
     name: string;
     role: string;
     biography: string;
     photoUrl: string;
-  } | null;
+  }[];
+  authorNames: string;
   isbn: string;
   categoryId: string;
   price: number;

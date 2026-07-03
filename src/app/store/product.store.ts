@@ -96,7 +96,7 @@ export class ProductStore {
         p.title.toLowerCase().includes(query) ||
         p.description.toLowerCase().includes(query) ||
         p.publisher.toLowerCase().includes(query) ||
-        p.author?.name.toLowerCase().includes(query)
+        p.authorNames.toLowerCase().includes(query)
       );
     }
 

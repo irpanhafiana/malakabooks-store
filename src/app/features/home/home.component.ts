@@ -181,7 +181,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openAuthorSheet(author: Author) {
     this.selectedAuthor.set(author);
-    this.selectedAuthorProducts.set(this.productStore.products().filter(p => p.authorId === author.id));
+    this.selectedAuthorProducts.set(this.productStore.products().filter(p => p.authorIds.includes(author.id)));
     this.isAuthorSheetOpen.set(true);
   }
 

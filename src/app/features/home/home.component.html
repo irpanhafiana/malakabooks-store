@@ -303,19 +303,18 @@
       </div>
 
       <div class="px-4 pt-4">
-        <h3 class="font-display font-bold text-slate-800 text-base mb-4">Tentang </h3>
+        <h3 class="font-display font-bold text-slate-800 text-base">Tentang </h3>
         <!-- Biography -->
         @if (auth.biography) {
-        <div class="text-sm text-slate-600 leading-relaxed text-center max-w-md [&_p]:mb-2"
-          [innerHTML]="auth.biography">
+        <div class="text-sm" [innerHTML]="auth.biography">
         </div>
         }
       </div>
 
 
       <!-- Products by Author -->
-      <div class="px-4 pt-4">
-        <h3 class="font-display font-bold text-slate-800 text-sm mb-4">Karya</h3>
+      <div class="px-4 pt-4 pb-12">
+        <h3 class="font-display font-bold text-slate-800 text-base mb-1">Karya </h3>
 
         @let products = selectedAuthorProducts();
 

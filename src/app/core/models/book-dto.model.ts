@@ -7,14 +7,14 @@ export interface BookDto {
   id: string;
   title: string;
   sapCode?: string;
-  authorId?: string;
-  author?: {
+  authorIds: string[];
+  authors: {
     id: string;
     name: string;
     role?: string;
     biography?: string;
     photoUrl?: string;
-  };
+  }[];
   isbn?: string;
   categoryId: string;
   price: number;

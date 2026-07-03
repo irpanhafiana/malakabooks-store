@@ -22,8 +22,8 @@ export class ProductsFormComponent {
   onCancel = output<void>();
   onSave = output<void>();
 
-  private readonly productStore = inject(ProductStore);
-  private readonly authorStore = inject(AuthorStore);
+  protected readonly productStore = inject(ProductStore);
+  protected readonly authorStore = inject(AuthorStore);
   private readonly alertService = inject(AlertService);
 
   titleControl = new FormControl('', [Validators.required]);
@@ -33,7 +33,7 @@ export class ProductsFormComponent {
   stockControl = new FormControl<number>(0, [Validators.required, Validators.min(0)]);
   coverImageControl = new FormControl('');
   descControl = new FormControl('', [Validators.required]);
-  authorControl = new FormControl('', [Validators.required]);
+  authorControl = new FormControl<string[]>([], [Validators.required]);
   isbnControl = new FormControl('');
   sapCodeControl = new FormControl({ value: '', disabled: true });
   publishedYearControl = new FormControl<number>(new Date().getFullYear());
@@ -63,6 +63,21 @@ export class ProductsFormComponent {
   authorOptions = computed(() => {
     return this.authorStore.authors().map(a => ({ value: a.id, label: a.name }));
   });
+
+  toggleAuthor(authorId: string) {
+    const current = this.authorControl.value || [];
+    const idx = current.indexOf(authorId);
+    if (idx >= 0) {
+      this.authorControl.setValue(current.filter(id => id !== authorId));
+    } else {
+      this.authorControl.setValue([...current, authorId]);
+    }
+    this.authorControl.markAsDirty();
+  }
+
+  isAuthorSelected(authorId: string): boolean {
+    return (this.authorControl.value || []).includes(authorId);
+  }
 
   additionalImagesControls = signal<AdditionalImage[]>([]);
 
@@ -129,7 +144,7 @@ export class ProductsFormComponent {
         this.coverImageControl.setValue(prod.coverImage || '');
         this.additionalImagesControls.set(prod.additionalImages?.length > 0 ? prod.additionalImages : []);
         this.descControl.setValue(prod.description);
-        this.authorControl.setValue(prod.authorId || '');
+        this.authorControl.setValue(prod.authorIds || []);
         this.isbnControl.setValue(prod.isbn || '');
         this.sapCodeControl.setValue(prod.sapCode || '');
         this.publishedYearControl.setValue(prod.publishedYear || new Date().getFullYear());
@@ -175,8 +190,9 @@ export class ProductsFormComponent {
       id: this.product()?.id || '',
       title: this.titleControl.value || '',
       sapCode: this.sapCodeControl.value || '',
-      authorId: this.authorControl.value || '',
-      author: null,
+      authorIds: this.authorControl.value || [],
+      authors: [],
+      authorNames: '',
       isbn: this.isbnControl.value || '',
       categoryId: catId,
       price: unformat(this.priceControl.value),
