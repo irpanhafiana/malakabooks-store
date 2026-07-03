@@ -3,7 +3,8 @@
     "allow": [
       "Agent(Explore)",
       "Bash(npx *)",
-      "Bash(findstr *)"
+      "Bash(findstr *)",
+      "Bash(ng *)"
     ]
   },
   "$version": 4
