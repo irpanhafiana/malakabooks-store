@@ -12,7 +12,7 @@ import { ToastService } from '../../../core/services/toast.service';
   standalone: true,
   imports: [CommonModule, RouterLink, IconComponent, SkeletonComponent, DatePipe],
   template: `
-    <div class="animate-fade-in px-4 py-4 overflow-y-auto h-full no-scrollbar flex flex-col gap-6">
+    <div class=" px-4 py-4 overflow-y-auto h-full no-scrollbar flex flex-col gap-6">
       
       <!-- Loading Skeleton State -->
       <ng-container *ngIf="loading()">

@@ -1,5 +1,5 @@
-import { Component, inject, signal, effect, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive, Router, ChildrenOutletContexts } from '@angular/router';
+import { Component, inject, signal, effect, ChangeDetectionStrategy } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
 import { ProductStore } from '../../store/product.store';
@@ -9,7 +9,6 @@ import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.
 import { QuantitySelectorComponent } from '../../shared/ui/quantity-selector/quantity-selector.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { PriceComponent } from '../../shared/ui/price/price.component';
-import { routeTransitionAnimations } from '../../core/animations/route.animations';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,19 +19,6 @@ import { routeTransitionAnimations } from '../../core/animations/route.animation
   styleUrl: './search-layout.component.css'
 })
 export class SearchLayoutComponent {
-  @ViewChild('routeContainer') routeContainer!: ElementRef;
-  private contexts = inject(ChildrenOutletContexts);
-
-  onRouteActivate() {
-    if (this.routeContainer) {
-      const el = this.routeContainer.nativeElement;
-      el.classList.remove('animate-page-fade');
-      // Trigger reflow to restart CSS animation
-      void el.offsetWidth;
-      el.classList.add('animate-page-fade');
-    }
-  }
-  
   protected readonly authStore = inject(AuthStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly productStore = inject(ProductStore);
@@ -69,7 +55,7 @@ export class SearchLayoutComponent {
 
   closeQty(fromConfirm: boolean = false) {
     this.productStore.setQtyModalOpen(false);
-    
+
     // If buying, we navigate away so don't reopen detail
     if (!fromConfirm || this.productStore.qtyAction() === 'cart') {
       if (this.productStore.reopenDetailOnQtyClose()) {

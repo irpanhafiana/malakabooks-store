@@ -1,10 +1,12 @@
 @if (renderComponent()) {
 <!-- Backdrop overlay -->
-<div class="bottom-sheet-backdrop !fixed !inset-0 !z-[9998]" [class.active]="isAnimating()" (click)="closeSheet()"></div>
+<div class="bottom-sheet-backdrop !fixed !inset-0 !z-[9998]" [class.active]="isAnimating()" (click)="closeSheet()">
+</div>
 
 <!-- Bottom Sheet Content Container -->
-<div class="bottom-sheet-container !fixed !bottom-0 !left-0 !right-0 !z-[9999]" [class.active]="isAnimating()" [class.dragging]="isDragging()"
-  [class.full-height]="fullHeight()" [style.transform]="isDragging() ? 'translateY(' + dragOffset() + 'px)' : null">
+<div class="bottom-sheet-container !fixed !bottom-0 !z-[9999]" [class.active]="isAnimating()"
+  [class.dragging]="isDragging()" [class.full-height]="fullHeight()"
+  [style.transform]="isDragging() ? 'translateY(' + dragOffset() + 'px)' : null">
   <!-- Header with drag indicator -->
   <div class="w-full flex flex-col shrink-0 select-none bg-white" (touchstart)="onDragStart($event)"
     (mousedown)="onDragStart($event)">

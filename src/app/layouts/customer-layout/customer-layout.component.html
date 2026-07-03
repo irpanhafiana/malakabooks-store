@@ -10,7 +10,7 @@
     <header class="sticky top-0 z-40 bg-gray-50 px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
       @if (isSearchActive()) {
       <!-- Active Search Header -->
-      <div class="flex items-center gap-2 w-full animate-fade-in">
+      <div class="flex items-center gap-2 w-full ">
         <button type="button" (click)="isSearchActive.set(false)"
           class="p-1 rounded-lg text-slate-500 hover:text-slate-700 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent">
           <i class="bx bx-left-arrow-alt text-xl"></i>
@@ -119,7 +119,7 @@
     <div class="absolute top-16 left-4 right-4 z-[60] flex flex-col gap-2 pointer-events-none">
       @for (toast of toastService.toasts(); track toast.id) {
       <div [class]="toastClass(toast.type)"
-        class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-white animate-slide-down  pointer-events-auto">
+        class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-white   pointer-events-auto">
         @if (toast.type === 'success') {
         <i class="bx bx-check text-emerald-500 text-sm"></i>
         } @else if (toast.type === 'error') {

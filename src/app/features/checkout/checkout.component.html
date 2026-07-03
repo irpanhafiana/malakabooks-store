@@ -1,4 +1,4 @@
-<div class="animate-fade-in px-4 py-4 overflow-y-auto h-full no-scrollbar">
+<div class=" px-4 py-4 overflow-y-auto h-full no-scrollbar">
 
   @if (cartStore.itemsCount() === 0) {
   <div class="text-center py-10 bg-white border border-slate-100 rounded-3xl p-5">
@@ -119,7 +119,7 @@
 
         @if (isCreditCardSelected()) {
         <div
-          class="mt-4 p-4 border border-slate-100 bg-slate-50/50 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fade-in">
+          class="mt-4 p-4 border border-slate-100 bg-slate-50/50 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-4 ">
           <div class="sm:col-span-3">
             <app-input label="Card Number" placeholder="xxxx xxxx xxxx 4321" [control]="cardNumControl"></app-input>
           </div>

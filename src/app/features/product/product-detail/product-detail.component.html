@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full overflow-hidden animate-fade-in bg-white relative">
+<div class="flex flex-col h-full overflow-hidden  bg-white relative">
   <!-- Top Navigation Header -->
   <header class="sticky top-0 z-50 bg-white px-4 py-0 flex items-center justify-between h-14 shrink-0">
     <button type="button" (click)="goBack()"
@@ -100,7 +100,7 @@
       <!-- Tab Content Views -->
       <div>
         @if (activeTab() === 'details') {
-        <div class="flex flex-col gap-4 animate-fade-in">
+        <div class="flex flex-col gap-4 ">
           <div>
             <h3 class="font-display font-bold text-slate-800 text-sm mb-2">About the Product</h3>
             <p class="text-sm text-slate-500 leading-relaxed font-sans" [innerHTML]="product()!.description"></p>
@@ -153,7 +153,7 @@
         }
 
         @if (activeTab() === 'reviews') {
-        <div class="flex flex-col gap-8 animate-fade-in">
+        <div class="flex flex-col gap-8 ">
           <!-- Review List -->
           <div class="flex flex-col gap-4">
             @if (reviews().length === 0) {

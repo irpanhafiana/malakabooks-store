@@ -75,7 +75,7 @@
       <!-- Fore Color Dropdown -->
       @if (showForeColorPicker()) {
       <div
-        class="absolute top-10 left-0 bg-white border border-slate-200 p-2.5 rounded-2xl shadow-xl z-20 grid grid-cols-5 gap-1.5 w-40 animate-scale-in">
+        class="absolute top-10 left-0 bg-white border border-slate-200 p-2.5 rounded-2xl shadow-xl z-20 grid grid-cols-5 gap-1.5 w-40 ">
         @for (color of textColors; track color) {
         <button type="button" (click)="setTextColor(color)"
           class="w-6 h-6 rounded-lg border border-slate-100 cursor-pointer hover:scale-110 active:scale-95 transition-transform"
@@ -87,7 +87,7 @@
       <!-- Hilite Color Dropdown -->
       @if (showHiliteColorPicker()) {
       <div
-        class="absolute top-10 left-10 bg-white border border-slate-200 p-2.5 rounded-2xl shadow-xl z-20 grid grid-cols-5 gap-1.5 w-40 animate-scale-in">
+        class="absolute top-10 left-10 bg-white border border-slate-200 p-2.5 rounded-2xl shadow-xl z-20 grid grid-cols-5 gap-1.5 w-40 ">
         @for (color of highlightColors; track color) {
         <button type="button" (click)="setHighlightColor(color)"
           class="w-6 h-6 rounded-lg border border-slate-100 cursor-pointer hover:scale-110 active:scale-95 transition-transform"

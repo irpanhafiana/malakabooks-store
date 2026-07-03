@@ -1,10 +1,9 @@
-import { Component, inject, signal, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { RouterOutlet, Router, NavigationEnd, ActivatedRoute, ChildrenOutletContexts } from '@angular/router';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastService } from '../../core/services/toast.service';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { routeTransitionAnimations } from '../../core/animations/route.animations';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,18 +14,6 @@ import { routeTransitionAnimations } from '../../core/animations/route.animation
   styleUrl: './inner-page-layout.component.css'
 })
 export class InnerPageLayoutComponent {
-  @ViewChild('routeContainer') routeContainer!: ElementRef;
-  private contexts = inject(ChildrenOutletContexts);
-
-  onRouteActivate() {
-    if (this.routeContainer) {
-      const el = this.routeContainer.nativeElement;
-      el.classList.remove('animate-page-fade');
-      // Trigger reflow to restart CSS animation
-      void el.offsetWidth;
-      el.classList.add('animate-page-fade');
-    }
-  }
   protected readonly toastService = inject(ToastService);
   private readonly location = inject(Location);
   private readonly router = inject(Router);

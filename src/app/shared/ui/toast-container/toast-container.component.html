@@ -2,7 +2,7 @@
   aria-live="polite" aria-atomic="false">
   @for (toast of toastService.toasts(); track toast.id) {
   <div [class]="toastClass(toast.type)"
-    class="flex items-center gap-2.5 p-3 rounded-xl shadow-md border bg-white animate-slide-down  pointer-events-auto"
+    class="flex items-center gap-2.5 p-3 rounded-xl shadow-md border bg-white   pointer-events-auto"
     role="status">
     @if (toast.type === 'success') {
     <i class="bx bx-check text-emerald-500 text-sm"></i>

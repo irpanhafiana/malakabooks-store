@@ -17,7 +17,7 @@
   <!-- Session Message -->
   @if (sessionMessage()) {
   <div
-    class="relative mb-6 p-4 pr-8 rounded-xl bg-red-50 text-sm text-red-800 font-medium text-left animate-fade-in border border-red-100">
+    class="relative mb-6 p-4 pr-8 rounded-xl bg-red-50 text-sm text-red-800 font-medium text-left  border border-red-100">
     {{ sessionMessage() }}
     <button type="button" (click)="clearSessionMessage()"
       class="absolute top-2 right-2 p-1.5 rounded-lg text-red-500 hover:text-red-800 hover:bg-red-100 transition-colors cursor-pointer">

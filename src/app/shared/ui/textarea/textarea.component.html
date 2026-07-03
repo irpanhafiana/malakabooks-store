@@ -10,7 +10,7 @@
         [class]="textareaClass()"
       ></textarea>
       @if (control().invalid && (control().dirty || control().touched)) {
-        <span class="text-rose-500 text-xs mt-1.5 block animate-fade-in">
+        <span class="text-rose-500 text-xs mt-1.5 block ">
           @if (control().errors?.['required']) { Field is required. }
         </span>
       }
