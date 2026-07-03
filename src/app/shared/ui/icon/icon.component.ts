@@ -22,7 +22,7 @@ export class IconComponent {
     'cog': 'bx-cog',
     'search': 'bx-search',
     'dashboard': 'bx-grid-alt',
-    'book-open': 'bx-book-open',
+    'book-open': 'bxs-book-open',
     'cpu': 'bx-chip',
     'pen-tool': 'bx-edit',
     'edit': 'bx-edit-alt',
@@ -64,9 +64,9 @@ export class IconComponent {
   readonly boxiconClass = computed(() => {
     const name = this.name();
     let classes = this.customClass();
-    
+
     let bxName = this.iconMap[name] || `bx-${name}`;
-    
+
     if (name === 'star' || name === 'star-half') {
       if (classes.includes('fill-amber-400') || classes.includes('text-amber-400')) {
         bxName = name === 'star' ? 'bxs-star' : 'bxs-star-half';
@@ -75,7 +75,7 @@ export class IconComponent {
         bxName = name === 'star' ? 'bx-star' : 'bx-star-half';
       }
     }
-    
+
     return `bx ${bxName} ${classes}`;
   });
 }

@@ -6,6 +6,7 @@ import { ProductStore } from '../../store/product.store';
 import { CartStore } from '../../store/cart.store';
 import { AuthorStore } from '../../store/author.store';
 import { UserStore } from '../../store/user.store';
+import { Author, Product } from '../../core/models';
 import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
@@ -72,8 +73,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('merchandiseCarouselViewport') merchandiseCarouselViewport?: ElementRef<HTMLElement>;
 
   isAuthorSheetOpen = signal(false);
-  selectedAuthorName = signal<string>('');
-  selectedAuthorProducts = signal<any[]>([]);
+  selectedAuthor = signal<Author | null>(null);
+  selectedAuthorProducts = signal<Product[]>([]);
 
   constructor() {
     effect(() => {
@@ -178,8 +179,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.productStore.setQtyModalOpen(true);
   }
 
-  openAuthorSheet(author: any) {
-    this.selectedAuthorName.set(author.name);
+  openAuthorSheet(author: Author) {
+    this.selectedAuthor.set(author);
     this.selectedAuthorProducts.set(this.productStore.products().filter(p => p.authorId === author.id));
     this.isAuthorSheetOpen.set(true);
   }

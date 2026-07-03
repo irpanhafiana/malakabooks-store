@@ -29,6 +29,7 @@ export class AuthorApiService {
       const data = list.map((a: Author) => ({
         id: a.id,
         name: a.name,
+        role: a.role || '',
         biography: a.biography || '',
         photoUrl: a.photoUrl || ''
       }));
@@ -50,6 +51,7 @@ export class AuthorApiService {
     const isNew = !author.id;
     const body: Partial<Author> = {
       name: author.name,
+      role: author.role || '',
       biography: author.biography || '',
       photoUrl: author.photoUrl || ''
     };

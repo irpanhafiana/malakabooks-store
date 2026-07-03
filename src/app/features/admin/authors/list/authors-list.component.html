@@ -8,8 +8,7 @@
       <!-- Search Input -->
       <div class="relative w-full hidden sm:block">
         <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
-        <input type="text" placeholder="Search authors..."
-          [value]="searchQuery()" (input)="onSearch($event)"
+        <input type="text" placeholder="Search authors..." [value]="searchQuery()" (input)="onSearch($event)"
           class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
       </div>
 
@@ -19,12 +18,11 @@
       </app-admin-button>
     </div>
   </div>
-  
+
   <!-- Mobile Search (visible only on small screens) -->
   <div class="sm:hidden relative w-full">
     <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
-    <input type="text" placeholder="Search authors..."
-      [value]="searchQuery()" (input)="onSearch($event)"
+    <input type="text" placeholder="Search authors..." [value]="searchQuery()" (input)="onSearch($event)"
       class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
   </div>
 
@@ -38,6 +36,7 @@
     <tr table-headers>
       <th class="px-5 py-4">Photo</th>
       <th class="px-5 py-4">Author Name</th>
+      <th class="px-5 py-4">Role</th>
       <th class="px-5 py-4 text-right">Actions</th>
     </tr>
 
@@ -46,15 +45,20 @@
       <tr class="hover:bg-slate-50/50 transition-colors">
         <td class="px-5 py-4">
           @if (auth.photoUrl) {
-            <img [src]="auth.photoUrl" alt="{{ auth.name }}" class="w-10 h-10 rounded-full object-cover border border-slate-200">
+          <img [src]="auth.photoUrl" alt="{{ auth.name }}"
+            class="w-10 h-10 rounded-full object-cover border border-slate-200">
           } @else {
-            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 text-slate-400">
-              <app-icon name="user" size="18"></app-icon>
-            </div>
+          <div
+            class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 text-slate-400">
+            <app-icon name="user" size="18"></app-icon>
+          </div>
           }
         </td>
         <td class="px-5 py-4 font-bold text-slate-800 text-xs">
           {{ auth.name }}
+        </td>
+        <td class="px-5 py-4 text-slate-600 text-xs">
+          {{ auth.role }}
         </td>
         <td class="px-5 py-4 text-right">
           <div class="flex justify-end gap-1.5">
@@ -71,7 +75,7 @@
       </tr>
       } @empty {
       <tr>
-        <td colspan="3" class="p-8 text-center text-slate-400">No authors found.</td>
+        <td colspan="4" class="p-8 text-center text-slate-400">No authors found.</td>
       </tr>
       }
     </ng-container>

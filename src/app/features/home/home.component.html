@@ -70,11 +70,6 @@
         <h2 class="font-display font-extrabold text-slate-800 text-base">Produk Terlaris</h2>
         <p class="text-[12px] text-slate-400 mt-0.5">Lorem Ipsum Dolor Sit Amet Anum</p>
       </div>
-      <a routerLink="/product"
-        class="text-xs font-bold text-primary-600 hover:text-primary-700  flex items-center gap-1">
-        View All
-        <app-icon name="chevron-right" size="12"></app-icon>
-      </a>
     </div>
 
     <!-- Best Seller Carousel -->
@@ -106,11 +101,7 @@
         <h2 class="font-display font-extrabold text-slate-800 text-base">Merchandise</h2>
         <p class="text-[12px] text-slate-400 mt-0.5">Lorem Ipsum Dolor Sit Amet Anum</p>
       </div>
-      <a routerLink="/product"
-        class="text-xs font-bold text-primary-600 hover:text-primary-700  flex items-center gap-1">
-        View All
-        <app-icon name="chevron-right" size="12"></app-icon>
-      </a>
+
     </div>
 
     <!-- Best Seller Carousel -->
@@ -136,17 +127,12 @@
   </section>
 
   <!-- Author Slideshow -->
-  <section class="flex flex-col gap-5 mt-2">
-    <div class="flex items-start justify-between">
+  <section class="flex flex-col gap-4 mt-2">
+    <div class="flex items-start justify-start">
       <div>
         <h2 class="font-display font-extrabold text-slate-800 text-base">Penulis dan Kontributor</h2>
         <p class="text-[12px] text-slate-400 mt-0.5">Lorem Ipsum Dolor Sit Amet Anum</p>
       </div>
-      <a routerLink="/product"
-        class="text-xs font-bold text-primary-600 hover:text-primary-700  flex items-center gap-1">
-        View All
-        <app-icon name="chevron-right" size="12"></app-icon>
-      </a>
     </div>
 
     <div #authorCarouselViewport class="overflow-hidden pl-2 pb-2">
@@ -170,7 +156,7 @@
                   {{
                   author.name }}</h3>
                 <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
-                  Content Creator
+                  {{ author.role }}
                 </p>
               </div>
             </div>
@@ -196,7 +182,7 @@
                   {{
                   author.name }}</h3>
                 <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
-                  Content Creator
+                  {{ author.role }}
                 </p>
               </div>
             </div>
@@ -238,14 +224,9 @@
     <div class="flex flex-col gap-6">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="font-display font-extrabold text-slate-800 text-base">Featured Publications</h2>
+          <h2 class="font-display font-extrabold text-slate-800 text-base">Semua Produk</h2>
           <p class="text-[12px] text-slate-400 mt-0.5">Handpicked premium titles & accessories</p>
         </div>
-        <a routerLink="/product"
-          class="text-xs font-bold text-primary-600 hover:text-primary-700  flex items-center gap-1">
-          View All
-          <app-icon name="chevron-right" size="12"></app-icon>
-        </a>
       </div>
 
       <section class="flex flex-col gap-2">
@@ -283,20 +264,75 @@
 
 <!-- Bottom Sheet for Author Products -->
 <app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true">
-  <div class="flex flex-col h-full bg-slate-50">
-    <div class="px-5 py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0 rounded-t-2xl">
-      <h3 class="font-display font-bold text-slate-800 text-base">{{ selectedAuthorName() }}</h3>
-      <button (click)="closeAuthorSheet()"
-        class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 cursor-pointer border-0">
-        <app-icon name="x" size="18"></app-icon>
+  <div class="flex flex-col h-full overflow-hidden bg-white relative">
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white px-4 py-0 flex items-center justify-start h-14 shrink-0">
+      <button type="button" (click)="closeAuthorSheet()"
+        class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0">
+        <i class="bx bx-left-arrow-alt text-2xl"></i>
       </button>
-    </div>
-    <div class="p-4 overflow-y-auto grow">
-      <app-masonry-grid [items]="selectedAuthorProducts()">
-        <ng-template let-prod>
+      <h1 class="font-display font-extrabold text-slate-800 text-base text-center truncate px-2">Penulis dan Kontributor
+      </h1>
+    </header>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto">
+      @let auth = selectedAuthor();
+
+      @if (auth) {
+      <!-- Author Profile -->
+      <div class="px-4 flex flex-col items-start justify-start gap-4">
+        <!-- Photo -->
+        @if (auth.photoUrl) {
+        <img [src]="auth.photoUrl" [alt]="auth.name" class="w-full h-full object-cover" />
+        } @else {
+        <div class="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+          <i class="bx bx-user text-3xl"></i>
+        </div>
+        }
+
+        <div class="flex flex-col justify-between items-start gap-2">
+          <!-- Name & Role -->
+          <div class="flex flex-col items-start">
+            <h2 class="font-display font-extrabold text-slate-800 text-xl text-center">{{ auth.name }}</h2>
+            @if (auth.role) {
+            <p class="text-sm font-medium text-slate-400">{{ auth.role }}</p>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="px-4 pt-4">
+        <h3 class="font-display font-bold text-slate-800 text-base mb-4">Tentang </h3>
+        <!-- Biography -->
+        @if (auth.biography) {
+        <div class="text-sm text-slate-600 leading-relaxed text-center max-w-md [&_p]:mb-2"
+          [innerHTML]="auth.biography">
+        </div>
+        }
+      </div>
+
+
+      <!-- Products by Author -->
+      <div class="px-4 pt-4">
+        <h3 class="font-display font-bold text-slate-800 text-sm mb-4">Karya</h3>
+
+        @let products = selectedAuthorProducts();
+
+        @if (products.length > 0) {
+        <div class="grid grid-cols-2 gap-3">
+          @for (prod of products; track prod.id) {
           <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
-        </ng-template>
-      </app-masonry-grid>
+          }
+        </div>
+        } @else {
+        <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+          <i class="bx bx-book-open text-4xl mb-3"></i>
+          <p class="text-sm">Belum ada karya yang tersedia.</p>
+        </div>
+        }
+      </div>
+      }
     </div>
   </div>
 </app-bottom-sheet>

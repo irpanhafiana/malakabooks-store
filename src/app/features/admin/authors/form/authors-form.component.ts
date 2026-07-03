@@ -21,6 +21,13 @@ import { AlertService } from '../../../../core/services/alert.service';
         placeholder="e.g. Tere Liye">
       </app-admin-input>
 
+      <app-admin-input
+        label="Role"
+        id="role"
+        [control]="roleControl"
+        placeholder="e.g. Penulis">
+      </app-admin-input>
+
       <div class="flex flex-col gap-1.5">
         <label class="font-semibold text-slate-700 text-sm">Biography</label>
         <app-editor [formControl]="biographyControl"></app-editor>
@@ -68,11 +75,13 @@ export class AuthorsFormComponent {
   private readonly alertService = inject(AlertService);
 
   nameControl = new FormControl('', [Validators.required]);
+  roleControl = new FormControl('');
   biographyControl = new FormControl('');
   photoUrlControl = new FormControl('');
 
   authorForm = new FormGroup({
     name: this.nameControl,
+    role: this.roleControl,
     biography: this.biographyControl,
     photoUrl: this.photoUrlControl
   });
@@ -82,10 +91,11 @@ export class AuthorsFormComponent {
       const auth = this.author();
       if (auth) {
         this.nameControl.setValue(auth.name);
+        this.roleControl.setValue(auth.role || '');
         this.biographyControl.setValue(auth.biography || '');
         this.photoUrlControl.setValue(auth.photoUrl || '');
       } else {
-        this.authorForm.reset({ name: '', biography: '', photoUrl: '' });
+        this.authorForm.reset({ name: '', role: '', biography: '', photoUrl: '' });
       }
     });
   }
@@ -105,6 +115,7 @@ export class AuthorsFormComponent {
     const aData: Partial<Author> = {
       id: this.author()?.id,
       name: this.nameControl.value || '',
+      role: this.roleControl.value || '',
       biography: this.biographyControl.value || '',
       photoUrl: this.photoUrlControl.value || ''
     };
