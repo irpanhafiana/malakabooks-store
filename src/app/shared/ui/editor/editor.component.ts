@@ -12,6 +12,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,6 +34,7 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
   @ViewChild('imageInput', { static: true }) imageInputRef!: ElementRef<HTMLInputElement>;
 
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly logger = inject(LoggerService);
 
   // Reusable Color Options
   readonly textColors = [
@@ -203,7 +205,7 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
       this.updateToolbarState();
     };
     reader.onerror = () => {
-      console.error('Gagal membaca file gambar.');
+      this.logger.error('Gagal membaca file gambar.');
     };
     reader.readAsDataURL(input.files[0]);
     input.value = ''; // reset so same file can be picked again

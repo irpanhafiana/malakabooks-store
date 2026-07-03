@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { AddressApiService } from './address-api.service';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 import { CartStore } from '../../store/cart.store';
 
 @Injectable({
@@ -9,6 +10,7 @@ import { CartStore } from '../../store/cart.store';
 export class ShippingService {
   private readonly addressApi = inject(AddressApiService);
   private readonly cartStore = inject(CartStore);
+  private readonly logger = inject(LoggerService);
 
   readonly provinces = signal<any[]>([]);
   readonly cities = signal<any[]>([]);
@@ -89,7 +91,7 @@ export class ShippingService {
       this.shippingCost.set(0);
       return services;
     } catch (e) {
-      console.error('Failed to fetch courier services:', e);
+      this.logger.error('ShippingService.fetchCourierServices', 'Failed to fetch courier services:', e);
       this.courierServices.set([]);
       this.shippingCost.set(0);
       return [];

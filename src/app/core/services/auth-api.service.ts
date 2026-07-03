@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 
 export const SKIP_AUTH_HEADER = 'X-Skip-Auth-Interceptor';
 
@@ -10,13 +11,13 @@ export const SKIP_AUTH_HEADER = 'X-Skip-Auth-Interceptor';
 })
 export class AuthApiService {
   private readonly http = inject(HttpClient);
+  private readonly logger = inject(LoggerService);
   private readonly AUTH_URL = environment.authUrl;
 
   async loginAndGetToken(username: string, password: string): Promise<{ accessToken: string; refreshToken: string } | null> {
     const body = new URLSearchParams();
     body.set('grant_type', 'password');
     body.set('client_id', 'MalakaBooks-FE');
-    body.set('client_secret', 'MalakaBooks-FE');
     body.set('username', username);
     body.set('password', password);
     body.set('scope', 'Create Update Delete Read offline_access MalakaBooks_Scope General_Scope');
@@ -33,7 +34,7 @@ export class AuthApiService {
         refreshToken: res.refresh_token || ''
       };
     } catch (e) {
-      console.error('Request token gagal:', e);
+      this.logger.error('AuthApiService.loginAndGetToken', e);
       return null;
     }
   }
@@ -42,7 +43,6 @@ export class AuthApiService {
     const body = new URLSearchParams();
     body.set('grant_type', 'refresh_token');
     body.set('client_id', 'MalakaBooks-FE');
-    body.set('client_secret', 'MalakaBooks-FE');
     body.set('refresh_token', refreshToken);
 
     try {
@@ -60,7 +60,7 @@ export class AuthApiService {
         refreshToken: res.refresh_token || refreshToken
       };
     } catch (e) {
-      console.error('Refresh token gagal:', e);
+      this.logger.error('AuthApiService.refreshToken', e);
       return null;
     }
   }

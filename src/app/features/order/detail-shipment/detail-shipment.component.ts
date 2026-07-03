@@ -5,6 +5,7 @@ import { OrderApiService } from '../../../core/services/order-api.service';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { ToastService } from '../../../core/services/toast.service';
+import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -171,6 +172,7 @@ export class DetailShipmentComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly orderApi = inject(OrderApiService);
   private readonly toastService = inject(ToastService);
+  private readonly logger = inject(LoggerService);
 
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
@@ -202,7 +204,7 @@ export class DetailShipmentComponent implements OnInit {
         this.error.set('Data tracking kosong dari API server.');
       }
     } catch (err: any) {
-      console.error('Gagal fetch tracking info:', err);
+      this.logger.error('Gagal fetch tracking info:', err);
       this.error.set(err?.message || 'Gagal memuat status pengiriman dari server Simasrim. Silakan periksa koneksi Anda.');
     } finally {
       this.loading.set(false);
@@ -312,7 +314,7 @@ export class DetailShipmentComponent implements OnInit {
       navigator.clipboard.writeText(text).then(() => {
         this.toastService.success('Nomor resi berhasil disalin!');
       }).catch(err => {
-        console.error('Gagal menyalin resi:', err);
+        this.logger.error('Gagal menyalin resi:', err);
       });
     } else {
       // Fallback
@@ -324,7 +326,7 @@ export class DetailShipmentComponent implements OnInit {
         document.execCommand('copy');
         this.toastService.success('Nomor resi berhasil disalin!');
       } catch (err) {
-        console.error('Gagal menyalin resi (fallback):', err);
+        this.logger.error('Gagal menyalin resi (fallback):', err);
       }
       document.body.removeChild(input);
     }

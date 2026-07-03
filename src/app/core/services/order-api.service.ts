@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Order } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 import { getStoredSessionUser } from '../auth/session.util';
 import { UserApiService } from './user-api.service';
 
@@ -12,6 +13,7 @@ import { UserApiService } from './user-api.service';
 export class OrderApiService {
   private readonly http = inject(HttpClient);
   private readonly userApi = inject(UserApiService);
+  private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
   async updateOrderStatus(id: string, status: string): Promise<boolean> {
@@ -19,7 +21,7 @@ export class OrderApiService {
       await firstValueFrom(this.http.put(`${this.BASE_URL}/admin/Orders/${id}/status`, { status }));
       return true;
     } catch (e) {
-      console.error(`Gagal update status order ${id}:`, e);
+      this.logger.error('OrderApiService.updateOrderStatus', `Gagal update status order ${id}:`, e);
       return false;
     }
   }
@@ -84,7 +86,7 @@ export class OrderApiService {
           };
         });
       } catch (e) {
-        console.error('Gagal mengambil semua order (admin):', e);
+        this.logger.error('OrderApiService.getOrders', 'Gagal mengambil semua order (admin):', e);
         return this.getOrdersByUserId(currentUser.id);
       }
     } else {
@@ -148,7 +150,7 @@ export class OrderApiService {
         };
       });
     } catch (e) {
-      console.error(`Gagal mengambil order untuk user ${userId}:`, e);
+      this.logger.error('OrderApiService.getOrdersByUserId', `Gagal mengambil order untuk user ${userId}:`, e);
       return [];
     }
   }
@@ -215,7 +217,7 @@ export class OrderApiService {
         trackingNumber: res.awbNo || res.awbNo || res.trackingNumber
       };
     } catch (e) {
-      console.error(`Gagal mengambil order detail untuk id ${id}:`, e);
+      this.logger.error('OrderApiService.getOrderById', `Gagal mengambil order detail untuk id ${id}:`, e);
       return null;
     }
   }
@@ -281,7 +283,7 @@ export class OrderApiService {
         orderDate: new Date().toISOString()
       };
     } catch (e) {
-      console.error('Gagal membuat order:', e);
+      this.logger.error('OrderApiService.saveOrder', 'Gagal membuat order:', e);
       throw e;
     }
   }
@@ -293,7 +295,7 @@ export class OrderApiService {
       );
       return res?.data || res || null;
     } catch (e) {
-      console.error(`Gagal membuat shipment untuk order ${id}:`, e);
+      this.logger.error('OrderApiService.createShipment', `Gagal membuat shipment untuk order ${id}:`, e);
       throw e;
     }
   }
@@ -305,7 +307,7 @@ export class OrderApiService {
       );
       return res?.data || res || null;
     } catch (e) {
-      console.error('Gagal membuat bulk shipment:', e);
+      this.logger.error('OrderApiService.createBulkShipment', 'Gagal membuat bulk shipment:', e);
       throw e;
     }
   }
@@ -317,7 +319,7 @@ export class OrderApiService {
       );
       return res?.data || res || null;
     } catch (e) {
-      console.error(`Gagal membatalkan shipment untuk order ${id}:`, e);
+      this.logger.error('OrderApiService.cancelShipment', `Gagal membatalkan shipment untuk order ${id}:`, e);
       throw e;
     }
   }
@@ -329,7 +331,7 @@ export class OrderApiService {
       );
       return res?.data || res || null;
     } catch (e) {
-      console.error(`Gagal tracking AWB ${awb}:`, e);
+      this.logger.error('OrderApiService.trackAwb', `Gagal tracking AWB ${awb}:`, e);
       throw e;
     }
   }

@@ -1,10 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User, Address, RegisterPayload } from '../models';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { getStoredSessionUser } from '../auth/session.util';
 import { AuthApiService } from './auth-api.service';
+import { LoggerService } from './logger.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,13 @@ import { AuthApiService } from './auth-api.service';
 export class UserApiService {
   private readonly http = inject(HttpClient);
   private readonly authApi = inject(AuthApiService);
+  private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
+
+  /** Fetch external profile ID from the payment/external system */
+  getExternalProfile(phone: string): Observable<any> {
+    return this.http.get<any>(`${this.BASE_URL}/customer/Users/${phone}/profile`);
+  }
 
   async getAddressesByUserId(userId: string): Promise<Address[]> {
     try {
@@ -34,7 +41,7 @@ export class UserApiService {
         isDefault: addr.isDefault
       }));
     } catch (e) {
-      console.error(`Gagal mengambil alamat untuk user ${userId}:`, e);
+      this.logger.error('UserApiService.getAddressesByUserId', e, { userId });
       return [];
     }
   }
@@ -64,7 +71,7 @@ export class UserApiService {
           addresses: []
         }));
       } catch (e) {
-        console.error('Gagal mengambil semua user (admin):', e);
+        this.logger.error('UserApiService.getUsers', e);
         return [];
       }
     } else {
@@ -90,7 +97,7 @@ export class UserApiService {
         addresses: addresses
       };
     } catch (e) {
-      console.error(`Gagal mengambil detail user ${id}:`, e);
+      this.logger.error('UserApiService.getUserById', e, { id });
       return undefined;
     }
   }
@@ -108,10 +115,10 @@ export class UserApiService {
 
     try {
       await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Users/${user.id}/profile`, profileBody));
-      
+
       const backendAddresses = await this.getAddressesByUserId(user.id);
       const backendAddrMap = new Map(backendAddresses.map(a => [a.id, a]));
-      
+
       for (const addr of user.addresses) {
         const isNew = !addr.id || addr.id.startsWith('addr-');
         const addressBody = {
@@ -130,7 +137,7 @@ export class UserApiService {
           longitude: addr.longitude || 0,
           isDefault: addr.isDefault
         };
-        
+
         if (isNew) {
           await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Addresses`, addressBody));
         } else {
@@ -138,12 +145,12 @@ export class UserApiService {
           backendAddrMap.delete(addr.id);
         }
       }
-      
+
       for (const [id, _] of backendAddrMap.entries()) {
         try {
           await firstValueFrom(this.http.delete(`${this.BASE_URL}/customer/Addresses/${id}`));
         } catch (e) {
-          console.error(`Gagal menghapus alamat ${id}:`, e);
+          this.logger.error('UserApiService.saveUser.deleteAddress', e, { id });
         }
       }
 
@@ -154,7 +161,7 @@ export class UserApiService {
         addresses: updatedAddresses
       };
     } catch (e) {
-      console.error('Gagal menyimpan user/alamat:', e);
+      this.logger.error('UserApiService.saveUser', e);
       throw e;
     }
   }
@@ -180,7 +187,7 @@ export class UserApiService {
       await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Addresses`, addressBody));
       return true;
     } catch (e) {
-      console.error('Failed to add address:', e);
+      this.logger.error('UserApiService.addAddress', e);
       return false;
     }
   }
@@ -206,7 +213,7 @@ export class UserApiService {
       await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Addresses/${addr.id}`, addressBody));
       return true;
     } catch (e) {
-      console.error('Failed to update address:', e);
+      this.logger.error('UserApiService.updateAddress', e);
       return false;
     }
   }
@@ -216,7 +223,7 @@ export class UserApiService {
       await firstValueFrom(this.http.delete(`${this.BASE_URL}/customer/Addresses/${addressId}`));
       return true;
     } catch (e) {
-      console.error('Failed to delete address:', e);
+      this.logger.error('UserApiService.deleteAddress', e);
       return false;
     }
   }

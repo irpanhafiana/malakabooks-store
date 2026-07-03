@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Payment, ApiResponse, CreatePaymentPayload, UpdatePaymentPayload } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 import { isAdminSession } from '../auth/session.util';
 
 @Injectable({
@@ -10,6 +11,7 @@ import { isAdminSession } from '../auth/session.util';
 })
 export class PaymentApiService {
   private readonly http = inject(HttpClient);
+  private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
   private paymentCache: { data: Payment[]; ts: number } | null = null;
@@ -38,7 +40,7 @@ export class PaymentApiService {
       }
       return data;
     } catch (e) {
-      console.error('Gagal mengambil payment:', e);
+      this.logger.error('PaymentApiService.getPayments', 'Gagal mengambil payment:', e);
       return [];
     }
   }
@@ -72,7 +74,7 @@ export class PaymentApiService {
       this.invalidatePaymentCache();
       return result;
     } catch (e) {
-      console.error('Gagal menyimpan payment:', e);
+      this.logger.error('PaymentApiService.savePayment', 'Gagal menyimpan payment:', e);
       throw e;
     }
   }
@@ -83,7 +85,7 @@ export class PaymentApiService {
       this.invalidatePaymentCache();
       return true;
     } catch (e) {
-      console.error(`Gagal menghapus payment ${id}:`, e);
+      this.logger.error('PaymentApiService.deletePayment', `Gagal menghapus payment ${id}:`, e);
       return false;
     }
   }

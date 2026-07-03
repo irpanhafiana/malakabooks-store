@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Review } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 import { getStoredSessionUser } from '../auth/session.util';
 
 @Injectable({
@@ -10,6 +11,7 @@ import { getStoredSessionUser } from '../auth/session.util';
 })
 export class ReviewApiService {
   private readonly http = inject(HttpClient);
+  private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
   async getReviewsByProductId(productId: string): Promise<Review[]> {
@@ -33,7 +35,7 @@ export class ReviewApiService {
         date: r.createdAt
       }));
     } catch (e) {
-      console.warn(`Reviews could not be loaded:`, e);
+      this.logger.warn('ReviewApiService.getReviewsByProductId', 'Reviews could not be loaded:', e);
       return [];
     }
   }

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Category, ApiResponse } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 import { isAdminSession } from '../auth/session.util';
 
 @Injectable({
@@ -10,6 +11,7 @@ import { isAdminSession } from '../auth/session.util';
 })
 export class CategoryApiService {
   private readonly http = inject(HttpClient);
+  private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
   private categoryCache: { data: Category[]; ts: number } | null = null;
@@ -38,7 +40,7 @@ export class CategoryApiService {
       }
       return data;
     } catch (e) {
-      console.error('Gagal mengambil kategori:', e);
+      this.logger.error('CategoryApiService.getCategories', 'Gagal mengambil kategori:', e);
       return [];
     }
   }
@@ -69,7 +71,7 @@ export class CategoryApiService {
       this.invalidateCategoryCache();
       return result;
     } catch (e) {
-      console.error('Gagal menyimpan kategori:', e);
+      this.logger.error('CategoryApiService.saveCategory', 'Gagal menyimpan kategori:', e);
       throw e;
     }
   }
@@ -80,7 +82,7 @@ export class CategoryApiService {
       this.invalidateCategoryCache();
       return true;
     } catch (e) {
-      console.error(`Gagal menghapus kategori ${id}:`, e);
+      this.logger.error('CategoryApiService.deleteCategory', `Gagal menghapus kategori ${id}:`, e);
       return false;
     }
   }

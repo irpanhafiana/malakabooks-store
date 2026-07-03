@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Author, ApiResponse } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 import { isAdminSession } from '../auth/session.util';
 
 @Injectable({
@@ -10,6 +11,7 @@ import { isAdminSession } from '../auth/session.util';
 })
 export class AuthorApiService {
   private readonly http = inject(HttpClient);
+  private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
   private authorCache: { data: Author[]; ts: number } | null = null;
@@ -38,7 +40,7 @@ export class AuthorApiService {
       }
       return data;
     } catch (e) {
-      console.error('Gagal mengambil author:', e);
+      this.logger.error('AuthorApiService.getAuthors', 'Gagal mengambil author:', e);
       return [];
     }
   }
@@ -69,7 +71,7 @@ export class AuthorApiService {
       this.invalidateAuthorCache();
       return result;
     } catch (e) {
-      console.error('Gagal menyimpan author:', e);
+      this.logger.error('AuthorApiService.saveAuthor', 'Gagal menyimpan author:', e);
       throw e;
     }
   }
@@ -80,7 +82,7 @@ export class AuthorApiService {
       this.invalidateAuthorCache();
       return true;
     } catch (e) {
-      console.error(`Gagal menghapus author ${id}:`, e);
+      this.logger.error('AuthorApiService.deleteAuthor', `Gagal menghapus author ${id}:`, e);
       return false;
     }
   }

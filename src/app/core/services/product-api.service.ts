@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Product, BookDto, ApiResponse } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 import { isAdminSession } from '../auth/session.util';
 import { CategoryApiService } from './category-api.service';
 
@@ -12,6 +13,7 @@ import { CategoryApiService } from './category-api.service';
 export class ProductApiService {
   private readonly http = inject(HttpClient);
   private readonly categoryApi = inject(CategoryApiService);
+  private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
   private mapBookToProduct(book: BookDto): Product {
@@ -62,7 +64,7 @@ export class ProductApiService {
         categoryName: catMap.get(b.categoryId) || 'Lainnya'
       }));
     } catch (e) {
-      console.error('Gagal mengambil daftar produk:', e);
+      this.logger.error('ProductApiService.getProducts', 'Gagal mengambil daftar produk:', e);
       throw e;
     }
   }
@@ -75,7 +77,7 @@ export class ProductApiService {
       if (!book) return undefined;
       return this.mapBookToProduct(book);
     } catch (e) {
-      console.error(`Gagal mengambil detail produk ${id}:`, e);
+      this.logger.error('ProductApiService.getProductById', `Gagal mengambil detail produk ${id}:`, e);
       return undefined;
     }
   }
@@ -112,7 +114,7 @@ export class ProductApiService {
         return this.mapBookToProduct(envelope?.data);
       }
     } catch (e) {
-      console.error('Gagal menyimpan produk:', e);
+      this.logger.error('ProductApiService.saveProduct', 'Gagal menyimpan produk:', e);
       throw e;
     }
   }
@@ -122,7 +124,7 @@ export class ProductApiService {
       await firstValueFrom(this.http.delete(`${this.BASE_URL}/admin/Books/${id}`));
       return true;
     } catch (e) {
-      console.error(`Gagal menghapus produk ${id}:`, e);
+      this.logger.error('ProductApiService.deleteProduct', `Gagal menghapus produk ${id}:`, e);
       return false;
     }
   }

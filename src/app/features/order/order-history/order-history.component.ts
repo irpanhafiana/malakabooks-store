@@ -10,6 +10,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { ExternalMessageService } from '../../../core/services/external-message.service';
+import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,6 +25,7 @@ export class OrderHistoryComponent implements OnInit {
   protected readonly orderStore = inject(OrderStore);
   private readonly router = inject(Router);
   private readonly externalMessageService = inject(ExternalMessageService);
+  private readonly logger = inject(LoggerService);
 
   ngOnInit() {
     const user = this.authStore.currentUser();
@@ -38,14 +40,14 @@ export class OrderHistoryComponent implements OnInit {
   checkPaymentStatus(orderId: string) {
     this.externalMessageService.postCheckPaymentDoku(orderId).subscribe({
       next: (response) => {
-        console.log('Status Pembayaran DOKU:', response);
+        this.logger.log('Status Pembayaran DOKU:', response);
         const user = this.authStore.currentUser();
         if (user) {
           this.orderStore.loadUserOrders(user.id);
         }
       },
       error: (err) => {
-        console.error('Gagal mengecek status pembayaran DOKU', err);
+        this.logger.error('Gagal mengecek status pembayaran DOKU', err);
       }
     });
   }

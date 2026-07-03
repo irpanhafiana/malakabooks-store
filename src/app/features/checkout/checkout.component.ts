@@ -18,6 +18,7 @@ import { ToastService } from '../../core/services/toast.service';
 import { AddressApiService } from '../../core/services/address-api.service';
 import { ExternalMessageService } from '../../core/services/external-message.service';
 import { UserApiService } from '../../core/services/user-api.service';
+import { LoggerService } from '../../core/services/logger.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ShippingService } from '../../core/services/shipping.service';
@@ -41,6 +42,7 @@ export class CheckoutComponent implements OnInit {
   private readonly addressApi = inject(AddressApiService);
   private readonly externalMessageService = inject(ExternalMessageService);
   private readonly userApi = inject(UserApiService);
+  private readonly logger = inject(LoggerService);
   private readonly shippingService = inject(ShippingService);
   private readonly paymentApi = inject(PaymentApiService);
 
@@ -75,7 +77,7 @@ export class CheckoutComponent implements OnInit {
       else if (typeof s.cost === 'number') { price = s.cost; }
       else if (s.cost && Array.isArray(s.cost)) { price = s.cost[0]?.value || 0; }
       else if (s.cost && typeof s.cost === 'object') { price = s.cost.value || 0; }
-      
+
       return {
         value: idx.toString(),
         label: `${s.service_display || s.service || 'Reg'} - Rp ${price.toLocaleString('id-ID')} (ETA: ${s.etd || s.cost?.[0]?.etd || '-'})`
@@ -84,10 +86,10 @@ export class CheckoutComponent implements OnInit {
   });
 
   checkoutTax = computed(() => this.cartStore.subtotal() * 0.10);
-  
+
   payments = signal<Payment[]>([]);
   paymentFee = signal<number>(0);
-  
+
   checkoutTotal = computed(() => {
     return Math.max(0, this.cartStore.subtotal() + this.checkoutTax() + this.shippingCost() + this.paymentFee() - this.cartStore.discount());
   });
@@ -145,7 +147,7 @@ export class CheckoutComponent implements OnInit {
       try {
         addresses = await this.userApi.getAddressesByUserId(userId);
       } catch (err) {
-        console.error('Failed to load user addresses via API:', err);
+        this.logger.error('Failed to load user addresses via API:', err);
       }
     }
     this.savedAddresses.set(addresses);
@@ -249,7 +251,7 @@ export class CheckoutComponent implements OnInit {
         this.paymentControl.setValue(res[0].id, { emitEvent: true });
       }
     } catch (err) {
-      console.error('Failed to load payments:', err);
+      this.logger.error('Failed to load payments:', err);
     }
   }
 
@@ -263,10 +265,10 @@ export class CheckoutComponent implements OnInit {
       this.paymentFee.set(0);
       return;
     }
-    
+
     let totalFee = 0;
     const subtotal = this.cartStore.subtotal();
-    
+
     for (const fee of payment.fees) {
       if (fee.type === 'PERCENTAGE') {
         totalFee += subtotal * (fee.value / 100);
@@ -318,17 +320,17 @@ export class CheckoutComponent implements OnInit {
       if (addr.district) {
         const targetDistrict = addr.district.toLowerCase();
         const targetSubDistrict = addr.subDistrict?.toLowerCase();
-        
+
         const districts = await this.addressApi.getDistricts(city);
-        const dist = districts.find(d => 
-            d.district_name.toLowerCase() === targetDistrict && 
-            (targetSubDistrict ? d.subdistrict_name.toLowerCase() === targetSubDistrict : true)
+        const dist = districts.find(d =>
+          d.district_name.toLowerCase() === targetDistrict &&
+          (targetSubDistrict ? d.subdistrict_name.toLowerCase() === targetSubDistrict : true)
         );
         return dist ? dist.region_code : city;
       }
       return city;
     } catch (e) {
-      console.error('Error resolving district ID for saved address:', e);
+      this.logger.error('Error resolving district ID for saved address:', e);
       return null;
     }
   }
@@ -366,7 +368,7 @@ export class CheckoutComponent implements OnInit {
     const provName = this.provinceControl.value || '';
     const cityName = this.cityControl.value || '';
     const distCode = this.districtControl.value;
-    
+
     const distObj = this.districts().find(d => d.region_code === distCode);
     const districtName = distObj ? distObj.district_name : '';
     const subDistrictName = distObj ? distObj.subdistrict_name : '';
@@ -420,7 +422,7 @@ export class CheckoutComponent implements OnInit {
       return true;
     }
     const selectedPayment = this.payments().find(p => p.id === this.paymentControl.value);
-    
+
     if (selectedPayment?.methodType === 'credit_card') {
       if (this.cardNumControl.invalid || this.cardExpiryControl.invalid || this.cardCvcControl.invalid) {
         this.toastService.error('Please complete your credit card details');
@@ -493,11 +495,11 @@ export class CheckoutComponent implements OnInit {
     if (placed) {
       if (selectedPayment?.methodType === 'jokul_checkout' || selectedPayment?.methodType === 'doku') {
         const checkoutUrl = placed.paymentUrl;
-        
+
         if (checkoutUrl) {
           (window as any).loadJokulCheckout(checkoutUrl);
         } else {
-          console.error('Failed to resolve checkout URL from order response:', placed);
+          this.logger.error('Failed to resolve checkout URL from order response:', placed);
           this.toastService.error('Order placed, but failed to load payment gateway. Please check your order history.');
           this.router.navigate(['/order-success'], { queryParams: { id: placed.id } });
         }

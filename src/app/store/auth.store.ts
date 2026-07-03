@@ -4,6 +4,7 @@ import { AuthApiService } from '../core/services/auth-api.service';
 import { UserApiService } from '../core/services/user-api.service';
 import { ProductApiService } from '../core/services/product-api.service';
 import { ToastService } from '../core/services/toast.service';
+import { LoggerService } from '../core/services/logger.service';
 import { CartStore } from './cart.store';
 import { decodeJwt, isTokenExpired, jwtHasAdminRole, mapJwtToUser } from '../core/auth/jwt.util';
 import { SESSION_TOKEN_KEY, SESSION_USER_KEY, SESSION_REFRESH_KEY } from '../core/auth/session.util';
@@ -21,6 +22,7 @@ export class AuthStore {
   private readonly userApi = inject(UserApiService);
   private readonly productApi = inject(ProductApiService);
   private readonly toastService = inject(ToastService);
+  private readonly logger = inject(LoggerService);
   private readonly cartStore = inject(CartStore);
 
   // Private state signal
@@ -171,7 +173,7 @@ export class AuthStore {
       this.toastService.success('Pendaftaran akun berhasil! Silakan masuk.');
       return true;
     } catch (err: any) {
-      console.error('Registration error:', err);
+      this.logger.error('AuthStore.register', err);
       const errorResponse = err?.error;
       if (errorResponse && errorResponse.errors) {
         const validationErrors = Object.values(errorResponse.errors).join('\n');

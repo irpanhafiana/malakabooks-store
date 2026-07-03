@@ -88,7 +88,7 @@ export const routes: Routes = [
     ]
   },
 
-    // Inner page layout (without bottom nav, with back button)
+  // Inner page layout (without bottom nav, with back button)
   {
     path: '',
     loadComponent: () => import('./layouts/inner-page-layout/inner-page-layout.component').then(c => c.InnerPageLayoutComponent),
@@ -152,12 +152,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/order/detail-shipment/detail-shipment.component').then(c => c.DetailShipmentComponent),
         canActivate: [authGuard],
         data: { title: 'Detail Shipment' }
-      },
-      {
-        path: 'tracking',
-        loadComponent: () => import('./features/tracking/tracking.component').then(c => c.TrackingComponent),
-        canActivate: [authGuard],
-        data: { title: 'Tracking Pesanan' }
       },
       {
         path: 'complaints',

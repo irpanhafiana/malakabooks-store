@@ -1,5 +1,6 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, Input, Output, EventEmitter, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, Input, Output, EventEmitter, PLATFORM_ID, Inject, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
   selector: 'app-map-picker',
@@ -53,6 +54,7 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
   private L: any;
 
   isLocating = false;
+  private readonly logger = inject(LoggerService);
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
@@ -118,7 +120,7 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
         },
         (error) => {
           this.isLocating = false;
-          console.error('Error getting location', error);
+          this.logger.error('Error getting location', error);
           alert('Tidak dapat mengakses lokasi saat ini. Pastikan izin lokasi diberikan pada browser Anda.');
         },
         { enableHighAccuracy: true }

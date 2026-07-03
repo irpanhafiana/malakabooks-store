@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Complaint, CreateComplaintPayload, RespondComplaintPayload } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComplaintApiService {
   private readonly http = inject(HttpClient);
+  private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
   private mapComplaint(c: any): Complaint {
@@ -31,7 +33,7 @@ export class ComplaintApiService {
       const list = envelope?.data || [];
       return list.map((c: any) => this.mapComplaint(c));
     } catch (e) {
-      console.error('Gagal mengambil complaints user:', e);
+      this.logger.error('ComplaintApiService.getComplaintsByUser', 'Gagal mengambil complaints user:', e);
       return [];
     }
   }
@@ -47,7 +49,7 @@ export class ComplaintApiService {
       const list = envelope?.data || [];
       return list.map((c: any) => this.mapComplaint(c));
     } catch (e) {
-      console.error('Gagal mengambil semua complaints (admin):', e);
+      this.logger.error('ComplaintApiService.getAllComplaints', 'Gagal mengambil semua complaints (admin):', e);
       return [];
     }
   }
