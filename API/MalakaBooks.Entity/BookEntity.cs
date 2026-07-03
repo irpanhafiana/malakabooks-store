@@ -6,14 +6,15 @@ namespace MalakaBooks.Entity;
 public class BookEntity : BaseObject
 {
     public string Title { get; set; } = string.Empty;
+    public string SAPCode { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string AuthorId { get; set; } = string.Empty;
+    public List<string> AuthorIds { get; set; } = [];
 
     public string Isbn { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string CategoryId { get; set; } = string.Empty;
+    public string? CategoryId { get; set; } = null;
 
     public decimal Price { get; set; }
     public string Description { get; set; } = string.Empty;

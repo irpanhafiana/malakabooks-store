@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MalakaBooks.API.Controllers.Admin;
+
 /// <summary>
 /// Provides API endpoints for managing books, including operations to retrieve, create, update, and delete book
 /// records.
@@ -17,12 +18,23 @@ namespace MalakaBooks.API.Controllers.Admin;
 [Authorize(Policy = "MalakaAdminPolicy")]
 public class BooksController(IMediator mediator) : ApiControllerBase
 {
-    /// <summary>Get all books</summary>
+    /// <summary>
+    /// Gets all books.
+    /// </summary>
+    /// <remarks>Sends a GetBooksQuery through the mediator and returns the result wrapped in a successful
+    /// response.</remarks>
+    /// <param name="cancellationToken">Cancellation token to cancel the request.</param>
+    /// <returns>An IActionResult containing the retrieved books on success.</returns>
     [HttpGet]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
         Success(await mediator.Send(new GetBooksQuery(), cancellationToken));
 
-    /// <summary>Get book by id</summary>
+    /// <summary>
+    /// Retrieves a book by its identifier.
+    /// </summary>
+    /// <param name="id">The identifier of the book to retrieve.</param>
+    /// <param name="cancellationToken">A cancellation token to observe while the request is processed.</param>
+    /// <returns>An IActionResult containing the book if found (200 OK), or NotFound (404) if not.</returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
     {
@@ -30,7 +42,13 @@ public class BooksController(IMediator mediator) : ApiControllerBase
         return book is null ? NotFound() : Success(book);
     }
 
-    /// <summary>Create book</summary>
+    /// <summary>
+    /// Creates a book by sending a CreateBookCommand to the mediator and returns an HTTP result representing the operation
+    /// outcome.
+    /// </summary>
+    /// <param name="request">The request containing the details for the book to create.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
+    /// <returns>An IActionResult representing the HTTP response for the create operation, reflecting success or failure statuses.</returns>
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateBookRequest request, CancellationToken cancellationToken)
     {
@@ -38,7 +56,14 @@ public class BooksController(IMediator mediator) : ApiControllerBase
         return ProcessResult(result);
     }
 
-    /// <summary>Update book</summary>
+    /// <summary>
+    /// Updates an existing book identified by the specified id using the provided request payload.
+    /// </summary>
+    /// <param name="id">Identifier of the book to update.</param>
+    /// <param name="request">UpdateBookRequest containing the new values for the book.</param>
+    /// <param name="cancellationToken">CancellationToken to cancel the operation.</param>
+    /// <returns>An IActionResult containing the result of the update operation, typically a success response with the updated
+    /// resource or an error status code.</returns>
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, [FromBody] UpdateBookRequest request, CancellationToken cancellationToken)
     {
@@ -46,7 +71,12 @@ public class BooksController(IMediator mediator) : ApiControllerBase
         return Success(result);
     }
 
-    /// <summary>Delete book</summary>
+    /// <summary>
+    /// Deletes the book with the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier of the book to delete.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>An IActionResult representing the outcome of the delete operation.</returns>
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
       => Success(await mediator.Send(new DeleteBookCommand(id), cancellationToken));

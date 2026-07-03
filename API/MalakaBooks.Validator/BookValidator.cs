@@ -8,9 +8,8 @@ public class CreateBookRequestValidator : AbstractValidator<CreateBookRequest>
     public CreateBookRequestValidator()
     {
         RuleFor(x => x.Title).NotEmpty();
-        RuleFor(x => x.AuthorId).NotEmpty();
+        RuleFor(x => x.SAPCode).NotEmpty();
         RuleFor(x => x.Isbn).NotEmpty();
-        RuleFor(x => x.CategoryId).NotEmpty();
         RuleFor(x => x.Price).GreaterThanOrEqualTo(0);
         RuleFor(x => x.PublishedYear).GreaterThan(0);
         RuleFor(x => x.Pages).GreaterThan(0);
