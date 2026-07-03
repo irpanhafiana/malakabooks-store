@@ -58,49 +58,10 @@
         <app-price [value]="cartStore.subtotal()" [bold]="false" size="sm"></app-price>
       </div>
 
-      @if (cartStore.discount() > 0) {
-      <div class="flex justify-between text-rose-600 font-semibold">
-        <span>Discount (10% promo applied)</span>
-        <span>- $ {{ cartStore.discount() | number: '1.2-2' }}</span>
-      </div>
-      }
-
-      <div class="flex justify-between">
-        <span>Tax (10%)</span>
-        <app-price [value]="cartStore.tax()" [bold]="false" size="sm"></app-price>
-      </div>
-
-      <div class="flex justify-between">
-        <span>Shipping Cost</span>
-        @if (cartStore.shipping() === 0) {
-        <span class="text-emerald-600 font-bold">Free</span>
-        } @else {
-        <app-price [value]="cartStore.shipping()" [bold]="false" size="sm"></app-price>
-        }
-      </div>
-
-      <hr class="border-slate-100 my-1" />
-
-      <div class="flex justify-between text-slate-800 text-sm font-bold">
-        <span>Total Amount</span>
-        <app-price [value]="cartStore.total()" size="md" class="text-primary-600"></app-price>
-      </div>
     </div>
 
-    <!-- Promo coupon input -->
-    <div class="flex gap-2 mt-2">
-      <div class="grow">
-        <app-input placeholder="Promo Code (PROMO10)" [control]="promoControl" class="h-9"></app-input>
-      </div>
-      <app-button (click)="applyPromo()" [disabled]="promoControl.invalid" variant="outline" size="sm" class="px-3">
-        Apply
-      </app-button>
-    </div>
 
-    <hr class="border-slate-100" />
-
-    <app-button routerLink="/checkout" variant="primary" size="md" [fullWidth]="true"
-      class="border border-primary-700/20">
+    <app-button routerLink="/checkout" variant="primary" size="lg" [fullWidth]="true" class="">
       Proceed to Checkout
     </app-button>
   </div>

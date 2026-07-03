@@ -1,0 +1,27 @@
+@if (isOpen()) {
+<div class="alert-overlay">
+  <div class="alert-card">
+    <!-- Icon -->
+    <div class="alert-icon" [class.bg-green-100]="type() === 'success'" [class.bg-red-100]="type() === 'error'"
+      [class.text-green-600]="type() === 'success'" [class.text-red-600]="type() === 'error'"
+      [class.text-blue-600]="type() === 'info'" [class.text-amber-600]="type() === 'warning'"
+      [class.bg-blue-100]="type() === 'info'" [class.bg-amber-100]="type() === 'warning'">
+      <app-icon [name]="iconMap[type()]" size="28"></app-icon>
+    </div>
+
+    <!-- Title -->
+    <h3 class="font-display font-extrabold text-slate-800 text-lg">{{ title() }}</h3>
+
+    <!-- Message -->
+    @if (message()) {
+    <p class="text-sm text-slate-500 text-center mt-1">{{ message() }}</p>
+    }
+
+    <!-- OK Button -->
+    <button type="button" (click)="close()"
+      class="mt-4 px-8 py-2.5 text-xs font-bold text-white bg-primary-600 hover:bg-primary-700 rounded-xl cursor-pointer active:scale-95">
+      OK
+    </button>
+  </div>
+</div>
+}

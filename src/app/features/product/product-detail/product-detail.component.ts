@@ -1,7 +1,6 @@
 import { Component, inject, signal, computed, OnInit, input, effect, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { KeyValuePipe, DatePipe, Location } from '@angular/common';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { ReviewApiService } from '../../../core/services/review-api.service';
@@ -16,6 +15,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { TextareaComponent } from '../../../shared/ui/textarea/textarea.component';
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 import { QuantitySelectorComponent } from '../../../shared/ui/quantity-selector/quantity-selector.component';
+import { AlertDialogComponent } from '../../../shared/ui/alert-dialog/alert-dialog.component';
 import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
@@ -24,13 +24,12 @@ import { ToastService } from '../../../core/services/toast.service';
   standalone: true,
   imports: [
     RouterLink,
-    ReactiveFormsModule,
     PriceComponent,
     IconComponent,
     ButtonComponent,
-    TextareaComponent,
     SpinnerComponent,
-    DatePipe
+    DatePipe,
+    AlertDialogComponent
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
@@ -54,16 +53,9 @@ export class ProductDetailComponent implements OnInit {
   activeImage = signal<string>('');
   activeTab = signal<'details' | 'reviews'>('details');
   reviews = signal<Review[]>([]);
-  isSubmittingReview = signal<boolean>(false);
   isWishlisted = signal<boolean>(false);
-
-  // Review Form controls
-  reviewRating = signal<number>(5);
-  commentControl = new FormControl('', [Validators.required, Validators.minLength(5)]);
-
-  reviewForm = new FormGroup({
-    comment: this.commentControl
-  });
+  protected readonly imageError = signal(false);
+  protected readonly showCartAlert = signal(false);
 
   protected readonly Math = Math;
 
@@ -74,6 +66,12 @@ export class ProductDetailComponent implements OnInit {
         this.activeTab.set('details');
         this.loadProduct(id);
       }
+    });
+
+    // Reset image error when active image changes (e.g. clicking a different thumbnail)
+    effect(() => {
+      this.activeImage();
+      this.imageError.set(false);
     });
   }
 
@@ -133,11 +131,11 @@ export class ProductDetailComponent implements OnInit {
 
   openQuantityModal(event: Event) {
     event.stopPropagation();
-    this.productStore.setQtyQuantity(1);
-    this.productStore.setQtyAction('cart');
-    this.productStore.setReopenDetailOnQtyClose(true);
-    this.productStore.setQtyModalOpen(true);
-    this.productStore.setSelectedProductId(null);
+    const prod = this.product();
+    if (prod) {
+      this.cartStore.addItem(prod, 1);
+      this.showCartAlert.set(true);
+    }
   }
 
   buyNow(event: Event) {
@@ -176,50 +174,7 @@ export class ProductDetailComponent implements OnInit {
     return !!(prod.isbn || prod.publisher || prod.publishedYear || prod.pages || prod.weight || prod.sapCode);
   }
 
-  setReviewRating(rating: number) {
-    this.reviewRating.set(rating);
-  }
-
-  async onSubmitReview() {
-    if (this.reviewForm.invalid) return;
-
-    const prodId = this.product()?.id;
-    if (!prodId) return;
-
-    this.isSubmittingReview.set(true);
-
-    const newReview: Review = {
-      id: '',
-      productId: prodId,
-      userName: this.authStore.currentUser()?.name || 'Anonymous',
-      rating: this.reviewRating(),
-      comment: this.commentControl.value || '',
-      date: new Date().toISOString()
-    };
-
-    try {
-      await this.reviewApi.addReview(newReview);
-
-      // refresh reviews
-      const updatedRevs = await this.reviewApi.getReviewsByProductId(prodId);
-      this.reviews.set(updatedRevs);
-
-      // update product rating local display
-      const prod = this.product();
-      if (prod) {
-        const total = updatedRevs.reduce((sum, r) => sum + r.rating, 0);
-        prod.averageRating = parseFloat((total / updatedRevs.length).toFixed(1));
-        prod.totalReviews = updatedRevs.length;
-        this.product.set({ ...prod });
-      }
-
-      this.toastService.success('Review submitted successfully!');
-      this.reviewForm.reset();
-      this.reviewRating.set(5);
-    } catch (e) {
-      this.toastService.error('Failed to submit review.');
-    } finally {
-      this.isSubmittingReview.set(false);
-    }
+  onImageError() {
+    this.imageError.set(true);
   }
 }

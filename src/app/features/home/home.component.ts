@@ -12,12 +12,13 @@ import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
+import { AlertDialogComponent } from '../../shared/ui/alert-dialog/alert-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent],
+  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent, AlertDialogComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -26,6 +27,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   protected readonly authorStore = inject(AuthorStore);
+
+  protected readonly showCartAlert = signal(false);
 
   slides = [
     {
@@ -173,10 +176,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openQtyModal(product: any) {
-    this.productStore.setActiveProduct(product);
-    this.productStore.setQtyQuantity(1);
-    this.productStore.setQtyAction('cart');
-    this.productStore.setQtyModalOpen(true);
+    this.cartStore.addItem(product, 1);
+    this.showCartAlert.set(true);
   }
 
   openAuthorSheet(author: Author) {

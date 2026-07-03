@@ -44,8 +44,16 @@
       <div class="flex flex-col gap-2">
         <!-- Main Image Viewer -->
         <div class="w-full aspect-square bg-white relative group">
-          <img [src]="activeImage()" [alt]="product()!.title" class="object-contain w-full h-full   ease-out" />
-          <div class="badge-uom-lg">{{ product()!.categoryName }}</div>
+          @if (!imageError()) {
+          <img [src]="activeImage()" [alt]="product()!.title" (error)="onImageError()"
+            class="object-contain w-full h-full ease-out" />
+          } @else {
+          <div
+            class="absolute inset-0 flex items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-300">
+            <app-icon name="book-open" size="40"></app-icon>
+          </div>
+          }
+          <div class="badge-uom-lg">{{ product()!.categoryName || 'Lainnya' }}</div>
         </div>
 
         <!-- Image Thumbnails -->
@@ -82,12 +90,12 @@
     <!-- Detail Information Tabs -->
     <div class="mt-8 pb-4">
       <!-- Segmented Control Tab Headers -->
-      <div class="flex bg-slate-50/80 p-1.5 rounded-2xl gap-1 mb-6 border border-slate-100/50">
+      <div class="flex bg-slate-50/80 p-1.5 rounded-lg gap-1 mb-6 border border-slate-100/50">
         <button (click)="setActiveTab('details')" [class.bg-white]="activeTab() === 'details'"
           [class.text-slate-800]="activeTab() === 'details'" [class.text-slate-500]="activeTab() !== 'details'"
           [class.hover:bg-slate-100/50]="activeTab() !== 'details'"
           class="flex-1 py-2.5 text-xs font-bold rounded-xl  cursor-pointer">
-          Description
+          Deskripsi
         </button>
         <button (click)="setActiveTab('reviews')" [class.bg-white]="activeTab() === 'reviews'"
           [class.text-slate-800]="activeTab() === 'reviews'" [class.text-slate-500]="activeTab() !== 'reviews'"
@@ -102,13 +110,13 @@
         @if (activeTab() === 'details') {
         <div class="flex flex-col gap-4 ">
           <div>
-            <h3 class="font-display font-bold text-slate-800 text-sm mb-2">About the Product</h3>
+            <h3 class="font-display font-bold text-slate-800 text-sm mb-2">Tentang</h3>
             <p class="text-sm text-slate-500 leading-relaxed font-sans" [innerHTML]="product()!.description"></p>
           </div>
 
           @if (hasSpecs()) {
           <div>
-            <h3 class="font-display font-bold text-slate-800 text-sm mb-3">Specifications</h3>
+            <h3 class="font-display font-bold text-slate-800 text-sm mb-3">Spesifikasi</h3>
             <div class="grid grid-cols-1 gap-x-8 gap-y-2 border border-slate-100 rounded-2xl overflow-hidden">
               @if (product()!.isbn) {
               <div class="flex justify-between p-3 text-xs border-b border-slate-100">
@@ -118,32 +126,26 @@
               }
               @if (product()!.publisher) {
               <div class="flex justify-between p-3 text-xs border-b border-slate-100">
-                <span class="text-slate-400 font-semibold uppercase tracking-wider">Publisher</span>
+                <span class="text-slate-400 font-semibold uppercase tracking-wider">Penerbit</span>
                 <span class="text-slate-700 font-bold text-right">{{ product()!.publisher }}</span>
               </div>
               }
               @if (product()!.publishedYear) {
               <div class="flex justify-between p-3 text-xs border-b border-slate-100">
-                <span class="text-slate-400 font-semibold uppercase tracking-wider">Published Year</span>
+                <span class="text-slate-400 font-semibold uppercase tracking-wider">Tahun Diterbitkan</span>
                 <span class="text-slate-700 font-bold text-right">{{ product()!.publishedYear }}</span>
               </div>
               }
               @if (product()!.pages) {
               <div class="flex justify-between p-3 text-xs border-b border-slate-100">
-                <span class="text-slate-400 font-semibold uppercase tracking-wider">Pages</span>
+                <span class="text-slate-400 font-semibold uppercase tracking-wider">Jumlah Halaman</span>
                 <span class="text-slate-700 font-bold text-right">{{ product()!.pages }}</span>
               </div>
               }
               @if (product()!.weight) {
               <div class="flex justify-between p-3 text-xs border-b border-slate-100">
-                <span class="text-slate-400 font-semibold uppercase tracking-wider">Weight (kg)</span>
+                <span class="text-slate-400 font-semibold uppercase tracking-wider">Berat (Kg)</span>
                 <span class="text-slate-700 font-bold text-right">{{ product()!.weight }}</span>
-              </div>
-              }
-              @if (product()!.sapCode) {
-              <div class="flex justify-between p-3 text-xs border-b border-slate-100 last:border-0">
-                <span class="text-slate-400 font-semibold uppercase tracking-wider">SAP Code</span>
-                <span class="text-slate-700 font-bold text-right">{{ product()!.sapCode }}</span>
               </div>
               }
             </div>
@@ -153,7 +155,7 @@
         }
 
         @if (activeTab() === 'reviews') {
-        <div class="flex flex-col gap-8 ">
+        <div class="flex flex-col gap-4">
           <!-- Review List -->
           <div class="flex flex-col gap-4">
             @if (reviews().length === 0) {
@@ -175,39 +177,6 @@
             </div>
             }
             }
-          </div>
-
-          <hr class="border-slate-100" />
-
-          <!-- Add Review Form -->
-          <div>
-            <h3 class="font-display font-bold text-slate-800 text-sm mb-4">Write a Review</h3>
-            <form [formGroup]="reviewForm" (submit)="onSubmitReview()" class="flex flex-col gap-4 max-w-lg">
-              <!-- Rating Stars selector -->
-              <div class="flex flex-col gap-1.5">
-                <span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Your Rating</span>
-                <div class="flex gap-1.5 items-center">
-                  @for (star of [1,2,3,4,5]; track star) {
-                  <button type="button" (click)="setReviewRating(star)"
-                    class="text-slate-200 hover:text-amber-400 cursor-pointer ">
-                    <app-icon name="star" size="24"
-                      [class]="star <= reviewRating() ? 'text-amber-400 fill-amber-400' : 'text-slate-200'"></app-icon>
-                  </button>
-                  }
-                </div>
-              </div>
-
-              <app-textarea label="Review Comment"
-                placeholder="Write your thoughts and experience about this product..." [control]="commentControl"
-                [rows]="4"></app-textarea>
-
-              <div class="flex">
-                <app-button type="submit" [disabled]="reviewForm.invalid || isSubmittingReview()"
-                  [loading]="isSubmittingReview()" variant="primary" size="sm">
-                  Submit Review
-                </app-button>
-              </div>
-            </form>
           </div>
         </div>
         }
@@ -236,4 +205,6 @@
     }
   </div>
   }
+  <app-alert-dialog [(isOpen)]="showCartAlert" title="Berhasil!"
+    message="Produk berhasil ditambahkan ke keranjang"></app-alert-dialog>
 </div>

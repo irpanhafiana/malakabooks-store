@@ -59,7 +59,7 @@ export class ProductApiService {
 
       return books.map((b: BookDto) => ({
         ...this.mapBookToProduct(b),
-        categoryName: catMap.get(b.categoryId) || 'Other'
+        categoryName: catMap.get(b.categoryId) || 'Lainnya'
       }));
     } catch (e) {
       console.error('Gagal mengambil daftar produk:', e);
