@@ -30,7 +30,9 @@
             "SimasrimRecheckPath": "/api/b2b/pengiriman/ekspedisi/cek-resi",
             "SimasrimRecheckMethod": "GET",
             "SimasrimCancelPath": "/api/b2b/pengiriman/ekspedisi/cancel-resi",
-            "SimasrimCancelMethod": "POST"
+            "SimasrimCancelMethod": "POST",
+            "SimasrimDetailResiPath": "/api/b2b/pengiriman/ekspedisi/detail-resi",
+            "SimasrimDetailResiMethod": "POST"
         }
     },
     "Logging": {
@@ -68,12 +70,18 @@
         "InternalPath": "https://mardikakopi.com:44200/api/externalMessage/Doku/Notif"
     },
     "SimasrimSetting": {
-        "BaseUrl": "https://devapi.simasrim.com",
-        "ClientId": "7",
-        "ClientSecret": "JScxLN7xIw2pciNpZZAMQa8OFKlO1uA93YmPQeMH",
+        //"BaseUrl": "https://devapi.simasrim.com",
+        //"ClientId": "7",
+        //"ClientSecret": "JScxLN7xIw2pciNpZZAMQa8OFKlO1uA93YmPQeMH",
+        //"Email": "simasrimdev@mail.com",
+        //"Password": "646239",
 
-        "Email": "simasrimdev@mail.com",
-        "Password": "646239",
+        "BaseUrl": "https://api1.simasrim.com:10204/api",
+        "ClientId": "11",
+        "ClientSecret": "7eBJI18qrNDUuRYQauJVjP7LK9MySI6KvVdGxPSh",
+        "Email": "aksara@simasrim.com",
+        "Password": "993746",
+
         "Scope": "",
         "Courier": [
             "all",

@@ -38,6 +38,8 @@ namespace MalakaBooks.ConfigSetting
         public string SimasrimRecheckMethod { get; set; } = "GET";
         public string SimasrimCancelPath { get; set; } = string.Empty;
         public string SimasrimCancelMethod { get; set; } = "POST";
+        public string SimasrimDetailResiPath { get; set; } = string.Empty;
+        public string SimasrimDetailResiMethod { get; set; } = "POST";
     }
 
     public class ImageSetting

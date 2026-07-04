@@ -1,7 +1,9 @@
 using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.General;
 using MalakaBooks.Mediator.OrderHandlers;
+using MalakaBooks.Mediator.SimasrimHandlers;
 using MalakaBooks.ViewModel;
+using Mardika.Simasrim.Service.Model;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -139,5 +141,29 @@ public class OrdersController(IMediator mediator) : ApiControllerBase
         }
 
         return Fail("One or more shipment rechecks failed.", result, "ShipmentRecheckFailed", StatusCodes.Status400BadRequest);
+    }
+
+    /// <summary>
+    /// Retrieves Simasrim shipment detail information for the provided courier and AWB number.
+    /// </summary>
+    /// <param name="request">The payload containing the courier code and AWB number.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the Simasrim detail-resi response.</returns>
+    [HttpPost("shipment/detail-resi")]
+    public async Task<IActionResult> GetShipmentDetailResi([FromBody] DetailResiModel request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetSimasrimDetailResiQuery(request), cancellationToken);
+
+        if (result is null)
+        {
+            return Fail("Failed to get shipment detail.", null, "ShipmentDetailResiFailed", StatusCodes.Status502BadGateway);
+        }
+
+        if (!string.Equals(result.Status, "Success", StringComparison.OrdinalIgnoreCase))
+        {
+            return Fail(result.Data?.Description ?? "Failed to get shipment detail.", result, "ShipmentDetailResiFailed", StatusCodes.Status400BadRequest);
+        }
+
+        return Success(result);
     }
 }
