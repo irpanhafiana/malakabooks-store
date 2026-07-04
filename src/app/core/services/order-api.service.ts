@@ -82,7 +82,8 @@ export class OrderApiService {
             tax: 0,
             total: res.totalPrice,
             orderDate: res.createdAt,
-            trackingNumber: res.awbNo || res.aWBNo || res.AWBNo || res.trackingNumber
+            trackingNumber: res.awbNo || res.aWBNo || res.AWBNo || res.trackingNumber,
+            shippingCourier: res.shippingCourier || res.ShippingCourier || ''
           };
         });
       } catch (e) {
@@ -332,6 +333,18 @@ export class OrderApiService {
       return res?.data || res || null;
     } catch (e) {
       this.logger.error('OrderApiService.trackAwb', `Gagal tracking AWB ${awb}:`, e);
+      throw e;
+    }
+  }
+
+  async detailResi(courier: string, awb: string): Promise<any> {
+    try {
+      const res = await firstValueFrom(
+        this.http.post<any>(`${this.BASE_URL}/admin/Orders/shipment/detail-resi`, { ekspedisi: courier, awb: awb })
+      );
+      return res?.data || res || null;
+    } catch (e) {
+      this.logger.error('OrderApiService.detailResi', `Gagal detail resi ${courier}/${awb}:`, e);
       throw e;
     }
   }

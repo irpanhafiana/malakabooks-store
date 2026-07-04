@@ -26,6 +26,7 @@
     "boxicons": "^2.1.4",
     "embla-carousel": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",
+    "jsbarcode": "^3.12.3",
     "leaflet": "^1.9.4",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.26.25",
