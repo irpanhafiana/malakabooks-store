@@ -5,27 +5,8 @@ import { LoggerService } from '../../../core/services/logger.service';
 @Component({
   selector: 'app-map-picker',
   standalone: true,
-  template: `
-    <div class="relative w-full h-[300px] bg-slate-100 rounded-md overflow-hidden border border-slate-200">
-      <div #mapContainer class="w-full h-full z-0"></div>
-      <button 
-        type="button"
-        (click)="useCurrentLocation()"
-        [disabled]="isLocating"
-        class="absolute bottom-4 right-4 z-[1000] flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg shadow border border-slate-200  cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
-        title="Gunakan Lokasi Sekarang"
-      >
-        <i class="bx" [class.bx-current-location]="!isLocating" [class.bx-loader-alt]="isLocating" [class.animate-spin]="isLocating" class="text-primary-500 text-base"></i> 
-        {{ isLocating ? 'Mencari...' : 'Lokasi Sekarang' }}
-      </button>
-    </div>
-  `,
-  styles: [`
-    :host {
-      display: block;
-      width: 100%;
-    }
-  `]
+  templateUrl: './map-picker.component.html',
+  styleUrl: './map-picker.component.css'
 })
 export class MapPickerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;

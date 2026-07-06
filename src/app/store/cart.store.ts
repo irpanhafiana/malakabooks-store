@@ -2,6 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { CartItem, Product } from '../core/models';
 import { CartApiService } from '../core/services/cart-api.service';
 import { ToastService } from '../core/services/toast.service';
+import { SESSION_CART_KEY } from '../core/auth/session.util';
 
 interface CartState {
   items: CartItem[];
@@ -63,20 +64,20 @@ export class CartStore {
 
   private loadCart() {
     if (typeof localStorage === 'undefined') return;
-    const saved = localStorage.getItem('malakabooks_cart');
+    const saved = localStorage.getItem(SESSION_CART_KEY);
     if (saved) {
       try {
         const items = JSON.parse(saved);
         this.state.update(s => ({ ...s, items }));
       } catch {
-        localStorage.removeItem('malakabooks_cart');
+        localStorage.removeItem(SESSION_CART_KEY);
       }
     }
   }
 
   private persistLocal(items: CartItem[]) {
     if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('malakabooks_cart', JSON.stringify(items));
+      localStorage.setItem(SESSION_CART_KEY, JSON.stringify(items));
     }
     this.state.update(s => ({ ...s, items }));
   }

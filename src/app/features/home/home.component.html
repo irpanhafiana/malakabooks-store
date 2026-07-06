@@ -230,7 +230,7 @@
       </div>
 
       <section class="flex flex-col gap-2">
-        <div class="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4">
+        <div class="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4">
           <button type="button" (click)="filterByCategory(null)"
             [class]="productStore.selectedCategoryId() === null ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px]  whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] text-slate-600  whitespace-nowrap cursor-pointer'">
             <i class="bx bx-category text-lg"></i>

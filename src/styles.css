@@ -161,15 +161,6 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* scrollbar hide mapping for layouting.md compatibility */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
 /* Ensure child pages inside the inner page layout stretch to fill height and enable scrolling */
 .inner-root main {
   height: 0;

@@ -3,14 +3,14 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { from, switchMap, catchError, throwError } from 'rxjs';
 import { isTokenExpired } from '../auth/jwt.util';
-import { SESSION_TOKEN_KEY, SESSION_USER_KEY } from '../auth/session.util';
+import { SESSION_TOKEN_KEY, SESSION_USER_KEY, SESSION_CART_KEY } from '../auth/session.util';
 import { AuthStore } from '../../store/auth.store';
 import { SKIP_AUTH_HEADER } from '../services/auth-api.service';
 
 function clearSession() {
   localStorage.removeItem(SESSION_USER_KEY);
   localStorage.removeItem(SESSION_TOKEN_KEY);
-  localStorage.removeItem('malakabooks_cart');
+  localStorage.removeItem(SESSION_CART_KEY);
 }
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {

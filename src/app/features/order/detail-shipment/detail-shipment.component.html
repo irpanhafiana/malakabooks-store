@@ -1,0 +1,153 @@
+<div class=" px-4 py-4 overflow-y-auto h-full no-scrollbar flex flex-col gap-6">
+
+  <!-- Loading Skeleton State -->
+  <ng-container *ngIf="loading()">
+    <div class="bg-white border border-slate-100 p-5 rounded-3xl flex flex-col gap-4">
+      <app-skeleton type="table-row" [count]="2"></app-skeleton>
+    </div>
+    <div class="bg-white border border-slate-100 p-5 rounded-3xl flex flex-col gap-6">
+      <div class="h-5 w-32 bg-slate-100 rounded animate-pulse"></div>
+      <div class="flex flex-col gap-4">
+        <app-skeleton type="text" [count]="3"></app-skeleton>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Error State -->
+  <ng-container *ngIf="!loading() && error()">
+    <div class="bg-white border border-slate-100 p-6 rounded-3xl text-center pb-8 flex flex-col items-center justify-center gap-4">
+      <div class="h-14 w-14 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center border border-rose-100">
+        <app-icon name="error-circle" size="28"></app-icon>
+      </div>
+      <div>
+        <h3 class="font-display font-extrabold text-slate-800 text-lg mb-1">Gagal Memuat Tracking</h3>
+        <p class="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">{{ error() }}</p>
+      </div>
+      <button
+        (click)="retry()"
+        class="px-4 py-2 text-xs font-semibold text-white bg-primary-600 rounded-xl hover:bg-primary-700 active:scale-95  cursor-pointer shadow-sm shadow-primary-200"
+      >
+        Coba Lagi
+      </button>
+    </div>
+  </ng-container>
+
+  <!-- Tracking Data State -->
+  <ng-container *ngIf="!loading() && !error() && trackingData()">
+
+    <!-- Summary Card -->
+    <div class="bg-white border border-slate-100 p-5 rounded-3xl flex flex-col gap-4 shadow-sm shadow-slate-50/50">
+
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex flex-col gap-0.5">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Kurir Pengiriman</span>
+          <strong class="text-xs font-extrabold text-slate-800 uppercase flex items-center gap-1">
+            <i class="bx bx-truck text-slate-500 text-base"></i>
+            {{ courier || 'Simasrim' }}
+          </strong>
+        </div>
+
+        <span
+          [ngClass]="statusBadgeClass"
+          class="px-3 py-1 text-[10px] font-bold rounded-full capitalize border"
+        >
+          {{ status || 'Diproses' }}
+        </span>
+      </div>
+
+      <div class="flex flex-col gap-3 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-semibold text-slate-400">Nomor Resi / AWB</span>
+          <div class="flex items-center gap-1.5">
+            <strong class="font-bold text-slate-800 select-all">{{ awbNo }}</strong>
+            <button
+              (click)="copyToClipboard(awbNo)"
+              class="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50  cursor-pointer"
+              title="Salin Resi"
+            >
+              <i class="bx bx-copy text-base"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="h-px bg-slate-100/70 w-full my-0.5"></div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-0.5">
+            <span class="font-semibold text-slate-400">Pengirim</span>
+            <span class="font-bold text-slate-700">{{ shipperName }}</span>
+          </div>
+          <div class="flex flex-col gap-0.5 text-right">
+            <span class="font-semibold text-slate-400">Penerima</span>
+            <span class="font-bold text-slate-700">{{ receiverName || 'Pelanggan' }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Detail Timeline Card -->
+    <div class="bg-white border border-slate-100 p-5 rounded-3xl flex flex-col gap-5 shadow-sm shadow-slate-50/50">
+      <h3 class="font-display font-extrabold text-slate-800 text-sm flex items-center gap-1.5">
+        <i class="bx bx-list-ul text-slate-400 text-lg"></i> Status Pengiriman
+      </h3>
+
+      <!-- Timeline list -->
+      <div *ngIf="trackingLogs.length > 0; else emptyTimeline" class="flex flex-col relative pl-6 border-l border-slate-100 ml-3 gap-6 py-1">
+
+        <div
+          *ngFor="let log of trackingLogs; let i = index; let first = first; let last = last"
+          class="relative flex flex-col gap-1 text-xs"
+        >
+          <!-- Timeline node dot -->
+          <div
+            [ngClass]="{
+              'bg-primary-500 border-4 border-primary-100 ring-2 ring-primary-50/50 ring-offset-0 animate-pulse': first,
+              'bg-slate-300 border-2 border-white': !first
+            }"
+            class="absolute -left-[30px] top-0.5 h-4.5 w-4.5 rounded-full flex items-center justify-center  "
+          ></div>
+
+          <!-- Log Date Time -->
+          <span class="text-[10px] font-semibold text-slate-400">
+            {{ getLogDate(log) | date: 'medium' }}
+          </span>
+
+          <!-- Log Description / Status -->
+          <strong
+            [ngClass]="{ 'text-primary-700 font-extrabold': first, 'text-slate-800 font-bold': !first }"
+            class="leading-snug"
+          >
+            {{ getLogDescription(log) }}
+          </strong>
+
+          <!-- Log Location / Detail Info -->
+          <span *ngIf="getLogLocation(log)" class="text-slate-500 flex items-center gap-0.5 mt-0.5">
+            <i class="bx bx-map text-slate-400 text-xs"></i>
+            {{ getLogLocation(log) }}
+          </span>
+        </div>
+
+      </div>
+
+      <ng-template #emptyTimeline>
+        <div class="bg-slate-50 rounded-2xl p-4 text-center text-xs text-slate-500 py-6 border border-dashed border-slate-200">
+          <i class="bx bx-package text-slate-400 text-2xl mb-1.5 block"></i>
+          Data perjalanan paket belum tersedia.<br>Silakan cek kembali secara berkala.
+        </div>
+      </ng-template>
+
+    </div>
+
+  </ng-container>
+
+  <div class="flex flex-col gap-3">
+    <a
+      routerLink="/order-history"
+      class="w-full text-center py-3 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 active:scale-98  block cursor-pointer"
+    >
+      Kembali ke Riwayat Pesanan
+    </a>
+  </div>
+
+</div>

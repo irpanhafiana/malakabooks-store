@@ -11,8 +11,10 @@
         <input type="text" placeholder="Search complaints..." [value]="searchQuery()" (input)="onSearch($event)"
           class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
       </div>
-      
-      <span class="text-xs text-slate-400 font-semibold bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 shrink-0">Total: {{ complaintStore.complaints().length }}</span>
+
+      <span
+        class="text-xs text-slate-400 font-semibold bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 shrink-0">Total:
+        {{ complaintStore.complaints().length }}</span>
     </div>
   </div>
 
@@ -25,69 +27,63 @@
 
   <!-- Table -->
   @if (complaintStore.loading()) {
-    <div class="bg-white rounded-2xl border border-slate-200">
-      <app-spinner text="Loading complaints..."></app-spinner>
-    </div>
+  <div class="bg-white rounded-2xl border border-slate-200">
+    <app-spinner text="Loading complaints..."></app-spinner>
+  </div>
   } @else {
-    <app-table>
-      <tr table-headers>
-        <th class="px-5 py-3">User ID</th>
-        <th class="px-5 py-3">Subject</th>
-        <th class="px-5 py-3">Order ID</th>
-        <th class="px-5 py-3">Date</th>
-        <th class="px-5 py-3">Status</th>
-        <th class="px-5 py-3 text-right">Action</th>
+  <app-table>
+    <tr table-headers>
+      <th class="px-5 py-3">User ID</th>
+      <th class="px-5 py-3">Subject</th>
+      <th class="px-5 py-3">Order ID</th>
+      <th class="px-5 py-3">Date</th>
+      <th class="px-5 py-3">Status</th>
+      <th class="px-5 py-3 text-right">Action</th>
+    </tr>
+
+    <ng-container table-rows>
+      @for (c of pagination.paged(); track c.id) {
+      <tr class="hover:bg-slate-50/30 text-xs">
+        <td class="px-5 py-4 font-mono text-slate-500 text-[10px]">{{ c.userId }}</td>
+        <td class="px-5 py-4 font-bold text-slate-800 max-w-[180px]">
+          <p class="truncate">{{ c.subject }}</p>
+          <p class="text-[10px] text-slate-400 mt-0.5 truncate">{{ c.description }}</p>
+        </td>
+        <td class="px-5 py-4 font-mono text-slate-500 text-[10px]">{{ c.orderId }}</td>
+        <td class="px-5 py-4 text-slate-600">{{ c.createdAt | date:'shortDate' }}</td>
+        <td class="px-5 py-4">
+          <app-status-badge [status]="c.status" type="complaint"></app-status-badge>
+        </td>
+        <td class="px-5 py-4 text-right">
+          <app-admin-button size="sm" variant="outline" (click)="openRespond(c)">
+            Respons
+          </app-admin-button>
+        </td>
       </tr>
-
-      <ng-container table-rows>
-        @for (c of pagination.paged(); track c.id) {
-          <tr class="hover:bg-slate-50/30 text-xs">
-            <td class="px-5 py-4 font-mono text-slate-500 text-[10px]">{{ c.userId }}</td>
-            <td class="px-5 py-4 font-bold text-slate-800 max-w-[180px]">
-              <p class="truncate">{{ c.subject }}</p>
-              <p class="text-[10px] text-slate-400 mt-0.5 truncate">{{ c.description }}</p>
-            </td>
-            <td class="px-5 py-4 font-mono text-slate-500 text-[10px]">{{ c.orderId }}</td>
-            <td class="px-5 py-4 text-slate-600">{{ c.createdAt | date:'shortDate' }}</td>
-            <td class="px-5 py-4">
-              <app-status-badge [status]="c.status" type="complaint"></app-status-badge>
-            </td>
-            <td class="px-5 py-4 text-right">
-              <app-admin-button size="sm" variant="outline" (click)="openRespond(c)">
-                Respons
-              </app-admin-button>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="6" class="px-5 py-10 text-center text-slate-400 text-xs">
-              Tidak ada komplain yang masuk.
-            </td>
-          </tr>
-        }
-      </ng-container>
-      <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
-        Showing {{ pagination.paged().length }} / {{ pagination.totalItems() }} data
-      </div>
-    </app-table>
-
-    <div class="flex justify-center w-full">
-      <app-pagination
-        [currentPage]="pagination.page()"
-        [totalPages]="pagination.totalPages() || 1"
-        (pageChange)="pagination.setPage($event)"
-      ></app-pagination>
+      } @empty {
+      <tr>
+        <td colspan="6" class="px-5 py-10 text-center text-slate-400 text-xs">
+          Tidak ada komplain yang masuk.
+        </td>
+      </tr>
+      }
+    </ng-container>
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+      Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
     </div>
+  </app-table>
+
+  <div class="flex justify-center w-full">
+    <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages() || 1"
+      (pageChange)="pagination.setPage($event)"></app-pagination>
+  </div>
   }
 </div>
 
 <!-- Respond Modal -->
 <app-modal title="Respons Komplain" [(isOpen)]="isModalOpen" [hasFooter]="false">
   @if (selected()) {
-    <app-complaints-form
-      [complaint]="selected()"
-      (onCancel)="closeModal()"
-      (onSave)="closeModal()">
-    </app-complaints-form>
+  <app-complaints-form [complaint]="selected()" (onCancel)="closeModal()" (onSave)="closeModal()">
+  </app-complaints-form>
   }
 </app-modal>

@@ -37,10 +37,10 @@ export const routes: Routes = [
         path: 'products/edit/:id',
         loadComponent: () => import('./features/admin/products/form-page/products-form-page.component').then(c => c.ProductsFormPageComponent)
       },
-      { path: 'categories', loadComponent: () => import('./features/admin/categories/list/categories-list.component').then(m => m.CategoriesListComponent) },
-      { path: 'payment-methods', loadComponent: () => import('./features/admin/payment-methods/list/payment-methods-list.component').then(m => m.PaymentMethodsListComponent) },
-      { path: 'authors', loadComponent: () => import('./features/admin/authors/list/authors-list.component').then(m => m.AuthorsListComponent) },
-      { path: 'home-addresses', loadComponent: () => import('./features/admin/home-addresses/list/home-addresses-list.component').then(m => m.HomeAddressesListComponent) },
+      { path: 'categories', loadComponent: () => import('./features/admin/categories/list/categories-list.component').then(c => c.CategoriesListComponent) },
+      { path: 'payment-methods', loadComponent: () => import('./features/admin/payment-methods/list/payment-methods-list.component').then(c => c.PaymentMethodsListComponent) },
+      { path: 'authors', loadComponent: () => import('./features/admin/authors/list/authors-list.component').then(c => c.AuthorsListComponent) },
+      { path: 'home-addresses', loadComponent: () => import('./features/admin/home-addresses/list/home-addresses-list.component').then(c => c.HomeAddressesListComponent) },
       {
         path: 'orders',
         loadComponent: () => import('./features/admin/orders/list/orders-list.component').then(c => c.OrdersListComponent)
@@ -67,7 +67,8 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./features/home/home.component').then(c => c.HomeComponent)
+        loadComponent: () => import('./features/home/home.component').then(c => c.HomeComponent),
+        data: { preload: true }
       }
     ]
   },
@@ -79,11 +80,13 @@ export const routes: Routes = [
     children: [
       {
         path: 'product',
-        loadComponent: () => import('./features/product/product-list/product-list.component').then(c => c.ProductListComponent)
+        loadComponent: () => import('./features/product/product-list/product-list.component').then(c => c.ProductListComponent),
+        data: { preload: true }
       },
       {
         path: 'product/:id',
-        loadComponent: () => import('./features/product/product-detail/product-detail.component').then(c => c.ProductDetailComponent)
+        loadComponent: () => import('./features/product/product-detail/product-detail.component').then(c => c.ProductDetailComponent),
+        data: { preload: true }
       }
     ]
   },
@@ -97,7 +100,7 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
         canActivate: [authGuard],
-        data: { title: 'Profile' }
+        data: { title: 'Profile', preload: true }
       },
       {
         path: 'auth',
@@ -105,59 +108,59 @@ export const routes: Routes = [
           {
             path: 'welcome',
             loadComponent: () => import('./features/auth/welcome/welcome.component').then(c => c.WelcomeComponent),
-            data: { title: 'Welcome', hideHeader: true }
+            data: { title: 'Welcome', hideHeader: true, preload: true }
           },
           {
             path: 'login',
             loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent),
-            data: { title: 'Login' }
+            data: { title: 'Login', preload: true }
           },
           {
             path: 'register',
             loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent),
-            data: { title: 'Register', hideHeader: true }
+            data: { title: 'Register', hideHeader: true, preload: true }
           },
           {
             path: 'forgot-password',
             loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(c => c.ForgotPasswordComponent),
-            data: { title: 'Lupa Password', hideHeader: true }
+            data: { title: 'Lupa Password', hideHeader: true, preload: true }
           }
         ]
       },
       {
         path: 'cart',
         loadComponent: () => import('./features/cart/cart.component').then(c => c.CartComponent),
-        data: { title: 'Shopping Cart' }
+        data: { title: 'Shopping Cart', preload: true }
       },
       {
         path: 'checkout',
         loadComponent: () => import('./features/checkout/checkout.component').then(c => c.CheckoutComponent),
         canActivate: [authGuard],
-        data: { title: 'Checkout' }
+        data: { title: 'Checkout', preload: true }
       },
       {
         path: 'order-success',
         loadComponent: () => import('./features/order/order-success/order-success.component').then(c => c.OrderSuccessComponent),
         canActivate: [authGuard],
-        data: { title: 'Order Status' }
+        data: { title: 'Order Status', preload: true }
       },
       {
         path: 'order-history',
         loadComponent: () => import('./features/order/order-history/order-history.component').then(c => c.OrderHistoryComponent),
         canActivate: [authGuard],
-        data: { title: 'Order History' }
+        data: { title: 'Order History', preload: true }
       },
       {
         path: 'detail-shipment/:id',
         loadComponent: () => import('./features/order/detail-shipment/detail-shipment.component').then(c => c.DetailShipmentComponent),
         canActivate: [authGuard],
-        data: { title: 'Detail Shipment' }
+        data: { title: 'Detail Shipment', preload: true }
       },
       {
         path: 'complaints',
         loadComponent: () => import('./features/complaint/complaint.component').then(c => c.ComplaintComponent),
         canActivate: [authGuard],
-        data: { title: 'Komplain Saya' }
+        data: { title: 'Komplain Saya', preload: true }
       }
     ]
   },

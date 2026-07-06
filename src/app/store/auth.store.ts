@@ -90,6 +90,16 @@ export class AuthStore {
     }
   }
 
+  /** DRY helper: merge partial user data into persisted session + state signal */
+  private syncUser(partial: Partial<User>) {
+    const currentUser = this.state().user;
+    if (!currentUser) return;
+    const activeToken = this.token() ?? currentUser.token ?? '';
+    const merged = { ...currentUser, ...partial, token: activeToken };
+    localStorage.setItem(SESSION_USER_KEY, JSON.stringify(merged));
+    this.state.update(s => ({ ...s, user: merged }));
+  }
+
   private clearPersistedSession() {
     localStorage.removeItem(SESSION_USER_KEY);
     localStorage.removeItem(SESSION_TOKEN_KEY);
@@ -188,13 +198,10 @@ export class AuthStore {
   async updateProfile(updatedUser: User): Promise<boolean> {
     try {
       const savedUser = await this.userApi.saveUser(updatedUser);
-      const activeToken = this.token() || '';
-      const userWithToken = { ...savedUser, token: activeToken };
-      localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
-      this.state.update(s => ({ ...s, user: userWithToken }));
+      this.syncUser(savedUser);
       this.toastService.success('Profil berhasil diperbarui!');
       return true;
-    } catch (err) {
+    } catch {
       this.toastService.error('Gagal memperbarui profil.');
       return false;
     }
@@ -207,16 +214,13 @@ export class AuthStore {
       const success = await this.userApi.addAddress(user.id, user.name, addr);
       if (success) {
         const updatedAddresses = await this.userApi.getAddressesByUserId(user.id);
-        const activeToken = this.token() || '';
-        const userWithToken = { ...user, addresses: updatedAddresses, token: activeToken };
-        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
-        this.state.update(s => ({ ...s, user: userWithToken }));
+        this.syncUser({ addresses: updatedAddresses } as Partial<User>);
         this.toastService.success('Alamat berhasil ditambahkan!');
         return true;
       }
       this.toastService.error('Gagal menambahkan alamat.');
       return false;
-    } catch (err) {
+    } catch {
       this.toastService.error('Gagal menambahkan alamat.');
       return false;
     }
@@ -229,16 +233,13 @@ export class AuthStore {
       const success = await this.userApi.updateAddress(user.id, user.name, addr);
       if (success) {
         const updatedAddresses = await this.userApi.getAddressesByUserId(user.id);
-        const activeToken = this.token() || '';
-        const userWithToken = { ...user, addresses: updatedAddresses, token: activeToken };
-        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
-        this.state.update(s => ({ ...s, user: userWithToken }));
+        this.syncUser({ addresses: updatedAddresses } as Partial<User>);
         this.toastService.success('Alamat berhasil diperbarui!');
         return true;
       }
       this.toastService.error('Gagal memperbarui alamat.');
       return false;
-    } catch (err) {
+    } catch {
       this.toastService.error('Gagal memperbarui alamat.');
       return false;
     }
@@ -251,16 +252,13 @@ export class AuthStore {
       const success = await this.userApi.deleteAddress(id);
       if (success) {
         const updatedAddresses = await this.userApi.getAddressesByUserId(user.id);
-        const activeToken = this.token() || '';
-        const userWithToken = { ...user, addresses: updatedAddresses, token: activeToken };
-        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
-        this.state.update(s => ({ ...s, user: userWithToken }));
+        this.syncUser({ addresses: updatedAddresses } as Partial<User>);
         this.toastService.success('Alamat berhasil dihapus!');
         return true;
       }
       this.toastService.error('Gagal menghapus alamat.');
       return false;
-    } catch (err) {
+    } catch {
       this.toastService.error('Gagal menghapus alamat.');
       return false;
     }

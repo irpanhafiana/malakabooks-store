@@ -14,7 +14,7 @@
 
       <app-admin-button (click)="openAddModal()" variant="primary" size="md" class="shrink-0">
         <app-icon name="plus" size="14"></app-icon>
-        Add Category
+        Tambah Kategori
       </app-admin-button>
     </div>
 
@@ -35,10 +35,10 @@
   } @else {
   <app-table>
     <tr table-headers>
-      <th class="px-5 py-4">Category Name</th>
+      <th class="px-5 py-4">Nama Kategori</th>
       <th class="px-5 py-4">Slug</th>
-      <th class="px-5 py-4">Icon Name</th>
-      <th class="px-5 py-4 text-right">Actions</th>
+      <th class="px-5 py-4">Ikon</th>
+      <th class="px-5 py-4 text-right">Aksi</th>
     </tr>
 
     <ng-container table-rows>
@@ -78,7 +78,7 @@
     </ng-container>
 
     <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
-      Showing {{ pagination.paged().length }} / {{ pagination.totalItems() }} data
+      Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
     </div>
   </app-table>
 

@@ -14,6 +14,7 @@ import { User } from '../models';
 export const SESSION_USER_KEY = 'malakabooks_session_user';
 export const SESSION_TOKEN_KEY = 'malakabooks_session_token';
 export const SESSION_REFRESH_KEY = 'malakabooks_session_refresh';
+export const SESSION_CART_KEY = 'malakabooks_cart';
 
 type StoredUser = (User & { token?: string }) | null;
 

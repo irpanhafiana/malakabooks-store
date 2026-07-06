@@ -2,20 +2,20 @@
 
   <!-- Top Action bar & Search -->
   <div class="flex items-center justify-between">
-    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Products Manager</h2>
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Data Produk</h2>
 
     <div class="flex flex-row gap-2 justify-center items-center">
       <!-- Search Input -->
       <div class="relative w-full hidden sm:block">
         <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
-        <input type="text" placeholder="Search products..." [value]="searchQuery()"
+        <input type="text" placeholder="Cari produk disini ..." [value]="searchQuery()"
           (input)="onSearchInput($any($event.target).value)"
           class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
       </div>
 
       <app-admin-button (click)="openAddModal()" variant="primary" size="md" class="shrink-0">
         <app-icon name="plus" size="14"></app-icon>
-        Add Product
+        Tambah Produk
       </app-admin-button>
     </div>
   </div>
@@ -23,7 +23,7 @@
   <!-- Mobile Search (visible only on small screens) -->
   <div class="sm:hidden relative w-full">
     <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
-    <input type="text" placeholder="Search products..." [value]="searchQuery()"
+    <input type="text" placeholder="Cari produk disini..." [value]="searchQuery()"
       (input)="onSearchInput($any($event.target).value)"
       class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
   </div>
@@ -36,12 +36,12 @@
   } @else {
   <app-table>
     <tr table-headers>
-      <th class="px-5 py-4">Product</th>
-      <th class="px-5 py-4">Category</th>
-      <th class="px-5 py-4">Price</th>
-      <th class="px-5 py-4">Stock</th>
+      <th class="px-5 py-4">Nama Produk</th>
+      <th class="px-5 py-4">Kategori</th>
+      <th class="px-5 py-4">Harga</th>
+      <th class="px-5 py-4">Stok</th>
       <th class="px-5 py-4">Rating</th>
-      <th class="px-5 py-4 text-right">Actions</th>
+      <th class="px-5 py-4 text-right">Aksi</th>
     </tr>
 
     <ng-container table-rows>
@@ -89,7 +89,7 @@
     </ng-container>
 
     <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
-      Showing {{ pagination.paged().length }} / {{ pagination.totalItems() }} data
+      Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
     </div>
   </app-table>
 
