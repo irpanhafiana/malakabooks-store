@@ -8,6 +8,7 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.OrderHandlers;
 
+using MalakaBooks.ConfigSetting;
 using MalakaBooks.Entity;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -26,11 +27,13 @@ public class CreateOrderHandler(
     DokuApiClient dokuApiClient,
     SimasrimApiClient simasrimApiClient,
     IOptions<DokuSetting> dokuOptions,
+    IOptions<SimasrimSetting> simasrimOptions,
     IOptions<AppSetting> appOptions) : IRequestHandler<CreateOrderCommand, CreateOrderResponse>
 {
     private readonly IOrderEntityValidator _validator = validator;
     private readonly DokuSetting dokuSetting = dokuOptions.Value;
     private readonly AppSetting appSetting = appOptions.Value;
+    private readonly SimasrimSetting simasrimSetting = simasrimOptions.Value;
 
     public async Task<CreateOrderResponse> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
@@ -159,7 +162,9 @@ public class CreateOrderHandler(
 
         var responseText = JsonConvert.DeserializeObject<DokuResponse>(await dokuResponse.Content.ReadAsStringAsync());
 
+        shipmentDetail.PartnerName = simasrimSetting.PartnerName!;
         shipmentDetail.ReferenceNo = entity.Id ?? string.Empty;
+
         entity.PaymentUrl = responseText!.response.payment!.url!;
         entity.UpdatedAt = DateTime.UtcNow;
         entity.ShipmentDetailJson = shipmentDetail.ToShipmentDetailJson();

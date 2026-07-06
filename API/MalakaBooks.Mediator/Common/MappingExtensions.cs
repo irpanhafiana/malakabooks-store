@@ -331,7 +331,7 @@ public static class MappingExtensions
             GoodsType = item.GoodsType,
             Quantity = item.Quantity!.Value,
         }).ToList(),
-        PartnerName = string.IsNullOrWhiteSpace(detail.PartnerName) ? "SIMASRIM" : detail.PartnerName,
+        PartnerName = detail.PartnerName,
         ReferenceNo = detail.ReferenceNo
     };
 
