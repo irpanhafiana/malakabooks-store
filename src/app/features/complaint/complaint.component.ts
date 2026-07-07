@@ -5,11 +5,10 @@ import { RouterLink } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { OrderStore } from '../../store/order.store';
 import { ComplaintStore } from '../../store/complaint.store';
-import { ComplaintStatus } from '../../core/models';
 import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
-import { ModalComponent } from '../../shared/ui/modal/modal.component';
+import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { InputComponent } from '../../shared/ui/input/input.component';
 import { TextareaComponent } from '../../shared/ui/textarea/textarea.component';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge/status-badge.component';
@@ -26,7 +25,7 @@ import { StatusBadgeComponent } from '../../shared/ui/status-badge/status-badge.
     EmptyStateComponent,
     SkeletonComponent,
     ButtonComponent,
-    ModalComponent,
+    BottomSheetComponent,
     InputComponent,
     TextareaComponent
   ],
@@ -39,7 +38,7 @@ export class ComplaintComponent implements OnInit {
   protected readonly orderStore = inject(OrderStore);
   protected readonly complaintStore = inject(ComplaintStore);
 
-  protected isFormOpen = false;
+  protected isFormOpen = signal<boolean>(false);
   protected readonly submitting = signal<boolean>(false);
 
   protected readonly form = this.fb.group({
@@ -58,11 +57,11 @@ export class ComplaintComponent implements OnInit {
 
   protected openForm() {
     this.form.reset({ orderId: '', subject: '', description: '' });
-    this.isFormOpen = true;
+    this.isFormOpen.set(true);
   }
 
   protected closeForm() {
-    this.isFormOpen = false;
+    this.isFormOpen.set(false);
   }
 
   protected async submitComplaint() {
@@ -79,6 +78,6 @@ export class ComplaintComponent implements OnInit {
       description: description!.trim()
     });
     this.submitting.set(false);
-    if (ok) this.closeForm();
+    if (ok) this.isFormOpen.set(false);
   }
 }

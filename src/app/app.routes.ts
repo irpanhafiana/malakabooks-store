@@ -161,6 +161,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/complaint/complaint.component').then(c => c.ComplaintComponent),
         canActivate: [authGuard],
         data: { title: 'Komplain Saya', preload: true }
+      },
+      {
+        path: 'profile/addresses',
+        loadComponent: () => import('./features/profile/my-addresses/my-addresses.component').then(c => c.MyAddressesComponent),
+        canActivate: [authGuard],
+        data: { title: 'Alamat Saya', preload: true }
       }
     ]
   },
