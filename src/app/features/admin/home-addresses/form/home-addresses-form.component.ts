@@ -82,7 +82,7 @@ export class HomeAddressesFormComponent implements OnInit {
     // Listen to city changes
     this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (city) => {
       if (city) {
-        const dsts = await this.addressApi.getDistricts(city);
+        const dsts = await this.addressApi.getDistricts(this.provinceControl.value || '', city);
         this.districts.set(dsts);
 
         const currentDstVal = this.districtControl.value;
@@ -143,7 +143,7 @@ export class HomeAddressesFormComponent implements OnInit {
         this.cityControl.setValue(city);
 
         this.isLoading.set(true);
-        const dsts = await this.addressApi.getDistricts(city);
+        const dsts = await this.addressApi.getDistricts(prov, city);
         this.districts.set(dsts);
         this.isLoading.set(false);
 

@@ -32,8 +32,8 @@ export class ShippingService {
     return cts;
   }
 
-  async loadDistricts(city: string): Promise<any[]> {
-    const dsts = await this.addressApi.getDistricts(city);
+  async loadDistricts(province: string, city: string): Promise<any[]> {
+    const dsts = await this.addressApi.getDistricts(province, city);
     this.districts.set(dsts);
     return dsts;
   }
@@ -64,11 +64,32 @@ export class ShippingService {
       }
       if (totalWeight <= 0) totalWeight = 1000;
 
+      let totalVolumeQty = 0;
+      for (const item of items) {
+        totalVolumeQty += item.quantity;
+      }
+
+      // Asumsi standar dimensi buku 20x15x3 cm per item
+      const length = 20;
+      const width = 15;
+      const height = Math.max(3, 3 * totalVolumeQty);
+      const volumeString = `${length}x${width}x${height}`;
+
+      let activeOriginCode = environment.originCode;
+      try {
+        const homeAddresses = await this.addressApi.getStoreHomeAddresses();
+        if (homeAddresses && homeAddresses.length > 0 && homeAddresses[0].addressCode) {
+          activeOriginCode = homeAddresses[0].addressCode;
+        }
+      } catch (err) {
+        this.logger.error('ShippingService', 'Failed to load home addresses, fallback to env originCode', err);
+      }
+
       const tariffRes = await this.addressApi.calculateTariff({
-        origin_code: environment.originCode,
+        origin_code: activeOriginCode,
         desti_code: districtCode,
-        berat_paket: "10",
-        volume: '1x1x1',
+        berat_paket: totalWeight.toString(),
+        volume: volumeString,
         ekspedisi: courier
       });
 

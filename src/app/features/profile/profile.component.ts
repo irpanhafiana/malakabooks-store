@@ -193,7 +193,7 @@ export class ProfileComponent implements OnInit {
     // Listen to city changes
     this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (city) => {
       if (city) {
-        const dsts = await this.addressApi.getDistricts(city);
+        const dsts = await this.addressApi.getDistricts(this.provinceControl.value || '', city);
         this.districts.set(dsts);
 
         const currentDstVal = this.districtControl.value;
@@ -291,7 +291,7 @@ export class ProfileComponent implements OnInit {
         this.cityControl.setValue(city);
 
         this.isDropdownLoading.set(true);
-        const dsts = await this.addressApi.getDistricts(city);
+        const dsts = await this.addressApi.getDistricts(addr.province, city);
         this.districts.set(dsts);
         this.isDropdownLoading.set(false);
 

@@ -195,7 +195,7 @@ export class CheckoutComponent implements OnInit {
       if (city) {
         this.districtControl.disable({ emitEvent: false });
         try {
-          await this.shippingService.loadDistricts(city);
+          await this.shippingService.loadDistricts(this.provinceControl.value || '', city);
         } finally {
           this.districtControl.enable({ emitEvent: false });
         }
@@ -321,7 +321,7 @@ export class CheckoutComponent implements OnInit {
         const targetDistrict = addr.district.toLowerCase();
         const targetSubDistrict = addr.subDistrict?.toLowerCase();
 
-        const districts = await this.addressApi.getDistricts(city);
+        const districts = await this.addressApi.getDistricts(prov, city);
         const dist = districts.find(d =>
           d.district_name.toLowerCase() === targetDistrict &&
           (targetSubDistrict ? d.subdistrict_name.toLowerCase() === targetSubDistrict : true)

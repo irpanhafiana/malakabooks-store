@@ -25,7 +25,7 @@ export class AddressApiService {
   async getCities(province: string): Promise<any[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/City`, { province })
+        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/City`, { prov: province })
       );
       return envelope?.data?.data || [];
     } catch (e) {
@@ -34,10 +34,10 @@ export class AddressApiService {
     }
   }
 
-  async getDistricts(city: string): Promise<any[]> {
+  async getDistricts(province: string, city: string, district: string = ''): Promise<any[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/District`, { city })
+        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/District`, { province, city, district })
       );
       return envelope?.data?.data || [];
     } catch (e) {
