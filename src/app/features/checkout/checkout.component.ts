@@ -85,7 +85,7 @@ export class CheckoutComponent implements OnInit {
     });
   });
 
-  checkoutTax = computed(() => this.cartStore.subtotal() * 0.10);
+  checkoutTax = computed(() => 0);
 
   payments = signal<Payment[]>([]);
   paymentFee = signal<number>(0);

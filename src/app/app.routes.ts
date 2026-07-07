@@ -118,12 +118,12 @@ export const routes: Routes = [
           {
             path: 'register',
             loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent),
-            data: { title: 'Register', hideHeader: true, preload: true }
+            data: { title: 'Register', preload: true }
           },
           {
             path: 'forgot-password',
             loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(c => c.ForgotPasswordComponent),
-            data: { title: 'Lupa Password', hideHeader: true, preload: true }
+            data: { title: 'Lupa Password', preload: true }
           }
         ]
       },

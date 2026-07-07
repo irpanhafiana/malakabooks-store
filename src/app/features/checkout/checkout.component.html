@@ -1,20 +1,20 @@
-<div class=" px-4 py-4 overflow-y-auto h-full no-scrollbar">
+<div class=" px-4 pb-4 pt-2 overflow-y-auto h-full no-scrollbar">
 
   @if (cartStore.itemsCount() === 0) {
-  <div class="text-center py-10 bg-white border border-slate-100 rounded-3xl p-5">
+  <div class="text-center py-10 bg-gray-50 border border-slate-100 rounded-3xl p-5">
     <h2 class="font-display font-extrabold text-slate-800 text-sm mb-1.5">No Items to Checkout</h2>
     <p class="text-slate-500 text-xs mb-5">Your shopping cart is empty. Please add items to your cart before proceeding.
     </p>
     <app-button routerLink="/product" variant="primary" size="sm">Start Shopping</app-button>
   </div>
   } @else {
-  <div class="flex flex-col gap-5">
+  <div class="flex flex-col gap-6">
 
     <!-- Checkout Steps Column (Vertical stack) -->
-    <div class="flex flex-col gap-5">
+    <div class="flex flex-col gap-2">
 
       <!-- Step 1: Shipping Address -->
-      <div class="bg-white border border-slate-100 p-6 rounded-3xl">
+      <div class="bg-white border border-slate-100 p-4 rounded-lg">
         <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
           <span
             class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">1</span>
@@ -26,7 +26,7 @@
         <div class="flex flex-col gap-3">
           @for (addr of savedAddresses(); track addr.id) {
           <div (click)="selectAddress(addr.id)"
-            class="flex items-start gap-3.5 p-4 border rounded-2xl cursor-pointer  hover:bg-slate-50"
+            class="flex items-start gap-3.5 p-4 border rounded-lg cursor-pointer  hover:bg-slate-50"
             [class.border-primary-500]="selectedAddressId() === addr.id"
             [class.border-slate-200]="selectedAddressId() !== addr.id">
             <app-radio-indicator [checked]="selectedAddressId() === addr.id" class="mt-1"></app-radio-indicator>
@@ -88,7 +88,7 @@
       </div>
 
       <!-- Step 2: Shipping Courier & Service -->
-      <div class="bg-white border border-slate-100 p-6 rounded-3xl">
+      <div class="bg-white border border-slate-100 p-4 rounded-lg">
         <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
           <span
             class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">2</span>
@@ -108,7 +108,7 @@
       </div>
 
       <!-- Step 3: Payment Method -->
-      <div class="bg-white border border-slate-100 p-6 rounded-3xl">
+      <div class="bg-white border border-slate-100 p-4 rounded-lg">
         <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
           <span
             class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">3</span>
@@ -118,8 +118,7 @@
         <app-radio [options]="paymentOptions()" [control]="paymentControl" direction="col"></app-radio>
 
         @if (isCreditCardSelected()) {
-        <div
-          class="mt-4 p-4 border border-slate-100 bg-slate-50/50 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-4 ">
+        <div class="mt-4 p-4 border border-slate-100 bg-slate-50/50 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-4 ">
           <div class="sm:col-span-3">
             <app-input label="Card Number" placeholder="xxxx xxxx xxxx 4321" [control]="cardNumControl"></app-input>
           </div>
@@ -132,11 +131,11 @@
     </div>
 
     <!-- Checkout Review Box (Right, 1/3 width) -->
-    <div class="bg-white border border-slate-100 p-6 rounded-3xl flex flex-col gap-5">
+    <div class="bg-white border border-slate-100 p-4 rounded-lg flex flex-col gap-5">
       <h3 class="font-display font-extrabold text-slate-800 text-sm uppercase tracking-wider">Review Items</h3>
 
       <!-- Items Scroll -->
-      <div class="flex flex-col gap-3.5 max-h-48 overflow-y-auto pr-1">
+      <div class="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1">
         @for (item of cartStore.items(); track item.product.id) {
         <div class="flex items-center gap-3 text-xs leading-tight">
           <div class="h-10 w-8 bg-slate-50 rounded overflow-hidden shrink-0 border border-slate-100 relative">
@@ -164,10 +163,7 @@
           <span>- Rp {{ cartStore.discount() | number: '1.0-0' }}</span>
         </div>
         }
-        <div class="flex justify-between">
-          <span>Tax</span>
-          <app-price [value]="checkoutTax()" [bold]="false" size="sm"></app-price>
-        </div>
+
         @if (paymentFee() > 0) {
         <div class="flex justify-between text-slate-600">
           <span>Payment Fee</span>
@@ -191,8 +187,7 @@
 
       <hr class="border-slate-100" />
 
-      <app-button (click)="onPlaceOrder()" [loading]="isLoading()" variant="primary" size="md" [fullWidth]="true"
-        class="border border-primary-700/20">
+      <app-button (click)="onPlaceOrder()" [loading]="isLoading()" [disabled]="courierControl.invalid || courierServiceControl.invalid" variant="primary" size="lg" [fullWidth]="true">
         Confirm and Pay
       </app-button>
     </div>

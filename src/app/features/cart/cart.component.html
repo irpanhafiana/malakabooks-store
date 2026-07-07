@@ -8,38 +8,52 @@
   </div>
   } @else {
   <!-- Scrollable Items Area -->
-  <div class="grow overflow-y-auto px-4 py-4 no-scrollbar">
-    <div class="flex flex-col gap-3">
+  <div class="grow overflow-y-auto px-4 pb-4 pt-2 no-scrollbar">
+    <div class="flex flex-col gap-1.5">
       @for (item of cartStore.items(); track item.product.id) {
-      <div class="flex items-center gap-4 bg-white border border-slate-100 p-4 rounded-2xl  hover:border-slate-200/50">
-        <!-- Item Image -->
-        <div (click)="productStore.setSelectedProductId(item.product.id)"
-          class="h-20 w-16 bg-slate-50 rounded-lg overflow-hidden shrink-0 cursor-pointer relative">
-          <img [src]="item.product.coverImage" [alt]="item.product.title" class="object-cover w-full h-full" />
+      <div
+        class="card-product flex-row! bg-gray-50 border border-slate-100/80 shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 group flex">
+        <!-- Thumbnail Image (matching product-list aspect & styling) -->
+        <div class="aspect-square w-32.5 shrink-0 bg-slate-50 overflow-hidden relative cursor-pointer"
+          (click)="productStore.setSelectedProductId(item.product.id)">
+          <img [src]="item.product.coverImage" [alt]="item.product.title"
+            class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105" />
+          <div class="badge-uom">{{ item.product.categoryName }}</div>
         </div>
 
-        <!-- Details & Remove -->
-        <div class="grow flex flex-col">
-          <div (click)="productStore.setSelectedProductId(item.product.id)"
-            class="text-sm font-semibold text-slate-800 hover:text-primary-600  line-clamp-1 mb-0.5 cursor-pointer">{{
-            item.product.title }}</div>
-          <span class="text-[10px] text-slate-400 font-semibold mb-1">{{ item.product.categoryName }}</span>
-          <div class="flex items-center justify-between mt-1">
+        <!-- Info Section -->
+        <div class="flex flex-col flex-1 min-w-0 justify-between px-3 py-3">
+          <!-- Top: Category, Title, Price -->
+          <div>
+            <div class="flex justify-between items-start gap-2">
+              <div class="flex-1 min-w-0">
+                <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">{{
+                  item.product.categoryName }}</span>
+                <h3
+                  class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 leading-tight cursor-pointer"
+                  (click)="productStore.setSelectedProductId(item.product.id)">
+                  {{ item.product.title }}</h3>
+              </div>
+            </div>
 
-            <!-- Quantity editor -->
+            <!-- Price -->
+            <div class="flex flex-col mt-0.5">
+              <app-price [value]="item.product.price * item.quantity" size="md"
+                class="text-primary-600 font-bold"></app-price>
+            </div>
+          </div>
+
+          <!-- Bottom: Quantity & Delete (matches product pricing row style) -->
+          <div class="flex items-center justify-between gap-2">
             <app-quantity-selector [quantity]="item.quantity"
               (quantityChange)="cartStore.updateQuantity(item.product.id, $event)" [stock]="item.product.stock"
               [disabled]="cartStore.loading()" variant="sm"></app-quantity-selector>
 
-            <!-- Price -->
-            <div class="flex items-center gap-4">
-              <app-price [value]="item.product.price * item.quantity" size="sm" class="text-slate-800"></app-price>
-              <app-button type="button" [disabled]="cartStore.loading()" (click)="cartStore.removeItem(item.product.id)"
-                variant="ghost"
-                customClass="text-slate-400 hover:text-rose-500 hover:bg-rose-50 !p-1.5 rounded-lg active:scale-90 disabled:opacity-40">
-                <app-icon name="trash" size="16"></app-icon>
-              </app-button>
-            </div>
+            <app-button type="button" [disabled]="cartStore.loading()" (click)="cartStore.removeItem(item.product.id)"
+              variant="ghost"
+              customClass="text-slate-400 hover:text-rose-500 hover:bg-rose-50 !p-1.5 rounded-lg active:scale-90 disabled:opacity-40">
+              <app-icon name="trash" size="16"></app-icon>
+            </app-button>
           </div>
         </div>
       </div>
@@ -50,12 +64,10 @@
   <!-- Checkout Summary Card (Natural fixed bottom via flex) -->
   <div
     class="shrink-0 bg-white border-t border-slate-100 p-5 rounded-t-3xl flex flex-col gap-4 z-40 shadow-[0_-15px_30px_-15px_rgba(0,0,0,0.1)]">
-    <h3 class="font-display font-extrabold text-slate-800 text-xs uppercase tracking-wider">Order Summary</h3>
-
     <div class="flex flex-col gap-3.5 text-xs text-slate-500">
-      <div class="flex justify-between">
-        <span>Subtotal</span>
-        <app-price [value]="cartStore.subtotal()" [bold]="false" size="sm"></app-price>
+      <div class="flex justify-between items-center">
+        <h3 class="font-display font-extrabold text-slate-800 text-xs uppercase tracking-wider">Subtotal</h3>
+        <app-price [value]="cartStore.subtotal()" [bold]="true" size="md"></app-price>
       </div>
 
     </div>
