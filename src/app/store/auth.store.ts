@@ -6,6 +6,7 @@ import { ProductApiService } from '../core/services/product-api.service';
 import { ToastService } from '../core/services/toast.service';
 import { LoggerService } from '../core/services/logger.service';
 import { CartStore } from './cart.store';
+import { firstValueFrom } from 'rxjs';
 import { decodeJwt, isTokenExpired, jwtHasAdminRole, mapJwtToUser } from '../core/auth/jwt.util';
 import { SESSION_TOKEN_KEY, SESSION_USER_KEY, SESSION_REFRESH_KEY } from '../core/auth/session.util';
 
@@ -151,15 +152,36 @@ export class AuthStore {
           return false;
         }
 
-        const userWithToken = { ...user, token: accessToken };
-        this.persistSession(accessToken, userWithToken, refreshToken);
-        this.state.set({ user: userWithToken, token: accessToken });
+        let resolvedUser = { ...user, phone: user.phone || username };
+
+        // Simpan token ke localStorage DULU agar interceptor bisa attach Bearer token
+        // ke request GET profile berikutnya.
+        this.persistSession(accessToken, { ...resolvedUser, token: accessToken }, refreshToken);
+        this.state.set({ user: { ...resolvedUser, token: accessToken }, token: accessToken });
+
+        // Fetch data.id dari customer service — ini ID yang dipakai untuk PUT profile.
+        // JWT sub berisi UUID auth-service yang BERBEDA dengan customer-service ID.
+        try {
+          const profileRes = await firstValueFrom(
+            this.userApi.getExternalProfile(username)
+          );
+          const profileId = profileRes?.data?.id || profileRes?.id;
+          if (profileId) {
+            resolvedUser = { ...resolvedUser, id: profileId };
+            // Update session dengan ID yang benar
+            const userWithToken = { ...resolvedUser, token: accessToken };
+            this.persistSession(accessToken, userWithToken, refreshToken);
+            this.state.set({ user: userWithToken, token: accessToken });
+          }
+        } catch (e) {
+          this.logger.error('AuthStore.login: gagal fetch profile id', e);
+        }
 
         // Sync cart guest ke backend
         const products = await this.productApi.getProducts();
-        await this.cartStore.syncOnLogin(user.id, products);
+        await this.cartStore.syncOnLogin(resolvedUser.id, products);
 
-        this.toastService.success(`Selamat datang kembali, ${user.name}!`);
+        this.toastService.success(`Selamat datang kembali, ${resolvedUser.name}!`);
         return true;
       }
       this.toastService.error('Email atau password salah.');

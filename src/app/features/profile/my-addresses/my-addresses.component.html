@@ -68,32 +68,35 @@
       </h2>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 overflow-y-auto" style="max-height: 50vh">
-    <app-input label="Nama Penerima" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
-    <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="addrPhoneControl"></app-input>
-    <div class="sm:col-span-2">
-      <app-input label="Alamat Lengkap" placeholder="e.g. Jl. Sudirman No. 21" [control]="streetControl"></app-input>
-    </div>
-    <app-select label="Provinsi" placeholder="Pilih Provinsi" [control]="provinceControl"
-      [options]="provinceOptions()"></app-select>
-    <app-select label="Kota/Kabupaten" placeholder="Pilih Kota" [control]="cityControl"
-      [options]="cityOptions()"></app-select>
-    <app-select label="Kecamatan" placeholder="Pilih Kecamatan" [control]="districtControl"
-      [options]="districtOptions()"></app-select>
-    <app-input label="Kode Pos" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
+      <app-input label="Nama Penerima" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
+      <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="addrPhoneControl"></app-input>
+      <div class="sm:col-span-2">
+        <app-input label="Alamat Lengkap" placeholder="e.g. Jl. Sudirman No. 21" [control]="streetControl"></app-input>
+      </div>
+      <app-select label="Provinsi" placeholder="Pilih Provinsi" [control]="provinceControl"
+        [options]="provinceOptions()"></app-select>
+      <app-select label="Kota/Kabupaten" placeholder="Pilih Kota" [control]="cityControl"
+        [options]="cityOptions()"></app-select>
+      <app-select label="Kecamatan" placeholder="Pilih Kecamatan" [control]="districtControl"
+        [options]="districtOptions()"></app-select>
+      <app-input label="Kode Pos" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
 
-    <div class="sm:col-span-2 mt-2">
-      <label class="block text-sm font-medium text-slate-700 mb-2">Pin Lokasi Peta</label>
-      <app-map-picker [initialLat]="selectedLat()" [initialLng]="selectedLng()"
-        (locationSelected)="onMapLocationSelected($event)">
-      </app-map-picker>
-      <p class="text-xs text-slate-500 mt-2">Klik peta atau geser pin untuk menyesuaikan titik koordinat.</p>
-    </div>
+      <div class="sm:col-span-2 mt-2">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Pin Lokasi Peta</label>
+        <app-map-picker [initialLat]="selectedLat()" [initialLng]="selectedLng()"
+          (locationSelected)="onMapLocationSelected($event)">
+        </app-map-picker>
+        <p class="text-xs text-slate-500 mt-2">Klik peta atau geser pin untuk menyesuaikan titik koordinat.</p>
+      </div>
     </div>
 
     <!-- Sticky Bottom Action Bar -->
     <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3">
-      <app-button type="button" (click)="cancelAddressForm()" variant="outline" size="lg" [fullWidth]="true" class="flex-1">Batal</app-button>
-      <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()" [disabled]="addressForm.invalid" variant="primary" size="lg" [fullWidth]="true" class="flex-1">Simpan Alamat</app-button>
+      <app-button type="button" (click)="cancelAddressForm()" variant="outline" size="lg" [fullWidth]="true"
+        class="flex-1">Batal</app-button>
+      <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()"
+        [disabled]="addressForm.invalid" variant="primary" size="lg" [fullWidth]="true" class="flex-1">Simpan
+        Alamat</app-button>
     </div>
   </form>
 </app-bottom-sheet>

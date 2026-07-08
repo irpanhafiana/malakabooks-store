@@ -85,7 +85,7 @@ export class UserApiService {
       const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Users/${id}/profile`));
       const userRes = envelope?.data;
       if (!userRes) return undefined;
-      const addresses = await this.getAddressesByUserId(id);
+      const addresses = await this.getAddressesByUserId(userRes.id);
       return {
         id: userRes.id,
         name: `${userRes.firstName || ''} ${userRes.lastName || ''}`.trim() || 'User',
@@ -103,6 +103,7 @@ export class UserApiService {
   }
 
   async saveUser(user: User): Promise<User> {
+    console.log(user)
     const nameParts = (user.name || '').trim().split(/\s+/);
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';

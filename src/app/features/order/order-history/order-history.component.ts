@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { DatePipe, NgOptimizedImage } from '@angular/common';
+import { DatePipe, DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { AuthStore } from '../../../store/auth.store';
 import { OrderStore } from '../../../store/order.store';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
@@ -16,7 +16,7 @@ import { LoggerService } from '../../../core/services/logger.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-order-history',
   standalone: true,
-  imports: [RouterLink, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, StatusBadgeComponent, DatePipe, ButtonComponent],
+  imports: [RouterLink, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, StatusBadgeComponent, DatePipe, DecimalPipe, ButtonComponent],
   templateUrl: './order-history.component.html',
   styleUrl: './order-history.component.css'
 })
