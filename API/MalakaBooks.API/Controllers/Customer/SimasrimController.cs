@@ -1,7 +1,7 @@
 using MalakaBooks.API.Controllers.Base;
+using MalakaBooks.ConfigSetting;
 using MalakaBooks.Mediator.SimasrimHandlers;
 using MalakaBooks.ViewModel;
-using Mardika.Portfolio.AppsSetting;
 using Mardika.Simasrim.Service.Model;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

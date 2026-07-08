@@ -13,7 +13,7 @@ public class GetOrdersByUserHandler(IOrderRepository orderRepository, IBookRepos
         var bookIds = orders.SelectMany(order => order.Items).Select(item => item.BookId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToArray();
         var coverImagesByBookId = await LoadCoverImagesByBookIdAsync(bookRepository, bookIds, cancellationToken);
 
-        return orders.Select(orderEntity => orderEntity.ToResponse(coverImagesByBookId)).ToArray();
+        return [.. orders.OrderByDescending(_ => _.DateCreated).Select(orderEntity => orderEntity.ToResponse(coverImagesByBookId))];
     }
 
     private static async Task<IReadOnlyDictionary<string, string>> LoadCoverImagesByBookIdAsync(IBookRepository bookRepository, IEnumerable<string> bookIds, CancellationToken cancellationToken)

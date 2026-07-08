@@ -244,6 +244,7 @@ builder.Services.RegisterRepositoryService();
 builder.Services.RegisterAdditionalValidatorService();
 builder.Services.RegisterAdditionalDataValidatorService();
 builder.Services.AddHostedService<UnpaidOrderExpirationService>();
+builder.Services.AddHostedService<ShippedOrderAwbStatusService>();
 #endregion
 
 #region Caching

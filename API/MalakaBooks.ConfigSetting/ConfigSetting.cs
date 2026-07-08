@@ -9,6 +9,20 @@ namespace MalakaBooks.ConfigSetting
         //public SimasrimSetting? SimasrimSetting { get; set; }
     }
 
+    public class SimasrimSetting
+    {
+        public string? BaseUrl { get; set; }
+        public string? ClientId { get; set; }
+        public string? ClientSecret { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public string? PartnerName { get; set; }
+        //public string[] Scope { get; set; }
+
+        public required string[] Courier { get; set; }
+    }
+
+
     //public class SimasrimSetting
     //{
     //  public string BaseUrl { get; set; } = string.Empty;
@@ -34,6 +48,8 @@ namespace MalakaBooks.ConfigSetting
         public int ExpirationTimeoutMinutes { get; set; } = 60;
         public int ExpirationCheckIntervalMinutes { get; set; } = 1;
         public int ExpirationStartupDelaySeconds { get; set; }
+        public int AwbStatusCheckIntervalMinutes { get; set; } = 60;
+        public int AwbStatusStartupDelaySeconds { get; set; }
         public string SimasrimRecheckPath { get; set; } = string.Empty;
         public string SimasrimRecheckMethod { get; set; } = "GET";
         public string SimasrimCancelPath { get; set; } = string.Empty;

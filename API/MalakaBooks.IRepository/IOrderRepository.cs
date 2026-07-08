@@ -8,8 +8,10 @@ public interface IOrderRepository
     Task<OrderEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<OrderEntity>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<OrderEntity>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<OrderEntity>> GetShippedOrdersWithAwbAsync(CancellationToken cancellationToken = default);
     Task<OrderEntity> CreateAsync(OrderEntity order, CancellationToken cancellationToken = default);
     Task<bool> UpdateAsync(string id, OrderEntity order, CancellationToken cancellationToken = default);
+    Task<bool> MarkAsDeliveredAsync(string id, DateTime utcNow, CancellationToken cancellationToken = default);
     Task<PagedResult<OrderEntity>> GetAllOrdersPaged(long pageNumber, long pageSize);
     Task<long> ExpireUnpaidOrdersAsync(DateTime utcNow, CancellationToken cancellationToken = default);
 }
