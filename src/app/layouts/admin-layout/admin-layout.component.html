@@ -8,7 +8,7 @@
       <div class="px-1.5 py-1 rounded-lg bg-primary-600 flex items-center justify-center h-6 w-6">
         <img src="/malaka-books.svg" alt="Malaka Books Logo" class="h-3.5 w-3.5">
       </div>
-      malakabooks
+      Malaka Books
     </a>
     <button type="button" (click)="toggleSidebar()" aria-label="Toggle navigation menu"
       [attr.aria-expanded]="isSidebarOpen()"
@@ -31,8 +31,8 @@
         </div>
         <div class="flex flex-col">
           <span
-            class="font-display font-extrabold text-base tracking-tight text-slate-800 leading-none">malakabooks</span>
-          <span class="text-[9px] font-bold text-slate-400 tracking-wider uppercase mt-1">Admin Panel</span>
+            class="font-display font-extrabold text-base tracking-tight text-slate-800 leading-none">Malaka Books</span>
+          <span class="text-[9px] font-bold text-slate-400 tracking-wider uppercase mt-1">Administrator</span>
         </div>
       </div>
 
@@ -47,32 +47,66 @@
           <span>Dashboard</span>
         </a>
 
-        <!-- Products -->
-        <a routerLink="/admin/products" routerLinkActive="!bg-primary-600 !text-white active-link"
-          (click)="closeSidebar()"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-          <app-icon name="book-open" size="20"
-            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-          <span>Produk</span>
-        </a>
+        <!-- Master Data Accordion -->
+        <div class="flex flex-col">
+          <button (click)="toggleMasterData()"
+            class="flex items-center justify-between w-full px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+            <div class="flex items-center gap-3">
+              <app-icon name="folder" size="20"
+                class="text-slate-400 group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>Master Data</span>
+            </div>
+            <app-icon [name]="isMasterDataOpen() ? 'chevron-down' : 'chevron-right'" size="16"
+              class="text-slate-400 group-hover:text-slate-600 transition-colors"></app-icon>
+          </button>
 
-        <!-- Promotion Banners -->
-        <a routerLink="/admin/promotion-banners" routerLinkActive="!bg-primary-600 !text-white active-link"
-          (click)="closeSidebar()"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-          <app-icon name="image" size="20"
-            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-          <span>Promo Banners</span>
-        </a>
+          <!-- Accordion Menu Items -->
+          <div [class.hidden]="!isMasterDataOpen()" class="pl-4 flex flex-col gap-1 mt-1 transition-all duration-200">
+            <!-- Products -->
+            <a routerLink="/admin/products" routerLinkActive="!bg-primary-600 !text-white active-link"
+              (click)="closeSidebar()"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+              <app-icon name="minus" size="18"
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>Data Produk</span>
+            </a>
 
-        <!-- Categories -->
-        <a routerLink="/admin/categories" routerLinkActive="!bg-primary-600 !text-white active-link"
-          (click)="closeSidebar()"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-          <app-icon name="category" size="20"
-            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-          <span>Kategori</span>
-        </a>
+            <!-- Categories -->
+            <a routerLink="/admin/categories" routerLinkActive="!bg-primary-600 !text-white active-link"
+              (click)="closeSidebar()"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+              <app-icon name="minus" size="18"
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>Data Kategori</span>
+            </a>
+
+            <!--  Banners -->
+            <a routerLink="/admin/promotion-banners" routerLinkActive="!bg-primary-600 !text-white active-link"
+              (click)="closeSidebar()"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+              <app-icon name="minus" size="18"
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>Data Promosi</span>
+            </a>
+
+            <!-- Authors -->
+            <a routerLink="/admin/authors" routerLinkActive="!bg-primary-600 !text-white active-link"
+              (click)="closeSidebar()"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+              <app-icon name="minus" size="18"
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>Data Author</span>
+            </a>
+
+            <!-- Users -->
+            <a routerLink="/admin/users" routerLinkActive="!bg-primary-600 !text-white active-link" (click)="closeSidebar()"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+              <app-icon name="minus" size="18"
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>Data Pelanggan</span>
+            </a>
+          </div>
+        </div>
 
         <!-- Payment Methods -->
         <a routerLink="/admin/payment-methods" routerLinkActive="!bg-primary-600 !text-white active-link"
@@ -83,16 +117,6 @@
           <span>Mtd Pembayaran</span>
         </a>
 
-
-        <!-- Authors -->
-        <a routerLink="/admin/authors" routerLinkActive="!bg-primary-600 !text-white active-link"
-          (click)="closeSidebar()"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-          <app-icon name="user" size="20"
-            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-          <span>Authors</span>
-        </a>
-
         <!-- Orders -->
         <a routerLink="/admin/orders" routerLinkActive="!bg-primary-600 !text-white active-link"
           (click)="closeSidebar()"
@@ -100,14 +124,6 @@
           <app-icon name="shopping-bag" size="20"
             class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
           <span>Pesanan</span>
-        </a>
-
-        <!-- Users -->
-        <a routerLink="/admin/users" routerLinkActive="!bg-primary-600 !text-white active-link" (click)="closeSidebar()"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-          <app-icon name="users" size="20"
-            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-          <span>Pelanggan</span>
         </a>
 
         <!-- Addresses -->
@@ -151,11 +167,11 @@
       </a>
 
       <!-- Settings Link -->
-      <a routerLink="/admin" (click)="closeSidebar()"
+      <!-- <a routerLink="/admin" (click)="closeSidebar()"
         class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
         <app-icon name="cog" size="20" class="text-slate-400 group-hover:text-slate-600"></app-icon>
         <span>Settings</span>
-      </a>
+      </a> -->
 
       <!-- Sign Out Button -->
       <button (click)="onSignOut(); closeSidebar()"

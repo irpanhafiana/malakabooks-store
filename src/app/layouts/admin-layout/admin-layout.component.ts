@@ -20,6 +20,7 @@ export class AdminLayoutComponent {
 
   isSidebarOpen = signal<boolean>(false);
   activeRouteName = signal<string>('Dashboard');
+  isMasterDataOpen = signal<boolean>(false);
 
   constructor() {
     this.router.events
@@ -29,6 +30,15 @@ export class AdminLayoutComponent {
       )
       .subscribe(() => {
         const url = this.router.url;
+        const isMasterRoute = url.includes('/products') || 
+                              url.includes('/categories') || 
+                              url.includes('/promotion-banners') || 
+                              url.includes('/authors') || 
+                              url.includes('/users');
+        if (isMasterRoute) {
+          this.isMasterDataOpen.set(true);
+        }
+
         if (url.includes('/products')) {
           this.activeRouteName.set('Products Manager');
         } else if (url.includes('/categories')) {
@@ -59,6 +69,10 @@ export class AdminLayoutComponent {
 
   closeSidebar() {
     this.isSidebarOpen.set(false);
+  }
+
+  toggleMasterData() {
+    this.isMasterDataOpen.update(v => !v);
   }
 
   onSignOut() {
