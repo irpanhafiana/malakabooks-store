@@ -15,6 +15,7 @@ public class ReviewEntity : BaseObject
 
     public int Rating { get; set; }
     public string Comment { get; set; } = string.Empty;
+    public List<AdditionalImage> AdditionalImages { get; set; } = [];
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

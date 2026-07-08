@@ -20,6 +20,7 @@ public static class ValidatorServiceExtension
         services.AddScoped<IValidator<UpdateAddressRequest>, UpdateAddressRequestValidator>();
         services.AddScoped<IValidator<UpdateUserRequest>, UpdateUserRequestValidator>();
         services.AddScoped<IValidator<CreatePromotionBannerRequest>, CreatePromotionBannerRequestValidator>();
+        services.AddScoped<IValidator<UpdatePromotionBannerRequest>, UpdatePromotionBannerRequestValidator>();
         services.AddScoped<IValidator<CreateReviewRequest>, CreateReviewRequestValidator>();
         services.AddScoped<IValidator<CreateComplaintRequest>, CreateComplaintRequestValidator>();
         services.AddScoped<IValidator<RespondComplaintRequest>, RespondComplaintRequestValidator>();

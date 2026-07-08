@@ -22,4 +22,17 @@ public class PromotionBannersController(IMediator mediator) : ApiControllerBase
         var result = await mediator.Send(new CreatePromotionBannerCommand(request), cancellationToken);
         return ProcessResult(result);
     }
+
+    /// <summary>Update promotion banner</summary>
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, [FromBody] UpdatePromotionBannerRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdatePromotionBannerCommand(id, request), cancellationToken);
+        return Success(result);
+    }
+
+    /// <summary>Delete promotion banner</summary>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
+        => Success(await mediator.Send(new DeletePromotionBannerCommand(id), cancellationToken));
 }

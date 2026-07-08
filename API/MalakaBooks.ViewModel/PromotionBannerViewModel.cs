@@ -31,3 +31,7 @@ public class CreatePromotionBannerRequest
     public DateTime? StartAt { get; set; }
     public DateTime? EndAt { get; set; }
 }
+
+public class UpdatePromotionBannerRequest : CreatePromotionBannerRequest
+{
+}

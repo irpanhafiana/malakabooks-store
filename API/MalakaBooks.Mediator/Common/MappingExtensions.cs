@@ -237,6 +237,21 @@ public static class MappingExtensions
         UpdatedAt = DateTime.UtcNow
     };
 
+    public static void UpdateFrom(this PromotionBannerEntity entity, UpdatePromotionBannerRequest request)
+    {
+        entity.Title = request.Title.Trim();
+        entity.Subtitle = request.Subtitle.Trim();
+        entity.ImageBase64 = request.ImageBase64.Trim();
+        entity.TargetUrl = request.TargetUrl.Trim();
+        entity.ButtonText = request.ButtonText.Trim();
+        entity.TargetType = string.IsNullOrWhiteSpace(request.TargetType) ? null : request.TargetType.Trim();
+        entity.IsActive = request.IsActive;
+        entity.DisplayOrder = request.DisplayOrder;
+        entity.StartAt = request.StartAt;
+        entity.EndAt = request.EndAt;
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
     public static OrderItemResponse ToResponse(this OrderItemEntity entity) => new()
     {
         BookId = entity.BookId,
@@ -673,6 +688,7 @@ public static class MappingExtensions
         OrderId = entity.OrderId,
         Rating = entity.Rating,
         Comment = entity.Comment,
+        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList(),
         CreatedAt = entity.CreatedAt
     };
 
@@ -683,6 +699,7 @@ public static class MappingExtensions
         OrderId = request.OrderId.Trim(),
         Rating = request.Rating,
         Comment = request.Comment.Trim(),
+        AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         CreatedAt = DateTime.UtcNow
     };
 
