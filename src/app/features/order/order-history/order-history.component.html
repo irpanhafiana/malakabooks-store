@@ -72,6 +72,11 @@
             <h4 class="font-bold text-slate-800 truncate">{{ item.product.title }}</h4>
             <span class="text-slate-400">{{ item.quantity }} × Rp {{ item.product.price | number }}</span>
           </div>
+          <div class="shrink-0">
+            <app-button variant="outline" size="sm" (click)="openReviewDialog($event, order.id, item.product)">
+              Tulis Ulasan
+            </app-button>
+          </div>
         </div>
         }
       </div>

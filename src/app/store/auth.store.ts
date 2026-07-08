@@ -152,36 +152,15 @@ export class AuthStore {
           return false;
         }
 
-        let resolvedUser = { ...user, phone: user.phone || username };
-
-        // Simpan token ke localStorage DULU agar interceptor bisa attach Bearer token
-        // ke request GET profile berikutnya.
-        this.persistSession(accessToken, { ...resolvedUser, token: accessToken }, refreshToken);
-        this.state.set({ user: { ...resolvedUser, token: accessToken }, token: accessToken });
-
-        // Fetch data.id dari customer service — ini ID yang dipakai untuk PUT profile.
-        // JWT sub berisi UUID auth-service yang BERBEDA dengan customer-service ID.
-        try {
-          const profileRes = await firstValueFrom(
-            this.userApi.getExternalProfile(username)
-          );
-          const profileId = profileRes?.data?.id || profileRes?.id;
-          if (profileId) {
-            resolvedUser = { ...resolvedUser, id: profileId };
-            // Update session dengan ID yang benar
-            const userWithToken = { ...resolvedUser, token: accessToken };
-            this.persistSession(accessToken, userWithToken, refreshToken);
-            this.state.set({ user: userWithToken, token: accessToken });
-          }
-        } catch (e) {
-          this.logger.error('AuthStore.login: gagal fetch profile id', e);
-        }
+        const userWithToken = { ...user, token: accessToken };
+        this.persistSession(accessToken, userWithToken, refreshToken);
+        this.state.set({ user: userWithToken, token: accessToken });
 
         // Sync cart guest ke backend
         const products = await this.productApi.getProducts();
-        await this.cartStore.syncOnLogin(resolvedUser.id, products);
+        await this.cartStore.syncOnLogin(user.id, products);
 
-        this.toastService.success(`Selamat datang kembali, ${resolvedUser.name}!`);
+        this.toastService.success(`Selamat datang kembali, ${user.name}!`);
         return true;
       }
       this.toastService.error('Email atau password salah.');

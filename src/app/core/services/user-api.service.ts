@@ -115,7 +115,11 @@ export class UserApiService {
     };
 
     try {
-      await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Users/${user.id}/profile`, profileBody));
+      // Ambil ID dari customer service yang disimpan oleh profile.component.ts
+      const externalProfileId = localStorage.getItem('externalProfileId');
+      const targetProfileId = externalProfileId || user.id;
+
+      await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Users/${targetProfileId}/profile`, profileBody));
 
       const backendAddresses = await this.getAddressesByUserId(user.id);
       const backendAddrMap = new Map(backendAddresses.map(a => [a.id, a]));

@@ -40,22 +40,24 @@ export class ReviewApiService {
     }
   }
 
-  async addReview(review: Review): Promise<Review> {
+  async addReview(review: Review, explicitOrderId?: string): Promise<Review> {
     const currentUser = getStoredSessionUser();
     if (!currentUser) throw new Error('User not authenticated');
 
-    let orderId = '';
-    try {
-      const envelope = await firstValueFrom(
-        this.http.get<any>(`${this.BASE_URL}/customer/Orders/user/${currentUser.id}`)
-      );
-      const orders = envelope?.data || [];
-      const matchingOrder = orders.find((o: any) =>
-        o.items?.some((item: any) => item.bookId === review.productId)
-      );
-      if (matchingOrder) orderId = matchingOrder.id;
-    } catch {
-      // orderId tetap kosong
+    let orderId = explicitOrderId || '';
+    if (!orderId) {
+      try {
+        const envelope = await firstValueFrom(
+          this.http.get<any>(`${this.BASE_URL}/customer/Orders/user/${currentUser.id}`)
+        );
+        const orders = envelope?.data || [];
+        const matchingOrder = orders.find((o: any) =>
+          o.items?.some((item: any) => item.bookId === review.productId)
+        );
+        if (matchingOrder) orderId = matchingOrder.id;
+      } catch {
+        // orderId tetap kosong
+      }
     }
 
     const body = {
