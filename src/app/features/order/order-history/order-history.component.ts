@@ -155,11 +155,13 @@ export class OrderHistoryComponent implements OnInit {
 
         await this.reviewApi.addReview({
           id: '',
-          productId: product.id,
-          userName: '',
+          userId: '',
+          bookId: product.id,
+          orderId: orderId,
           rating: result.value.rating,
           comment: result.value.comment,
-          date: new Date().toISOString()
+          additionalImages: [], // Could be expanded later to support image uploads
+          createdAt: new Date().toISOString()
         }, orderId);
 
         Swal.fire({

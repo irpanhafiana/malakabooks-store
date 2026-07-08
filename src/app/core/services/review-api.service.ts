@@ -28,11 +28,13 @@ export class ReviewApiService {
 
       return reviews.map((r: any) => ({
         id: r.id,
-        productId: r.bookId,
-        userName: currentUser.id === r.userId ? (currentUser.name || 'Customer') : 'Customer',
+        userId: r.userId,
+        bookId: r.bookId,
+        orderId: r.orderId,
         rating: r.rating,
         comment: r.comment,
-        date: r.createdAt
+        additionalImages: r.additionalImages,
+        createdAt: r.createdAt
       }));
     } catch (e) {
       this.logger.warn('ReviewApiService.getReviewsByProductId', 'Reviews could not be loaded:', e);
@@ -52,7 +54,7 @@ export class ReviewApiService {
         );
         const orders = envelope?.data || [];
         const matchingOrder = orders.find((o: any) =>
-          o.items?.some((item: any) => item.bookId === review.productId)
+          o.items?.some((item: any) => item.bookId === review.bookId)
         );
         if (matchingOrder) orderId = matchingOrder.id;
       } catch {
@@ -62,21 +64,24 @@ export class ReviewApiService {
 
     const body = {
       userId: currentUser.id,
-      bookId: review.productId,
+      bookId: review.bookId,
       orderId,
       rating: review.rating,
-      comment: review.comment
+      comment: review.comment,
+      additionalImages: review.additionalImages || []
     };
 
     const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Reviews`, body));
     const data = res?.data;
     return {
       id: data.id,
-      productId: data.bookId,
-      userName: currentUser.name || 'Customer',
+      userId: data.userId,
+      bookId: data.bookId,
+      orderId: data.orderId,
       rating: data.rating,
       comment: data.comment,
-      date: data.createdAt
+      additionalImages: data.additionalImages,
+      createdAt: data.createdAt
     };
   }
 }

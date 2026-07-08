@@ -45,6 +45,8 @@ export class AdminLayoutComponent {
           this.activeRouteName.set('Analytics Reports');
         } else if (url.includes('/home-addresses')) {
           this.activeRouteName.set('Home Addresses Manager');
+        } else if (url.includes('/promotion-banners')) {
+          this.activeRouteName.set('Promotion Banners Manager');
         } else {
           this.activeRouteName.set('Dashboard Overview');
         }

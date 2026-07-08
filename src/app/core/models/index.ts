@@ -16,3 +16,4 @@ export * from './api-response.model';
 export * from './book-dto.model';
 export * from './author.model';
 export * from './payment.model';
+export * from './promotion-banner.model';

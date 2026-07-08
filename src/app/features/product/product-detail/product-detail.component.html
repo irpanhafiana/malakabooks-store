@@ -159,13 +159,13 @@
           <!-- Review List -->
           <div class="flex flex-col gap-4">
             @if (reviews().length === 0) {
-            <p class="text-sm text-slate-400 text-center py-6">No reviews yet. Be the first to review this product!</p>
+            <p class="text-sm text-slate-400 text-center py-6">Belum ada ulasan. Jadilah yang pertama memberikan ulasan!</p>
             } @else {
             @for (rev of reviews(); track rev.id) {
             <div class="flex flex-col gap-2 p-4 border border-slate-50 rounded-2xl bg-slate-50/20">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-slate-800">{{ rev.userName }}</span>
-                <span class="text-[10px] text-slate-400">{{ rev.date | date: 'mediumDate' }}</span>
+                <span class="text-xs font-bold text-slate-800">User {{ rev.userId.substring(0, 5) }}***</span>
+                <span class="text-[10px] text-slate-400">{{ rev.createdAt | date: 'mediumDate' }}</span>
               </div>
               <div class="flex items-center text-amber-400 gap-0.5">
                 @for (star of [1,2,3,4,5]; track star) {
@@ -174,6 +174,15 @@
                 }
               </div>
               <p class="text-xs text-slate-600 leading-relaxed">{{ rev.comment }}</p>
+              @if (rev.additionalImages && rev.additionalImages.length > 0) {
+              <div class="flex gap-2 mt-2 overflow-x-auto no-scrollbar">
+                @for (img of rev.additionalImages; track img.image) {
+                <div class="h-16 w-16 shrink-0 rounded-lg overflow-hidden border border-slate-200">
+                  <img [src]="img.image" class="w-full h-full object-cover" alt="Review image" />
+                </div>
+                }
+              </div>
+              }
             </div>
             }
             }

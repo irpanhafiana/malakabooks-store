@@ -40,6 +40,7 @@ export const routes: Routes = [
       { path: 'categories', loadComponent: () => import('./features/admin/categories/list/categories-list.component').then(c => c.CategoriesListComponent) },
       { path: 'payment-methods', loadComponent: () => import('./features/admin/payment-methods/list/payment-methods-list.component').then(c => c.PaymentMethodsListComponent) },
       { path: 'authors', loadComponent: () => import('./features/admin/authors/list/authors-list.component').then(c => c.AuthorsListComponent) },
+      { path: 'promotion-banners', loadComponent: () => import('./features/admin/promotion-banners/list/promotion-banners-list.component').then(c => c.PromotionBannersListComponent) },
       { path: 'home-addresses', loadComponent: () => import('./features/admin/home-addresses/list/home-addresses-list.component').then(c => c.HomeAddressesListComponent) },
       {
         path: 'orders',

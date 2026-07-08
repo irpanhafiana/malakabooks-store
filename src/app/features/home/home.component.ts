@@ -14,6 +14,8 @@ import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { AlertDialogComponent } from '../../shared/ui/alert-dialog/alert-dialog.component';
 
+import { PromotionBannerStore } from '../../store/promotion-banner.store';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
@@ -27,6 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   protected readonly authorStore = inject(AuthorStore);
+  protected readonly bannerStore = inject(PromotionBannerStore);
 
   protected readonly showCartAlert = signal(false);
 
@@ -69,6 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private embla?: EmblaCarouselType;
   private authorEmbla?: EmblaCarouselType;
   private bestSellerEmbla?: EmblaCarouselType;
+  private merchandiseEmbla?: EmblaCarouselType;
 
   @ViewChild('carouselViewport') carouselViewport!: ElementRef<HTMLElement>;
   @ViewChild('authorCarouselViewport') authorCarouselViewport?: ElementRef<HTMLElement>;
@@ -91,6 +95,21 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               autoplay.play();
             }
           }
+          if (this.merchandiseEmbla) {
+            this.merchandiseEmbla.reInit();
+            const merchAutoplay = this.merchandiseEmbla.plugins()['autoplay'];
+            if (merchAutoplay) {
+              merchAutoplay.reset();
+              merchAutoplay.play();
+            }
+          }
+        }, 100);
+      }
+    });
+
+    effect(() => {
+      if (this.authorStore.authors().length > 0) {
+        setTimeout(() => {
           if (this.authorEmbla) {
             this.authorEmbla.reInit();
             const authAutoplay = this.authorEmbla.plugins()['autoplay'];
@@ -102,11 +121,27 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 100);
       }
     });
+
+    effect(() => {
+      if (this.bannerStore.banners().length > 0) {
+        setTimeout(() => {
+          if (this.embla) {
+            this.embla.reInit();
+            const autoplay = this.embla.plugins()['autoplay'];
+            if (autoplay) {
+              autoplay.reset();
+              autoplay.play();
+            }
+          }
+        }, 100);
+      }
+    });
   }
 
   ngOnInit() {
     this.productStore.loadAll();
     this.authorStore.loadAuthors();
+    this.bannerStore.loadActiveBanners();
   }
 
   ngAfterViewInit() {
@@ -133,14 +168,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (this.merchandiseCarouselViewport) {
-      this.authorEmbla = EmblaCarousel(
+      this.merchandiseEmbla = EmblaCarousel(
         this.merchandiseCarouselViewport.nativeElement,
         { loop: true, align: 'start', duration: 40 },
         [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
       );
-      const onAuthorSelect = () => this.currentAuthorSlide.set(this.authorEmbla!.selectedScrollSnap());
-      this.authorEmbla.on('select', onAuthorSelect);
-      onAuthorSelect();
     }
 
     if (this.bestSellerCarouselViewport) {
@@ -156,6 +188,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.embla?.destroy();
     this.authorEmbla?.destroy();
     this.bestSellerEmbla?.destroy();
+    this.merchandiseEmbla?.destroy();
   }
 
   // Invoked when user taps on dot indicators

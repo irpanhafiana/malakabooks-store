@@ -2,65 +2,62 @@
 
   <!-- Hero Banner Carousel (Swipeable, looping, with dot indicators) -->
   <section class="relative group">
+    @if (bannerStore.loading()) {
+      <div class="h-45 w-full flex justify-center items-center">
+        <app-skeleton type="card" [count]="1" class="w-full h-full"></app-skeleton>
+      </div>
+    } @else if (bannerStore.banners().length === 0) {
+      <div class="h-45 w-full bg-slate-100 rounded-2xl flex justify-center items-center text-slate-400">
+        <p>Tidak ada banner aktif</p>
+      </div>
+    } 
+    
     <!-- Embla viewport -->
-    <div #carouselViewport class="overflow-hidden h-45">
+    <div #carouselViewport class="overflow-hidden h-45" [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
       <!-- Embla container -->
-      <div class="flex -ml-3 items-center h-full">
-        @for (slide of slides; track $index) {
-        <div class="flex-[0_0_100%] min-w-0 pl-3">
-          <div
-            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 shadow-sm bg-linear-to-tr {{ slide.bgGradient }} px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out h-42">
-            <!-- Background Image overlay -->
-            <div class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
-              [style.backgroundImage]="'url(' + slide.imageUrl + ')'"></div>
-
-            <!-- Background glow vectors -->
-            <div class="absolute -right-16 -top-16 w-56 h-56 bg-white/10 rounded-full blur-2xl pointer-events-none">
-            </div>
+        <div class="flex -ml-3 items-center h-full">
+          @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
+          <div class="flex-[0_0_100%] min-w-0 pl-3">
             <div
-              class="absolute -left-16 -bottom-16 w-56 h-56 bg-rose-500/15 rounded-full blur-2xl pointer-events-none">
-            </div>
+              class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out h-42">
+              <!-- Background Image -->
+              <div class="absolute inset-0 bg-cover bg-center pointer-events-none"
+                [style.backgroundImage]="'url(' + banner.imageBase64 + ')'"></div>
 
-            <div class="relative z-10 flex flex-col items-start gap-1 max-w-xl">
-              <span
-                class="px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-[8px] font-bold uppercase tracking-wider">
-                {{ slide.badge }}
-              </span>
-              <h1 class="text-base font-display font-extrabold tracking-tight leading-tight line-clamp-1">
-                {{ slide.title }}
-              </h1>
-              <p class="text-[10px] text-primary-100/90 max-w-sm leading-relaxed line-clamp-1">
-                {{ slide.description }}
-              </p>
-            </div>
+              <div class="relative z-10 flex flex-col items-start gap-1 max-w-xl">
+                <span
+                  class="px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-md text-[8px] font-bold uppercase tracking-wider">
+                  Promo
+                </span>
+                <h1 class="text-base font-display font-extrabold tracking-tight leading-tight line-clamp-1 drop-shadow-md">
+                  {{ banner.title }}
+                </h1>
+                <p class="text-[10px] text-white max-w-sm leading-relaxed line-clamp-1 drop-shadow-md font-medium">
+                  {{ banner.subtitle }}
+                </p>
+              </div>
 
-            <div class="relative z-10 flex items-center justify-between gap-3 mt-2 w-full">
-              <a [routerLink]="slide.buttonLink"
-                class="px-3.5 py-1.5 rounded-lg bg-white text-primary-700 font-bold text-[9px] hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
-                {{ slide.buttonText }}
-              </a>
-              @if (slide.promoCode) {
-              <span
-                class="text-[8px] text-white/95 bg-black/15 backdrop-blur-sm px-2 py-1 rounded-md border border-white/5 font-medium">
-                Use Code <strong class="text-white font-bold underline">{{ slide.promoCode }}</strong>
-              </span>
-              }
+              <div class="relative z-10 flex items-center justify-between gap-3 mt-2 w-full">
+                <a [routerLink]="banner.targetUrl"
+                  class="px-3.5 py-1.5 rounded-lg bg-white text-primary-700 font-bold text-[9px] hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
+                  {{ banner.buttonText }}
+                </a>
+              </div>
             </div>
           </div>
+          }
         </div>
+      </div>
+
+      <!-- Dot Indicators -->
+      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+        @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
+        <button type="button" (click)="scrollToSlide(i)"
+          [class]="i === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"
+          class="transition-all duration-500 ease-in-out cursor-pointer hover:bg-white/80"
+          [attr.aria-label]="'Go to slide ' + (i + 1)"></button>
         }
       </div>
-    </div>
-
-    <!-- Dot Indicators -->
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
-      @for (slide of slides; track $index) {
-      <button type="button" (click)="scrollToSlide($index)"
-        [class]="$index === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"
-        class="transition-all duration-500 ease-in-out cursor-pointer hover:bg-white/80"
-        [attr.aria-label]="'Go to slide ' + ($index + 1)"></button>
-      }
-    </div>
   </section>
 
   <!-- Best seller product -->

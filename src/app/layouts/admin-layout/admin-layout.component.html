@@ -56,6 +56,15 @@
           <span>Produk</span>
         </a>
 
+        <!-- Promotion Banners -->
+        <a routerLink="/admin/promotion-banners" routerLinkActive="!bg-primary-600 !text-white active-link"
+          (click)="closeSidebar()"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+          <app-icon name="image" size="20"
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+          <span>Promo Banners</span>
+        </a>
+
         <!-- Categories -->
         <a routerLink="/admin/categories" routerLinkActive="!bg-primary-600 !text-white active-link"
           (click)="closeSidebar()"
