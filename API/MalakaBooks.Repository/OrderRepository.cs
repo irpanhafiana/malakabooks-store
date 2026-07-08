@@ -33,6 +33,16 @@ public class OrderRepository : BaseRepository<OrderEntity>, IOrderRepository
     public async Task<IReadOnlyCollection<OrderEntity>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.User.UserId == userId).ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<OrderEntity>> GetShippedOrdersWithAwbAsync(CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<OrderEntity>.Filter.And(
+            Builders<OrderEntity>.Filter.Eq(order => order.Status, "shipped"),
+            Builders<OrderEntity>.Filter.Ne(order => order.AWBNo, null),
+            Builders<OrderEntity>.Filter.Ne(order => order.AWBNo, string.Empty));
+
+        return await _collection.Find(filter).ToListAsync(cancellationToken);
+    }
+
     public async Task<OrderEntity> CreateAsync(OrderEntity order, CancellationToken cancellationToken = default)
     {
         await _collection.InsertOneAsync(order, cancellationToken: cancellationToken);
@@ -43,6 +53,20 @@ public class OrderRepository : BaseRepository<OrderEntity>, IOrderRepository
     {
         order.Id = id;
         var result = await _collection.ReplaceOneAsync(x => x.Id == id, order, cancellationToken: cancellationToken);
+        return result.ModifiedCount > 0;
+    }
+
+    public async Task<bool> MarkAsDeliveredAsync(string id, DateTime utcNow, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<OrderEntity>.Filter.And(
+            Builders<OrderEntity>.Filter.Eq(order => order.Id, id),
+            Builders<OrderEntity>.Filter.Ne(order => order.Status, "delivered"));
+
+        var update = Builders<OrderEntity>.Update
+            .Set(order => order.Status, "delivered")
+            .Set(order => order.UpdatedAt, utcNow);
+
+        var result = await _collection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
         return result.ModifiedCount > 0;
     }
 

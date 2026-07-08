@@ -13,6 +13,7 @@ namespace MalakaBooks.DataValidator
             services.AddScoped<ICategoryEntityValidator, CategoryEntityValidator>();
             services.AddScoped<IComplaintEntityValidator, ComplaintEntityValidator>();
             services.AddScoped<IOrderEntityValidator, OrderEntityValidator>();
+            services.AddScoped<IPromotionBannerEntityValidator, PromotionBannerEntityValidator>();
             services.AddScoped<IReviewEntityValidator, ReviewEntityValidator>();
             services.AddScoped<IUserEntityValidator, UserEntityValidator>();
 

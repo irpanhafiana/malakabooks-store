@@ -11,6 +11,7 @@
     "AddressesCollection": "addresses",
     "UsersCollection": "users",
     "ReviewsCollection": "reviews",
-    "ComplaintsCollection": "complaints"
+    "ComplaintsCollection": "complaints",
+    "PromotionBannersCollection": "promotionbanners"
   }
 }

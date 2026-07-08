@@ -26,7 +26,9 @@
         "OrderSetting": {
             "ExpirationTimeoutMinutes": 60,
             "ExpirationCheckIntervalMinutes": 1,
-            "ExpirationStartupDelaySeconds": 0,
+            "ExpirationStartupDelaySeconds": 30,
+            "AwbStatusCheckIntervalMinutes": 60,
+            "AwbStatusStartupDelaySeconds": 30,
             "SimasrimRecheckPath": "/api/b2b/pengiriman/ekspedisi/cek-resi",
             "SimasrimRecheckMethod": "GET",
             "SimasrimCancelPath": "/api/b2b/pengiriman/ekspedisi/cancel-resi",

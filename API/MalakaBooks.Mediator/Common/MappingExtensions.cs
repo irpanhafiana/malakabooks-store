@@ -203,6 +203,40 @@ public static class MappingExtensions
         entity.Icon = request.Icon.Trim();
     }
 
+    public static PromotionBannerResponse ToResponse(this PromotionBannerEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        Title = entity.Title,
+        Subtitle = entity.Subtitle,
+        ImageBase64 = entity.ImageBase64,
+        TargetUrl = entity.TargetUrl,
+        ButtonText = entity.ButtonText,
+        TargetType = entity.TargetType ?? string.Empty,
+        IsActive = entity.IsActive,
+        DisplayOrder = entity.DisplayOrder,
+        StartAt = entity.StartAt,
+        EndAt = entity.EndAt,
+        CreatedAt = entity.CreatedAt,
+        UpdatedAt = entity.UpdatedAt,
+        Alias = entity.Alias ?? string.Empty
+    };
+
+    public static PromotionBannerEntity ToEntity(this CreatePromotionBannerRequest request) => new()
+    {
+        Title = request.Title.Trim(),
+        Subtitle = request.Subtitle.Trim(),
+        ImageBase64 = request.ImageBase64.Trim(),
+        TargetUrl = request.TargetUrl.Trim(),
+        ButtonText = request.ButtonText.Trim(),
+        TargetType = string.IsNullOrWhiteSpace(request.TargetType) ? null : request.TargetType.Trim(),
+        IsActive = request.IsActive,
+        DisplayOrder = request.DisplayOrder,
+        StartAt = request.StartAt,
+        EndAt = request.EndAt,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
+    };
+
     public static OrderItemResponse ToResponse(this OrderItemEntity entity) => new()
     {
         BookId = entity.BookId,

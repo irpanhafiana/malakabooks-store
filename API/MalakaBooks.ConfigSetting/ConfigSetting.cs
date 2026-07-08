@@ -48,6 +48,8 @@ namespace MalakaBooks.ConfigSetting
         public int ExpirationTimeoutMinutes { get; set; } = 60;
         public int ExpirationCheckIntervalMinutes { get; set; } = 1;
         public int ExpirationStartupDelaySeconds { get; set; }
+        public int AwbStatusCheckIntervalMinutes { get; set; } = 60;
+        public int AwbStatusStartupDelaySeconds { get; set; }
         public string SimasrimRecheckPath { get; set; } = string.Empty;
         public string SimasrimRecheckMethod { get; set; } = "GET";
         public string SimasrimCancelPath { get; set; } = string.Empty;

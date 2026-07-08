@@ -19,6 +19,7 @@ public static class RepositoryServiceExtension
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
         services.AddScoped<IComplaintRepository, ComplaintRepository>();
+        services.AddScoped<IPromotionBannerRepository, PromotionBannerRepository>();
 
         return services;
     }
