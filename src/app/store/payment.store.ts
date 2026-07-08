@@ -33,7 +33,7 @@ export class PaymentStore {
       this.state.update(s => ({ ...s, payments, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar payment dari server.' }));
-      this.toastService.error('Failed to load payment methods.');
+      this.toastService.error('Gagal memuat metode pembayaran.');
     }
   }
 
@@ -42,10 +42,10 @@ export class PaymentStore {
     try {
       const saved = await this.paymentApi.savePayment(payment);
       await this.loadPayments();
-      this.toastService.success(`Payment Method "${saved.name}" saved successfully!`);
+      this.toastService.success(`Metode Pembayaran "${saved.name}" berhasil disimpan!`);
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to save payment method.');
+      this.toastService.error('Gagal menyimpan metode pembayaran.');
     }
   }
 
@@ -55,14 +55,14 @@ export class PaymentStore {
       const success = await this.paymentApi.deletePayment(id);
       if (success) {
         await this.loadPayments();
-        this.toastService.success('Payment Method deleted successfully.');
+        this.toastService.success('Metode Pembayaran berhasil dihapus.');
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Payment Method not found.');
+        this.toastService.error('Metode Pembayaran tidak ditemukan.');
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to delete payment method.');
+      this.toastService.error('Gagal menghapus metode pembayaran.');
     }
   }
 }

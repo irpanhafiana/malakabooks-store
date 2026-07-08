@@ -32,31 +32,31 @@
   ></app-admin-input>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-    <app-select
+    <app-admin-select
       id="province"
       label="Provinsi"
       [control]="provinceControl"
       [options]="provinceOptions()"
       placeholder="Pilih Provinsi"
-    ></app-select>
+    ></app-admin-select>
 
-    <app-select
+    <app-admin-select
       id="city"
       label="Kota/Kabupaten"
       [control]="cityControl"
       [options]="cityOptions()"
       placeholder="Pilih Kota"
-    ></app-select>
+    ></app-admin-select>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-    <app-select
+    <app-admin-select
       id="district"
       label="Kecamatan"
       [control]="districtControl"
       [options]="districtOptions()"
       placeholder="Pilih Kecamatan"
-    ></app-select>
+    ></app-admin-select>
 
     <app-admin-input
       id="postalCode"

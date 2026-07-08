@@ -120,6 +120,14 @@ body {
   font-weight: 700 !important;
 }
 
+/* SweetAlert2 Global Font Overrides */
+.swal2-popup {
+  font-family: 'Poppins', sans-serif !important;
+}
+.swal2-title {
+  font-family: 'Fraunces', serif !important;
+}
+
 /* Card Product Styling from layouting.md (with brand colors) */
 .card-product {
   /* background-color: #ffffff; */

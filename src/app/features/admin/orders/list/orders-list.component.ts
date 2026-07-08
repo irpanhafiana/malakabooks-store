@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy, signal, computed } from '@angular/core';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
-import { CommonModule } from '@angular/common';
+import { DatePipe, NgClass, JsonPipe } from '@angular/common';
 import { OrderStore } from '../../../../store/order.store';
 import { Order, OrderStatus } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
@@ -11,14 +11,14 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-badge.component';
 import { DrawerComponent } from '../../../../shared/ui/drawer/drawer.component';
-import { OrderApiService } from '../../../../core/services/order-api.service';
+
 import JsBarcode from 'jsbarcode';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-orders-list',
   standalone: true,
-  imports: [CommonModule, TableComponent, PriceComponent, PaginationComponent, SpinnerComponent, StatusBadgeComponent, IconComponent, DrawerComponent],
+  imports: [DatePipe, NgClass, JsonPipe, TableComponent, PriceComponent, PaginationComponent, SpinnerComponent, StatusBadgeComponent, IconComponent, DrawerComponent],
   templateUrl: './orders-list.component.html',
   styleUrl: './orders-list.component.css'
 })
@@ -48,7 +48,6 @@ export class OrdersListComponent implements OnInit {
   protected readonly detailResiData = signal<any>(null);
   protected readonly selectedOrder = signal<Order | null>(null);
 
-  private readonly orderApi = inject(OrderApiService);
 
   onSearch(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -209,7 +208,7 @@ export class OrdersListComponent implements OnInit {
     }
 
     try {
-      const res = await this.orderApi.detailResi(courier, awb);
+      const res = await this.orderStore.getDetailResi(courier, awb);
       this.detailResiData.set(res);
     } catch (e: any) {
       this.detailResiError.set(e?.error?.message || e?.message || 'Gagal memuat detail resi pengiriman.');

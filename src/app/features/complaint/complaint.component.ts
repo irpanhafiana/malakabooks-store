@@ -50,7 +50,7 @@ export class ComplaintComponent implements OnInit {
   ngOnInit() {
     const user = this.authStore.currentUser();
     if (user) {
-      this.complaintStore.loadByUser(user.id);
+      this.complaintStore.loadComplaintsByUser(user.id);
       this.orderStore.loadUserOrders(user.id);
     }
   }

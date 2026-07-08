@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ComplaintStore } from '../../../../store/complaint.store';
 import { Complaint, ComplaintStatus } from '../../../../core/models';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
+import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { TextareaComponent } from '../../../../shared/ui/textarea/textarea.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
@@ -10,20 +11,26 @@ import { AlertService } from '../../../../core/services/alert.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-complaints-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminButtonComponent, TextareaComponent],
-  templateUrl: './complaints-form.component.html',
-  styleUrl: './complaints-form.component.css'
+  imports: [ReactiveFormsModule, AdminButtonComponent, TextareaComponent, AdminSelectComponent],
+  templateUrl: './complaints-form.component.html'
 })
 export class ComplaintsFormComponent {
-  complaint = input<Complaint | null>(null);
-  onCancel = output<void>();
-  onSave = output<void>();
+  readonly complaint = input<Complaint | null>(null);
+  readonly onCancel = output<void>();
+  readonly onSave = output<void>();
 
   private readonly complaintStore = inject(ComplaintStore);
   private readonly fb = inject(FormBuilder);
   private readonly alertService = inject(AlertService);
 
   submitting = signal(false);
+
+  statusOptions = [
+    { value: 'open', label: 'Terbuka' },
+    { value: 'in_progress', label: 'Diproses' },
+    { value: 'resolved', label: 'Selesai' },
+    { value: 'closed', label: 'Ditutup' }
+  ];
 
   respondForm = this.fb.group({
     status: ['open' as ComplaintStatus, Validators.required],

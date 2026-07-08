@@ -33,7 +33,7 @@ export class AuthorStore {
       this.state.update(s => ({ ...s, authors, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar author dari server.' }));
-      this.toastService.error('Failed to load authors.');
+      this.toastService.error('Gagal memuat daftar penulis.');
     }
   }
 
@@ -42,10 +42,10 @@ export class AuthorStore {
     try {
       const saved = await this.authorApi.saveAuthor(author);
       await this.loadAuthors();
-      this.toastService.success(`Author "${saved.name}" saved successfully!`);
+      this.toastService.success(`Penulis "${saved.name}" berhasil disimpan!`);
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to save author.');
+      this.toastService.error('Gagal menyimpan penulis.');
     }
   }
 
@@ -55,14 +55,14 @@ export class AuthorStore {
       const success = await this.authorApi.deleteAuthor(id);
       if (success) {
         await this.loadAuthors();
-        this.toastService.success('Author deleted successfully.');
+        this.toastService.success('Penulis berhasil dihapus.');
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Author not found.');
+        this.toastService.error('Penulis tidak ditemukan.');
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to delete author.');
+      this.toastService.error('Gagal menghapus penulis.');
     }
   }
 }

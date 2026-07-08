@@ -15,9 +15,9 @@ import { AlertService } from '../../../../core/services/alert.service';
   styleUrl: './categories-form.component.css'
 })
 export class CategoriesFormComponent {
-  category = input<Category | null>(null);
-  onCancel = output<void>();
-  onSave = output<void>();
+  readonly category = input<Category | null>(null);
+  readonly onCancel = output<void>();
+  readonly onSave = output<void>();
 
   private readonly productStore = inject(ProductStore);
   private readonly alertService = inject(AlertService);

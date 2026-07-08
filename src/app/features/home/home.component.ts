@@ -21,8 +21,7 @@ import { PromotionBannerStore } from '../../store/promotion-banner.store';
   selector: 'app-home',
   standalone: true,
   imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent, AlertDialogComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly productStore = inject(ProductStore);

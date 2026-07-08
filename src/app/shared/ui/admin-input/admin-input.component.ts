@@ -1,4 +1,4 @@
-import { Component, input, computed, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, computed, ViewChild, ElementRef, ChangeDetectionStrategy, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
 
@@ -21,10 +21,29 @@ export class AdminInputComponent {
   readonly customClass = input<string>('', { alias: 'class' });
   readonly formatNumber = input<boolean>(false);
 
+  // Password toggle
+  showPassword = signal<boolean>(false);
+
+  togglePassword() {
+    this.showPassword.update(s => !s);
+  }
+
+  readonly inputType = computed(() => {
+    if (this.type() === 'password') {
+      return this.showPassword() ? 'text' : 'password';
+    }
+    return this.type();
+  });
+
   // Compute styling based on states
   readonly inputClass = computed(() => {
     const base = 'block w-full border rounded-xl py-2.5 text-sm focus:outline-none focus:ring-1 placeholder-slate-400 text-slate-800 bg-white';
-    const padding = this.icon() ? 'pl-9 pr-3' : 'px-3';
+    let padding = this.icon() ? 'pl-9 pr-3' : 'px-3';
+    if (this.icon() && this.type() === 'password') {
+      padding = 'pl-9 pr-10';
+    } else if (this.type() === 'password') {
+      padding = 'pl-3 pr-10';
+    }
 
     const isError = this.control().invalid && (this.control().dirty || this.control().touched);
     const border = isError

@@ -23,7 +23,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(c => c.AdminDashboardComponent)
+        loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(c => c.DashboardComponent)
       },
       {
         path: 'products',
@@ -48,7 +48,7 @@ export const routes: Routes = [
       },
       {
         path: 'users',
-        loadComponent: () => import('./features/admin/users/users-crud.component').then(c => c.UsersCrudComponent)
+        loadComponent: () => import('./features/admin/users/list/users-list.component').then(c => c.UsersListComponent)
       },
       {
         path: 'complaints',

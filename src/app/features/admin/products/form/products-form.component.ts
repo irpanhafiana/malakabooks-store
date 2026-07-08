@@ -1,10 +1,10 @@
-import { Component, inject, input, output, effect, computed, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, inject, input, output, effect, computed, ChangeDetectionStrategy, signal, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductStore } from '../../../../store/product.store';
 import { AuthorStore } from '../../../../store/author.store';
 import { Product, AdditionalImage } from '../../../../core/models';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
-import { SelectComponent } from '../../../../shared/ui/select/select.component';
+import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { EditorComponent } from '../../../../shared/ui/editor/editor.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AlertService } from '../../../../core/services/alert.service';
@@ -13,18 +13,19 @@ import { AlertService } from '../../../../core/services/alert.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, SelectComponent, EditorComponent, AdminButtonComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminSelectComponent, EditorComponent, AdminButtonComponent],
   templateUrl: './products-form.component.html',
   styleUrl: './products-form.component.css'
 })
 export class ProductsFormComponent {
-  product = input<Product | null>(null);
-  onCancel = output<void>();
-  onSave = output<void>();
+  readonly product = input<Product | null>(null);
+  readonly onCancel = output<void>();
+  readonly onSave = output<void>();
 
   protected readonly productStore = inject(ProductStore);
   protected readonly authorStore = inject(AuthorStore);
   private readonly alertService = inject(AlertService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   titleControl = new FormControl('', [Validators.required]);
   categoryControl = new FormControl('', [Validators.required]);
@@ -113,6 +114,7 @@ export class ProductsFormComponent {
         const base64 = await this.readFileAsBase64(input.files[0]);
         this.coverImageControl.setValue(base64);
         this.coverImageControl.markAsDirty();
+        this.cdr.markForCheck();
       } catch (err) {
         this.alertService.error('Error', String(err));
       }
@@ -125,6 +127,7 @@ export class ProductsFormComponent {
       try {
         const base64 = await this.readFileAsBase64(input.files[0]);
         this.updateAdditionalImage(index, base64);
+        this.cdr.markForCheck();
       } catch (err) {
         this.alertService.error('Error', String(err));
       }

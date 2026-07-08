@@ -13,7 +13,7 @@
       </div>
       <span
         class="text-xs text-slate-400 font-semibold bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 shrink-0">Total
-        Accounts: {{ usersList().length }}</span>
+        Accounts: {{ userStore.users().length }}</span>
     </div>
   </div>
 
@@ -25,7 +25,7 @@
   </div>
 
   <!-- Data Table -->
-  @if (loading()) {
+  @if (userStore.loading()) {
   <div class="bg-white rounded-2xl border border-slate-200">
     <app-spinner text="Loading users..."></app-spinner>
   </div>

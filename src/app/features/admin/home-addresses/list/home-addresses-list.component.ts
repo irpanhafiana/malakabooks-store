@@ -41,7 +41,7 @@ export class HomeAddressesListComponent implements OnInit {
   editAddress = signal<HomeAddress | null>(null);
 
   ngOnInit() {
-    this.store.loadAddresses();
+    this.store.loadHomeAddresses();
   }
 
   onSearch(event: Event) {

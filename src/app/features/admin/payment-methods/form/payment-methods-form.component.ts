@@ -3,6 +3,7 @@ import { FormControl, FormGroup, FormArray, Validators, ReactiveFormsModule, For
 import { Payment, PaymentFee } from '../../../../core/models';
 import { PaymentStore } from '../../../../store/payment.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
+import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
@@ -11,13 +12,13 @@ import { IconComponent } from '../../../../shared/ui/icon/icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-payment-methods-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, IconComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminSelectComponent, AdminButtonComponent, IconComponent],
   templateUrl: './payment-methods-form.component.html'
 })
 export class PaymentMethodsFormComponent {
-  payment = input<Payment | null>(null);
-  onCancel = output<void>();
-  onSave = output<void>();
+  readonly payment = input<Payment | null>(null);
+  readonly onCancel = output<void>();
+  readonly onSave = output<void>();
 
   private readonly paymentStore = inject(PaymentStore);
   private readonly alertService = inject(AlertService);
@@ -26,6 +27,11 @@ export class PaymentMethodsFormComponent {
   nameControl = new FormControl('', [Validators.required]);
   methodTypeControl = new FormControl('', [Validators.required]);
   
+  feeTypeOptions = [
+    { value: 'PERCENTAGE', label: 'Percentage (%)' },
+    { value: 'FIXED', label: 'Fixed (Rp)' }
+  ];
+
   feesArray = this.fb.array<FormGroup>([]);
 
   paymentForm = new FormGroup({

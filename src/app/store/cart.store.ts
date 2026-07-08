@@ -8,6 +8,7 @@ interface CartState {
   items: CartItem[];
   discountCode: string | null;
   loading: boolean;
+  error: string | null;
 }
 
 @Injectable({
@@ -20,13 +21,15 @@ export class CartStore {
   private readonly state = signal<CartState>({
     items: [],
     discountCode: null,
-    loading: false
+    loading: false,
+    error: null
   });
 
   // Selectors
   readonly items = computed(() => this.state().items);
   readonly discountCode = computed(() => this.state().discountCode);
   readonly loading = computed(() => this.state().loading);
+  readonly error = computed(() => this.state().error);
 
   readonly subtotal = computed(() =>
     this.items().reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
@@ -112,7 +115,7 @@ export class CartStore {
 
   async addItem(product: Product, quantity = 1) {
     if (product.stock <= 0) {
-      this.toastService.error('Sorry, this product is out of stock!');
+      this.toastService.error('Maaf, produk ini kehabisan stok!');
       return;
     }
 
@@ -123,7 +126,7 @@ export class CartStore {
     if (index >= 0) {
       newQty = currentItems[index].quantity + quantity;
       if (newQty > product.stock) {
-        this.toastService.error(`Only ${product.stock} items left in stock.`);
+        this.toastService.error(`Hanya tersisa ${product.stock} barang.`);
         return;
       }
       currentItems[index] = { ...currentItems[index], quantity: newQty };
@@ -132,7 +135,7 @@ export class CartStore {
     }
 
     this.persistLocal(currentItems);
-    this.toastService.success(`Added "${product.title}" to cart.`);
+    this.toastService.success(`"${product.title}" berhasil ditambahkan ke keranjang.`);
 
     // Sync ke backend
     const userId = this.getCurrentUserId();
@@ -149,7 +152,7 @@ export class CartStore {
   async removeItem(productId: string) {
     const filtered = this.items().filter(item => item.product.id !== productId);
     this.persistLocal(filtered);
-    this.toastService.info('Item removed from cart.');
+    this.toastService.info('Barang berhasil dihapus dari keranjang.');
 
     const userId = this.getCurrentUserId();
     if (userId) {
@@ -174,7 +177,7 @@ export class CartStore {
 
     const stock = currentItems[index].product.stock;
     if (quantity > stock) {
-      this.toastService.error(`Only ${stock} items available in stock.`);
+      this.toastService.error(`Hanya tersedia ${stock} barang.`);
       return;
     }
 
@@ -197,10 +200,10 @@ export class CartStore {
     const formattedCode = code.trim().toUpperCase();
     if (formattedCode === 'PROMO10') {
       this.state.update(s => ({ ...s, discountCode: 'PROMO10' }));
-      this.toastService.success('10% Promo Code applied successfully!');
+      this.toastService.success('Kode Promo 10% berhasil digunakan!');
       return true;
     } else {
-      this.toastService.error('Invalid promo code. Try using "PROMO10".');
+      this.toastService.error('Kode promo tidak valid. Coba gunakan "PROMO10".');
       return false;
     }
   }

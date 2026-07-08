@@ -13,6 +13,7 @@ import { SESSION_TOKEN_KEY, SESSION_USER_KEY, SESSION_REFRESH_KEY } from '../cor
 interface AuthState {
   user: User | null;
   token: string | null;
+  error: string | null;
 }
 
 @Injectable({
@@ -29,12 +30,14 @@ export class AuthStore {
   // Private state signal
   private readonly state = signal<AuthState>({
     user: null,
-    token: null
+    token: null,
+    error: null
   });
 
   // Selectors
   readonly currentUser = computed(() => this.state().user);
   readonly token = computed(() => this.state().token);
+  readonly error = computed(() => this.state().error);
   readonly isLoggedIn = computed(() => this.state().user !== null);
   readonly isAdmin = computed(() => this.state().user?.role === 'admin');
 
@@ -75,7 +78,8 @@ export class AuthStore {
       const role: User['role'] = jwtHasAdminRole(decoded) ? 'admin' : 'customer';
       this.state.set({
         user: { ...persisted, role, token: savedToken },
-        token: savedToken
+        token: savedToken,
+        error: null
       });
     } catch {
       this.clearPersistedSession();
@@ -130,7 +134,7 @@ export class AuthStore {
       if (currentUser) {
         const userWithToken = { ...currentUser, token: result.accessToken };
         localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
-        this.state.set({ user: userWithToken, token: result.accessToken });
+        this.state.set({ user: userWithToken, token: result.accessToken, error: null });
       } else {
         this.state.update(s => ({ ...s, token: result.accessToken }));
       }
@@ -154,7 +158,7 @@ export class AuthStore {
 
         const userWithToken = { ...user, token: accessToken };
         this.persistSession(accessToken, userWithToken, refreshToken);
-        this.state.set({ user: userWithToken, token: accessToken });
+        this.state.set({ user: userWithToken, token: accessToken, error: null });
 
         // Sync cart guest ke backend
         const products = await this.productApi.getProducts();
@@ -174,7 +178,7 @@ export class AuthStore {
   logout() {
     this.clearPersistedSession();
     this.cartStore.clearOnLogout();
-    this.state.set({ user: null, token: null });
+    this.state.set({ user: null, token: null, error: null });
     this.toastService.info('Anda telah keluar.');
   }
 

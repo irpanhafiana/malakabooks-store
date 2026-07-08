@@ -1,38 +1,33 @@
 import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, UpperCasePipe } from '@angular/common';
-import { UserApiService } from '../../../core/services/user-api.service';
-import { User } from '../../../core/models';
-import { TableComponent } from '../../../shared/ui/table/table.component';
-import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
-import { AdminButtonComponent } from '../../../shared/ui/admin-button/admin-button.component';
-import { PaginationComponent } from '../../../shared/ui/pagination/pagination.component';
-import { ToastService } from '../../../core/services/toast.service';
-import { AlertService } from '../../../core/services/alert.service';
-import { createClientPagination } from '../../../shared/util/pagination.util';
-import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
-import { IconComponent } from '../../../shared/ui/icon/icon.component';
+import { UserStore } from '../../../../store/user.store';
+import { User } from '../../../../core/models';
+import { TableComponent } from '../../../../shared/ui/table/table.component';
+import { BadgeComponent } from '../../../../shared/ui/badge/badge.component';
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
+import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
+import { AlertService } from '../../../../core/services/alert.service';
+import { createClientPagination } from '../../../../shared/util/pagination.util';
+import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
+import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-users-crud',
+  selector: 'app-users-list',
   standalone: true,
   imports: [TableComponent, BadgeComponent, AdminButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent, IconComponent],
-  templateUrl: './users-crud.component.html',
-  styleUrl: './users-crud.component.css'
+  templateUrl: './users-list.component.html',
+  styleUrl: './users-list.component.css'
 })
-export class UsersCrudComponent implements OnInit {
-  private readonly userApi = inject(UserApiService);
-  private readonly toastService = inject(ToastService);
+export class UsersListComponent implements OnInit {
+  protected readonly userStore = inject(UserStore);
   private readonly alertService = inject(AlertService);
-
-  usersList = signal<User[]>([]);
-  loading = signal<boolean>(true);
 
   searchQuery = signal<string>('');
 
   filteredUsers = computed(() => {
     const query = this.searchQuery().toLowerCase().trim();
-    const users = this.usersList();
+    const users = this.userStore.users();
     if (!query) return users;
     return users.filter(u => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query));
   });
@@ -40,25 +35,13 @@ export class UsersCrudComponent implements OnInit {
   protected readonly pagination = createClientPagination(this.filteredUsers, 10);
 
   ngOnInit() {
-    this.loadUsers();
+    this.userStore.loadUsers();
   }
 
   onSearch(event: Event) {
     const target = event.target as HTMLInputElement;
     this.searchQuery.set(target.value);
     this.pagination.setPage(1);
-  }
-
-  async loadUsers() {
-    this.loading.set(true);
-    try {
-      const users = await this.userApi.getUsers();
-      this.usersList.set(users);
-    } catch (e) {
-      this.toastService.error('Failed to load user accounts.');
-    } finally {
-      this.loading.set(false);
-    }
   }
 
   async toggleRole(user: User) {
@@ -72,9 +55,8 @@ export class UsersCrudComponent implements OnInit {
 
     const updatedUser = { ...user, role: newRole };
     try {
-      await this.userApi.saveUser(updatedUser);
+      await this.userStore.saveUser(updatedUser);
       this.alertService.success('Berhasil!', `Peran pengguna "${user.name}" berhasil diubah menjadi ${newRole.toUpperCase()}.`);
-      this.loadUsers(); // reload list
     } catch (e) {
       this.alertService.error('Gagal!', 'Gagal mengubah peran pengguna.');
     }

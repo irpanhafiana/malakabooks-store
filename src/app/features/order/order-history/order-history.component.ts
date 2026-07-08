@@ -21,8 +21,7 @@ import { Product } from '../../../core/models';
   selector: 'app-order-history',
   standalone: true,
   imports: [RouterLink, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, StatusBadgeComponent, DatePipe, DecimalPipe, ButtonComponent],
-  templateUrl: './order-history.component.html',
-  styleUrl: './order-history.component.css'
+  templateUrl: './order-history.component.html'
 })
 export class OrderHistoryComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);

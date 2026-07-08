@@ -27,8 +27,7 @@ import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-
     StatusBadgeComponent,
     IconComponent
   ],
-  templateUrl: './complaints-list.component.html',
-  styleUrl: './complaints-list.component.css'
+  templateUrl: './complaints-list.component.html'
 })
 export class ComplaintsListComponent implements OnInit {
   protected readonly complaintStore = inject(ComplaintStore);
@@ -55,7 +54,7 @@ export class ComplaintsListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.complaintStore.loadAll();
+    this.complaintStore.loadAllComplaints();
   }
 
   protected openRespond(complaint: Complaint) {

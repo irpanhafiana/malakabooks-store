@@ -9,13 +9,13 @@ import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-bad
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-admin-dashboard',
+  selector: 'app-dashboard',
   standalone: true,
   imports: [RouterLink, PriceComponent, IconComponent, StatusBadgeComponent, DatePipe, CurrencyPipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class AdminDashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   private readonly dashboardApi = inject(DashboardApiService);
 
   metrics = signal<DashboardMetrics | null>(null);

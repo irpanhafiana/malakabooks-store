@@ -7,20 +7,11 @@
   </div>
 
   <form [formGroup]="respondForm" (ngSubmit)="submitRespond()" class="flex flex-col gap-4">
-    <div>
-      <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-        Ubah Status
-      </label>
-      <select
-        formControlName="status"
-        class="w-full text-sm border border-slate-200 rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:border-primary-400"
-      >
-        <option value="open">Terbuka</option>
-        <option value="in_progress">Diproses</option>
-        <option value="resolved">Selesai</option>
-        <option value="closed">Ditutup</option>
-      </select>
-    </div>
+    <app-admin-select
+      label="Ubah Status"
+      [control]="$any(respondForm.controls.status)"
+      [options]="statusOptions"
+    ></app-admin-select>
 
     <app-textarea
       label="Respons Admin"

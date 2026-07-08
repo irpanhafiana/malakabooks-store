@@ -13,8 +13,7 @@ import { QuantitySelectorComponent } from '../../shared/ui/quantity-selector/qua
   selector: 'app-cart',
   standalone: true,
   imports: [RouterLink, PriceComponent, IconComponent, ButtonComponent, EmptyStateComponent, QuantitySelectorComponent],
-  templateUrl: './cart.component.html',
-  styleUrl: './cart.component.css'
+  templateUrl: './cart.component.html'
 })
 export class CartComponent {
   protected readonly cartStore = inject(CartStore);

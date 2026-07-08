@@ -8,6 +8,7 @@ interface OrderState {
   orders: Order[];
   currentOrder: Order | null;
   loading: boolean;
+  error: string | null;
 }
 
 @Injectable({
@@ -21,13 +22,15 @@ export class OrderStore {
   private readonly state = signal<OrderState>({
     orders: [],
     currentOrder: null,
-    loading: false
+    loading: false,
+    error: null
   });
 
   // Selectors
   readonly orders = computed(() => this.state().orders);
   readonly currentOrder = computed(() => this.state().currentOrder);
   readonly loading = computed(() => this.state().loading);
+  readonly error = computed(() => this.state().error);
 
   async loadUserOrders(userId: string) {
     this.state.update(s => ({ ...s, loading: true }));
@@ -36,7 +39,7 @@ export class OrderStore {
       this.state.update(s => ({ ...s, orders, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to load your orders.');
+      this.toastService.error('Gagal memuat daftar pesanan Anda.');
     }
   }
 
@@ -47,7 +50,7 @@ export class OrderStore {
       this.state.update(s => ({ ...s, currentOrder: order, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to load order details.');
+      this.toastService.error('Gagal memuat detail pesanan.');
     }
   }
 
@@ -58,7 +61,7 @@ export class OrderStore {
       this.state.update(s => ({ ...s, orders, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to load admin orders.');
+      this.toastService.error('Gagal memuat daftar pesanan admin.');
     }
   }
 
@@ -80,11 +83,11 @@ export class OrderStore {
         currentOrder: placed,
         loading: false
       }));
-      this.toastService.success('Order placed successfully!');
+      this.toastService.success('Pesanan berhasil dibuat!');
       return placed;
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to place order.');
+      this.toastService.error('Gagal membuat pesanan.');
       return null;
     }
   }
@@ -99,18 +102,18 @@ export class OrderStore {
           orders: s.orders.map(o => o.id === orderId ? { ...o, status } : o),
           loading: false
         }));
-        this.toastService.success(`Order #${orderId} status updated to ${status}.`);
+        this.toastService.success(`Status pesanan #${orderId} diperbarui menjadi ${status}.`);
       } else {
         // The API returns false for any failure (network/server), so we must not
         // claim "not found". Resync from the server to discard the optimistic
         // assumption and surface a generic, accurate error.
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Failed to update order status. Please try again.');
+        this.toastService.error('Gagal memperbarui status pesanan. Silakan coba lagi.');
         await this.loadAllOrders();
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to update order status.');
+      this.toastService.error('Gagal memperbarui status pesanan.');
     }
   }
 
@@ -142,6 +145,17 @@ export class OrderStore {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const result = await this.orderApi.cancelShipment(orderId);
+      this.state.update(s => ({ ...s, loading: false }));
+      return result;
+    } catch (e) {
+      this.state.update(s => ({ ...s, loading: false }));
+      throw e;
+    }
+  }
+  async getDetailResi(courier: string, awb: string): Promise<any> {
+    this.state.update(s => ({ ...s, loading: true }));
+    try {
+      const result = await this.orderApi.detailResi(courier, awb);
       this.state.update(s => ({ ...s, loading: false }));
       return result;
     } catch (e) {

@@ -35,8 +35,7 @@ export class AlertService {
       title,
       text,
       icon: 'success',
-      timer: 2000,
-      showConfirmButton: false
+      confirmButtonText: 'Tutup'
     });
   }
 

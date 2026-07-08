@@ -47,31 +47,20 @@ export class PromotionBannerStore {
     }
   }
 
-  async createBanner(request: CreatePromotionBannerRequest) {
+  async saveBanner(request: CreatePromotionBannerRequest | UpdatePromotionBannerRequest, id?: string) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const saved = await this.bannerApi.createBanner(request);
+      const saved = id 
+        ? await this.bannerApi.updateBanner(id, request as UpdatePromotionBannerRequest)
+        : await this.bannerApi.createBanner(request as CreatePromotionBannerRequest);
+      
       if (saved) {
         await this.loadAdminBanners();
         this.toastService.success(`Banner "${saved.title}" saved successfully!`);
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to create banner.');
-    }
-  }
-
-  async updateBanner(id: string, request: UpdatePromotionBannerRequest) {
-    this.state.update(s => ({ ...s, loading: true }));
-    try {
-      const updated = await this.bannerApi.updateBanner(id, request);
-      if (updated) {
-        await this.loadAdminBanners();
-        this.toastService.success(`Banner "${updated.title}" updated successfully!`);
-      }
-    } catch (e) {
-      this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to update banner.');
+      this.toastService.error('Failed to save banner.');
     }
   }
 

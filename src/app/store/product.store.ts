@@ -115,8 +115,6 @@ export class ProductStore {
     return list;
   });
 
-  constructor() { }
-
   async loadAll() {
     this.state.update(s => ({ ...s, loading: true, error: null }));
     try {
@@ -127,7 +125,7 @@ export class ProductStore {
       this.state.update(s => ({ ...s, products, categories, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat produk dan kategori dari server.' }));
-      this.toastService.error('Failed to load products and categories.');
+      this.toastService.error('Gagal memuat daftar produk dan kategori.');
     }
   }
 
@@ -138,7 +136,7 @@ export class ProductStore {
       this.state.update(s => ({ ...s, products, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat katalog produk dari server.' }));
-      this.toastService.error('Failed to load products.');
+      this.toastService.error('Gagal memuat katalog produk.');
     }
   }
 
@@ -149,7 +147,7 @@ export class ProductStore {
       this.state.update(s => ({ ...s, categories, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar kategori dari server.' }));
-      this.toastService.error('Failed to load categories.');
+      this.toastService.error('Gagal memuat daftar kategori.');
     }
   }
 

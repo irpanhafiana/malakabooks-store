@@ -1,4 +1,4 @@
-import { Component, input, output, effect, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, effect, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Author } from '../../../../core/models';
 import { AuthorStore } from '../../../../store/author.store';
@@ -67,12 +67,13 @@ import { AlertService } from '../../../../core/services/alert.service';
   `
 })
 export class AuthorsFormComponent {
-  author = input<Author | null>(null);
-  onCancel = output<void>();
-  onSave = output<void>();
+  readonly author = input<Author | null>(null);
+  readonly onCancel = output<void>();
+  readonly onSave = output<void>();
 
   protected readonly authorStore = inject(AuthorStore);
   private readonly alertService = inject(AlertService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   nameControl = new FormControl('', [Validators.required]);
   roleControl = new FormControl('');
@@ -132,6 +133,7 @@ export class AuthorsFormComponent {
       const reader = new FileReader();
       reader.onload = () => {
         this.photoUrlControl.setValue(reader.result as string);
+        this.cdr.markForCheck();
       };
       reader.readAsDataURL(file);
     }

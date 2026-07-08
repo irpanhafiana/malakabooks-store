@@ -1,16 +1,17 @@
-import { Component, input, output, effect, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, effect, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PromotionBanner, CreatePromotionBannerRequest, UpdatePromotionBannerRequest } from '../../../../core/models';
 import { PromotionBannerStore } from '../../../../store/promotion-banner.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
+import { AdminCheckboxComponent } from '../../../../shared/ui/admin-checkbox/admin-checkbox.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-promotion-banners-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminCheckboxComponent],
   template: `
     <form [formGroup]="bannerForm" (ngSubmit)="onSubmitForm()" class="flex flex-col gap-5">
       <app-admin-input
@@ -43,10 +44,7 @@ import { AlertService } from '../../../../core/services/alert.service';
 
       <div class="flex flex-col gap-2">
         <label class="font-semibold text-slate-700 text-sm">Status</label>
-        <div class="flex items-center gap-2">
-          <input type="checkbox" [formControl]="isActiveControl" id="isActive" class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
-          <label for="isActive" class="text-sm text-slate-600">Active</label>
-        </div>
+        <app-admin-checkbox label="Active" [control]="isActiveControl"></app-admin-checkbox>
       </div>
 
       <app-admin-input
@@ -107,12 +105,13 @@ import { AlertService } from '../../../../core/services/alert.service';
   `
 })
 export class PromotionBannersFormComponent {
-  banner = input<PromotionBanner | null>(null);
-  onCancel = output<void>();
-  onSave = output<void>();
+  readonly banner = input<PromotionBanner | null>(null);
+  readonly onCancel = output<void>();
+  readonly onSave = output<void>();
 
   protected readonly bannerStore = inject(PromotionBannerStore);
   private readonly alertService = inject(AlertService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   titleControl = new FormControl('', [Validators.required]);
   subtitleControl = new FormControl('', [Validators.required]);
@@ -182,10 +181,10 @@ export class PromotionBannersFormComponent {
       endAt: this.endAtControl.value ? new Date(this.endAtControl.value).toISOString() : null
     };
 
-    if (this.banner()?.id) {
-      await this.bannerStore.updateBanner(this.banner()!.id, data as UpdatePromotionBannerRequest);
+    if (this.banner() && this.banner()!.id) {
+      await this.bannerStore.saveBanner(data as UpdatePromotionBannerRequest, this.banner()!.id);
     } else {
-      await this.bannerStore.createBanner(data);
+      await this.bannerStore.saveBanner(data);
     }
     this.alertService.success('Berhasil!', 'Data banner berhasil disimpan.');
     this.onSave.emit();
@@ -198,6 +197,7 @@ export class PromotionBannersFormComponent {
       const reader = new FileReader();
       reader.onload = () => {
         this.imageBase64Control.setValue(reader.result as string);
+        this.cdr.markForCheck();
       };
       reader.readAsDataURL(file);
     }

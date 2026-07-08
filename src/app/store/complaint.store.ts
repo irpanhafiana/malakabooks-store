@@ -6,6 +6,7 @@ import { ToastService } from '../core/services/toast.service';
 interface ComplaintState {
   complaints: Complaint[];
   loading: boolean;
+  error: string | null;
 }
 
 @Injectable({
@@ -17,13 +18,15 @@ export class ComplaintStore {
 
   private readonly state = signal<ComplaintState>({
     complaints: [],
-    loading: false
+    loading: false,
+    error: null
   });
 
   readonly complaints = computed(() => this.state().complaints);
   readonly loading = computed(() => this.state().loading);
+  readonly error = computed(() => this.state().error);
 
-  async loadByUser(userId: string) {
+  async loadComplaintsByUser(userId: string) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const complaints = await this.complaintApi.getComplaintsByUser(userId);
@@ -34,7 +37,7 @@ export class ComplaintStore {
     }
   }
 
-  async loadAll() {
+  async loadAllComplaints() {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const complaints = await this.complaintApi.getAllComplaints();

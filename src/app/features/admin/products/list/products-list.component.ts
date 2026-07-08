@@ -1,5 +1,4 @@
 import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProductStore } from '../../../../store/product.store';
 import { Product } from '../../../../core/models';
@@ -17,9 +16,8 @@ import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule, TableComponent, AdminButtonComponent, BadgeComponent, PriceComponent, IconComponent, PaginationComponent, SpinnerComponent],
-  templateUrl: './products-list.component.html',
-  styleUrl: './products-list.component.css'
+  imports: [TableComponent, AdminButtonComponent, BadgeComponent, PriceComponent, IconComponent, PaginationComponent, SpinnerComponent],
+  templateUrl: './products-list.component.html'
 })
 export class ProductsListComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);

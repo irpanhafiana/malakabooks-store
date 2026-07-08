@@ -1,4 +1,4 @@
-import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, computed, ChangeDetectionStrategy, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
 
@@ -19,10 +19,29 @@ export class InputComponent {
   readonly icon = input<string | undefined>(undefined);
   readonly customClass = input<string>('', { alias: 'class' });
 
+  // Password toggle
+  showPassword = signal<boolean>(false);
+
+  togglePassword() {
+    this.showPassword.update(s => !s);
+  }
+
+  readonly inputType = computed(() => {
+    if (this.type() === 'password') {
+      return this.showPassword() ? 'text' : 'password';
+    }
+    return this.type();
+  });
+
   // Compute styling based on states
   readonly inputClass = computed(() => {
     const base = 'block w-full border rounded-xl py-2.5 text-sm  focus:outline-none focus:ring-2 placeholder-slate-400 text-slate-800 bg-white';
-    const padding = this.icon() ? 'pl-10 pr-4' : 'px-4';
+    let padding = this.icon() ? 'pl-10 pr-4' : 'px-4';
+    if (this.icon() && this.type() === 'password') {
+      padding = 'pl-10 pr-10';
+    } else if (this.type() === 'password') {
+      padding = 'pl-4 pr-10';
+    }
 
     const isError = this.control().invalid && (this.control().dirty || this.control().touched);
     const border = isError
