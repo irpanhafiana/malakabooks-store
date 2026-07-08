@@ -20,3 +20,11 @@ public class CreatePromotionBannerRequestValidator : AbstractValidator<CreatePro
             .WithMessage("EndAt must be greater than or equal to StartAt.");
     }
 }
+
+public class UpdatePromotionBannerRequestValidator : AbstractValidator<UpdatePromotionBannerRequest>
+{
+    public UpdatePromotionBannerRequestValidator()
+    {
+        Include(new CreatePromotionBannerRequestValidator());
+    }
+}
