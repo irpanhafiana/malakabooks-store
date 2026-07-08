@@ -15,28 +15,28 @@ import { AlertService } from '../../../../core/services/alert.service';
   template: `
     <form [formGroup]="bannerForm" (ngSubmit)="onSubmitForm()" class="flex flex-col gap-5">
       <app-admin-input
-        label="Title"
+        label="Judul"
         id="title"
         [control]="titleControl"
         placeholder="e.g. Promo Merdeka">
       </app-admin-input>
 
       <app-admin-input
-        label="Subtitle"
+        label="Subjudul"
         id="subtitle"
         [control]="subtitleControl"
         placeholder="e.g. Diskon up to 70%">
       </app-admin-input>
 
       <app-admin-input
-        label="Target URL"
+        label="URL Tujuan"
         id="targetUrl"
         [control]="targetUrlControl"
         placeholder="e.g. /products/promo">
       </app-admin-input>
 
       <app-admin-input
-        label="Button Text"
+        label="Teks Tombol"
         id="buttonText"
         [control]="buttonTextControl"
         placeholder="e.g. Beli Sekarang">
@@ -44,11 +44,11 @@ import { AlertService } from '../../../../core/services/alert.service';
 
       <div class="flex flex-col gap-2">
         <label class="font-semibold text-slate-700 text-sm">Status</label>
-        <app-admin-checkbox label="Active" [control]="isActiveControl"></app-admin-checkbox>
+        <app-admin-checkbox label="Aktif" [control]="isActiveControl"></app-admin-checkbox>
       </div>
 
       <app-admin-input
-        label="Display Order"
+        label="Urutan Tampil"
         id="displayOrder"
         type="number"
         [control]="displayOrderControl"
@@ -57,14 +57,14 @@ import { AlertService } from '../../../../core/services/alert.service';
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <app-admin-input
-          label="Start At (Optional)"
+          label="Mulai Pada (Opsional)"
           id="startAt"
           type="datetime-local"
           [control]="startAtControl">
         </app-admin-input>
 
         <app-admin-input
-          label="End At (Optional)"
+          label="Berakhir Pada (Opsional)"
           id="endAt"
           type="datetime-local"
           [control]="endAtControl">

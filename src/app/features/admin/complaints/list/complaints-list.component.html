@@ -8,7 +8,7 @@
       <!-- Search Input -->
       <div class="relative w-full hidden sm:block">
         <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
-        <input type="text" placeholder="Search complaints..." [value]="searchQuery()" (input)="onSearch($event)"
+        <input type="text" placeholder="Cari komplain..." [value]="searchQuery()" (input)="onSearch($event)"
           class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
       </div>
 
@@ -21,7 +21,7 @@
   <!-- Mobile Search (visible only on small screens) -->
   <div class="sm:hidden relative w-full">
     <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
-    <input type="text" placeholder="Search complaints..." [value]="searchQuery()" (input)="onSearch($event)"
+    <input type="text" placeholder="Cari komplain..." [value]="searchQuery()" (input)="onSearch($event)"
       class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
   </div>
 
@@ -33,12 +33,12 @@
   } @else {
   <app-table>
     <tr table-headers>
-      <th class="px-5 py-3">User ID</th>
-      <th class="px-5 py-3">Subject</th>
-      <th class="px-5 py-3">Order ID</th>
-      <th class="px-5 py-3">Date</th>
+      <th class="px-5 py-3">ID Pengguna</th>
+      <th class="px-5 py-3">Subjek</th>
+      <th class="px-5 py-3">ID Pesanan</th>
+      <th class="px-5 py-3">Tanggal</th>
       <th class="px-5 py-3">Status</th>
-      <th class="px-5 py-3 text-right">Action</th>
+      <th class="px-5 py-3 text-right">Aksi</th>
     </tr>
 
     <ng-container table-rows>

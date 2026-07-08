@@ -15,26 +15,26 @@ import { AlertService } from '../../../../core/services/alert.service';
   template: `
     <form [formGroup]="authorForm" (ngSubmit)="onSubmitForm()" class="flex flex-col gap-5">
       <app-admin-input
-        label="Author Name"
+        label="Nama Penulis"
         id="name"
         [control]="nameControl"
         placeholder="e.g. Tere Liye">
       </app-admin-input>
 
       <app-admin-input
-        label="Role"
+        label="Peran"
         id="role"
         [control]="roleControl"
         placeholder="e.g. Penulis">
       </app-admin-input>
 
       <div class="flex flex-col gap-1.5">
-        <label class="font-semibold text-slate-700 text-sm">Biography</label>
+        <label class="font-semibold text-slate-700 text-sm">Biografi</label>
         <app-editor [formControl]="biographyControl"></app-editor>
       </div>
 
       <div class="flex flex-col gap-2">
-        <label class="font-semibold text-slate-700 text-sm">Author Photo</label>
+        <label class="font-semibold text-slate-700 text-sm">Foto Penulis</label>
         <div class="flex items-start gap-4">
           @if (photoUrlControl.value) {
             <img [src]="photoUrlControl.value" alt="Photo Preview" class="w-16 h-16 rounded-lg object-cover border border-slate-200">
