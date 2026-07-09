@@ -3,16 +3,16 @@
   <!-- Loading state -->
   @if (loading()) {
   <div class="p-12 text-center text-slate-400 font-semibold bg-white rounded-2xl border border-slate-200">
-    Loading dashboard metrics...
+    Memuat data metrik dasbor...
   </div>
   } @else if (error()) {
   <!-- Error state with retry -->
   <div class="p-12 flex flex-col items-center gap-3 text-center bg-white rounded-2xl border border-slate-200">
     <app-icon name="bar-chart" size="28" class="text-slate-300"></app-icon>
-    <p class="text-sm font-semibold text-slate-600">Failed to load dashboard metrics.</p>
+    <p class="text-sm font-semibold text-slate-600">Gagal memuat data metrik dasbor.</p>
     <button type="button" (click)="loadData()"
       class="text-xs font-bold text-primary-600 hover:text-primary-700 cursor-pointer">
-      Retry
+      Coba Lagi
     </button>
   </div>
   }
@@ -23,11 +23,11 @@
     <!-- Metric Card: Revenue -->
     <div class="bg-white border border-slate-200 p-5 rounded-2xl flex items-center justify-between">
       <div class="flex flex-col gap-1">
-        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Revenue</span>
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pendapatan</span>
         <app-price [value]="data.totalRevenue" size="xl" class="text-slate-800"></app-price>
         <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
           <app-icon name="plus" size="10"></app-icon>
-          {{ data.revenueGrowth }}% this month
+          {{ data.revenueGrowth }}% bulan ini
         </span>
       </div>
       <div class="p-3.5 bg-primary-50 rounded-2xl text-primary-600">
@@ -38,11 +38,11 @@
     <!-- Metric Card: Orders -->
     <div class="bg-white border border-slate-200 p-5 rounded-2xl flex items-center justify-between">
       <div class="flex flex-col gap-1">
-        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Orders</span>
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pesanan</span>
         <strong class="font-display font-extrabold text-xl text-slate-800">{{ data.totalOrders }}</strong>
         <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
           <app-icon name="plus" size="10"></app-icon>
-          {{ data.ordersGrowth }}% this month
+          {{ data.ordersGrowth }}% bulan ini
         </span>
       </div>
       <div class="p-3.5 bg-sky-50 rounded-2xl text-sky-600">
@@ -53,11 +53,11 @@
     <!-- Metric Card: Customers -->
     <div class="bg-white border border-slate-200 p-5 rounded-2xl flex items-center justify-between">
       <div class="flex flex-col gap-1">
-        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Customers</span>
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pelanggan Aktif</span>
         <strong class="font-display font-extrabold text-xl text-slate-800">{{ data.totalCustomers }}</strong>
         <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
           <app-icon name="plus" size="10"></app-icon>
-          {{ data.customersGrowth }}% this month
+          {{ data.customersGrowth }}% bulan ini
         </span>
       </div>
       <div class="p-3.5 bg-indigo-50 rounded-2xl text-indigo-600">
@@ -68,11 +68,11 @@
     <!-- Metric Card: Conversion -->
     <div class="bg-white border border-slate-200 p-5 rounded-2xl flex items-center justify-between">
       <div class="flex flex-col gap-1">
-        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Conversion Rate</span>
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tingkat Konversi</span>
         <strong class="font-display font-extrabold text-xl text-slate-800">{{ data.conversionRate }}%</strong>
         <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
           <app-icon name="plus" size="10"></app-icon>
-          {{ data.conversionGrowth }}% this month
+          {{ data.conversionGrowth }}% bulan ini
         </span>
       </div>
       <div class="p-3.5 bg-emerald-50 rounded-2xl text-emerald-600">
@@ -87,8 +87,8 @@
     <div class="lg:col-span-2 bg-white border border-slate-200 p-5 rounded-2xl flex flex-col gap-4">
       <div class="flex items-center justify-between">
         <div>
-          <h3 class="font-display font-bold text-slate-800 text-sm">Sales Activity</h3>
-          <p class="text-[10px] text-slate-400 mt-0.5">Total simulated revenues over the past 7 days</p>
+          <h3 class="font-display font-bold text-slate-800 text-sm">Aktivitas Penjualan</h3>
+          <p class="text-[10px] text-slate-400 mt-0.5">Total simulasi pendapatan dalam 7 hari terakhir</p>
         </div>
       </div>
 
@@ -130,8 +130,8 @@
     <!-- Category Breakdown Bar list (Right, 1/3 width) -->
     <div class="bg-white border border-slate-200 p-5 rounded-2xl flex flex-col gap-4">
       <div>
-        <h3 class="font-display font-bold text-slate-800 text-sm">Product Sales Share</h3>
-        <p class="text-[10px] text-slate-400 mt-0.5">Top performing product categories</p>
+        <h3 class="font-display font-bold text-slate-800 text-sm">Porsi Penjualan Produk</h3>
+        <p class="text-[10px] text-slate-400 mt-0.5">Kategori produk dengan performa terbaik</p>
       </div>
 
       <div class="flex flex-col gap-4 mt-2">
@@ -139,7 +139,7 @@
         <div class="flex flex-col gap-1.5 text-xs">
           <div class="flex justify-between font-semibold">
             <span class="text-slate-600">{{ catShare.category }}</span>
-            <span class="text-slate-800">{{ catShare.amount | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+            <span class="text-slate-800">{{ catShare.amount | currency: 'IDR' : 'symbol' : '1.0-0' }}</span>
           </div>
           <!-- Percentage bar -->
           <div class="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
@@ -155,8 +155,8 @@
   <!-- Recent Orders Table -->
   <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden">
     <div class="p-5 border-b border-slate-200 flex items-center justify-between">
-      <h3 class="font-display font-bold text-slate-800 text-sm">Recent Order Logs</h3>
-      <a routerLink="/admin/orders" class="text-xs font-bold text-primary-600 hover:text-primary-700">Manage All</a>
+      <h3 class="font-display font-bold text-slate-800 text-sm">Log Pesanan Terbaru</h3>
+      <a routerLink="/admin/orders" class="text-xs font-bold text-primary-600 hover:text-primary-700">Kelola Semua</a>
     </div>
 
     <div class="overflow-x-auto">
@@ -190,7 +190,7 @@
           </tr>
           } @empty {
           <tr>
-            <td colspan="5" class="px-5 py-8 text-center text-slate-400">No recent orders.</td>
+            <td colspan="5" class="px-5 py-8 text-center text-slate-400">Tidak ada pesanan terbaru.</td>
           </tr>
           }
         </tbody>

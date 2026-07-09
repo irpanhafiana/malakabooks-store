@@ -2,9 +2,9 @@
 
   @if (cartStore.itemsCount() === 0) {
   <div class="px-4 py-4">
-    <app-empty-state icon="shopping-cart" title="Your Cart is Empty"
-      description="Looks like you haven't added any items to your cart yet. Explore our publications to find your next great read!"
-      actionText="Start Shopping" routerLink="/product"></app-empty-state>
+    <app-empty-state icon="shopping-cart" title="Keranjang Belanja Kosong"
+      description="Sepertinya Anda belum menambahkan produk apapun ke keranjang. Jelajahi koleksi buku kami untuk menemukan bacaan menarik berikutnya!"
+      actionText="Mulai Belanja" routerLink="/product"></app-empty-state>
   </div>
   } @else {
   <!-- Scrollable Items Area -->
@@ -74,7 +74,7 @@
 
 
     <app-button routerLink="/checkout" variant="primary" size="lg" [fullWidth]="true" class="">
-      Proceed to Checkout
+      Lanjut ke Pembayaran
     </app-button>
   </div>
   }
