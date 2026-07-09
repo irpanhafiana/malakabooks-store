@@ -71,13 +71,8 @@
 <!-- ================= BOTTOM SHEETS & MODALS ================= -->
 
 <!-- Edit Profile Bottom Sheet -->
-<app-bottom-sheet [isOpen]="showEditProfile()" title="Edit Profile" (closed)="showEditProfile.set(false)">
+<app-bottom-sheet [isOpen]="showEditProfile()" title="Edit Profil" (closed)="showEditProfile.set(false)">
   <form [formGroup]="profileForm" (submit)="onSubmitProfile()" class="flex flex-col">
-
-    <!-- Fixed Title -->
-    <div class="shrink-0 px-5 pt-1 pb-4 border-b border-slate-100">
-      <h2 class="font-display font-extrabold text-slate-800 text-base">Edit Profil</h2>
-    </div>
 
     <!-- Scrollable content -->
     <div class="flex flex-col gap-4 p-5 overflow-y-auto" style="max-height: 55vh">

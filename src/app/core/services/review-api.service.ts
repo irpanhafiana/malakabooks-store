@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Review } from '../models';
+import { Review, ApiResponse, ReviewDto, OrderDto, OrderItemDto } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
@@ -22,11 +22,11 @@ export class ReviewApiService {
 
     try {
       const envelope = await firstValueFrom(
-        this.http.get<any>(`${this.BASE_URL}/customer/Reviews/book/${productId}`)
+        this.http.get<ApiResponse<ReviewDto[]>>(`${this.BASE_URL}/customer/Reviews/book/${productId}`)
       );
       const reviews = envelope?.data || [];
 
-      return reviews.map((r: any) => ({
+      return reviews.map((r: ReviewDto) => ({
         id: r.id,
         userId: r.userId,
         bookId: r.bookId,
@@ -50,11 +50,11 @@ export class ReviewApiService {
     if (!orderId) {
       try {
         const envelope = await firstValueFrom(
-          this.http.get<any>(`${this.BASE_URL}/customer/Orders/user/${currentUser.id}`)
+          this.http.get<ApiResponse<OrderDto[]>>(`${this.BASE_URL}/customer/Orders/user/${currentUser.id}`)
         );
         const orders = envelope?.data || [];
-        const matchingOrder = orders.find((o: any) =>
-          o.items?.some((item: any) => item.bookId === review.bookId)
+        const matchingOrder = orders.find((o: OrderDto) =>
+          o.items?.some((item: OrderItemDto) => item.bookId === review.bookId)
         );
         if (matchingOrder) orderId = matchingOrder.id;
       } catch {
@@ -71,8 +71,15 @@ export class ReviewApiService {
       additionalImages: review.additionalImages || []
     };
 
-    const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Reviews`, body));
+    const res = await firstValueFrom(
+      this.http.post<ApiResponse<ReviewDto>>(`${this.BASE_URL}/customer/Reviews`, body)
+    );
     const data = res?.data;
+    
+    if (!data) {
+      throw new Error('Gagal menyimpan ulasan, respons kosong dari server.');
+    }
+
     return {
       id: data.id,
       userId: data.userId,

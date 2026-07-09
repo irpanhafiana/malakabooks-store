@@ -28,3 +28,17 @@ export interface Order {
   shippingType?: string;
   shippingEst?: string;
 }
+
+export interface OrderItemDto {
+  bookId: string;
+  title: string;
+  price: number;
+  coverImage?: string;
+  quantity: number;
+}
+
+export interface OrderDto {
+  id: string;
+  userId: string;
+  items: OrderItemDto[];
+}

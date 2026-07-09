@@ -131,7 +131,7 @@ export const routes: Routes = [
       {
         path: 'cart',
         loadComponent: () => import('./features/cart/cart.component').then(c => c.CartComponent),
-        data: { title: 'Shopping Cart', preload: true }
+        data: { title: 'Keranjang Belanja', preload: true }
       },
       {
         path: 'checkout',
@@ -149,7 +149,7 @@ export const routes: Routes = [
         path: 'order-history',
         loadComponent: () => import('./features/order/order-history/order-history.component').then(c => c.OrderHistoryComponent),
         canActivate: [authGuard],
-        data: { title: 'Order History', preload: true }
+        data: { title: 'Riwayat Pesanan', preload: true }
       },
       {
         path: 'detail-shipment/:id',

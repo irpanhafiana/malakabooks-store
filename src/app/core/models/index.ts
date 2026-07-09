@@ -1,4 +1,3 @@
-export * from './register-payload.model';
 export * from './address.model';
 export * from './user.model';
 export * from './product.model';
@@ -9,11 +8,9 @@ export * from './order.model';
 export * from './review.model';
 export * from './complaint-status.model';
 export * from './complaint.model';
-export * from './complaint-payload.model';
 export * from './dashboard-metrics.model';
 export * from './home-address.model';
 export * from './api-response.model';
-export * from './book-dto.model';
 export * from './author.model';
 export * from './payment.model';
 export * from './promotion-banner.model';

@@ -36,11 +36,11 @@ describe('CartStore', () => {
   });
 
   it('should add item and calculate totals correctly', async () => {
-    const product: Product = {
+    const product = {
       id: '1', title: 'Test Book', price: 100000, stock: 10,
-      authors: [{ id: '1', name: 'A', role: 'author', biography: '', photoUrl: '' }], category: 'C', coverImage: 'img', description: 'desc', totalPages: 100,
-      isbn: '123', publisher: 'P', publicationDate: '2023', format: 'physical', weight: 1, condition: 'new'
-    };
+      authors: [{ id: '1', name: 'A', role: 'author', biography: '', photoUrl: '' }], categoryId: 'C', coverImage: 'img', description: 'desc', pages: 100,
+      isbn: '123', publisher: 'P', publishedYear: 2023, weight: 1
+    } as unknown as Product;
     await store.addItem(product, 2);
     expect(store.items().length).toBe(1);
     expect(store.items()[0].quantity).toBe(2);
@@ -49,11 +49,11 @@ describe('CartStore', () => {
   });
 
   it('should reject adding item if out of stock', async () => {
-    const product: Product = {
+    const product = {
       id: '1', title: 'Test Book', price: 100000, stock: 0,
-      authors: [{ id: '1', name: 'A', role: 'author', biography: '', photoUrl: '' }], category: 'C', coverImage: 'img', description: 'desc', totalPages: 100,
-      isbn: '123', publisher: 'P', publicationDate: '2023', format: 'physical', weight: 1, condition: 'new'
-    };
+      authors: [{ id: '1', name: 'A', role: 'author', biography: '', photoUrl: '' }], categoryId: 'C', coverImage: 'img', description: 'desc', pages: 100,
+      isbn: '123', publisher: 'P', publishedYear: 2023, weight: 1
+    } as unknown as Product;
     await store.addItem(product, 1);
     expect(store.items().length).toBe(0);
     expect(mockToast.error).toHaveBeenCalledWith('Maaf, produk ini kehabisan stok!');

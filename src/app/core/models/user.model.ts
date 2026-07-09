@@ -11,3 +11,13 @@ export interface User {
   joinedAt: string;
   addresses: Address[];
 }
+
+export interface RegisterPayload {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  avatar: string;
+  email: string;
+  password: string;
+}
