@@ -8,10 +8,14 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 import { SelectivePreloadingStrategy } from './core/strategies/selective-preloading-strategy';
 
+import { GlobalErrorHandler } from './core/errors/global-error-handler';
+import { ErrorHandler } from '@angular/core';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     // Only preload routes marked with data: { preload: true } in app.routes.ts.
     // Admin chunks (dashboard, products, orders, ...) are excluded — they are
     // loaded on-demand only when the user navigates to /admin/*.

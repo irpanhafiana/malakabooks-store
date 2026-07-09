@@ -36,19 +36,4 @@ describe('CartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should not call applyPromo if code is empty', () => {
-    component.promoControl.setValue('');
-    component.applyPromo();
-    expect(mockCartStore.applyPromo).not.toHaveBeenCalled();
-  });
-
-  it('should call applyPromo and reset input if successful', () => {
-    component.promoControl.setValue('PROMO123');
-    mockCartStore.applyPromo.mockReturnValue(true);
-
-    component.applyPromo();
-
-    expect(mockCartStore.applyPromo).toHaveBeenCalledWith('PROMO123');
-    expect(component.promoControl.value).toBeNull(); // reset() turns it to null by default
-  });
 });

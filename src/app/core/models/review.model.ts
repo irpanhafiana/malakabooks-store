@@ -5,6 +5,6 @@ export interface Review {
   orderId: string;
   rating: number;
   comment: string;
-  additionalImages?: { image: string }[];
+  additionalImages?: { no: number; image: string }[];
   createdAt: string;
 }

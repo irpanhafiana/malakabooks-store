@@ -73,7 +73,7 @@
             <span class="text-slate-400">{{ item.quantity }} × Rp {{ item.product.price | number }}</span>
           </div>
           <div class="shrink-0">
-            <app-button variant="outline" size="sm" (click)="openReviewDialog($event, order.id, item.product)">
+            <app-button variant="outline" size="sm" (click)="openReviewSheet($event, order.id, item.product)">
               Tulis Ulasan
             </app-button>
           </div>
@@ -112,3 +112,68 @@
     }
   </div>
 </div>
+
+<app-bottom-sheet
+  [isOpen]="isReviewSheetOpen()"
+  title="Tulis Ulasan"
+  (closed)="closeReviewSheet()">
+  
+  @if (selectedProduct()) {
+    <div class="flex flex-col gap-4 text-left p-4">
+      <h3 class="text-xl font-bold text-slate-800">Beri Ulasan</h3>
+      
+      <div class="flex items-center gap-3">
+        <img [src]="selectedProduct()?.coverImage" class="w-12 h-16 object-cover rounded border border-slate-200">
+        <span class="font-bold text-slate-800 line-clamp-2">{{ selectedProduct()?.title }}</span>
+      </div>
+      
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-semibold text-slate-700">Penilaian Anda</label>
+        <div class="flex items-center gap-2 text-3xl">
+          @for (star of [1,2,3,4,5]; track star) {
+            <i class="bx bxs-star cursor-pointer transition-colors"
+               [class.text-yellow-400]="reviewRating() >= star"
+               [class.text-slate-300]="reviewRating() < star"
+               (click)="reviewRating.set(star)"></i>
+          }
+        </div>
+      </div>
+      
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-semibold text-slate-700">Komentar</label>
+        <textarea 
+          [ngModel]="reviewComment()"
+          (input)="updateComment($event)"
+          class="w-full p-3 border border-slate-200 rounded-lg focus:ring-primary-500 focus:border-primary-500 text-sm" 
+          rows="3" 
+          placeholder="Bagaimana pendapat Anda tentang buku ini?"></textarea>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-semibold text-slate-700">Foto (Opsional)</label>
+        <div class="flex flex-wrap gap-3">
+          @for (img of reviewImages(); track img.no) {
+            <div class="relative w-20 h-20 border border-slate-200 rounded-lg overflow-hidden group">
+              <img [src]="img.image" class="w-full h-full object-cover">
+              <button (click)="removeImage($index)" class="absolute top-1 right-1 bg-white text-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow">
+                <i class="bx bx-x"></i>
+              </button>
+            </div>
+          }
+          <label class="w-20 h-20 border-2 border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors">
+            <i class="bx bx-plus text-2xl"></i>
+            <span class="text-xs mt-1">Tambah</span>
+            <input type="file" accept="image/*" class="hidden" (change)="onImageSelected($event)">
+          </label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
+      <app-button variant="outline" size="lg" [fullWidth]="true" class="flex-1" (click)="closeReviewSheet()">Batal</app-button>
+      <app-button variant="primary" size="lg" [fullWidth]="true" class="flex-1" [disabled]="reviewRating() === 0 || !reviewComment().trim() || isSubmittingReview()" (click)="submitReview()">
+        {{ isSubmittingReview() ? 'Mengirim...' : 'Kirim Ulasan' }}
+      </app-button>
+    </div>
+  }
+</app-bottom-sheet>

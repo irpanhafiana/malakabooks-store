@@ -4,6 +4,16 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
 
+import { ApiResponse } from '../models/api-response.model';
+
+interface CartItemResponse {
+  bookId: string;
+  quantity: number;
+}
+interface CartData {
+  items: CartItemResponse[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,8 +24,8 @@ export class CartApiService {
 
   async getCart(userId: string): Promise<{ bookId: string; quantity: number }[]> {
     try {
-      const res = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Cart/${userId}`));
-      return (res?.data?.items || []).map((item: any) => ({ bookId: item.bookId, quantity: item.quantity }));
+      const res = await firstValueFrom(this.http.get<ApiResponse<CartData>>(`${this.BASE_URL}/customer/Cart/${userId}`));
+      return (res?.data?.items || []).map((item: CartItemResponse) => ({ bookId: item.bookId, quantity: item.quantity }));
     } catch (e) {
       this.logger.error('CartApiService.getCart', 'Gagal mengambil cart:', e);
       return [];

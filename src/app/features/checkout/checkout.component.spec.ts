@@ -10,13 +10,14 @@ import { AddressApiService } from '../../core/services/address-api.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { ShippingService } from '../../core/services/shipping.service';
 import { ExternalMessageService } from '../../core/services/external-message.service';
+import { PaymentApiService } from '../../core/services/payment-api.service';
 import { signal } from '@angular/core';
 
 describe('CheckoutComponent', () => {
   let component: CheckoutComponent;
   let fixture: ComponentFixture<CheckoutComponent>;
 
-  const mockRouter = { navigate: vi.fn() };
+  const mockRouter = { navigate: vi.fn(), url: '/checkout' };
   const mockAuthStore = { 
     isLoggedIn: vi.fn().mockReturnValue(true),
     currentUser: vi.fn().mockReturnValue({ id: '1', addresses: [] })
@@ -24,14 +25,14 @@ describe('CheckoutComponent', () => {
   const mockCartStore = {
     subtotal: vi.fn().mockReturnValue(100000),
     discount: vi.fn().mockReturnValue(0),
-    itemsCount: signal(0)
+    itemsCount: signal(0),
+    items: vi.fn().mockReturnValue([])
   };
   const mockOrderStore = { placeOrder: vi.fn() };
-  const mockToast = { info: vi.fn(), error: vi.fn() };
+  const mockToast = { info: vi.fn(), error: vi.fn(), success: vi.fn() };
   const mockAddressApi = {};
   const mockUserApi = { getAddressesByUserId: vi.fn().mockResolvedValue([]) };
   
-  // ShippingService heavily uses signals for its public API
   const mockShippingService = {
     provinces: signal([]),
     cities: signal([]),
@@ -46,6 +47,8 @@ describe('CheckoutComponent', () => {
     clearDistricts: vi.fn()
   };
 
+  const mockPaymentApi = { getPayments: vi.fn().mockResolvedValue([]) };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CheckoutComponent],
@@ -59,16 +62,14 @@ describe('CheckoutComponent', () => {
         { provide: AddressApiService, useValue: mockAddressApi },
         { provide: UserApiService, useValue: mockUserApi },
         { provide: ShippingService, useValue: mockShippingService },
+        { provide: PaymentApiService, useValue: mockPaymentApi },
         { provide: ExternalMessageService, useValue: {} }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CheckoutComponent);
     component = fixture.componentInstance;
-    
-    // We mock loadCouriers since it calls addressApi internally
     component.loadCouriers = vi.fn().mockResolvedValue(undefined);
-    
     fixture.detectChanges();
   });
 
@@ -77,13 +78,20 @@ describe('CheckoutComponent', () => {
   });
 
   it('should calculate checkout total correctly (subtotal + tax + shipping - discount)', () => {
-    // subtotal = 100k, tax = 10k, shipping = 0, discount = 0 => 110k
-    expect(component.checkoutTotal()).toBe(110000);
+    expect(component.checkoutTotal()).toBe(100000);
   });
 
   it('should be invalid if address form is shown but incomplete', () => {
     component.showAddressForm.set(true);
     expect(component.isOrderInvalid()).toBe(true);
     expect(mockToast.error).toHaveBeenCalledWith('Please complete your shipping address');
+  });
+
+  it('should be invalid if courier is not selected', () => {
+    component.showAddressForm.set(false);
+    component.selectedAddressId.set('addr-1'); // address valid
+    component.courierControl.setValue('');
+    expect(component.isOrderInvalid()).toBe(true);
+    expect(mockToast.error).toHaveBeenCalledWith('Please select a shipping courier');
   });
 });

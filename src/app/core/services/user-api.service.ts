@@ -103,7 +103,6 @@ export class UserApiService {
   }
 
   async saveUser(user: User): Promise<User> {
-    console.log(user)
     const nameParts = (user.name || '').trim().split(/\s+/);
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
