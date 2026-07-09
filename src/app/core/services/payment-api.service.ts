@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Payment, ApiResponse, CreatePaymentPayload, UpdatePaymentPayload } from '../models';
+import { Payment, ApiResponse, UpdatePaymentPayload } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';

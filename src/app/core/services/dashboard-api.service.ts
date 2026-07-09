@@ -15,7 +15,7 @@ export class DashboardApiService {
   private readonly userApi = inject(UserApiService);
 
   async getDashboardMetrics(): Promise<DashboardMetrics> {
-    const [products, categories, orders, users] = await Promise.all([
+    const [products, _categories, orders, users] = await Promise.all([
       this.productApi.getProducts(),
       this.categoryApi.getCategories(),
       this.orderApi.getOrders(),

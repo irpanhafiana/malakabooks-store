@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, computed, ChangeDetectionStrategy, effect } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, ChangeDetectionStrategy, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
@@ -12,15 +12,14 @@ import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
-import { AlertDialogComponent } from '../../shared/ui/alert-dialog/alert-dialog.component';
-
+import { AlertService } from '../../core/services/alert.service';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent, AlertDialogComponent],
+  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -28,9 +27,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   protected readonly authorStore = inject(AuthorStore);
+  protected readonly alertService = inject(AlertService);
   protected readonly bannerStore = inject(PromotionBannerStore);
-
-  protected readonly showCartAlert = signal(false);
 
   slides = [
     {
@@ -209,7 +207,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openQtyModal(product: any) {
     this.cartStore.addItem(product, 1);
-    this.showCartAlert.set(true);
+    this.alertService.success('Berhasil!', 'Produk berhasil ditambahkan ke keranjang');
   }
 
   openAuthorSheet(author: Author) {

@@ -2,7 +2,6 @@ import { Component, inject, signal, effect, OnInit, ChangeDetectionStrategy } fr
 import { ProductStore } from '../../../store/product.store';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
-import { Product } from '../../../core/models';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { BottomSheetComponent } from '../../../shared/ui/bottom-sheet/bottom-sheet.component';

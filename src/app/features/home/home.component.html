@@ -3,58 +3,61 @@
   <!-- Hero Banner Carousel (Swipeable, looping, with dot indicators) -->
   <section class="relative group">
     @if (bannerStore.loading()) {
-      <div class="h-45 w-full flex justify-center items-center">
-        <app-skeleton type="card" [count]="1" class="w-full h-full"></app-skeleton>
+    <div class="flex -ml-3 items-center h-45 overflow-hidden">
+      <div class="flex-[0_0_100%] min-w-0 pl-3">
+        <div class="h-42 w-full bg-slate-200/60 rounded-2xl animate-pulse"></div>
       </div>
+    </div>
     } @else if (bannerStore.banners().length === 0) {
-      <div class="h-45 w-full bg-slate-100 rounded-2xl flex justify-center items-center text-slate-400">
-        <p>Tidak ada banner aktif</p>
-      </div>
-    } 
-    
+    <div class="h-45 w-full bg-slate-100 rounded-2xl flex justify-center items-center text-slate-400">
+      <p>Tidak ada banner aktif</p>
+    </div>
+    }
+
     <!-- Embla viewport -->
-    <div #carouselViewport class="overflow-hidden h-45" [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
+    <div #carouselViewport class="overflow-hidden h-45" [class.hidden]="bannerStore.banners().length === 0">
       <!-- Embla container -->
-        <div class="flex -ml-3 items-center h-full">
-          @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
-          <div class="flex-[0_0_100%] min-w-0 pl-3">
-            <div
-              class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out h-42">
-              <!-- Background Image -->
-              <div class="absolute inset-0 bg-cover bg-center pointer-events-none"
-                [style.backgroundImage]="'url(' + banner.imageBase64 + ')'"></div>
+      <div class="flex -ml-3 items-center h-full">
+        @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
+        <div class="flex-[0_0_100%] min-w-0 pl-3">
+          <div
+            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out h-42">
+            <!-- Background Image -->
+            <div class="absolute inset-0 bg-cover bg-center pointer-events-none"
+              [style.backgroundImage]="'url(' + banner.imageBase64 + ')'"></div>
 
-              <div class="relative z-10 flex flex-col items-start gap-1 max-w-xl">
-                
-                <h1 class="text-base font-display font-extrabold tracking-tight leading-tight line-clamp-1 drop-shadow-md">
-                  {{ banner.title }}
-                </h1>
-                <p class="text-[10px] text-white max-w-sm leading-relaxed line-clamp-1 drop-shadow-md font-medium">
-                  {{ banner.subtitle }}
-                </p>
-              </div>
+            <div class="relative z-10 flex flex-col items-start gap-1 max-w-xl">
 
-              <div class="relative z-10 flex items-center justify-between gap-3 mt-2 w-full">
-                <a [routerLink]="banner.targetUrl"
-                  class="px-3.5 py-1.5 rounded-lg bg-white text-primary-700 font-bold text-[9px] hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
-                  {{ banner.buttonText }}
-                </a>
-              </div>
+              <h1
+                class="text-base font-display font-extrabold tracking-tight leading-tight line-clamp-1 drop-shadow-md">
+                {{ banner.title }}
+              </h1>
+              <p class="text-[10px] text-white max-w-sm leading-relaxed line-clamp-1 drop-shadow-md font-medium">
+                {{ banner.subtitle }}
+              </p>
+            </div>
+
+            <div class="relative z-10 flex items-center justify-between gap-3 mt-2 w-full">
+              <a [routerLink]="banner.targetUrl"
+                class="px-3.5 py-1.5 rounded-lg bg-white text-primary-700 font-bold text-[9px] hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
+                {{ banner.buttonText }}
+              </a>
             </div>
           </div>
-          }
         </div>
-      </div>
-
-      <!-- Dot Indicators -->
-      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
-        @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
-        <button type="button" (click)="scrollToSlide(i)"
-          [class]="i === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"
-          class="transition-all duration-500 ease-in-out cursor-pointer hover:bg-white/80"
-          [attr.aria-label]="'Go to slide ' + (i + 1)"></button>
         }
       </div>
+    </div>
+
+    <!-- Dot Indicators -->
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+      @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
+      <button type="button" (click)="scrollToSlide(i)"
+        [class]="i === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"
+        class="transition-all duration-500 ease-in-out cursor-pointer hover:bg-white/80"
+        [attr.aria-label]="'Go to slide ' + (i + 1)"></button>
+      }
+    </div>
   </section>
 
   <!-- Best seller product -->
@@ -69,20 +72,28 @@
     <!-- Best Seller Carousel -->
     <div #bestSellerCarouselViewport class="overflow-hidden pl-2">
       <div class="flex -ml-3 cursor-grab active:cursor-grabbing">
+        @if (productStore.loading()) {
+        @for (i of [1, 2, 3]; track i) {
+        <div class="flex-[0_0_170px] min-w-0 pl-2">
+          <app-skeleton type="card" [count]="1"></app-skeleton>
+        </div>
+        }
+        } @else {
         @for (prod of productStore.products(); track prod.id) {
-        <div class="flex-[0_0_165px] min-w-0 pl-2">
+        <div class="flex-[0_0_170px] min-w-0 pl-2">
           <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
         }
         @for (prod of productStore.products(); track prod.id + '-clone1') {
-        <div class="flex-[0_0_165px] min-w-0 pl-2" aria-hidden="true">
+        <div class="flex-[0_0_170px] min-w-0 pl-2" aria-hidden="true">
           <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
         }
         @for (prod of productStore.products(); track prod.id + '-clone2') {
-        <div class="flex-[0_0_165px] min-w-0 pl-2" aria-hidden="true">
+        <div class="flex-[0_0_170px] min-w-0 pl-2" aria-hidden="true">
           <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
+        }
         }
       </div>
     </div>
@@ -101,20 +112,28 @@
     <!-- Best Seller Carousel -->
     <div #merchandiseCarouselViewport class="overflow-hidden pl-2">
       <div class="flex -ml-3 cursor-grab active:cursor-grabbing">
+        @if (productStore.loading()) {
+        @for (i of [1, 2, 3]; track i) {
+        <div class="flex-[0_0_170px] min-w-0 pl-2">
+          <app-skeleton type="card" [count]="1"></app-skeleton>
+        </div>
+        }
+        } @else {
         @for (prod of productStore.products(); track prod.id) {
-        <div class="flex-[0_0_165px] min-w-0 pl-2">
+        <div class="flex-[0_0_170px] min-w-0 pl-2">
           <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
         }
         @for (prod of productStore.products(); track prod.id + '-clone1') {
-        <div class="flex-[0_0_165px] min-w-0 pl-2" aria-hidden="true">
+        <div class="flex-[0_0_170px] min-w-0 pl-2" aria-hidden="true">
           <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
         }
         @for (prod of productStore.products(); track prod.id + '-clone2') {
-        <div class="flex-[0_0_165px] min-w-0 pl-2" aria-hidden="true">
+        <div class="flex-[0_0_170px] min-w-0 pl-2" aria-hidden="true">
           <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
+        }
         }
       </div>
     </div>
@@ -131,8 +150,15 @@
 
     <div #authorCarouselViewport class="overflow-hidden pl-2 pb-2">
       <div class="flex -ml-3 items-center h-full">
+        @if (authorStore.loading()) {
+        @for (i of [1, 2, 3]; track i) {
+        <div class="flex-[0_0_170px] pl-2 h-full flex items-center justify-center">
+          <div class="w-full h-45 bg-slate-200/60 animate-pulse rounded-none"></div>
+        </div>
+        }
+        } @else {
         @for (author of authorStore.authors(); track author.id) {
-        <div class="flex-[0_0_165px] pl-2 h-full flex items-center justify-center">
+        <div class="flex-[0_0_170px] pl-2 h-full flex items-center justify-center">
           <div
             class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
             (click)="openAuthorSheet(author)">
@@ -158,7 +184,7 @@
         </div>
         }
         @for (author of authorStore.authors(); track author.id + '-clone1') {
-        <div class="flex-[0_0_165px] pl-2 h-full flex items-center justify-center">
+        <div class="flex-[0_0_170px] pl-2 h-full flex items-center justify-center">
           <div
             class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
             (click)="openAuthorSheet(author)">
@@ -184,7 +210,7 @@
         </div>
         }
         @for (author of authorStore.authors(); track author.id + '-clone2') {
-        <div class="flex-[0_0_165px] pl-2 h-full flex items-center justify-center">
+        <div class="flex-[0_0_170px] pl-2 h-full flex items-center justify-center">
           <div
             class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
             (click)="openAuthorSheet(author)">
@@ -208,6 +234,7 @@
             </div>
           </div>
         </div>
+        }
         }
       </div>
     </div>
@@ -243,7 +270,10 @@
 
     @if (productStore.loading()) {
     <div class="grid grid-cols-2 gap-2">
-      <app-skeleton type="card" [count]="2"></app-skeleton>
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
     </div>
     } @else {
     <app-masonry-grid [items]="productStore.filteredProducts()">
@@ -329,5 +359,3 @@
     </div>
   </div>
 </app-bottom-sheet>
-<app-alert-dialog [(isOpen)]="showCartAlert" title="Berhasil!"
-  message="Produk berhasil ditambahkan ke keranjang"></app-alert-dialog>

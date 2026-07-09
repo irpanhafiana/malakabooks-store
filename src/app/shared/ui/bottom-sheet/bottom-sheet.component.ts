@@ -11,17 +11,17 @@ export class BottomSheetComponent implements OnDestroy {
   readonly isOpen = input<boolean>(false);
   readonly title = input<string>('');
   readonly fullHeight = input<boolean>(false);
-  
+
   readonly closed = output<void>();
 
   renderComponent = signal<boolean>(false);
   isAnimating = signal<boolean>(false);
-  
+
   // Gesture states
   isDragging = signal<boolean>(false);
   dragOffset = signal<number>(0);
   lazyRenderContent = signal<boolean>(false);
-  
+
   private startY = 0;
   private openTimerId: any = null;
   private readonly cdr = inject(ChangeDetectorRef);
@@ -131,7 +131,7 @@ export class BottomSheetComponent implements OnDestroy {
     this.isDragging.set(false);
 
     const finalOffset = this.dragOffset();
-    const threshold = 120; // 120px drag down to close
+    const threshold = 120; // 170px drag down to close
 
     if (finalOffset > threshold) {
       this.isAnimating.set(false);

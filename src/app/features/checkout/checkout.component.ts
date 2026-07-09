@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, OnInit, DestroyRef, ChangeDetectio
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { DecimalPipe, NgOptimizedImage } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
 import { OrderStore } from '../../store/order.store';
@@ -16,11 +16,8 @@ import { PriceComponent } from '../../shared/ui/price/price.component';
 import { MapPickerComponent } from '../../shared/ui/map-picker/map-picker.component';
 import { ToastService } from '../../core/services/toast.service';
 import { AddressApiService } from '../../core/services/address-api.service';
-import { ExternalMessageService } from '../../core/services/external-message.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { LoggerService } from '../../core/services/logger.service';
-import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { ShippingService } from '../../core/services/shipping.service';
 import { PaymentApiService } from '../../core/services/payment-api.service';
 
@@ -40,7 +37,6 @@ export class CheckoutComponent implements OnInit {
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
   private readonly addressApi = inject(AddressApiService);
-  private readonly externalMessageService = inject(ExternalMessageService);
   private readonly userApi = inject(UserApiService);
   private readonly logger = inject(LoggerService);
   private readonly shippingService = inject(ShippingService);
@@ -462,8 +458,6 @@ export class CheckoutComponent implements OnInit {
     }
 
     const selectedCourier = this.courierControl.value || 'jne';
-    const note = `Courier: ${selectedCourier.toUpperCase()}`;
-
     const serviceIdxStr = this.courierServiceControl.value;
     const serviceIdx = serviceIdxStr ? parseInt(serviceIdxStr, 10) : -1;
     const selectedService = serviceIdx >= 0 ? this.courierServices()[serviceIdx] : null;

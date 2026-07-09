@@ -6,7 +6,6 @@ import { ProductApiService } from '../core/services/product-api.service';
 import { ToastService } from '../core/services/toast.service';
 import { LoggerService } from '../core/services/logger.service';
 import { CartStore } from './cart.store';
-import { firstValueFrom } from 'rxjs';
 import { decodeJwt, isTokenExpired, jwtHasAdminRole, mapJwtToUser } from '../core/auth/jwt.util';
 import { SESSION_TOKEN_KEY, SESSION_USER_KEY, SESSION_REFRESH_KEY } from '../core/auth/session.util';
 

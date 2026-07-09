@@ -207,13 +207,11 @@
       Beli Sekarang
     </app-button>
     } @else {
-    <app-button routerLink="/auth/login" (click)="goToLogin($event)" variant="primary" size="lg" [fullWidth]="true"
+    <app-button routerLink="/auth/login" (click)="goToLogin()" variant="primary" size="lg" [fullWidth]="true"
       class="flex-1">
       Login untuk Membeli
     </app-button>
     }
   </div>
   }
-  <app-alert-dialog [(isOpen)]="showCartAlert" title="Berhasil!"
-    message="Produk berhasil ditambahkan ke keranjang"></app-alert-dialog>
 </div>

@@ -2,7 +2,7 @@ import { Component, inject, OnInit, ChangeDetectionStrategy, signal, computed } 
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { DatePipe, NgClass, JsonPipe } from '@angular/common';
 import { OrderStore } from '../../../../store/order.store';
-import { Order, OrderStatus } from '../../../../core/models';
+import { Order } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
 import { PriceComponent } from '../../../../shared/ui/price/price.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
@@ -12,7 +12,6 @@ import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.componen
 import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-badge.component';
 import { DrawerComponent } from '../../../../shared/ui/drawer/drawer.component';
 
-import JsBarcode from 'jsbarcode';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

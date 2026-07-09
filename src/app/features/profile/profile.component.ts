@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed, DestroyRef, ChangeDetectionStrategy, ElementRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
@@ -42,7 +42,6 @@ export class ProfileComponent implements OnInit {
   protected readonly orderStore = inject(OrderStore);
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly logger = inject(LoggerService);
   private readonly userApi = inject(UserApiService);
 

@@ -1,7 +1,7 @@
-import { Component, inject, signal, computed, OnInit, input, effect, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, OnInit, input, effect, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KeyValuePipe, DatePipe, Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { ReviewApiService } from '../../../core/services/review-api.service';
 import { CartStore } from '../../../store/cart.store';
@@ -12,10 +12,8 @@ import { Product, Review } from '../../../core/models';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
-import { TextareaComponent } from '../../../shared/ui/textarea/textarea.component';
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
-import { QuantitySelectorComponent } from '../../../shared/ui/quantity-selector/quantity-selector.component';
-import { AlertDialogComponent } from '../../../shared/ui/alert-dialog/alert-dialog.component';
+import { AlertService } from '../../../core/services/alert.service';
 import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
@@ -28,8 +26,7 @@ import { ToastService } from '../../../core/services/toast.service';
     IconComponent,
     ButtonComponent,
     SpinnerComponent,
-    DatePipe,
-    AlertDialogComponent
+    DatePipe
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
@@ -47,6 +44,7 @@ export class ProductDetailComponent implements OnInit {
   private readonly toastService = inject(ToastService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly location = inject(Location);
+  private readonly alertService = inject(AlertService);
 
   loading = signal<boolean>(true);
   product = signal<Product | null>(null);
@@ -55,8 +53,6 @@ export class ProductDetailComponent implements OnInit {
   reviews = signal<Review[]>([]);
   isWishlisted = signal<boolean>(false);
   protected readonly imageError = signal(false);
-  protected readonly showCartAlert = signal(false);
-
   protected readonly Math = Math;
 
   constructor() {
@@ -134,7 +130,7 @@ export class ProductDetailComponent implements OnInit {
     const prod = this.product();
     if (prod) {
       this.cartStore.addItem(prod, 1);
-      this.showCartAlert.set(true);
+      this.alertService.success('Berhasil!', 'Produk berhasil ditambahkan ke keranjang');
     }
   }
 
@@ -147,7 +143,7 @@ export class ProductDetailComponent implements OnInit {
     this.productStore.setSelectedProductId(null);
   }
 
-  goToLogin(event: Event) {
+  goToLogin() {
     this.productStore.setSelectedProductId(null);
   }
 

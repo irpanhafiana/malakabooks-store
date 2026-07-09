@@ -53,23 +53,12 @@ export class AdminInputComponent {
     return `${base} ${padding} ${border} ${this.customClass()}`;
   });
 
-  /** Format raw digits → Indonesian thousand format (1000 → 1.000) */
-  private formatThousand(val: string): string {
-    const digits = val.replace(/[^0-9]/g, '');
-    if (!digits) return '';
-    return parseInt(digits, 10).toLocaleString('id-ID');
-  }
-
   onFocus() {
     if (!this.formatNumber()) return;
     const input = this.inputRef?.nativeElement;
     if (!input) return;
-    // Save raw cursor position-based digit index
-    this.restoreCursorPos = 0;
     input.value = input.value.replace(/\./g, '');
   }
-
-  private restoreCursorPos = 0;
 
   onInput() {
     if (!this.formatNumber()) return;

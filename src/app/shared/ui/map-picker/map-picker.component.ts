@@ -1,8 +1,9 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, Input, Output, EventEmitter, PLATFORM_ID, Inject, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, Input, Output, EventEmitter, PLATFORM_ID, Inject, inject, ChangeDetectionStrategy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-map-picker',
   standalone: true,
   templateUrl: './map-picker.component.html',
@@ -32,7 +33,6 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
 
   private map: any;
   private marker: any;
-  private L: any;
 
   isLocating = false;
   private readonly logger = inject(LoggerService);
@@ -43,8 +43,6 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
       // Dynamically import Leaflet so it doesn't break SSR
       const L = await import('leaflet');
-      this.L = L;
-
       // Default to Jakarta if no coords provided
       const startLat = (this._lat && this._lat !== 0) ? this._lat : -6.200000;
       const startLng = (this._lng && this._lng !== 0) ? this._lng : 106.816666;

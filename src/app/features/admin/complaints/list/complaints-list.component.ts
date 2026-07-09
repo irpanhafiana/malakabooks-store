@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal, computed, ChangeDetectionStrategy } 
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { DatePipe } from '@angular/common';
 import { ComplaintStore } from '../../../../store/complaint.store';
-import { Complaint, ComplaintStatus } from '../../../../core/models';
+import { Complaint } from '../../../../core/models';
 import { TableComponent } from '../../../../shared/ui/table/table.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';

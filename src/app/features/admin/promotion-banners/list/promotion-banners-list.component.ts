@@ -10,7 +10,7 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { PromotionBannersFormComponent } from '../form/promotion-banners-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
-import { DatePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -7,8 +7,6 @@ import { Address } from '../../../core/models';
 import { InputComponent } from '../../../shared/ui/input/input.component';
 import { SelectComponent } from '../../../shared/ui/select/select.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
-import { ToastService } from '../../../core/services/toast.service';
-import { LoggerService } from '../../../core/services/logger.service';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { AddressApiService } from '../../../core/services/address-api.service';
 import { UserApiService } from '../../../core/services/user-api.service';
@@ -35,10 +33,8 @@ import { MapPickerComponent } from '../../../shared/ui/map-picker/map-picker.com
 })
 export class MyAddressesComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
-  private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly logger = inject(LoggerService);
   private readonly addressApi = inject(AddressApiService);
   private readonly userApi = inject(UserApiService);
 
