@@ -6,7 +6,7 @@
       <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Kelola Pesanan</h2>
       @if (selectedOrderIds().length > 0) {
       <span class="text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full font-bold">
-        {{ selectedOrderIds().length }} selected
+        {{ selectedOrderIds().length }} terpilih
       </span>
       }
     </div>
@@ -32,14 +32,14 @@
   <!-- Mobile Search (visible only on small screens) -->
   <div class="sm:hidden relative w-full">
     <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
-    <input type="text" placeholder="Search orders..." [value]="searchQuery()" (input)="onSearch($event)"
+    <input type="text" placeholder="Cari pesanan..." [value]="searchQuery()" (input)="onSearch($event)"
       class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
   </div>
 
   <!-- Data Table -->
   @if (orderStore.loading()) {
   <div class="bg-white rounded-2xl border border-slate-200">
-    <app-spinner text="Loading orders..."></app-spinner>
+    <app-spinner text="Memuat pesanan..."></app-spinner>
   </div>
   } @else {
   <app-table>
@@ -73,7 +73,7 @@
           </div>
         </td>
         <td class="px-5 py-4">{{ order.orderDate | date: 'mediumDate' }}</td>
-        <td class="px-5 py-4 font-semibold text-slate-600">{{ order.items.length }} items</td>
+        <td class="px-5 py-4 font-semibold text-slate-600">{{ order.items.length }} item</td>
         <td class="px-5 py-4 font-bold text-slate-800">
           <app-price [value]="order.total" size="sm"></app-price>
         </td>
@@ -102,7 +102,7 @@
       </tr>
       } @empty {
       <tr>
-        <td colspan="8" class="p-8 text-center text-slate-400">No orders logged yet.</td>
+        <td colspan="8" class="p-8 text-center text-slate-400">Belum ada pesanan yang tercatat.</td>
       </tr>
       }
     </ng-container>
@@ -245,7 +245,7 @@
     <!-- Raw JSON fallback when no structured data -->
     <div class="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm">
       <h3 class="font-display font-extrabold text-slate-800 text-sm mb-3 flex items-center gap-1.5">
-        <i class="bx bx-data text-slate-400 text-lg"></i> Response Data
+        <i class="bx bx-data text-slate-400 text-lg"></i> Data Respons
       </h3>
       <pre
         class="text-[10px] text-slate-600 bg-slate-50 p-3 rounded-xl overflow-auto max-h-96 leading-relaxed">{{ data | json }}</pre>
@@ -256,7 +256,7 @@
     <button (click)="printLabel()"
       class="w-full py-3 text-xs font-bold text-white bg-slate-800 hover:bg-slate-900 rounded-2xl flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all">
       <i class="bx bx-printer text-sm"></i>
-      Print Label
+      Cetak Label
     </button>
     }
   </div>

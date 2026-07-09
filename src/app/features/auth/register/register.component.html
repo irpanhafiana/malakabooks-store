@@ -16,37 +16,37 @@
               Literasi Bangsa</span>
           </div> -->
         </div>
-        <h2 class="text-2xl font-display font-extrabold text-slate-800 tracking-tight">Create Account</h2>
-        <p class="text-slate-500 text-xs mt-1">Sign up to get started with your dashboard.</p>
+        <h2 class="text-2xl font-display font-extrabold text-slate-800 tracking-tight">Buat Akun</h2>
+        <p class="text-slate-500 text-xs mt-1">Daftar untuk memulai dengan dasbor Anda.</p>
       </div>
 
       <!-- Registration Form -->
       <form [formGroup]="registerForm" (submit)="onSubmit()" class="flex flex-col gap-4">
         <!-- Full Name Input -->
-        <app-input label="Full Name" type="text" placeholder="Enter your name" [control]="fullNameControl"></app-input>
+        <app-input label="Nama Lengkap" type="text" placeholder="Masukkan nama lengkap" [control]="fullNameControl"></app-input>
 
         <!-- Phone Number Input -->
-        <app-input label="Phone Number" type="tel" placeholder="Enter your phone number"
+        <app-input label="Nomor Telepon" type="tel" placeholder="Masukkan nomor telepon"
           [control]="phoneControl"></app-input>
 
         <!-- Email Input -->
-        <app-input label="Email" type="email" placeholder="Enter your email" [control]="emailControl"></app-input>
+        <app-input label="Email" type="email" placeholder="Masukkan email Anda" [control]="emailControl"></app-input>
 
         <!-- Password Input -->
-        <app-input label="Password" type="password" placeholder="Create a password"
+        <app-input label="Kata Sandi" type="password" placeholder="Buat kata sandi"
           [control]="passwordControl"></app-input>
 
         <!-- Create Account Button -->
         <app-button type="submit" [loading]="isLoading()" [disabled]="registerForm.invalid" [fullWidth]="true"
           variant="primary" size="lg" class="mt-2">
-          Create Account
+          Buat Akun
         </app-button>
       </form>
 
       <!-- Or Divider -->
       <div class="flex items-center gap-3 text-xs font-semibold text-slate-400">
         <div class="h-px grow bg-slate-200/80"></div>
-        <span>Or</span>
+        <span>Atau</span>
         <div class="h-px grow bg-slate-200/80"></div>
       </div>
 
@@ -67,8 +67,7 @@
 
     <!-- Sign In Action Footer -->
     <div class="mt-8 text-center text-xs text-slate-500 pb-2">
-      <span>Already have an account? </span>
-      <a routerLink="/auth/login" class="text-primary-600 hover:text-primary-700 font-extrabold  cursor-pointer">Sign
-        In</a>
+      <span>Sudah punya akun? </span>
+      <a routerLink="/auth/login" class="text-primary-600 hover:text-primary-700 font-extrabold  cursor-pointer">Masuk</a>
     </div>
   </div>

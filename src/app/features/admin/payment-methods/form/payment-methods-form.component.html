@@ -1,7 +1,7 @@
 <form [formGroup]="paymentForm" class="flex flex-col gap-4">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <app-admin-input label="Nama Pembayaran" placeholder="e.g. Bank BCA" [control]="nameControl"></app-admin-input>
-    <app-admin-input label="Tipe Metode" placeholder="e.g. bank_transfer" [control]="methodTypeControl"></app-admin-input>
+    <app-admin-input label="Nama Pembayaran" placeholder="Misal: Bank BCA" [control]="nameControl"></app-admin-input>
+    <app-admin-input label="Tipe Metode" placeholder="Misal: transfer_bank" [control]="methodTypeControl"></app-admin-input>
   </div>
 
   <div class="flex items-center justify-between mt-4">
@@ -23,12 +23,12 @@
       <div [formGroupName]="$index" class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row gap-3 items-start sm:items-center">
         
         <div class="flex flex-col gap-1 w-full sm:w-1/4">
-          <app-admin-input label="Kode" placeholder="e.g. ADMIN_FEE" 
+          <app-admin-input label="Kode" placeholder="Misal: BIAYA_ADMIN" 
             [control]="$any(feeForm.get('code'))"></app-admin-input>
         </div>
 
         <div class="flex flex-col gap-1 w-full sm:w-1/4">
-          <app-admin-input label="Nama" placeholder="e.g. Biaya Admin" 
+          <app-admin-input label="Nama" placeholder="Misal: Biaya Admin" 
             [control]="$any(feeForm.get('name'))"></app-admin-input>
         </div>
 
@@ -38,7 +38,7 @@
         </div>
 
         <div class="flex flex-col gap-1 w-full sm:w-1/4">
-          <app-admin-input label="Nilai" placeholder="e.g. 5000" type="number"
+          <app-admin-input label="Nilai" placeholder="Misal: 5000" type="number"
             [control]="$any(feeForm.get('value'))"></app-admin-input>
         </div>
 

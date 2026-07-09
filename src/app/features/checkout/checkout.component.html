@@ -18,7 +18,7 @@
         <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
           <span
             class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">1</span>
-          Shipping Address
+          Alamat Pengiriman
         </h2>
 
         @if (!showAddressForm()) {
@@ -42,33 +42,33 @@
           }
           <app-button type="button" (click)="addNewAddress()" variant="ghost" size="sm"
             customClass="text-primary-600 hover:text-primary-700 !p-0 mt-1 flex items-center gap-1">
-            + Add New Shipping Address
+            + Tambah Alamat Baru
           </app-button>
         </div>
         } @else {
         <div
           class="text-center py-6 border border-dashed border-slate-200 rounded-2xl p-4 flex flex-col items-center gap-3">
-          <p class="text-slate-500 text-xs">You have no saved shipping addresses.</p>
+          <p class="text-slate-500 text-xs">Anda belum memiliki alamat pengiriman yang tersimpan.</p>
           <app-button type="button" (click)="addNewAddress()" variant="outline" size="sm">
-            + Add New Address
+            + Tambah Alamat Baru
           </app-button>
         </div>
         }
         } @else {
         <form [formGroup]="addressForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <app-input label="Recipient Name" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
-          <app-input label="Phone Number" placeholder="e.g. +628123456789" [control]="phoneControl"></app-input>
+          <app-input label="Nama Penerima" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
+          <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="phoneControl"></app-input>
           <div class="sm:col-span-2">
-            <app-input label="Street Address" placeholder="e.g. Jl. Sudirman No. 21"
+            <app-input label="Alamat Lengkap (Jalan)" placeholder="e.g. Jl. Sudirman No. 21"
               [control]="streetControl"></app-input>
           </div>
-          <app-select label="Province" placeholder="Select Province" [control]="provinceControl"
+          <app-select label="Provinsi" placeholder="Pilih Provinsi" [control]="provinceControl"
             [options]="provinceOptions()"></app-select>
-          <app-select label="City" placeholder="Select City" [control]="cityControl"
+          <app-select label="Kota" placeholder="Pilih Kota" [control]="cityControl"
             [options]="cityOptions()"></app-select>
-          <app-select label="District" placeholder="Select District" [control]="districtControl"
+          <app-select label="Kecamatan" placeholder="Pilih Kecamatan" [control]="districtControl"
             [options]="districtOptions()"></app-select>
-          <app-input label="Postal Code" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
+          <app-input label="Kode Pos" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
 
           <div class="sm:col-span-2 mt-2">
             <label class="block text-sm font-medium text-slate-700 mb-2">Pin Lokasi Peta</label>
@@ -79,9 +79,9 @@
           </div>
 
           <div class="sm:col-span-2 flex justify-end gap-2.5 mt-2">
-            <app-button type="button" (click)="cancelAddressForm()" variant="ghost" size="sm">Cancel</app-button>
+            <app-button type="button" (click)="cancelAddressForm()" variant="ghost" size="sm">Batal</app-button>
             <app-button type="button" (click)="saveAddressForm()" [disabled]="addressForm.invalid" variant="outline"
-              size="sm">Save Address</app-button>
+              size="sm">Simpan Alamat</app-button>
           </div>
         </form>
         }
@@ -92,17 +92,17 @@
         <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
           <span
             class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">2</span>
-          Shipping Courier & Service
+          Kurir & Layanan Pengiriman
         </h2>
         <div class="flex flex-col gap-4">
-          <app-select label="Select Courier" placeholder="Choose Shipping Courier" [control]="courierControl"
+          <app-select label="Pilih Kurir" placeholder="Pilih Kurir" [control]="courierControl"
             [options]="courierOptions()"></app-select>
 
           @if (courierOptions().length > 0 && courierControl.value && courierServices().length > 0) {
-          <app-select label="Select Service" placeholder="Choose Shipping Service" [control]="courierServiceControl"
+          <app-select label="Pilih Layanan" placeholder="Pilih Layanan" [control]="courierServiceControl"
             [options]="courierServiceOptions()"></app-select>
           } @else if (courierControl.value && shippingLoading()) {
-          <div class="text-xs text-slate-500 animate-pulse">Loading available services...</div>
+          <div class="text-xs text-slate-500 animate-pulse">Memuat layanan yang tersedia...</div>
           }
         </div>
       </div>
@@ -112,7 +112,7 @@
         <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
           <span
             class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">3</span>
-          Payment Method
+          Metode Pembayaran
         </h2>
 
         <app-radio [options]="paymentOptions()" [control]="paymentControl" direction="col"></app-radio>
@@ -120,9 +120,9 @@
         @if (isCreditCardSelected()) {
         <div class="mt-4 p-4 border border-slate-100 bg-slate-50/50 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-4 ">
           <div class="sm:col-span-3">
-            <app-input label="Card Number" placeholder="xxxx xxxx xxxx 4321" [control]="cardNumControl"></app-input>
+            <app-input label="Nomor Kartu" placeholder="xxxx xxxx xxxx 4321" [control]="cardNumControl"></app-input>
           </div>
-          <app-input label="Expiry Date" placeholder="MM/YY" [control]="cardExpiryControl"></app-input>
+          <app-input label="Masa Berlaku" placeholder="MM/YY" [control]="cardExpiryControl"></app-input>
           <app-input label="CVC" placeholder="xxx" type="password" [control]="cardCvcControl"></app-input>
         </div>
         }
@@ -132,7 +132,7 @@
 
     <!-- Checkout Review Box (Right, 1/3 width) -->
     <div class="bg-white border border-slate-100 p-4 rounded-lg flex flex-col gap-5">
-      <h3 class="font-display font-extrabold text-slate-800 text-sm uppercase tracking-wider">Review Items</h3>
+      <h3 class="font-display font-extrabold text-slate-800 text-sm uppercase tracking-wider">Ringkasan Pesanan</h3>
 
       <!-- Items Scroll -->
       <div class="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1">
@@ -143,7 +143,7 @@
           </div>
           <div class="grow min-w-0">
             <h4 class="font-bold text-slate-800 truncate">{{ item.product.title }}</h4>
-            <span class="text-slate-400">Qty: {{ item.quantity }} × Rp {{ item.product.price | number: '1.0-0' }}</span>
+            <span class="text-slate-400">Jml: {{ item.quantity }} × Rp {{ item.product.price | number: '1.0-0' }}</span>
           </div>
         </div>
         }
@@ -159,28 +159,28 @@
         </div>
         @if (cartStore.discount() > 0) {
         <div class="flex justify-between text-rose-600 font-semibold">
-          <span>Discount</span>
+          <span>Diskon</span>
           <span>- Rp {{ cartStore.discount() | number: '1.0-0' }}</span>
         </div>
         }
 
         @if (paymentFee() > 0) {
         <div class="flex justify-between text-slate-600">
-          <span>Payment Fee</span>
+          <span>Biaya Layanan</span>
           <app-price [value]="paymentFee()" [bold]="false" size="sm"></app-price>
         </div>
         }
         <div class="flex justify-between">
-          <span>Shipping Cost</span>
+          <span>Ongkos Kirim</span>
           @if (shippingCost() === 0) {
-          <span class="text-emerald-600 font-bold">Free</span>
+          <span class="text-emerald-600 font-bold">Gratis</span>
           } @else {
           <app-price [value]="shippingCost()" [bold]="false" size="sm"></app-price>
           }
         </div>
         <hr class="border-slate-100" />
         <div class="flex justify-between text-slate-800 text-sm font-bold">
-          <span>Total Payment</span>
+          <span>Total Pembayaran</span>
           <app-price [value]="checkoutTotal()" size="md" class="text-primary-600"></app-price>
         </div>
       </div>
@@ -188,7 +188,7 @@
       <hr class="border-slate-100" />
 
       <app-button (click)="onPlaceOrder()" [loading]="isLoading()" [disabled]="courierControl.invalid || courierServiceControl.invalid" variant="primary" size="lg" [fullWidth]="true">
-        Confirm and Pay
+        Konfirmasi dan Bayar
       </app-button>
     </div>
 
