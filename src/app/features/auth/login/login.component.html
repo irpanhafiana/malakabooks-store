@@ -44,7 +44,7 @@
       </div>
 
         <!-- Sign In Button -->
-        <app-button type="submit" [loading]="authStore.loading()" [disabled]="loginForm.invalid" [fullWidth]="true"
+        <app-button type="submit" [loading]="isLoading()" [disabled]="loginForm.invalid" [fullWidth]="true"
         variant="primary" size="lg">
         Masuk
       </app-button>
