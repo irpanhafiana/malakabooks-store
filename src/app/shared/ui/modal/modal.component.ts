@@ -17,6 +17,14 @@ export class ModalComponent implements OnInit, OnDestroy {
   private readonly el = inject(ElementRef);
 
   ngOnInit() {
+    // Cari parent root class sebelum memindahkan elemen
+    const parentRoot = this.el.nativeElement.closest('.admin-root, .customer-root, .inner-root');
+    if (parentRoot) {
+      if (parentRoot.classList.contains('admin-root')) this.el.nativeElement.classList.add('admin-root');
+      if (parentRoot.classList.contains('customer-root')) this.el.nativeElement.classList.add('customer-root');
+      if (parentRoot.classList.contains('inner-root')) this.el.nativeElement.classList.add('inner-root');
+    }
+
     // Pindahkan modal ke akhir tag <body> untuk menghindari masalah z-index & stacking context
     document.body.appendChild(this.el.nativeElement);
   }

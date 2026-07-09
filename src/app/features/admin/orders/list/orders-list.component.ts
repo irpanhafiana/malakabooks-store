@@ -92,19 +92,6 @@ export class OrdersListComponent implements OnInit {
     }
   }
 
-  async onStatusChange(orderId: string, status: string, selectElement: HTMLSelectElement, currentStatus: string) {
-    const isConfirmed = await this.alertService.confirm(
-      'Ubah Status Pesanan?',
-      `Apakah Anda yakin ingin mengubah status pesanan ke ${status.toUpperCase()}?`
-    );
-    if (isConfirmed) {
-      await this.orderStore.updateOrderStatus(orderId, status as OrderStatus);
-      this.alertService.success('Berhasil!', 'Status pesanan berhasil diperbarui.');
-    } else {
-      selectElement.value = currentStatus;
-    }
-  }
-
   async onCreateShipment(orderId: string) {
     const isConfirmed = await this.alertService.confirm(
       'Buat Pengiriman?',

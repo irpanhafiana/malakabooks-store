@@ -92,7 +92,8 @@
   }
 
   <!-- Add/Edit Modal Form -->
-  <app-modal [(isOpen)]="isModalOpen" [title]="editPayment() ? 'Edit Payment Method' : 'Add New Payment Method'">
+  <app-modal [(isOpen)]="isModalOpen"
+    [title]="editPayment() ? 'Edit Metode Pembayaran' : 'Tambah Metode Pembayaran Baru'">
     <app-payment-methods-form [payment]="editPayment()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-payment-methods-form>
   </app-modal>

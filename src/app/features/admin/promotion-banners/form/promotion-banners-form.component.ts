@@ -95,10 +95,10 @@ import { AlertService } from '../../../../core/services/alert.service';
       </div>
 
       <!-- Actions -->
-      <div class="flex justify-end gap-3 mt-4">
-        <app-admin-button type="button" variant="outline" (click)="onCancel.emit()">Cancel</app-admin-button>
+      <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
+        <app-admin-button type="button" variant="outline" (click)="onCancel.emit()">Batalkan</app-admin-button>
         <app-admin-button type="submit" variant="primary" [disabled]="bannerForm.invalid || bannerStore.loading()">
-          {{ bannerStore.loading() ? 'Saving...' : 'Save Banner' }}
+          {{ bannerStore.loading() ? 'Menyimpan...' : 'Simpan' }}
         </app-admin-button>
       </div>
     </form>
@@ -146,7 +146,7 @@ export class PromotionBannersFormComponent {
         this.imageBase64Control.setValue(b.imageBase64);
         this.isActiveControl.setValue(b.isActive);
         this.displayOrderControl.setValue(b.displayOrder);
-        
+
         // Format to YYYY-MM-DDTHH:mm for datetime-local input
         const formatDateTimeLocal = (dateStr?: string) => dateStr ? new Date(dateStr).toISOString().slice(0, 16) : '';
         this.startAtControl.setValue(formatDateTimeLocal(b.startAt));

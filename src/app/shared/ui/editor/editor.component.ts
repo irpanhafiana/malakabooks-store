@@ -9,13 +9,15 @@ import {
   OnDestroy,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-editor',
   standalone: true,
   templateUrl: './editor.component.html',

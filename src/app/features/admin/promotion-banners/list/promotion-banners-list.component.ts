@@ -68,7 +68,7 @@ export class PromotionBannersListComponent implements OnInit {
     );
     if (isConfirmed) {
       await this.bannerStore.deleteBanner(id);
-      this.alertService.success('Berhasil!', 'Banner promosi telah berhasil dihapus.');
+      this.alertService.success('Berhasil!', 'Promosi telah berhasil dihapus.');
     }
   }
 }

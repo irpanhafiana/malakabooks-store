@@ -57,10 +57,10 @@ import { AlertService } from '../../../../core/services/alert.service';
       </div>
 
       <!-- Actions -->
-      <div class="flex justify-end gap-3 mt-4">
+      <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
         <app-admin-button type="button" variant="outline" (click)="onCancel.emit()">Cancel</app-admin-button>
         <app-admin-button type="submit" variant="primary" [disabled]="authorForm.invalid || authorStore.loading()">
-          {{ authorStore.loading() ? 'Saving...' : 'Save Author' }}
+          {{ authorStore.loading() ? 'Menyimpan...' : 'Simpan Penulis' }}
         </app-admin-button>
       </div>
     </form>
@@ -108,8 +108,8 @@ export class AuthorsFormComponent {
     }
 
     const isConfirmed = await this.alertService.confirm(
-      'Simpan Author?',
-      'Apakah Anda yakin ingin menyimpan perubahan data author ini?'
+      'Simpan Penulis?',
+      'Apakah Anda yakin ingin menyimpan perubahan data penulis ini?'
     );
     if (!isConfirmed) return;
 
@@ -122,7 +122,7 @@ export class AuthorsFormComponent {
     };
 
     await this.authorStore.saveAuthor(aData);
-    this.alertService.success('Berhasil!', 'Data author berhasil disimpan.');
+    this.alertService.success('Berhasil!', 'Data penulis berhasil disimpan.');
     this.onSave.emit();
   }
 

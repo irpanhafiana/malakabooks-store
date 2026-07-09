@@ -2,7 +2,7 @@
 
   <!-- Top Action bar & Search -->
   <div class="flex items-center justify-between">
-    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Authors Manager</h2>
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Kelola Penulis</h2>
 
     <div class="flex flex-row gap-2 justify-center items-center">
       <!-- Search Input -->
@@ -14,7 +14,7 @@
 
       <app-admin-button (click)="openAddModal()" variant="primary" size="md" class="shrink-0">
         <app-icon name="plus" size="14"></app-icon>
-        Add Author
+        Tambah Penulis
       </app-admin-button>
     </div>
   </div>
@@ -92,7 +92,7 @@
   }
 
   <!-- Add/Edit Author Modal Form -->
-  <app-modal [(isOpen)]="isModalOpen" [title]="editAuthor() ? 'Edit Author' : 'Add New Author'">
+  <app-modal [(isOpen)]="isModalOpen" [title]="editAuthor() ? 'Edit Penulis' : 'Tambah Penulis Baru'">
     <app-authors-form [author]="editAuthor()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-authors-form>
   </app-modal>

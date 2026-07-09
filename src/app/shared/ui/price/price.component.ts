@@ -16,7 +16,7 @@ export class PriceComponent {
   readonly customClass = input<string>('', { alias: 'class' });
 
   readonly formattedPrice = computed(() => {
-    return 'Rp ' + Math.round(this.value()).toLocaleString('id-ID');
+    return 'Rp' + Math.round(this.value()).toLocaleString('id-ID');
   });
 
   readonly priceClass = computed(() => {

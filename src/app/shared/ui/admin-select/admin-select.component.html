@@ -18,7 +18,7 @@
   </div>
   @if (control().invalid && (control().dirty || control().touched)) {
   <span class="text-red-500 text-xs mt-1 block">
-    @if (control().errors?.['required']) { Selection is required. }
+    @if (control().errors?.['required']) { {{ label() || 'Pilihan ini' }} wajib diisi. }
   </span>
   }
 </div>

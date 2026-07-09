@@ -2,7 +2,7 @@
 
   <!-- Top Action bar & Search -->
   <div class="flex items-center justify-between">
-    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Data Promosi</h2>
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Kelola Promosi</h2>
 
     <div class="flex flex-row gap-2 justify-center items-center">
       <!-- Search Input -->
@@ -54,7 +54,7 @@
         </td>
         <td class="px-5 py-4">
           <span class="px-2 py-1 text-[10px] font-bold rounded-md"
-                [ngClass]="banner.isActive ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-50 text-slate-500 border border-slate-200'">
+            [ngClass]="banner.isActive ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-50 text-slate-500 border border-slate-200'">
             {{ banner.isActive ? 'Active' : 'Inactive' }}
           </span>
         </td>
@@ -93,7 +93,7 @@
   }
 
   <!-- Add/Edit Modal Form -->
-  <app-modal [(isOpen)]="isModalOpen" [title]="editBanner() ? 'Edit Banner' : 'Add New Banner'">
+  <app-modal [(isOpen)]="isModalOpen" [title]="editBanner() ? 'Edit Promosi' : 'Tambah Promosi Baru'">
     <app-promotion-banners-form [banner]="editBanner()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-promotion-banners-form>
   </app-modal>

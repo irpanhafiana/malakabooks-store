@@ -44,8 +44,8 @@ export class OrderApiService {
           return {
             id: res.id,
             userId: res.userId,
-            userName: u ? u.name : 'Unknown User',
-            userEmail: u ? (u.email || u.phone || 'No Contact') : '',
+            userName: u ? u.name : (res.user ? `${res.user.firstName || ''} ${res.user.lastName || ''}`.trim() : 'Unknown User') || 'Unknown User',
+            userEmail: u ? (u.email || u.phone || 'No Contact') : (res.user?.phone || 'No Contact'),
             items: res.items.map((item: any) => ({
               product: {
                 id: item.bookId,
@@ -118,8 +118,8 @@ export class OrderApiService {
         return {
           id: res.id,
           userId: res.userId,
-          userName: '',
-          userEmail: '',
+          userName: res.user ? `${res.user.firstName || ''} ${res.user.lastName || ''}`.trim() : 'Unknown User',
+          userEmail: res.user?.phone || 'No Contact',
           items: res.items.map((item: any) => ({
             product: {
               id: item.bookId,
