@@ -65,4 +65,8 @@ export class ComplaintsListComponent implements OnInit {
   protected closeModal() {
     this.isModalOpen = false;
   }
+
+  onRefresh() {
+    this.complaintStore.loadAllComplaints();
+  }
 }

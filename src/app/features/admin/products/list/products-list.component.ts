@@ -62,4 +62,8 @@ export class ProductsListComponent implements OnInit {
       this.alertService.success('Berhasil!', 'Produk telah berhasil dihapus.');
     }
   }
+
+  onRefresh() {
+    this.productStore.loadAll();
+  }
 }

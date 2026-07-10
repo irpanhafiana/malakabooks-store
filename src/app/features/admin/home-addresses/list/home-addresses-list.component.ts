@@ -73,4 +73,8 @@ export class HomeAddressesListComponent implements OnInit {
       await this.store.deleteAddress(id);
     }
   }
+
+  onRefresh() {
+    this.store.loadHomeAddresses();
+  }
 }

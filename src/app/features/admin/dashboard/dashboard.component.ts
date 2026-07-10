@@ -6,12 +6,13 @@ import { DashboardMetrics } from '../../../core/models';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
+import { AdminButtonComponent } from '../../../shared/ui/admin-button/admin-button.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, PriceComponent, IconComponent, StatusBadgeComponent, DatePipe, CurrencyPipe],
+  imports: [RouterLink, PriceComponent, IconComponent, StatusBadgeComponent, DatePipe, CurrencyPipe, AdminButtonComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

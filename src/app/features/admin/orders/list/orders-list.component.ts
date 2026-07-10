@@ -1,3 +1,4 @@
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { Component, inject, OnInit, ChangeDetectionStrategy, signal, computed } from '@angular/core';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { DatePipe, NgClass, JsonPipe } from '@angular/common';
@@ -17,7 +18,7 @@ import { DrawerComponent } from '../../../../shared/ui/drawer/drawer.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-orders-list',
   standalone: true,
-  imports: [DatePipe, NgClass, JsonPipe, TableComponent, PriceComponent, PaginationComponent, SpinnerComponent, StatusBadgeComponent, IconComponent, DrawerComponent],
+  imports: [DatePipe, NgClass, JsonPipe, TableComponent, PriceComponent, PaginationComponent, SpinnerComponent, StatusBadgeComponent, IconComponent, DrawerComponent, AdminButtonComponent],
   templateUrl: './orders-list.component.html',
   styleUrl: './orders-list.component.css'
 })
@@ -553,5 +554,9 @@ export class OrdersListComponent implements OnInit {
     return Object.entries(obj)
       .filter(([k, v]) => !skip.includes(k) && v != null && v !== '' && typeof v !== 'object')
       .map(([k, v]) => ({ key: k, val: String(v) }));
+  }
+
+  onRefresh() {
+    this.orderStore.loadAllOrders();
   }
 }

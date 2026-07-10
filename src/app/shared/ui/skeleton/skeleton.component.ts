@@ -8,7 +8,7 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
   styleUrl: './skeleton.component.css'
 })
 export class SkeletonComponent {
-  readonly type = input<'text' | 'avatar' | 'card' | 'table-row'>('text');
+  readonly type = input<'text' | 'avatar' | 'card' | 'table-row' | 'horizontal-card'>('text');
   readonly count = input<number>(1);
   readonly width = input<string>('100%');
   readonly height = input<string>('16px');

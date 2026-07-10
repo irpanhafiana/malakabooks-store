@@ -71,4 +71,8 @@ export class PromotionBannersListComponent implements OnInit {
       this.alertService.success('Berhasil!', 'Promosi telah berhasil dihapus.');
     }
   }
+
+  onRefresh() {
+    this.bannerStore.loadAdminBanners();
+  }
 }

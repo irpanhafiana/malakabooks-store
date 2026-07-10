@@ -73,4 +73,8 @@ export class PaymentMethodsListComponent implements OnInit {
       this.alertService.success('Berhasil!', 'Payment Method telah berhasil dihapus.');
     }
   }
+
+  onRefresh() {
+    this.paymentStore.loadPayments();
+  }
 }

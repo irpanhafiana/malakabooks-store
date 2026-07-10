@@ -39,7 +39,7 @@
   <!-- Product List (Card-List / Horizontal Row Layout) -->
   <div class="w-full flex flex-col gap-1.5">
     @if (productStore.loading()) {
-    <app-skeleton type="card" [count]="4"></app-skeleton>
+    <app-skeleton type="horizontal-card" [count]="9"></app-skeleton>
     } @else if (productStore.error()) {
     <app-empty-state icon="error" title="Gagal Memuat Produk" [description]="productStore.error() || ''"
       actionText="Coba Lagi" (actionClick)="retryLoading()"></app-empty-state>
@@ -112,9 +112,6 @@
 
     <!-- Sort selector -->
     <div>
-      <h4 class="font-display font-bold text-slate-700 text-base  text-center mb-3 px-1">Urutkan
-        Berdasarkan
-      </h4>
       <div class="flex flex-col">
         <!-- Featured -->
         <button type="button" (click)="onSortChange('featured'); closeFilters()"

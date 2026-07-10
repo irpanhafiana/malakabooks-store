@@ -70,4 +70,8 @@ export class AuthorsListComponent implements OnInit {
       this.alertService.success('Berhasil!', 'Author telah berhasil dihapus.');
     }
   }
+
+  onRefresh() {
+    this.authorStore.loadAuthors();
+  }
 }

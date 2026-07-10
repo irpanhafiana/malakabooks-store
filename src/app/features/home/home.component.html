@@ -15,7 +15,7 @@
     }
 
     <!-- Embla viewport -->
-    <div #carouselViewport class="overflow-hidden h-45" [class.hidden]="bannerStore.banners().length === 0">
+    <div #carouselViewport class="overflow-hidden h-45" [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
       <!-- Embla container -->
       <div class="flex -ml-3 items-center h-full">
         @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
@@ -50,7 +50,7 @@
     </div>
 
     <!-- Dot Indicators -->
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10" [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
       @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
       <button type="button" (click)="scrollToSlide(i)"
         [class]="i === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"

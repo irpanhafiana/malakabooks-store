@@ -74,4 +74,8 @@ export class CategoriesListComponent implements OnInit {
       this.alertService.success('Berhasil!', 'Kategori telah berhasil dihapus.');
     }
   }
+
+  onRefresh() {
+    this.productStore.loadCategories();
+  }
 }

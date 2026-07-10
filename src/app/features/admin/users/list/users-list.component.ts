@@ -61,4 +61,8 @@ export class UsersListComponent implements OnInit {
       this.alertService.error('Gagal!', 'Gagal mengubah peran pengguna.');
     }
   }
+
+  onRefresh() {
+    this.userStore.loadUsers();
+  }
 }
