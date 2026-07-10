@@ -123,6 +123,12 @@ namespace MalakaBooks.Mediator.UserHandlers
                         new StringUserClaimApiDto
                         {
                             UserId = createdUser.Id,
+                            ClaimType = "customer_group",
+                            ClaimValue = "online"
+                        },
+                        new StringUserClaimApiDto
+                        {
+                            UserId = createdUser.Id,
                             ClaimType = "given_name",
                             ClaimValue = string.Format("{0} {1}", user.FirstName, user.LastName).Trim()
                         }

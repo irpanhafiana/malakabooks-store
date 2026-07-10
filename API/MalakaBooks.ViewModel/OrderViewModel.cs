@@ -3,6 +3,7 @@ namespace MalakaBooks.ViewModel;
 public class OrderUserResponse
 {
     public string UserId { get; set; } = string.Empty;
+    public string CustomerGroupCode { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
@@ -65,7 +66,9 @@ public class OrderShipmentBpikDetail
 public class OrderItemResponse
 {
     public string BookId { get; set; } = string.Empty;
+    public string? ItemId { get; set; }
     public string Title { get; set; } = string.Empty;
+    public string UomCode { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public int Quantity { get; set; }
     public required string CoverImage { get; set; }
@@ -143,9 +146,11 @@ public class SimasrimInsuranceData
 public class CreateOrderItemRequest
 {
     public string BookId { get; set; } = string.Empty;
+    public string? ItemId { get; set; }
     public string BookName { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
-    public decimal Price { get; set; }
+    public string UomCode { get; set; } = string.Empty;
+    public decimal? Price { get; set; }
     public int Quantity { get; set; }
 }
 

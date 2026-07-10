@@ -5,6 +5,11 @@ public class MongoDbSetting
     public string ConnectionString { get; set; } = string.Empty;
     public string DatabaseName { get; set; } = string.Empty;
     public string BooksCollection { get; set; } = "books";
+    public string ItemsCollection { get; set; } = "items";
+    public string UomGroupsCollection { get; set; } = "uomgroups";
+    public string PricingsCollection { get; set; } = "pricings";
+    public string WarehousesCollection { get; set; } = "warehouses";
+    public string WarehouseStocksCollection { get; set; } = "warehousestocks";
     public string AuthorsCollection { get; set; } = "authors";
     public string PaymentsCollection { get; set; } = "payments";
     public string CategoriesCollection { get; set; } = "categories";

@@ -6,6 +6,7 @@ namespace MalakaBooks.Entity;
 public class OrderUserEntity
 {
     public string UserId { get; set; } = string.Empty;
+    public string CustomerGroupCode { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;

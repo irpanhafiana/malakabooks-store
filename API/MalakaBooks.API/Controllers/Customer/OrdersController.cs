@@ -60,12 +60,12 @@ public class OrdersController(IMediator mediator) : ApiControllerBase
     /// </summary>
     /// <remarks>Dispatches a GetOrderByIdQuery through the mediator.</remarks>
     /// <param name="id">The order identifier.</param>
-    /// <param name="cancellationToken">Token to observe while awaiting the operation.</param>
+    /// <param name="cancellationToken">Token to observe while awaiting the operation.</param>  
     /// <returns>An IActionResult containing the order when found (200 OK) or an appropriate error result.</returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
     {
         var order = await mediator.Send(new GetOrderByIdQuery(id), cancellationToken);
-        return Success(order);
+        return order is null ? NotFound() : Success(order);
     }
 }

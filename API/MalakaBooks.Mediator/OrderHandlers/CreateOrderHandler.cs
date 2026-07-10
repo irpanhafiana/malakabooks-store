@@ -10,6 +10,7 @@ namespace MalakaBooks.Mediator.OrderHandlers;
 
 using MalakaBooks.ConfigSetting;
 using MalakaBooks.Entity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PhoneNumbers;
@@ -23,6 +24,10 @@ public class CreateOrderHandler(
     IAddressRepository addressRepository,
     IHomeAddressRepository homeAddressRepository,
     IPaymentRepository paymentRepository,
+    IPricingRepository pricingRepository,
+    IItemRepository itemRepository,
+    IUomGroupRepository uomGroupRepository,
+    IHttpContextAccessor httpContextAccessor,
     IOrderEntityValidator validator,
     DokuApiClient dokuApiClient,
     SimasrimApiClient simasrimApiClient,
@@ -34,9 +39,23 @@ public class CreateOrderHandler(
     private readonly DokuSetting dokuSetting = dokuOptions.Value;
     private readonly AppSetting appSetting = appOptions.Value;
     private readonly SimasrimSetting simasrimSetting = simasrimOptions.Value;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     public async Task<CreateOrderResponse> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
+        var customerGroupCode = GetCustomerGroupCode();
+        if (string.IsNullOrWhiteSpace(customerGroupCode))
+        {
+            return new CreateOrderResponse
+            {
+                IsSuccess = false,
+                Errors = new Dictionary<string, string>
+                {
+                    ["1"] = "Customer group claim was not found."
+                }
+            };
+        }
+
         var user = await userRepository.GetByUserIdAsync(request.Request.UserId.Trim(), cancellationToken);
         if (user is null)
         {
@@ -90,7 +109,13 @@ public class CreateOrderHandler(
         }
 
         var shipmentDetail = BuildShipmentDetail(request.Request, user, pickupAddress, pickupAddress, receiverAddress);
-        var entity = request.Request.ToEntity(user);
+        var entity = request.Request.ToEntity(user, customerGroupCode);
+        var pricingResolution = await ApplyPricingAsync(request.Request, entity, customerGroupCode, pricingRepository, itemRepository, uomGroupRepository, cancellationToken);
+        if (!pricingResolution.IsSuccess)
+        {
+            return pricingResolution;
+        }
+
         var expirationTimeoutMinutes = Math.Max(1, appSetting.OrderSetting?.ExpirationTimeoutMinutes ?? 60);
 
         if (request.Request.Insurance)
@@ -227,7 +252,7 @@ public class CreateOrderHandler(
             Quantity = request.Items.Sum(item => item.Quantity).ToString(),
             WoodenPacking = "no",
             Insurance = insuranceEnabled ? "yes" : "no",
-            ItemValueAmount = request.Items.Sum(item => item.Price * item.Quantity),
+            ItemValueAmount = request.Items.Sum(item => (item.Price ?? 0) * item.Quantity),
             ItemType = "buku",
             Volume = "10x3x10",
             ItemName = string.Join(", ", itemTitles),
@@ -260,6 +285,156 @@ public class CreateOrderHandler(
         }
 
         return errorDictionary;
+    }
+
+    private static async Task<CreateOrderResponse> ApplyPricingAsync(
+        CreateOrderRequest request,
+        OrderEntity entity,
+        string customerGroupCode,
+        IPricingRepository pricingRepository,
+        IItemRepository itemRepository,
+        IUomGroupRepository uomGroupRepository,
+        CancellationToken cancellationToken)
+    {
+        var pricing = await pricingRepository.GetActiveByCustomerGroupCodeAsync(customerGroupCode, DateTime.UtcNow, cancellationToken);
+        if (pricing is null)
+        {
+            return new CreateOrderResponse
+            {
+                IsSuccess = false,
+                Message = "No active pricing found for the customer group.",
+                Errors = new Dictionary<string, string>
+                {
+                    ["1"] = "No active pricing found for the customer group."
+                }
+            };
+        }
+
+        for (var index = 0; index < request.Items.Count; index++)
+        {
+            var requestItem = request.Items[index];
+            var orderItem = entity.Items[index];
+
+            if (string.IsNullOrWhiteSpace(orderItem.ItemId))
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(orderItem.UomCode))
+            {
+                return new CreateOrderResponse
+                {
+                    IsSuccess = false,
+                    Message = "UoM code is required for catalog-priced items.",
+                    Errors = new Dictionary<string, string>
+                    {
+                        ["1"] = $"UoM code is required for item '{orderItem.ItemId}'."
+                    }
+                };
+            }
+
+            var item = await itemRepository.GetByIdAsync(orderItem.ItemId, cancellationToken);
+            if (item is null)
+            {
+                return new CreateOrderResponse
+                {
+                    IsSuccess = false,
+                    Message = "Catalog item not found.",
+                    Errors = new Dictionary<string, string>
+                    {
+                        ["1"] = $"Item '{orderItem.ItemId}' was not found."
+                    }
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(item.UomGroupId))
+            {
+                return new CreateOrderResponse
+                {
+                    IsSuccess = false,
+                    Message = "Item UoM group is not configured.",
+                    Errors = new Dictionary<string, string>
+                    {
+                        ["1"] = $"Item '{item.Name}' does not have a UoM group."
+                    }
+                };
+            }
+
+            var uomGroup = await uomGroupRepository.GetByIdAsync(item.UomGroupId, cancellationToken);
+            if (uomGroup is null || !uomGroup.Details.Any(detail => string.Equals(detail.Code, orderItem.UomCode, StringComparison.OrdinalIgnoreCase) && detail.IsActive))
+            {
+                return new CreateOrderResponse
+                {
+                    IsSuccess = false,
+                    Message = "Item UoM is invalid.",
+                    Errors = new Dictionary<string, string>
+                    {
+                        ["1"] = $"UoM '{orderItem.UomCode}' is not valid for item '{item.Name}'."
+                    }
+                };
+            }
+
+            var pricingDetail = pricing.Details.FirstOrDefault(detail =>
+                string.Equals(detail.ItemId, orderItem.ItemId, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(detail.UomCode, orderItem.UomCode, StringComparison.OrdinalIgnoreCase));
+
+            if (pricingDetail is null)
+            {
+                return new CreateOrderResponse
+                {
+                    IsSuccess = false,
+                    Message = "Pricing detail not found for item and UoM.",
+                    Errors = new Dictionary<string, string>
+                    {
+                        ["1"] = $"Pricing for item '{item.Name}' and UoM '{orderItem.UomCode}' was not found."
+                    }
+                };
+            }
+
+            orderItem.Price = pricingDetail.Price;
+            orderItem.Title = string.IsNullOrWhiteSpace(orderItem.Title) ? item.Name : orderItem.Title;
+            if (string.IsNullOrWhiteSpace(orderItem.BookName))
+            {
+                orderItem.BookName = item.Name;
+            }
+
+            requestItem.Price = pricingDetail.Price;
+        }
+
+        entity.ItemsSubtotal = entity.Items.Sum(item => item.Price * item.Quantity);
+        entity.GrandTotal = entity.ItemsSubtotal + entity.ShippingFee + entity.ShippingInsurance;
+        entity.TotalPrice = entity.GrandTotal;
+
+        return new CreateOrderResponse
+        {
+            IsSuccess = true,
+            Message = "OK"
+        };
+    }
+
+    private string GetCustomerGroupCode()
+    {
+        var claimsPrincipal = _httpContextAccessor.HttpContext?.User;
+        if (claimsPrincipal is null)
+        {
+            return string.Empty;
+        }
+
+        string[] claimTypes = ["customer_group", "customer_group_code", "customerGroup", "customerGroupCode", "CUSTOMER_GROUP", "CUSTOMER_GROUP_CODE"];
+
+        foreach (var claimType in claimTypes)
+        {
+            var value = claimsPrincipal.Claims
+                .FirstOrDefault(claim => string.Equals(claim.Type, claimType, StringComparison.OrdinalIgnoreCase))
+                ?.Value;
+
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                return value.Trim();
+            }
+        }
+
+        return string.Empty;
     }
 
     private static DokuObject ToDokuObject(CreateOrderRequest request, MalakaBooks.Entity.OrderEntity entity, MalakaBooks.ConfigSetting.DokuSetting dokuSetting)

@@ -7,6 +7,208 @@ namespace MalakaBooks.Mediator.Common;
 
 public static class MappingExtensions
 {
+    public static ItemResponse ToResponse(this ItemEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        Name = entity.Name,
+        SAPCode = entity.SAPCode,
+        ItemType = entity.ItemType,
+        UomGroupId = entity.UomGroupId,
+        BaseUomCode = entity.BaseUomCode,
+        Description = entity.Description,
+        IsActive = entity.IsActive,
+        CreatedAt = entity.CreatedAt,
+        UpdatedAt = entity.UpdatedAt
+    };
+
+    public static ItemEntity ToEntity(this CreateItemRequest request) => new()
+    {
+        Name = request.Name.Trim(),
+        SAPCode = request.SAPCode.Trim(),
+        ItemType = request.ItemType.Trim(),
+        UomGroupId = string.IsNullOrWhiteSpace(request.UomGroupId) ? null : request.UomGroupId.Trim(),
+        BaseUomCode = request.BaseUomCode.Trim(),
+        Description = request.Description.Trim(),
+        IsActive = request.IsActive,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
+    };
+
+    public static void UpdateFrom(this ItemEntity entity, UpdateItemRequest request)
+    {
+        entity.Name = request.Name.Trim();
+        entity.SAPCode = request.SAPCode.Trim();
+        entity.ItemType = request.ItemType.Trim();
+        entity.UomGroupId = string.IsNullOrWhiteSpace(request.UomGroupId) ? null : request.UomGroupId.Trim();
+        entity.BaseUomCode = request.BaseUomCode.Trim();
+        entity.Description = request.Description.Trim();
+        entity.IsActive = request.IsActive;
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
+    public static UomGroupResponse ToResponse(this UomGroupEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        Name = entity.Name,
+        BaseUomCode = entity.BaseUomCode,
+        Details = entity.Details.Select(ToResponse).ToList(),
+        IsActive = entity.IsActive,
+        Alias = entity.Alias ?? string.Empty
+    };
+
+    public static UomGroupEntity ToEntity(this CreateUomGroupRequest request) => new()
+    {
+        Name = request.Name.Trim(),
+        BaseUomCode = request.BaseUomCode.Trim(),
+        Details = request.Details.Select(ToEntity).ToList(),
+        IsActive = request.IsActive
+    };
+
+    public static void UpdateFrom(this UomGroupEntity entity, UpdateUomGroupRequest request)
+    {
+        entity.Name = request.Name.Trim();
+        entity.BaseUomCode = request.BaseUomCode.Trim();
+        entity.Details = request.Details.Select(ToEntity).ToList();
+        entity.IsActive = request.IsActive;
+    }
+
+    public static UomGroupDetailResponse ToResponse(this UomGroupDetailEntity entity) => new()
+    {
+        Code = entity.Code,
+        Name = entity.Name,
+        ConversionFactor = entity.ConversionFactor,
+        IsBaseUom = entity.IsBaseUom,
+        SortOrder = entity.SortOrder,
+        IsActive = entity.IsActive
+    };
+
+    public static UomGroupDetailEntity ToEntity(this UomGroupDetailRequest request) => new()
+    {
+        Code = request.Code.Trim(),
+        Name = request.Name.Trim(),
+        ConversionFactor = request.ConversionFactor,
+        IsBaseUom = request.IsBaseUom,
+        SortOrder = request.SortOrder,
+        IsActive = request.IsActive
+    };
+
+    public static PricingResponse ToResponse(this PricingEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        Code = entity.Code,
+        Name = entity.Name,
+        CustomerGroupCode = entity.CustomerGroupCode,
+        StartDate = entity.StartDate,
+        EndDate = entity.EndDate,
+        IsActive = entity.IsActive,
+        Details = entity.Details.Select(ToResponse).ToList(),
+        CreatedAt = entity.CreatedAt,
+        UpdatedAt = entity.UpdatedAt,
+        Alias = entity.Alias ?? string.Empty
+    };
+
+    public static PricingEntity ToEntity(this CreatePricingRequest request) => new()
+    {
+        Code = request.Code.Trim(),
+        Name = request.Name.Trim(),
+        CustomerGroupCode = request.CustomerGroupCode.Trim(),
+        StartDate = request.StartDate,
+        EndDate = request.EndDate,
+        IsActive = request.IsActive,
+        Details = request.Details.Select(ToEntity).ToList(),
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
+    };
+
+    public static void UpdateFrom(this PricingEntity entity, UpdatePricingRequest request)
+    {
+        entity.Code = request.Code.Trim();
+        entity.Name = request.Name.Trim();
+        entity.CustomerGroupCode = request.CustomerGroupCode.Trim();
+        entity.StartDate = request.StartDate;
+        entity.EndDate = request.EndDate;
+        entity.IsActive = request.IsActive;
+        entity.Details = request.Details.Select(ToEntity).ToList();
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
+    public static PricingDetailResponse ToResponse(this PricingDetailEntity entity) => new()
+    {
+        ItemId = entity.ItemId,
+        UomCode = entity.UomCode,
+        Price = entity.Price
+    };
+
+    public static PricingDetailEntity ToEntity(this PricingDetailRequest request) => new()
+    {
+        ItemId = request.ItemId.Trim(),
+        UomCode = request.UomCode.Trim(),
+        Price = request.Price
+    };
+
+    public static WarehouseResponse ToResponse(this WarehouseEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        Code = entity.Code,
+        Name = entity.Name,
+        Description = entity.Description,
+        IsActive = entity.IsActive,
+        CreatedAt = entity.CreatedAt,
+        UpdatedAt = entity.UpdatedAt,
+        Alias = entity.Alias ?? string.Empty
+    };
+
+    public static WarehouseEntity ToEntity(this CreateWarehouseRequest request) => new()
+    {
+        Code = request.Code.Trim(),
+        Name = request.Name.Trim(),
+        Description = request.Description.Trim(),
+        IsActive = request.IsActive,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
+    };
+
+    public static void UpdateFrom(this WarehouseEntity entity, UpdateWarehouseRequest request)
+    {
+        entity.Code = request.Code.Trim();
+        entity.Name = request.Name.Trim();
+        entity.Description = request.Description.Trim();
+        entity.IsActive = request.IsActive;
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
+    public static WarehouseStockResponse ToResponse(this WarehouseStockEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        BaseUomCode = entity.BaseUomCode,
+        WarehouseId = entity.WarehouseId,
+        ItemId = entity.ItemId,
+        QuantityOnHand = entity.QuantityOnHand,
+        ReservedQuantity = entity.ReservedQuantity,
+        UpdatedAt = entity.UpdatedAt,
+        Alias = entity.Alias ?? string.Empty
+    };
+
+    public static WarehouseStockEntity ToEntity(this CreateWarehouseStockRequest request) => new()
+    {
+        BaseUomCode = request.BaseUomCode.Trim(),
+        WarehouseId = request.WarehouseId.Trim(),
+        ItemId = request.ItemId.Trim(),
+        QuantityOnHand = request.QuantityOnHand,
+        ReservedQuantity = request.ReservedQuantity,
+        UpdatedAt = DateTime.UtcNow
+    };
+
+    public static void UpdateFrom(this WarehouseStockEntity entity, UpdateWarehouseStockRequest request)
+    {
+        entity.BaseUomCode = request.BaseUomCode.Trim();
+        entity.WarehouseId = request.WarehouseId.Trim();
+        entity.ItemId = request.ItemId.Trim();
+        entity.QuantityOnHand = request.QuantityOnHand;
+        entity.ReservedQuantity = request.ReservedQuantity;
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
     public static InventoryMovementResponse ToResponse(this InventoryMovementEntity entity) => new()
     {
         Id = entity.Id ?? string.Empty,
@@ -273,7 +475,9 @@ public static class MappingExtensions
     public static OrderItemResponse ToResponse(this OrderItemEntity entity) => new()
     {
         BookId = entity.BookId,
+        ItemId = entity.ItemId,
         Title = entity.Title,
+        UomCode = entity.UomCode,
         CoverImage = string.Empty,
         Price = entity.Price,
         Quantity = entity.Quantity
@@ -282,16 +486,20 @@ public static class MappingExtensions
     public static OrderItemEntity ToEntity(this CreateOrderItemRequest request) => new()
     {
         BookId = request.BookId.Trim(),
+        ItemId = string.IsNullOrWhiteSpace(request.ItemId) ? null : request.ItemId.Trim(),
         BookName = request.BookName.Trim(),
         Title = request.Title.Trim(),
-        Price = request.Price,
+        UomCode = request.UomCode.Trim(),
+        Price = request.Price ?? 0,
         Quantity = request.Quantity
     };
 
     public static OrderItemResponse ToResponse(this OrderItemEntity entity, IReadOnlyDictionary<string, string> coverImagesByBookId) => new()
     {
         BookId = entity.BookId,
+        ItemId = entity.ItemId,
         Title = entity.Title,
+        UomCode = entity.UomCode,
         CoverImage = coverImagesByBookId.TryGetValue(entity.BookId, out var coverImage) ? coverImage : string.Empty,
         Price = entity.Price,
         Quantity = entity.Quantity
@@ -419,6 +627,7 @@ public static class MappingExtensions
     public static OrderUserResponse ToResponse(this OrderUserEntity entity) => new()
     {
         UserId = entity.UserId,
+        CustomerGroupCode = entity.CustomerGroupCode,
         FirstName = entity.FirstName,
         LastName = entity.LastName,
         Phone = entity.Phone
@@ -427,6 +636,7 @@ public static class MappingExtensions
     public static OrderUserEntity ToEntity(this UserEntity entity) => new()
     {
         UserId = entity.UserId.Trim(),
+        CustomerGroupCode = string.Empty,
         FirstName = entity.FirstName.Trim(),
         LastName = entity.LastName.Trim(),
         Phone = entity.Phone.Trim()
@@ -539,14 +749,17 @@ public static class MappingExtensions
         UpdatedAt = entity.UpdatedAt
     };
 
-    public static OrderEntity ToEntity(this CreateOrderRequest request, UserEntity user)
+    public static OrderEntity ToEntity(this CreateOrderRequest request, UserEntity user, string customerGroupCode)
     {
-        var itemsSubtotal = request.Items.Sum(item => item.Price * item.Quantity);
+        var itemsSubtotal = request.Items.Sum(item => (item.Price ?? 0) * item.Quantity);
         var shippingFee = request.ShippingFee;
+
+        var orderUser = user.ToEntity();
+        orderUser.CustomerGroupCode = customerGroupCode.Trim();
 
         return new OrderEntity
         {
-            User = user.ToEntity(),
+            User = orderUser,
             AddressId = request.AddressId.Trim(),
             Items = request.Items.Select(ToEntity).ToList(),
             PaymentId = request.PaymentId.Trim(),

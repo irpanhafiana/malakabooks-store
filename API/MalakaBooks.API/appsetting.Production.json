@@ -35,6 +35,9 @@
             "SimasrimCancelMethod": "POST",
             "SimasrimDetailResiPath": "/api/b2b/pengiriman/ekspedisi/detail-resi",
             "SimasrimDetailResiMethod": "POST"
+        },
+        "PricingSetting": {
+            "DefaultPublicCustomerGroupCode": "Non Member"
         }
     },
     "Logging": {
