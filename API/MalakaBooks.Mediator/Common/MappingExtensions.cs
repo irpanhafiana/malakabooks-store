@@ -7,6 +7,20 @@ namespace MalakaBooks.Mediator.Common;
 
 public static class MappingExtensions
 {
+    public static InventoryMovementResponse ToResponse(this InventoryMovementEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        BookId = entity.BookId,
+        BookTitle = entity.BookTitle,
+        MovementType = entity.MovementType,
+        QuantityDelta = entity.QuantityDelta,
+        StockBefore = entity.StockBefore,
+        StockAfter = entity.StockAfter,
+        ReferenceId = entity.ReferenceId,
+        Note = entity.Note,
+        CreatedAt = entity.CreatedAt
+    };
+
     public static BookResponse ToResponse(this BookEntity entity) => new()
     {
         Id = entity.Id ?? string.Empty,
@@ -24,6 +38,8 @@ public static class MappingExtensions
         Pages = entity.Pages,
         Weight = entity.Weight,
         Stock = entity.Stock,
+        QuantitySold = 0,
+        Rating = entity.AverageRating,
         AverageRating = entity.AverageRating,
         TotalReviews = entity.TotalReviews,
         CreatedAt = entity.CreatedAt,
@@ -47,6 +63,8 @@ public static class MappingExtensions
         Pages = entity.Pages,
         Weight = entity.Weight,
         Stock = entity.Stock,
+        QuantitySold = 0,
+        Rating = entity.AverageRating,
         AverageRating = entity.AverageRating,
         TotalReviews = entity.TotalReviews,
         CreatedAt = entity.CreatedAt,
@@ -708,24 +726,45 @@ public static class MappingExtensions
         Id = entity.Id ?? string.Empty,
         UserId = entity.UserId,
         OrderId = entity.OrderId,
+        BookId = entity.BookId,
         Subject = entity.Subject,
         Description = entity.Description,
         Status = entity.Status,
-        AdminResponse = entity.AdminResponse,
         CreatedAt = entity.CreatedAt,
         UpdatedAt = entity.UpdatedAt,
-        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList()
+        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList(),
+        Messages = entity.Messages.Select(ToResponse).ToList()
+    };
+
+    public static ComplaintMessageResponse ToResponse(this ComplaintMessageEntity entity) => new()
+    {
+        SenderType = entity.SenderType,
+        SenderId = entity.SenderId,
+        Message = entity.Message,
+        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList(),
+        CreatedAt = entity.CreatedAt
     };
 
     public static ComplaintEntity ToEntity(this CreateComplaintRequest request) => new()
     {
         UserId = request.UserId.Trim(),
         OrderId = request.OrderId.Trim(),
+        BookId = request.BookId.Trim(),
         Subject = request.Subject.Trim(),
         Description = request.Description.Trim(),
         AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         Status = "open",
-        AdminResponse = string.Empty,
+        Messages =
+        [
+            new ComplaintMessageEntity
+            {
+                SenderType = "customer",
+                SenderId = request.UserId.Trim(),
+                Message = request.Description.Trim(),
+                AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
+                CreatedAt = DateTime.UtcNow
+            }
+        ],
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow
     };
@@ -733,7 +772,14 @@ public static class MappingExtensions
     public static void UpdateFrom(this ComplaintEntity entity, RespondComplaintRequest request)
     {
         entity.Status = request.Status.Trim();
-        entity.AdminResponse = request.AdminResponse.Trim();
+        entity.Messages.Add(new ComplaintMessageEntity
+        {
+            SenderType = request.SenderType.Trim(),
+            SenderId = request.SenderId.Trim(),
+            Message = request.Message.Trim(),
+            AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
+            CreatedAt = DateTime.UtcNow
+        });
         entity.UpdatedAt = DateTime.UtcNow;
     }
 

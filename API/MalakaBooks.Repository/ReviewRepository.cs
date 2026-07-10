@@ -15,6 +15,9 @@ public class ReviewRepository : IReviewRepository
         _collection = database.GetCollection<ReviewEntity>(mongoDbSetting.Value.ReviewsCollection);
     }
 
+    public async Task<IReadOnlyCollection<ReviewEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
+        await _collection.Find(Builders<ReviewEntity>.Filter.Empty).ToListAsync(cancellationToken);
+
     public async Task<IReadOnlyCollection<ReviewEntity>> GetByBookIdAsync(string bookId, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.BookId == bookId).ToListAsync(cancellationToken);
 

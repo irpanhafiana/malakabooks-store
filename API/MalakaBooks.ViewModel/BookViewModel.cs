@@ -1,5 +1,19 @@
 namespace MalakaBooks.ViewModel;
 
+public class InventoryMovementResponse
+{
+    public string Id { get; set; } = string.Empty;
+    public string BookId { get; set; } = string.Empty;
+    public string BookTitle { get; set; } = string.Empty;
+    public string MovementType { get; set; } = string.Empty;
+    public int QuantityDelta { get; set; }
+    public int StockBefore { get; set; }
+    public int StockAfter { get; set; }
+    public string ReferenceId { get; set; } = string.Empty;
+    public string Note { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+}
+
 public class BookResponse
 {
     public string Id { get; set; } = string.Empty;
@@ -17,6 +31,8 @@ public class BookResponse
     public int Pages { get; set; }
     public decimal Weight { get; set; }
     public int Stock { get; set; }
+    public int QuantitySold { get; set; }
+    public double Rating { get; set; }
     public double AverageRating { get; set; }
     public int TotalReviews { get; set; }
     public DateTime CreatedAt { get; set; }

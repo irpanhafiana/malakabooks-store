@@ -5,7 +5,11 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.BookHandlers;
 
-public class GetBookByIdHandler(IBookRepository bookRepository, IAuthorRepository authorRepository) : IRequestHandler<GetBookByIdQuery, BookResponse?>
+public class GetBookByIdHandler(
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository,
+    IOrderRepository orderRepository,
+    IReviewRepository reviewRepository) : IRequestHandler<GetBookByIdQuery, BookResponse?>
 {
     public async Task<BookResponse?> Handle(GetBookByIdQuery request, CancellationToken cancellationToken)
     {
@@ -25,6 +29,23 @@ public class GetBookByIdHandler(IBookRepository bookRepository, IAuthorRepositor
             }
         }
 
-        return book.ToResponse(authors);
+        var response = book.ToResponse(authors);
+        var orders = await orderRepository.GetAllAsync(cancellationToken);
+        var reviews = await reviewRepository.GetByBookIdAsync(book.Id ?? string.Empty, cancellationToken);
+
+        response.QuantitySold = orders
+            .Where(order => string.Equals(order.PaymentStatus, "paid", StringComparison.OrdinalIgnoreCase))
+            .SelectMany(order => order.Items)
+            .Where(item => string.Equals(item.BookId, book.Id, StringComparison.OrdinalIgnoreCase))
+            .Sum(item => item.Quantity);
+
+        if (reviews.Count > 0)
+        {
+            response.Rating = reviews.Average(review => (double)review.Rating);
+            response.AverageRating = response.Rating;
+            response.TotalReviews = reviews.Count;
+        }
+
+        return response;
     }
 }

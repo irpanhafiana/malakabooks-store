@@ -1,4 +1,5 @@
 using MalakaBooks.IRepository;
+using MalakaBooks.Mediator.Common;
 using MalakaBooks.ViewModel;
 using MediatR;
 
@@ -9,17 +10,6 @@ public class GetAllComplaintsHandler(IComplaintRepository complaintRepository) :
     public async Task<IReadOnlyCollection<ComplaintResponse>> Handle(GetAllComplaintsQuery request, CancellationToken cancellationToken)
     {
         var complaints = await complaintRepository.GetAllAsync(cancellationToken);
-        return complaints.Select(entity => new ComplaintResponse
-        {
-            Id = entity.Id ?? string.Empty,
-            UserId = entity.UserId,
-            OrderId = entity.OrderId,
-            Subject = entity.Subject,
-            Description = entity.Description,
-            Status = entity.Status,
-            AdminResponse = entity.AdminResponse,
-            CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt
-        }).ToList();
+        return complaints.Select(entity => entity.ToResponse()).ToList();
     }
 }

@@ -7,7 +7,9 @@ namespace MalakaBooks.Mediator.IncomingPaymentHandlers;
 
 public class ProcessDokuPaymentNotificationHandler(
     IOrderRepository orderRepository,
-    IIncomingPaymentRepository incomingPaymentRepository)
+    IIncomingPaymentRepository incomingPaymentRepository,
+    IBookRepository bookRepository,
+    IInventoryMovementRepository inventoryMovementRepository)
     : IRequestHandler<ProcessDokuPaymentNotificationCommand, ProcessDokuPaymentResult>
 {
     public async Task<ProcessDokuPaymentResult> Handle(ProcessDokuPaymentNotificationCommand request, CancellationToken cancellationToken)
@@ -76,6 +78,7 @@ public class ProcessDokuPaymentNotificationHandler(
                 order.PaidAt = existingIncomingPayment.PaidAt;
                 order.UpdatedAt = DateTime.UtcNow;
 
+                await DeductStockAsync(order, cancellationToken);
                 await orderRepository.UpdateAsync(order.Id!, order, cancellationToken);
             }
 
@@ -132,6 +135,7 @@ public class ProcessDokuPaymentNotificationHandler(
         order.PaidAt = paidAt;
         order.UpdatedAt = DateTime.UtcNow;
 
+        await DeductStockAsync(order, cancellationToken);
         await orderRepository.UpdateAsync(order.Id!, order, cancellationToken);
 
         return new ProcessDokuPaymentResult
@@ -154,4 +158,36 @@ public class ProcessDokuPaymentNotificationHandler(
             "completed" => "paid",
             _ => status?.Trim().ToLowerInvariant() ?? string.Empty
         };
+
+    private async Task DeductStockAsync(OrderEntity order, CancellationToken cancellationToken)
+    {
+        foreach (var item in order.Items.Where(item => !string.IsNullOrWhiteSpace(item.BookId) && item.Quantity > 0))
+        {
+            var currentBook = await bookRepository.GetByIdAsync(item.BookId, cancellationToken);
+            if (currentBook is null)
+            {
+                continue;
+            }
+
+            var stockBefore = currentBook.Stock;
+            var updatedBook = await bookRepository.AdjustStockAsync(item.BookId, -item.Quantity, cancellationToken);
+            if (updatedBook is null)
+            {
+                continue;
+            }
+
+            await inventoryMovementRepository.CreateAsync(new InventoryMovementEntity
+            {
+                BookId = item.BookId,
+                BookTitle = string.IsNullOrWhiteSpace(currentBook.Title) ? item.Title : currentBook.Title,
+                MovementType = "sale",
+                QuantityDelta = -item.Quantity,
+                StockBefore = stockBefore,
+                StockAfter = updatedBook.Stock,
+                ReferenceId = order.Id ?? string.Empty,
+                Note = $"Stock deducted after payment confirmation for order '{order.Id}'.",
+                CreatedAt = DateTime.UtcNow
+            }, cancellationToken);
+        }
+    }
 }

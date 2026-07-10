@@ -10,10 +10,12 @@ public class ComplaintEntity : BaseObject
     [BsonRepresentation(BsonType.ObjectId)]
     public string OrderId { get; set; } = string.Empty;
 
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string BookId { get; set; } = string.Empty;
+
     public string Subject { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Status { get; set; } = "open";
-    public string AdminResponse { get; set; } = string.Empty;
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -22,4 +24,16 @@ public class ComplaintEntity : BaseObject
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     public List<AdditionalImage> AdditionalImages { get; set; } = [];
+    public List<ComplaintMessageEntity> Messages { get; set; } = [];
+}
+
+public class ComplaintMessageEntity
+{
+    public string SenderType { get; set; } = string.Empty;
+    public string SenderId { get; set; } = string.Empty;
+    public string Message { get; set; } = string.Empty;
+    public List<AdditionalImage> AdditionalImages { get; set; } = [];
+
+    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
