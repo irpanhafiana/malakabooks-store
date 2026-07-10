@@ -1,0 +1,42 @@
+using MalakaBooks.Entity;
+using MalakaBooks.IRepository;
+using MalakaBooks.Repository.Configuration;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+
+namespace MalakaBooks.Repository;
+
+public class ItemRepository : IItemRepository
+{
+    private readonly IMongoCollection<ItemEntity> _collection;
+
+    public ItemRepository(IMongoDatabase database, IOptions<MongoDbSetting> mongoDbSetting)
+    {
+        _collection = database.GetCollection<ItemEntity>(mongoDbSetting.Value.ItemsCollection);
+    }
+
+    public async Task<IReadOnlyCollection<ItemEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
+        await _collection.Find(Builders<ItemEntity>.Filter.Empty).ToListAsync(cancellationToken);
+
+    public async Task<ItemEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
+        await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+
+    public async Task<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
+    {
+        await _collection.InsertOneAsync(item, cancellationToken: cancellationToken);
+        return item;
+    }
+
+    public async Task<bool> UpdateAsync(string id, ItemEntity item, CancellationToken cancellationToken = default)
+    {
+        item.Id = id;
+        var result = await _collection.ReplaceOneAsync(x => x.Id == id, item, cancellationToken: cancellationToken);
+        return result.ModifiedCount > 0;
+    }
+
+    public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
+    {
+        var result = await _collection.DeleteOneAsync(x => x.Id == id, cancellationToken);
+        return result.DeletedCount > 0;
+    }
+}

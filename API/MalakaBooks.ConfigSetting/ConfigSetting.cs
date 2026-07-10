@@ -6,8 +6,14 @@ namespace MalakaBooks.ConfigSetting
         public ImageSetting? ImageSetting { get; set; }
         public RateLimiterSetting? RateLimiterSetting { get; set; }
         public OrderSetting? OrderSetting { get; set; }
+    public PricingSetting? PricingSetting { get; set; }
         //public SimasrimSetting? SimasrimSetting { get; set; }
     }
+
+public class PricingSetting
+{
+    public string DefaultPublicCustomerGroupCode { get; set; } = string.Empty;
+}
 
     public class SimasrimSetting
     {
