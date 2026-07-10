@@ -89,4 +89,19 @@ export class PaymentApiService {
       return false;
     }
   }
+
+  async calculatePaymentFee(paymentId: string, itemsSubtotal: number): Promise<number> {
+    try {
+      const envelope = await firstValueFrom(
+        this.http.post<ApiResponse<any>>(`${this.BASE_URL}/customer/Payments/calculate-fees`, {
+          paymentId,
+          itemsSubtotal
+        })
+      );
+      return envelope?.data?.totalFeeAmount ?? 0;
+    } catch (e) {
+      this.logger.error('PaymentApiService.calculatePaymentFee', `Gagal hit kalkulasi fee payment ${paymentId}:`, e);
+      return 0;
+    }
+  }
 }

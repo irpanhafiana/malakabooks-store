@@ -1,0 +1,28 @@
+<form [formGroup]="formGroup" class="flex flex-col gap-4 text-slate-700">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <app-admin-input label="Nama Item" placeholder="Contoh: Novel Laskar Pelangi" [control]="nameControl"></app-admin-input>
+    <app-admin-input label="SAP Code" placeholder="Contoh: SAP-00091" [control]="sapCodeControl"></app-admin-input>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <app-admin-select label="Tipe Item" [control]="$any(itemTypeControl)" [options]="itemTypeOptions"></app-admin-select>
+    <app-admin-select label="Group UoM" [control]="$any(uomGroupIdControl)" [options]="uomGroupOptions()"></app-admin-select>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <app-admin-input label="Base UoM Code" placeholder="Contoh: PCS" [control]="baseUomCodeControl" [readonly]="uomGroupIdControl.value !== ''"></app-admin-input>
+    <div class="flex items-center gap-2 pt-6">
+      <input type="checkbox" id="isActive" [formControl]="isActiveControl" class="w-4 h-4 text-primary-600 border-slate-300 rounded focus:ring-primary-500">
+      <label for="isActive" class="text-sm font-medium text-slate-700">Aktif</label>
+    </div>
+  </div>
+
+  <app-admin-input label="Deskripsi" placeholder="Masukkan deskripsi item ..." [control]="descriptionControl"></app-admin-input>
+
+  <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
+    <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
+    <app-admin-button (click)="onSubmitForm()" [disabled]="formGroup.invalid" type="button" variant="primary" size="sm">
+      Simpan
+    </app-admin-button>
+  </div>
+</form>

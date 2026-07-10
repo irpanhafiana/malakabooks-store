@@ -1,0 +1,17 @@
+<form [formGroup]="formGroup" class="flex flex-col gap-4 text-slate-700">
+  <app-admin-input label="Kode Gudang" placeholder="Contoh: WH-01" [control]="codeControl"></app-admin-input>
+  <app-admin-input label="Nama Gudang" placeholder="Contoh: Gudang Jakarta Pusat" [control]="nameControl"></app-admin-input>
+  <app-admin-input label="Deskripsi" placeholder="Masukkan deskripsi gudang ..." [control]="descriptionControl"></app-admin-input>
+
+  <div class="flex items-center gap-2">
+    <input type="checkbox" id="isActive" [formControl]="isActiveControl" class="w-4 h-4 text-primary-600 border-slate-300 rounded focus:ring-primary-500">
+    <label for="isActive" class="text-sm font-medium text-slate-700">Aktif</label>
+  </div>
+
+  <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
+    <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
+    <app-admin-button (click)="onSubmitForm()" [disabled]="formGroup.invalid" type="button" variant="primary" size="sm">
+      Simpan
+    </app-admin-button>
+  </div>
+</form>

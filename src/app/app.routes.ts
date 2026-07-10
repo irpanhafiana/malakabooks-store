@@ -38,6 +38,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/products/form-page/products-form-page.component').then(c => c.ProductsFormPageComponent)
       },
       { path: 'categories', loadComponent: () => import('./features/admin/categories/list/categories-list.component').then(c => c.CategoriesListComponent) },
+      { path: 'uoms', loadComponent: () => import('./features/admin/uoms/list/uom-groups-list.component').then(c => c.UomGroupsListComponent) },
+      { path: 'warehouses', loadComponent: () => import('./features/admin/warehouses/list/warehouses-list.component').then(c => c.WarehousesListComponent) },
+      { path: 'items', loadComponent: () => import('./features/admin/items/list/items-list.component').then(c => c.ItemsListComponent) },
+      { path: 'stocks', loadComponent: () => import('./features/admin/stocks/list/stocks-list.component').then(c => c.StocksListComponent) },
+      { path: 'pricings', loadComponent: () => import('./features/admin/pricings/list/pricings-list.component').then(c => c.PricingsListComponent) },
+      { path: 'inventory-movements', loadComponent: () => import('./features/admin/inventory-movements/inventory-movements.component').then(c => c.InventoryMovementsComponent) },
       { path: 'payment-methods', loadComponent: () => import('./features/admin/payment-methods/list/payment-methods-list.component').then(c => c.PaymentMethodsListComponent) },
       { path: 'authors', loadComponent: () => import('./features/admin/authors/list/authors-list.component').then(c => c.AuthorsListComponent) },
       { path: 'promotion-banners', loadComponent: () => import('./features/admin/promotion-banners/list/promotion-banners-list.component').then(c => c.PromotionBannersListComponent) },

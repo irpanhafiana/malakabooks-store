@@ -251,28 +251,14 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  calculatePaymentFee(paymentId: string | null) {
+  async calculatePaymentFee(paymentId: string | null) {
     if (!paymentId) {
       this.paymentFee.set(0);
       return;
     }
-    const payment = this.payments().find(p => p.id === paymentId);
-    if (!payment || !payment.fees) {
-      this.paymentFee.set(0);
-      return;
-    }
-
-    let totalFee = 0;
     const subtotal = this.cartStore.subtotal();
-
-    for (const fee of payment.fees) {
-      if (fee.type === 'PERCENTAGE') {
-        totalFee += subtotal * (fee.value / 100);
-      } else {
-        totalFee += fee.value;
-      }
-    }
-    this.paymentFee.set(totalFee);
+    const fee = await this.paymentApi.calculatePaymentFee(paymentId, subtotal);
+    this.paymentFee.set(fee);
   }
 
   async loadCouriers() {

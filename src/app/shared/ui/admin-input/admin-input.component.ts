@@ -20,6 +20,7 @@ export class AdminInputComponent {
   readonly icon = input<string | undefined>(undefined);
   readonly customClass = input<string>('', { alias: 'class' });
   readonly formatNumber = input<boolean>(false);
+  readonly readonly = input<boolean>(false);
 
   // Password toggle
   showPassword = signal<boolean>(false);

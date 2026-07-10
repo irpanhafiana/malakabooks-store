@@ -10,7 +10,7 @@
     }
     <input #inputEl [id]="id()" [type]="formatNumber() ? 'text' : inputType()"
       [inputMode]="formatNumber() ? 'numeric' : 'text'" [placeholder]="placeholder()" [formControl]="control()"
-      [class]="inputClass()" (focus)="onFocus()" (input)="onInput()" />
+      [class]="inputClass()" [readOnly]="readonly()" (focus)="onFocus()" (input)="onInput()" />
     @if (type() === 'password') {
       <button type="button" (click)="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
         <app-icon [name]="showPassword() ? 'eye-off' : 'eye'" size="16"></app-icon>

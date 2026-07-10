@@ -1,0 +1,105 @@
+<div class=" flex flex-col gap-6">
+
+  <!-- Top Action bar & Search -->
+  <div class="flex items-center justify-between">
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Kelola Stok Gudang</h2>
+
+    <div class="flex flex-row gap-2 justify-center items-center">
+      <!-- Search Input -->
+      <div class="relative w-full hidden sm:block">
+        <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
+        <input type="text" placeholder="Cari Stok Gudang ..." [value]="searchQuery()" (input)="onSearch($event)"
+          class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
+      </div>
+      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0" title="Refresh Data">
+        <app-icon name="refresh" size="14"></app-icon>
+        Segarkan
+      </app-admin-button>
+
+      <app-admin-button (click)="openAddModal()" variant="primary" size="md" class="shrink-0">
+        <app-icon name="plus" size="14"></app-icon>
+        Tambah Stok
+      </app-admin-button>
+    </div>
+
+  </div>
+
+  <!-- Mobile Search (visible only on small screens) -->
+  <div class="sm:hidden relative w-full">
+    <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
+    <input type="text" placeholder="Cari stok..." [value]="searchQuery()" (input)="onSearch($event)"
+      class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
+  </div>
+
+  <!-- Data Table -->
+  @if (stockStore.loading()) {
+  <div class="bg-white rounded-2xl border border-slate-200">
+    <app-spinner text="Loading warehouse stocks..."></app-spinner>
+  </div>
+  } @else {
+  <app-table>
+    <tr table-headers>
+      <th class="px-5 py-4">Gudang</th>
+      <th class="px-5 py-4">Nama Item</th>
+      <th class="px-5 py-4">Stok Fisik</th>
+      <th class="px-5 py-4">Reserved</th>
+      <th class="px-5 py-4">UoM</th>
+      <th class="px-5 py-4 text-right">Aksi</th>
+    </tr>
+
+    <ng-container table-rows>
+      @for (stock of pagination.paged(); track stock.id) {
+      <tr class="hover:bg-slate-50/50 transition-colors">
+        <td class="px-5 py-4 font-bold text-slate-800 text-xs">
+          {{ warehouseMap().get(stock.warehouseId) || '-' }}
+        </td>
+        <td class="px-5 py-4 text-xs font-semibold text-slate-700">
+          {{ itemMap().get(stock.itemId) || '-' }}
+        </td>
+        <td class="px-5 py-4 text-xs font-semibold text-slate-600">
+          {{ stock.quantityOnHand }}
+        </td>
+        <td class="px-5 py-4 text-xs text-rose-500 font-semibold">
+          {{ stock.reservedQuantity }}
+        </td>
+        <td class="px-5 py-4 text-xs font-semibold text-slate-500">
+          <code class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-slate-600 font-mono">{{ stock.baseUomCode }}</code>
+        </td>
+        <td class="px-5 py-4 text-right">
+          <div class="flex justify-end gap-1.5">
+            <button (click)="openEditModal(stock)"
+              class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer transition-colors">
+              <app-icon name="edit" size="14"></app-icon>
+            </button>
+            <button (click)="onDelete(stock.id)"
+              class="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors">
+              <app-icon name="trash" size="14"></app-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="6" class="p-8 text-center text-slate-400">Tidak ada Catatan Stok ditemukan.</td>
+      </tr>
+      }
+    </ng-container>
+
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+      Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
+    </div>
+  </app-table>
+
+  <div class="flex justify-center w-full">
+    <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages() || 1"
+      (pageChange)="pagination.setPage($event)"></app-pagination>
+  </div>
+  }
+
+  <!-- Add/Edit Stock Modal Form -->
+  <app-modal [(isOpen)]="isModalOpen" [title]="editStock() ? 'Edit Stok Gudang' : 'Tambah Stok Gudang Baru'">
+    <app-stocks-form [stock]="editStock()" (onCancel)="closeModal()" (onSave)="closeModal()">
+    </app-stocks-form>
+  </app-modal>
+
+</div>

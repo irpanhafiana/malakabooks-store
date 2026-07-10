@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
 import { isAdminSession } from '../auth/session.util';
 import { CategoryApiService } from './category-api.service';
+import { PricingApiService } from './pricing-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ import { CategoryApiService } from './category-api.service';
 export class ProductApiService {
   private readonly http = inject(HttpClient);
   private readonly categoryApi = inject(CategoryApiService);
+  private readonly pricingApi = inject(PricingApiService);
   private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
@@ -59,10 +61,28 @@ export class ProductApiService {
       const categories = await this.categoryApi.getCategories();
       const catMap = new Map(categories.map(c => [c.id, c.name]));
 
-      return books.map((b: BookDto) => ({
+      const products = books.map((b: BookDto) => ({
         ...this.mapBookToProduct(b),
         categoryName: catMap.get(b.categoryId) || 'Lainnya'
       }));
+
+      // Look up customer prices in parallel if logged in (not admin)
+      if (!isAdminSession()) {
+        await Promise.all(
+          products.map(async (p) => {
+            try {
+              const res = await this.pricingApi.lookupCustomerPrice(p.id, 'PCS');
+              if (res && res.price > 0) {
+                p.price = res.price;
+              }
+            } catch (err) {
+              // Fail silently, use default book price
+            }
+          })
+        );
+      }
+
+      return products;
     } catch (e) {
       this.logger.error('ProductApiService.getProducts', 'Gagal mengambil daftar produk:', e);
       throw e;
@@ -75,7 +95,20 @@ export class ProductApiService {
       const envelope = await firstValueFrom(this.http.get<ApiResponse<BookDto>>(endpoint));
       const book = envelope?.data;
       if (!book) return undefined;
-      return this.mapBookToProduct(book);
+      const product = this.mapBookToProduct(book);
+
+      if (!isAdminSession()) {
+        try {
+          const res = await this.pricingApi.lookupCustomerPrice(id, 'PCS');
+          if (res && res.price > 0) {
+            product.price = res.price;
+          }
+        } catch (err) {
+          // Fail silently
+        }
+      }
+
+      return product;
     } catch (e) {
       this.logger.error('ProductApiService.getProductById', `Gagal mengambil detail produk ${id}:`, e);
       return undefined;

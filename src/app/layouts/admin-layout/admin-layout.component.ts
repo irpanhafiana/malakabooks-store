@@ -39,7 +39,13 @@ export class AdminLayoutComponent {
           url.includes('/categories') ||
           url.includes('/promotion-banners') ||
           url.includes('/authors') ||
-          url.includes('/users');
+          url.includes('/users') ||
+          url.includes('/uoms') ||
+          url.includes('/warehouses') ||
+          url.includes('/items') ||
+          url.includes('/stocks') ||
+          url.includes('/pricings') ||
+          url.includes('/inventory-movements');
         if (isMasterRoute) {
           this.isMasterDataOpen.set(true);
         }
@@ -48,6 +54,18 @@ export class AdminLayoutComponent {
           this.activeRouteName.set('Kelola Produk');
         } else if (url.includes('/categories')) {
           this.activeRouteName.set('Kelola Kategori');
+        } else if (url.includes('/uoms')) {
+          this.activeRouteName.set('Kelola Satuan Ukuran (UoM)');
+        } else if (url.includes('/warehouses')) {
+          this.activeRouteName.set('Kelola Gudang');
+        } else if (url.includes('/items')) {
+          this.activeRouteName.set('Kelola Catalog Items');
+        } else if (url.includes('/stocks')) {
+          this.activeRouteName.set('Kelola Stok Gudang');
+        } else if (url.includes('/pricings')) {
+          this.activeRouteName.set('Kelola Pricing Master');
+        } else if (url.includes('/inventory-movements')) {
+          this.activeRouteName.set('Riwayat Mutasi Stok');
         } else if (url.includes('/payment-methods')) {
           this.activeRouteName.set('Kelola Metode Pembayaran');
         } else if (url.includes('/authors')) {

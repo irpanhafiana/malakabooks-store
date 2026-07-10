@@ -1,0 +1,90 @@
+<div class=" flex flex-col gap-6">
+
+  <!-- Top Action bar & Search -->
+  <div class="flex items-center justify-between">
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Riwayat Mutasi Stok (Inventory Movements)</h2>
+
+    <div class="flex flex-row gap-2 justify-center items-center">
+      <!-- Book Filter Dropdown -->
+      <select (change)="onBookChange($event)" [value]="selectedBookId()"
+        class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
+        @for (opt of bookOptions(); track opt.id) {
+          <option [value]="opt.id">{{ opt.title }}</option>
+        }
+      </select>
+
+      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0" title="Refresh Data">
+        <app-icon name="refresh" size="14"></app-icon>
+        Segarkan
+      </app-admin-button>
+    </div>
+
+  </div>
+
+  <!-- Data Table -->
+  @if (movementStore.loading()) {
+  <div class="bg-white rounded-2xl border border-slate-200">
+    <app-spinner text="Loading inventory logs..."></app-spinner>
+  </div>
+  } @else {
+  <app-table>
+    <tr table-headers>
+      <th class="px-5 py-4">Buku</th>
+      <th class="px-5 py-4">Tipe Mutasi</th>
+      <th class="px-5 py-4">Quantity Delta</th>
+      <th class="px-5 py-4">Stok Sebelum</th>
+      <th class="px-5 py-4">Stok Sesudah</th>
+      <th class="px-5 py-4">Referensi</th>
+      <th class="px-5 py-4">Catatan</th>
+      <th class="px-5 py-4">Waktu</th>
+    </tr>
+
+    <ng-container table-rows>
+      @for (log of pagination.paged(); track log.id) {
+      <tr class="hover:bg-slate-50/50 transition-colors">
+        <td class="px-5 py-4 font-bold text-slate-800 text-xs">
+          {{ log.bookTitle }}
+        </td>
+        <td class="px-5 py-4 text-xs font-semibold">
+          @if (log.movementType === 'STOCK_IN' || log.quantityDelta > 0) {
+            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-100 text-green-700">Masuk</span>
+          } @else {
+            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-100 text-rose-700">Keluar</span>
+          }
+        </td>
+        <td class="px-5 py-4 text-xs font-semibold"
+            [class.text-green-600]="log.quantityDelta > 0"
+            [class.text-rose-600]="log.quantityDelta < 0">
+          {{ log.quantityDelta > 0 ? '+' : '' }}{{ log.quantityDelta }}
+        </td>
+        <td class="px-5 py-4 text-xs text-slate-500 font-semibold">
+          {{ log.stockBefore }}
+        </td>
+        <td class="px-5 py-4 text-xs text-slate-700 font-bold">
+          {{ log.stockAfter }}
+        </td>
+        <td class="px-5 py-4 text-xs font-semibold text-slate-500">
+          <code class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-slate-600 font-mono">{{ log.referenceId || '-' }}</code>
+        </td>
+        <td class="px-5 py-4 text-xs text-slate-500">{{ log.note }}</td>
+        <td class="px-5 py-4 text-xs text-slate-400 font-semibold">{{ log.createdAt | date:'medium' }}</td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="8" class="p-8 text-center text-slate-400">Tidak ada riwayat mutasi stok ditemukan.</td>
+      </tr>
+      }
+    </ng-container>
+
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+      Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
+    </div>
+  </app-table>
+
+  <div class="flex justify-center w-full">
+    <app-pagination [currentPage]="pagination.page()" [totalPages]="pagination.totalPages() || 1"
+      (pageChange)="pagination.setPage($event)"></app-pagination>
+  </div>
+  }
+
+</div>
