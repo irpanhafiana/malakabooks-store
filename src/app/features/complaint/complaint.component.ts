@@ -12,6 +12,8 @@ import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.
 import { InputComponent } from '../../shared/ui/input/input.component';
 import { TextareaComponent } from '../../shared/ui/textarea/textarea.component';
 import { StatusBadgeComponent } from '../../shared/ui/status-badge/status-badge.component';
+import { OrderApiService } from '../../core/services/order-api.service';
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +29,8 @@ import { StatusBadgeComponent } from '../../shared/ui/status-badge/status-badge.
     ButtonComponent,
     BottomSheetComponent,
     InputComponent,
-    TextareaComponent
+    TextareaComponent,
+    ModalComponent
   ],
   templateUrl: './complaint.component.html',
   styleUrl: './complaint.component.css'
@@ -37,15 +40,26 @@ export class ComplaintComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
   protected readonly orderStore = inject(OrderStore);
   protected readonly complaintStore = inject(ComplaintStore);
+  private readonly orderApi = inject(OrderApiService);
 
   protected isFormOpen = signal<boolean>(false);
+  protected isChatOpen = signal<boolean>(false);
+  protected selectedComplaint = signal<any>(null);
   protected readonly submitting = signal<boolean>(false);
+  protected readonly replying = signal<boolean>(false);
+  protected previewImage = signal<string | null>(null);
 
   protected readonly form = this.fb.group({
     orderId: ['', Validators.required],
+    bookId: ['', Validators.required],
     subject: ['', [Validators.required, Validators.maxLength(100)]],
     description: ['', [Validators.required, Validators.maxLength(1000)]]
   });
+
+  protected readonly replyControl = this.fb.control('', Validators.required);
+  protected complaintImages = signal<{no: number, image: string}[]>([]);
+  protected replyImages = signal<{no: number, image: string}[]>([]);
+  protected selectedOrderItems = signal<any[]>([]);
 
   ngOnInit() {
     const user = this.authStore.currentUser();
@@ -55,13 +69,111 @@ export class ComplaintComponent implements OnInit {
     }
   }
 
+  async onOrderChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const orderId = target.value;
+    if (orderId) {
+      this.form.controls.bookId.reset();
+      this.form.controls.bookId.setValue('');
+      const order = await this.orderApi.getOrderById(orderId);
+      if (order) {
+        this.selectedOrderItems.set(order.items);
+      } else {
+        this.selectedOrderItems.set([]);
+      }
+    }
+  }
+
   protected openForm() {
-    this.form.reset({ orderId: '', subject: '', description: '' });
+    this.form.reset({ orderId: '', bookId: '', subject: '', description: '' });
+    this.complaintImages.set([]);
+    this.selectedOrderItems.set([]);
     this.isFormOpen.set(true);
   }
 
   protected closeForm() {
     this.isFormOpen.set(false);
+  }
+
+  protected openImagePreview(url: string) {
+    this.previewImage.set(url);
+  }
+
+  protected closeImagePreview() {
+    this.previewImage.set(null);
+  }
+
+  protected openChat(complaint: any) {
+    this.selectedComplaint.set(complaint);
+    this.replyControl.reset();
+    this.replyImages.set([]);
+    this.isChatOpen.set(true);
+  }
+
+  protected closeChat() {
+    this.isChatOpen.set(false);
+    this.selectedComplaint.set(null);
+  }
+
+  onImageSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64 = e.target?.result as string;
+        const current = this.complaintImages();
+        this.complaintImages.set([...current, { no: current.length + 1, image: base64 }]);
+      };
+      reader.readAsDataURL(file);
+    }
+    (event.target as HTMLInputElement).value = '';
+  }
+
+  removeImage(index: number) {
+    const current = this.complaintImages();
+    this.complaintImages.set(current.filter((_, i) => i !== index));
+  }
+
+  onReplyImageSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64 = e.target?.result as string;
+        const current = this.replyImages();
+        this.replyImages.set([...current, { no: current.length + 1, image: base64 }]);
+      };
+      reader.readAsDataURL(file);
+    }
+    (event.target as HTMLInputElement).value = '';
+  }
+
+  removeReplyImage(index: number) {
+    const current = this.replyImages();
+    this.replyImages.set(current.filter((_, i) => i !== index));
+  }
+
+  protected async submitReply() {
+    if (this.replyControl.invalid) return;
+    const complaint = this.selectedComplaint();
+    const user = this.authStore.currentUser();
+    if (!complaint || !user) return;
+
+    this.replying.set(true);
+    const ok = await this.complaintStore.reply(complaint.id, {
+      status: complaint.status,
+      message: this.replyControl.value!.trim(),
+      senderId: user.id,
+      senderType: 'customer',
+      additionalImages: this.replyImages()
+    });
+    this.replying.set(false);
+    if (ok) {
+      this.replyControl.reset();
+      this.replyImages.set([]);
+      const updated = this.complaintStore.complaints().find(c => c.id === complaint.id);
+      if (updated) this.selectedComplaint.set(updated);
+    }
   }
 
   protected async submitComplaint() {
@@ -70,14 +182,20 @@ export class ComplaintComponent implements OnInit {
     if (!user) return;
 
     this.submitting.set(true);
-    const { orderId, subject, description } = this.form.value;
+    const { orderId, bookId, subject, description } = this.form.value;
     const ok = await this.complaintStore.create({
       userId: user.id,
       orderId: orderId!,
+      bookId: bookId!,
       subject: subject!.trim(),
-      description: description!.trim()
+      description: description!.trim(),
+      additionalImages: this.complaintImages()
     });
     this.submitting.set(false);
-    if (ok) this.isFormOpen.set(false);
+    if (ok) {
+      this.isFormOpen.set(false);
+      this.complaintImages.set([]);
+      this.selectedOrderItems.set([]);
+    }
   }
 }

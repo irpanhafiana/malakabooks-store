@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { Complaint, CreateComplaintPayload, RespondComplaintPayload } from '../core/models';
+import { Complaint, CreateComplaintPayload, RespondComplaintPayload, ReplyComplaintPayload } from '../core/models';
 import { ComplaintApiService } from '../core/services/complaint-api.service';
 import { ToastService } from '../core/services/toast.service';
 
@@ -71,6 +71,21 @@ export class ComplaintStore {
       return true;
     } catch {
       this.toastService.error('Gagal menyimpan respons.');
+      return false;
+    }
+  }
+
+  async reply(id: string, payload: ReplyComplaintPayload): Promise<boolean> {
+    try {
+      const updated = await this.complaintApi.replyComplaint(id, payload);
+      this.state.update(s => ({
+        ...s,
+        complaints: s.complaints.map(c => c.id === id ? updated : c)
+      }));
+      this.toastService.success('Balasan berhasil dikirim.');
+      return true;
+    } catch {
+      this.toastService.error('Gagal mengirim balasan.');
       return false;
     }
   }

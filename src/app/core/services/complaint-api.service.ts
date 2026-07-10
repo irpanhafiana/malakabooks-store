@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Complaint, CreateComplaintPayload, RespondComplaintPayload } from '../models';
+import { Complaint, CreateComplaintPayload, RespondComplaintPayload, ReplyComplaintPayload } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
@@ -18,10 +18,12 @@ export class ComplaintApiService {
       id: c.id,
       userId: c.userId,
       orderId: c.orderId,
+      bookId: c.bookId,
       subject: c.subject,
       description: c.description,
       status: c.status,
-      adminResponse: c.adminResponse || '',
+      additionalImages: c.additionalImages || [],
+      messages: c.messages || [],
       createdAt: c.createdAt,
       updatedAt: c.updatedAt
     };
@@ -56,6 +58,11 @@ export class ComplaintApiService {
 
   async respondComplaint(id: string, payload: RespondComplaintPayload): Promise<Complaint> {
     const res = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/Complaints/${id}/respond`, payload));
+    return this.mapComplaint(res?.data);
+  }
+
+  async replyComplaint(id: string, payload: ReplyComplaintPayload): Promise<Complaint> {
+    const res = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Complaints/${id}/reply`, payload));
     return this.mapComplaint(res?.data);
   }
 }

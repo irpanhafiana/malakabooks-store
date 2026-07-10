@@ -4,6 +4,56 @@
     <p><strong>Subjek:</strong> {{ complaint()?.subject }}</p>
     <p><strong>Deskripsi:</strong> {{ complaint()?.description }}</p>
     <p><strong>Order ID:</strong> {{ complaint()?.orderId }}</p>
+
+    @if (complaint()?.additionalImages?.length) {
+      <div class="flex flex-wrap gap-2 mt-2">
+        @for (img of complaint()?.additionalImages; track img.no) {
+          <img [src]="img.image" (click)="openImagePreview(img.image)" class="w-16 h-16 object-cover rounded-lg border border-slate-200 cursor-pointer hover:opacity-80 transition-opacity">
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Chat Messages -->
+  <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-slate-50 border border-slate-200 rounded-xl h-80">
+    <!-- Replies -->
+    @for (msg of complaint()?.messages; track msg.createdAt) {
+    <div class="flex" [class.justify-end]="msg.senderType === 'admin'">
+      <div class="p-3 rounded-2xl max-w-[85%] text-sm shadow-sm"
+        [class.bg-primary-500]="msg.senderType === 'admin'"
+        [class.text-white]="msg.senderType === 'admin'"
+        [class.rounded-tr-none]="msg.senderType === 'admin'"
+        [class.bg-white]="msg.senderType === 'customer'"
+        [class.text-slate-700]="msg.senderType === 'customer'"
+        [class.rounded-tl-none]="msg.senderType === 'customer'"
+        [class.border]="msg.senderType === 'customer'"
+        [class.border-slate-200]="msg.senderType === 'customer'">
+        
+        @if (msg.senderType === 'customer') {
+          <p class="text-xs font-bold text-slate-800 mb-1">Customer</p>
+        } @else {
+          <p class="text-xs font-bold text-primary-100 mb-1">Admin</p>
+        }
+        <p>{{ msg.message }}</p>
+
+        @if (msg.additionalImages?.length) {
+          <div class="flex flex-wrap gap-2 mt-2">
+            @for (img of msg.additionalImages; track img.no) {
+              <img [src]="img.image" (click)="openImagePreview(img.image)" class="w-16 h-16 object-cover rounded-lg border cursor-pointer hover:opacity-80 transition-opacity"
+                   [class.border-primary-400]="msg.senderType === 'admin'"
+                   [class.border-slate-200]="msg.senderType === 'customer'">
+            }
+          </div>
+        }
+
+        <p class="text-[10px] text-right mt-1" 
+           [class.text-primary-200]="msg.senderType === 'admin'"
+           [class.text-slate-400]="msg.senderType === 'customer'">
+           {{ msg.createdAt | date:'shortTime' }}
+        </p>
+      </div>
+    </div>
+    }
   </div>
 
   <form [formGroup]="respondForm" (ngSubmit)="submitRespond()" class="flex flex-col gap-4">
@@ -14,11 +64,32 @@
     ></app-admin-select>
 
     <app-textarea
-      label="Respons Admin"
-      placeholder="Tulis respons untuk pelanggan..."
-      [control]="respondForm.controls.adminResponse"
-      [rows]="4"
+      label="Balas Komplain"
+      placeholder="Ketik balasan untuk pelanggan..."
+      [control]="respondForm.controls.message"
+      [rows]="3"
     ></app-textarea>
+
+    <!-- Reply Image Previews -->
+    @if (replyImages().length > 0) {
+      <div class="flex flex-wrap gap-2">
+        @for (img of replyImages(); track img.no; let i = $index) {
+          <div class="relative w-16 h-16 group">
+            <img [src]="img.image" class="w-16 h-16 object-cover rounded-lg border border-slate-200">
+            <button type="button" (click)="removeReplyImage(i)"
+                    class="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-red-600">
+              ×
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Image attach label -->
+    <label class="cursor-pointer text-slate-500 hover:text-primary-600 transition-colors self-start flex items-center gap-1 text-sm font-medium">
+      <i class="bx bx-image-add text-xl"></i> Lampirkan Foto
+      <input type="file" accept="image/*" class="hidden" (change)="onReplyImageSelected($event)">
+    </label>
 
     <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex gap-3 mt-4 z-10">
       <app-admin-button type="button" variant="outline" class="flex-1" (click)="onCancel.emit()">
@@ -34,4 +105,13 @@
       </app-admin-button>
     </div>
   </form>
+
+  <!-- Image Preview Modal -->
+  <app-modal [isOpen]="previewImage() !== null" title="Lihat Foto" (isOpenChange)="!$event ? closeImagePreview() : null">
+    @if (previewImage()) {
+      <div class="flex items-center justify-center">
+        <img [src]="previewImage()" class="max-w-full h-auto max-h-[70vh] object-contain rounded-lg">
+      </div>
+    }
+  </app-modal>
 </div>
