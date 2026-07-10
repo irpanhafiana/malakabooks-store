@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpResponse } from '@angular/common/http';
+import { HttpRequest, HttpHandlerFn, HttpResponse } from '@angular/common/http';
 import { authInterceptor } from './auth.interceptor';
 import { Router } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';

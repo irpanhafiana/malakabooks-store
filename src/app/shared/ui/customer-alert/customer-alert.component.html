@@ -1,0 +1,58 @@
+@if (alertService.isOpen()) {
+<div class="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+  <!-- Backdrop with blur and transition animations -->
+  <div @fadeInOut class="absolute inset-0 bg-slate-900/30 backdrop-blur-md cursor-pointer"
+    (click)="alertService.type() !== 'confirm' ? alertService.close(false) : null"></div>
+
+  <!-- Modal Container with bounce in/out animations -->
+  <div @fadeScale
+    class="alert-popup relative w-full max-w-sm overflow-hidden rounded-[2.5rem] border border-slate-100 bg-white p-8 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.08)] backdrop-blur-xl flex flex-col items-center text-center">
+
+    <!-- Premium Icon Container with unique background gradients per status type -->
+    <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl transition-transform hover:rotate-6"
+      [ngClass]="{
+             'bg-emerald-50 text-emerald-500 border border-emerald-100/50': alertService.type() === 'success',
+             'bg-rose-50 text-rose-500 border border-rose-100/50': alertService.type() === 'error',
+             'bg-amber-50 text-amber-500 border border-amber-100/50': alertService.type() === 'confirm'
+           }">
+      <i class="bx text-3xl" [ngClass]="{
+             'bx-check-circle': alertService.type() === 'success',
+             'bx-x-circle': alertService.type() === 'error',
+             'bx-help-circle': alertService.type() === 'confirm'
+           }"></i>
+    </div>
+
+    <!-- Title with Fraunces font styling -->
+    <h3 class="alert-title text-xl font-black text-slate-800 tracking-tight mb-2">
+      {{ alertService.title() }}
+    </h3>
+
+    <!-- Body text with Poppins font and balanced neutral color -->
+    <p class="alert-body text-sm text-slate-500 font-medium leading-relaxed max-w-[280px]">
+      {{ alertService.text() }}
+    </p>
+
+    <!-- Action buttons wrapper -->
+    <div class="mt-8 flex w-full gap-3">
+      <!-- Cancel button (Visible only for confirmations) -->
+      @if (alertService.type() === 'confirm') {
+      <button type="button" (click)="alertService.close(false)"
+        class="flex-1 rounded-2xl border border-slate-200/80 bg-slate-50/50 px-5 py-3.5 text-sm font-bold text-slate-500 hover:bg-slate-100 hover:text-slate-700 active:scale-[0.98] transition-all cursor-pointer outline-none">
+        {{ alertService.cancelButtonText() }}
+      </button>
+      }
+
+      <!-- Confirm / Close button with distinct color matching the alert type -->
+      <button type="button" (click)="alertService.close(true)"
+        class="flex-1 rounded-2xl px-5 py-3.5 text-sm font-bold text-white active:scale-[0.98] transition-all cursor-pointer outline-none"
+        [ngClass]="{
+            'bg-emerald-500 hover:bg-emerald-600': alertService.type() === 'success',
+            'bg-rose-500 hover:bg-rose-600': alertService.type() === 'error',
+            'bg-amber-500 hover:bg-amber-600': alertService.type() === 'confirm'
+          }">
+        {{ alertService.type() === 'confirm' ? alertService.confirmButtonText() : 'Tutup' }}
+      </button>
+    </div>
+  </div>
+</div>
+}

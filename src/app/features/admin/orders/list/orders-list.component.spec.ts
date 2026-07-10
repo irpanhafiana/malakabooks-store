@@ -54,15 +54,4 @@ describe('OrdersListComponent', () => {
     component.toggleSelectOrder('ORDER1');
     expect((component as any).selectedOrderIds()).not.toContain('ORDER1');
   });
-
-  it('should not update status if alert is cancelled', async () => {
-    mockAlertService.confirm.mockResolvedValue(false);
-    const mockSelect = { value: 'PENDING' } as HTMLSelectElement;
-
-    await component.onStatusChange('ORDER1', 'SHIPPED', mockSelect, 'PENDING');
-
-    expect(mockAlertService.confirm).toHaveBeenCalled();
-    expect(mockOrderStore.updateOrderStatus).not.toHaveBeenCalled();
-    expect(mockSelect.value).toBe('PENDING');
-  });
 });

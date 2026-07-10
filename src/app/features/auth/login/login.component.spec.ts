@@ -3,7 +3,6 @@ import { LoginComponent } from './login.component';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
-import { signal } from '@angular/core';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;

@@ -1,10 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
+  private readonly router = inject(Router);
+
+  // Custom Modal States (signals)
+  isOpen = signal<boolean>(false);
+  title = signal<string>('');
+  text = signal<string>('');
+  type = signal<'success' | 'error' | 'confirm'>('success');
+  confirmButtonText = signal<string>('Ya, Lanjutkan');
+  cancelButtonText = signal<string>('Batal');
+
+  private resolveFn: ((value: boolean) => void) | null = null;
+
   private readonly swalConfig = {
     buttonsStyling: false,
     customClass: {
@@ -16,36 +29,75 @@ export class AlertService {
     }
   };
 
+  private isAdminRoute(): boolean {
+    return this.router.url.startsWith('/admin');
+  }
+
   async confirm(title: string, text: string, confirmButtonText: string = 'Ya, Lanjutkan'): Promise<boolean> {
-    const res = await Swal.fire({
-      ...this.swalConfig,
-      title,
-      text,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText,
-      cancelButtonText: 'Batal'
-    });
-    return res.isConfirmed;
+    if (this.isAdminRoute()) {
+      const res = await Swal.fire({
+        ...this.swalConfig,
+        title,
+        text,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText,
+        cancelButtonText: 'Batal'
+      });
+      return res.isConfirmed;
+    } else {
+      this.title.set(title);
+      this.text.set(text);
+      this.type.set('confirm');
+      this.confirmButtonText.set(confirmButtonText);
+      this.cancelButtonText.set('Batal');
+      this.isOpen.set(true);
+
+      return new Promise<boolean>((resolve) => {
+        this.resolveFn = resolve;
+      });
+    }
   }
 
   success(title: string, text: string) {
-    Swal.fire({
-      ...this.swalConfig,
-      title,
-      text,
-      icon: 'success',
-      confirmButtonText: 'Tutup'
-    });
+    if (this.isAdminRoute()) {
+      Swal.fire({
+        ...this.swalConfig,
+        title,
+        text,
+        icon: 'success',
+        confirmButtonText: 'Tutup'
+      });
+    } else {
+      this.title.set(title);
+      this.text.set(text);
+      this.type.set('success');
+      this.isOpen.set(true);
+    }
   }
 
   error(title: string, text: string) {
-    Swal.fire({
-      ...this.swalConfig,
-      title,
-      text,
-      icon: 'error',
-      confirmButtonText: 'Tutup'
-    });
+    if (this.isAdminRoute()) {
+      Swal.fire({
+        ...this.swalConfig,
+        title,
+        text,
+        icon: 'error',
+        confirmButtonText: 'Tutup'
+      });
+    } else {
+      this.title.set(title);
+      this.text.set(text);
+      this.type.set('error');
+      this.isOpen.set(true);
+    }
+  }
+
+  close(value: boolean) {
+    this.isOpen.set(false);
+    if (this.resolveFn) {
+      this.resolveFn(value);
+      this.resolveFn = null;
+    }
   }
 }

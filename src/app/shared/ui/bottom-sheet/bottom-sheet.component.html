@@ -1,10 +1,10 @@
 @if (renderComponent()) {
 <!-- Backdrop overlay -->
-<div class="bottom-sheet-backdrop !fixed !inset-0 !z-[9998]" [class.active]="isAnimating()" (click)="closeSheet()">
+<div class="bottom-sheet-backdrop fixed! inset-0! z-9998!" [class.active]="isAnimating()" (click)="closeSheet()">
 </div>
 
 <!-- Bottom Sheet Content Container -->
-<div class="bottom-sheet-container !fixed !bottom-0 !z-[9999]" [class.active]="isAnimating()"
+<div class="bottom-sheet-container fixed! bottom-0! z-9999!" [class.active]="isAnimating()"
   [class.dragging]="isDragging()" [class.full-height]="fullHeight()"
   [style.transform]="isDragging() ? 'translateY(' + dragOffset() + 'px)' : null">
   <!-- Header with drag indicator -->
@@ -27,7 +27,7 @@
     <ng-content></ng-content>
     } @else {
     <!-- Spinner Loader -->
-    <div class="w-full h-full min-h-[200px] flex items-center justify-center text-slate-400">
+    <div class="w-full h-full min-h-50 flex items-center justify-center text-slate-400">
       <i class="bx bx-loader-alt bx-spin text-4xl"></i>
     </div>
     }
