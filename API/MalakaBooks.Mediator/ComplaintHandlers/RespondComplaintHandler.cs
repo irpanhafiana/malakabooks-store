@@ -15,6 +15,12 @@ public class RespondComplaintHandler(IComplaintRepository complaintRepository) :
             return null;
         }
 
+        if (string.Equals(request.Request.SenderType, "customer", StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(entity.UserId, request.Request.SenderId, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
         entity.UpdateFrom(request.Request);
         await complaintRepository.UpdateAsync(request.Id, entity, cancellationToken);
         return entity.ToResponse();

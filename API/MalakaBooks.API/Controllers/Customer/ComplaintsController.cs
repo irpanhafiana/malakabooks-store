@@ -23,6 +23,15 @@ public class ComplaintsController(IMediator mediator) : ApiControllerBase
     public async Task<IActionResult> GetByUser(string userId, CancellationToken cancellationToken) =>
         Success(await mediator.Send(new GetComplaintsByUserQuery(userId), cancellationToken));
 
+    /// <summary>Reply to own complaint thread</summary>
+    [HttpPut("{id}/reply")]
+    public async Task<IActionResult> Reply(string id, [FromBody] RespondComplaintRequest request, CancellationToken cancellationToken)
+    {
+        request.SenderType = "customer";
+        var complaint = await mediator.Send(new RespondComplaintCommand(id, request), cancellationToken);
+        return complaint is null ? NotFound() : Success(complaint);
+    }
+
     /// <summary>Submit a complaint</summary>
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateComplaintRequest request, CancellationToken cancellationToken)

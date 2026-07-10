@@ -26,6 +26,7 @@ public class ComplaintsController(IMediator mediator) : ApiControllerBase
     [HttpPut("{id}/respond")]
     public async Task<IActionResult> Respond(string id, [FromBody] RespondComplaintRequest request, CancellationToken cancellationToken)
     {
+        request.SenderType = "admin";
         var complaint = await mediator.Send(new RespondComplaintCommand(id, request), cancellationToken);
         return complaint is null ? NotFound() : Success(complaint);
     }

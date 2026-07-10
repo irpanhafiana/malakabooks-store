@@ -15,6 +15,7 @@ public class MongoDbSetting
     public string HomeAddressesCollection { get; set; } = "homeaddresses";
     public string UsersCollection { get; set; } = "users";
     public string ReviewsCollection { get; set; } = "reviews";
+    public string InventoryMovementsCollection { get; set; } = "inventorymovements";
     public string ComplaintsCollection { get; set; } = "complaints";
     public string PromotionBannersCollection { get; set; } = "promotionbanners";
 }
