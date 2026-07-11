@@ -20,3 +20,4 @@
 - In MalakaBooks, keep fee rules inside PaymentEntity, while OrderEntity should store only grand total and shipping-related information rather than a fee breakdown snapshot.
 - In MalakaBooks, coffee pack sizes such as 100GR, 150GR, and 1KG should be modeled as UoMs in the existing Item -> UoMGroup -> UoMGroupDetail structure rather than as separate item variants.
 - For MalakaBooks, prefer a phased migration: add generic multi-UoM support for coffee/FMCG first and migrate books later to avoid changing the existing book flow immediately.
+- For MalakaBooks third-party item sync, external callers will not know or send internal UoM group ids; the contract should rely solely on embedded item-oriented data rather than UomGroupId. Additionally, external callers will not send Item.BaseUomCode; the backend should derive it internally from the embedded UoM group detail where IsBaseUom is true.

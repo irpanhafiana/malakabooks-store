@@ -21,6 +21,9 @@ public class ItemRepository : IItemRepository
     public async Task<ItemEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 
+    public async Task<ItemEntity?> GetBySapCodeAsync(string sapCode, CancellationToken cancellationToken = default) =>
+        await _collection.Find(x => x.SAPCode == sapCode).FirstOrDefaultAsync(cancellationToken);
+
     public async Task<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
     {
         await _collection.InsertOneAsync(item, cancellationToken: cancellationToken);

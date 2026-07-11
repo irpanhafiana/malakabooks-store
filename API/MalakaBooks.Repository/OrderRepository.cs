@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Subur.Extension;
 using Subur.Storage.MongoDbProvider;
+using System.Text.Json;
 
 namespace MalakaBooks.Repository;
 
@@ -26,6 +27,56 @@ public class OrderRepository : BaseRepository<OrderEntity>, IOrderRepository
 
     public async Task<OrderEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+
+    public async Task<OrderEntity?> GetByShipmentReferenceAsync(string referenceNo, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(referenceNo))
+        {
+            return null;
+        }
+
+        var orders = await _collection.Find(order => !string.IsNullOrWhiteSpace(order.ShipmentDetailJson)).ToListAsync(cancellationToken);
+
+        foreach (var order in orders)
+        {
+            if (string.IsNullOrWhiteSpace(order.ShipmentDetailJson))
+            {
+                continue;
+            }
+
+            try
+            {
+                using var payload = JsonDocument.Parse(order.ShipmentDetailJson);
+                var root = payload.RootElement;
+                var storedReference = TryGetPropertyValue(root, "ReferenceNo")
+                    ?? TryGetPropertyValue(root, "referenceNo")
+                    ?? TryGetPropertyValue(root, "reference_no");
+
+                if (string.Equals(storedReference, referenceNo, StringComparison.OrdinalIgnoreCase))
+                {
+                    return order;
+                }
+            }
+            catch
+            {
+                // Ignore malformed stored shipment payloads and continue searching.
+            }
+        }
+
+        return null;
+    }
+
+    private static string? TryGetPropertyValue(JsonElement element, string propertyName)
+    {
+        if (element.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        return element.TryGetProperty(propertyName, out var value)
+            ? value.GetString()
+            : null;
+    }
 
     public async Task<IReadOnlyCollection<OrderEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await _collection.Find(_ => true).ToListAsync(cancellationToken);

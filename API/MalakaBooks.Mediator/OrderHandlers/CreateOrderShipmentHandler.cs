@@ -136,7 +136,7 @@ public class CreateOrderShipmentHandler(
             order.AWBNo = simasrimResponse.Data.Awb;
             order.ShipmentLastError = string.Empty;
             order.ShipmentCreatedAt = DateTime.UtcNow;
-            order.Status = "shipped";
+            order.Status = OrderStatuses.Shipped;
             order.UpdatedAt = DateTime.UtcNow;
 
             await orderRepository.UpdateAsync(order.Id!, order, cancellationToken);

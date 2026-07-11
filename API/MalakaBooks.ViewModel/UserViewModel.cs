@@ -43,3 +43,9 @@ public class UpdateUserRequest
     public string LastName { get; set; } = string.Empty;
     public string Avatar { get; set; } = string.Empty;
 }
+
+public class ChangePasswordRequest
+{
+    public string Password { get; set; } = string.Empty;
+    public string ConfirmPassword { get; set; } = string.Empty;
+}
