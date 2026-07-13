@@ -7,6 +7,7 @@ public class ItemResponse
     public string SAPCode { get; set; } = string.Empty;
     public string ItemType { get; set; } = string.Empty;
     public string? UomGroupId { get; set; }
+    public UomGroupResponse? UomGroup { get; set; }
     public string BaseUomCode { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public bool IsActive { get; set; }
@@ -20,6 +21,7 @@ public class CreateItemRequest
     public string SAPCode { get; set; } = string.Empty;
     public string ItemType { get; set; } = string.Empty;
     public string? UomGroupId { get; set; }
+    public CreateUomGroupRequest? UomGroup { get; set; }
     public string BaseUomCode { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public bool IsActive { get; set; } = true;
@@ -27,6 +29,16 @@ public class CreateItemRequest
 
 public class UpdateItemRequest : CreateItemRequest
 {
+}
+
+public class SyncItemRequest
+{
+    public string Name { get; set; } = string.Empty;
+    public string SAPCode { get; set; } = string.Empty;
+    public string ItemType { get; set; } = string.Empty;
+    public CreateUomGroupRequest UomGroup { get; set; } = new();
+    public string Description { get; set; } = string.Empty;
+    public bool IsActive { get; set; } = true;
 }
 
 public class UomGroupResponse

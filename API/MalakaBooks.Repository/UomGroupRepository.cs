@@ -3,6 +3,7 @@ using MalakaBooks.IRepository;
 using MalakaBooks.Repository.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System.Globalization;
 
 namespace MalakaBooks.Repository;
 
@@ -20,6 +21,27 @@ public class UomGroupRepository : IUomGroupRepository
 
     public async Task<UomGroupEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+
+    public async Task<UomGroupEntity?> GetByDefinitionAsync(UomGroupEntity uomGroup, CancellationToken cancellationToken = default)
+    {
+        var signature = BuildSignature(uomGroup);
+        var allGroups = await _collection.Find(Builders<UomGroupEntity>.Filter.Empty).ToListAsync(cancellationToken);
+        return allGroups.FirstOrDefault(existing => BuildSignature(existing) == signature);
+    }
+
+    public async Task<UomGroupEntity> UpsertByDefinitionAsync(UomGroupEntity uomGroup, CancellationToken cancellationToken = default)
+    {
+        var existing = await GetByDefinitionAsync(uomGroup, cancellationToken);
+        if (existing is not null)
+        {
+            uomGroup.Id = existing.Id;
+            uomGroup.Alias = existing.Alias;
+            await UpdateAsync(existing.Id!, uomGroup, cancellationToken);
+            return uomGroup;
+        }
+
+        return await CreateAsync(uomGroup, cancellationToken);
+    }
 
     public async Task<UomGroupEntity> CreateAsync(UomGroupEntity uomGroup, CancellationToken cancellationToken = default)
     {
@@ -39,4 +61,25 @@ public class UomGroupRepository : IUomGroupRepository
         var result = await _collection.DeleteOneAsync(x => x.Id == id, cancellationToken);
         return result.DeletedCount > 0;
     }
+
+    private static string BuildSignature(UomGroupEntity uomGroup)
+    {
+        var normalizedName = Normalize(uomGroup.Name);
+        var normalizedBaseUomCode = Normalize(uomGroup.BaseUomCode);
+        var normalizedDetails = uomGroup.Details
+            .OrderBy(detail => detail.SortOrder)
+            .ThenBy(detail => Normalize(detail.Code))
+            .Select(detail => string.Join("|",
+                Normalize(detail.Code),
+                Normalize(detail.Name),
+                detail.ConversionFactor.ToString(CultureInfo.InvariantCulture),
+                detail.IsBaseUom,
+                detail.SortOrder,
+                detail.IsActive));
+
+        return string.Join("::", new[] { normalizedName, normalizedBaseUomCode }.Concat(normalizedDetails));
+    }
+
+    private static string Normalize(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim().ToUpperInvariant();
 }

@@ -4,6 +4,7 @@ using MalakaBooks.ViewModel;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace MalakaBooks.API.Controllers.Customer;
 /// <summary>
@@ -67,5 +68,38 @@ public class UsersController(IMediator mediator) : ApiControllerBase
     {
         var result = await mediator.Send(new UpdateUserProfileCommand(id, request), cancellationToken);
         return Success(result);
+    }
+
+    /// <summary>Change own IS4 password</summary>
+    [HttpPut("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken)
+    {
+        var userId = ResolveAuthenticatedUserId();
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            return Fail("Authenticated user identifier was not found.", statusCode: StatusCodes.Status401Unauthorized);
+        }
+
+        var result = await mediator.Send(new ChangeUserPasswordCommand(userId, request), cancellationToken);
+        return ProcessResult(result);
+    }
+
+    private string ResolveAuthenticatedUserId()
+    {
+        string[] claimTypes = ["sub", ClaimTypes.NameIdentifier, "nameid"];
+
+        foreach (var claimType in claimTypes)
+        {
+            var value = User.Claims
+                .FirstOrDefault(claim => string.Equals(claim.Type, claimType, StringComparison.OrdinalIgnoreCase))
+                ?.Value;
+
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                return value.Trim();
+            }
+        }
+
+        return string.Empty;
     }
 }

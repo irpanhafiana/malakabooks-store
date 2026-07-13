@@ -7,13 +7,14 @@ namespace MalakaBooks.Mediator.Common;
 
 public static class MappingExtensions
 {
-    public static ItemResponse ToResponse(this ItemEntity entity) => new()
+    public static ItemResponse ToResponse(this ItemEntity entity, UomGroupEntity? uomGroup = null) => new()
     {
         Id = entity.Id ?? string.Empty,
         Name = entity.Name,
         SAPCode = entity.SAPCode,
         ItemType = entity.ItemType,
         UomGroupId = entity.UomGroupId,
+        UomGroup = uomGroup?.ToResponse(),
         BaseUomCode = entity.BaseUomCode,
         Description = entity.Description,
         IsActive = entity.IsActive,
@@ -44,6 +45,45 @@ public static class MappingExtensions
         entity.Description = request.Description.Trim();
         entity.IsActive = request.IsActive;
         entity.UpdatedAt = DateTime.UtcNow;
+    }
+
+    public static bool HasEmbeddedUomGroup(this CreateItemRequest request) =>
+        request.UomGroup is not null;
+
+    public static CreateItemRequest ToCreateItemRequest(this SyncItemRequest request) => new()
+    {
+        Name = request.Name,
+        SAPCode = request.SAPCode,
+        ItemType = request.ItemType,
+        UomGroup = request.UomGroup,
+        Description = request.Description,
+        IsActive = request.IsActive
+    };
+
+    public static UpdateItemRequest ToUpdateItemRequest(this SyncItemRequest request) => new()
+    {
+        Name = request.Name,
+        SAPCode = request.SAPCode,
+        ItemType = request.ItemType,
+        UomGroup = request.UomGroup,
+        Description = request.Description,
+        IsActive = request.IsActive
+    };
+
+    public static string ResolveBaseUomCode(this CreateUomGroupRequest? request)
+    {
+        if (request is null)
+        {
+            return string.Empty;
+        }
+
+        var baseDetail = request.Details.FirstOrDefault(detail => detail.IsBaseUom);
+        if (baseDetail is not null && !string.IsNullOrWhiteSpace(baseDetail.Code))
+        {
+            return baseDetail.Code.Trim();
+        }
+
+        return request.BaseUomCode.Trim();
     }
 
     public static UomGroupResponse ToResponse(this UomGroupEntity entity) => new()

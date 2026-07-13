@@ -1,6 +1,8 @@
 using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.Mediator.IncomingPaymentHandlers;
+using MalakaBooks.Mediator.OrderHandlers;
 using MalakaBooks.ViewModel;
+using Mardika.Simasrim.Service.Model;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +27,19 @@ public class ExternalMessageController(IMediator mediator) : ApiControllerBase
     public async Task<IActionResult> DokuNotify([FromBody] DokuPaymentNotificationRequest request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new ProcessDokuPaymentNotificationCommand(request), cancellationToken);
+        return Success(result);
+    }
+
+    /// <summary>
+    /// Processes a Simasrim shipment webhook notification for batched cetak-resi submissions.
+    /// </summary>
+    /// <param name="request">The Simasrim shipment response payload containing shipment status, AWB, and transaction reference information.</param>
+    /// <param name="cancellationToken">A token that can be used to cancel the webhook processing request.</param>
+    /// <returns>An <see cref="IActionResult"/> containing a minimal acknowledgment of webhook receipt.</returns>
+    [HttpPost("SIMASRIM/Notify")]
+    public async Task<IActionResult> SimasrimNotify([FromBody] CreateResiResponse request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new ProcessSimasrimShipmentWebhookCommand(request), cancellationToken);
         return Success(result);
     }
 }
