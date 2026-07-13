@@ -6,6 +6,7 @@ using MediatR;
 namespace MalakaBooks.Mediator.CatalogHandlers;
 
 public record GetItemsQuery() : IRequest<IReadOnlyCollection<ItemResponse>>;
+public record GetItemsByTypeQuery(string ItemType) : IRequest<IReadOnlyCollection<ItemResponse>>;
 public record GetItemByIdQuery(string Id) : IRequest<ItemResponse?>;
 public record CreateItemCommand(CreateItemRequest Request) : IRequest<bool>;
 public record UpdateItemCommand(string Id, UpdateItemRequest Request) : IRequest<bool>;
@@ -17,6 +18,22 @@ public class GetItemsHandler(IItemRepository itemRepository, IUomGroupRepository
     public async Task<IReadOnlyCollection<ItemResponse>> Handle(GetItemsQuery request, CancellationToken cancellationToken)
     {
         var items = await itemRepository.GetAllAsync(cancellationToken);
+        var uomGroups = await uomGroupRepository.GetAllAsync(cancellationToken);
+        var uomGroupsById = uomGroups
+            .Where(group => !string.IsNullOrWhiteSpace(group.Id))
+            .ToDictionary(group => group.Id!, group => group);
+
+        return items
+            .Select(entity => entity.ToResponse(uomGroupsById.GetValueOrDefault(entity.UomGroupId ?? string.Empty)))
+            .ToArray();
+    }
+}
+
+public class GetItemsByTypeHandler(IItemRepository itemRepository, IUomGroupRepository uomGroupRepository) : IRequestHandler<GetItemsByTypeQuery, IReadOnlyCollection<ItemResponse>>
+{
+    public async Task<IReadOnlyCollection<ItemResponse>> Handle(GetItemsByTypeQuery request, CancellationToken cancellationToken)
+    {
+        var items = await itemRepository.GetByItemTypeAsync(request.ItemType, cancellationToken);
         var uomGroups = await uomGroupRepository.GetAllAsync(cancellationToken);
         var uomGroupsById = uomGroups
             .Where(group => !string.IsNullOrWhiteSpace(group.Id))

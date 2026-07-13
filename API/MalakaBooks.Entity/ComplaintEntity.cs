@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MalakaBooks.Entity;
 
+[BsonIgnoreExtraElements]
 public class ComplaintEntity : BaseObject
 {
     public string UserId { get; set; } = string.Empty;
