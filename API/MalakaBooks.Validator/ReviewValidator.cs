@@ -8,7 +8,7 @@ public class CreateReviewRequestValidator : AbstractValidator<CreateReviewReques
     public CreateReviewRequestValidator()
     {
         RuleFor(x => x.UserId).NotEmpty();
-        RuleFor(x => x.BookId).NotEmpty();
+        RuleFor(x => x.ItemId).NotEmpty();
         RuleFor(x => x.OrderId).NotEmpty();
         RuleFor(x => x.Rating).InclusiveBetween(1, 5);
         RuleFor(x => x.Comment).NotEmpty();

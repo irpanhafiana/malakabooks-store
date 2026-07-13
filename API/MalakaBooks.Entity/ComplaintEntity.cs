@@ -11,7 +11,7 @@ public class ComplaintEntity : BaseObject
     public string OrderId { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string BookId { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
 
     public string Subject { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;

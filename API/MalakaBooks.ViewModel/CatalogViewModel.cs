@@ -6,10 +6,14 @@ public class ItemResponse
     public string Name { get; set; } = string.Empty;
     public string SAPCode { get; set; } = string.Empty;
     public string ItemType { get; set; } = string.Empty;
+    public string CoverImage { get; set; } = string.Empty;
+    public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
     public string? UomGroupId { get; set; }
     public UomGroupResponse? UomGroup { get; set; }
     public string BaseUomCode { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public decimal Weight { get; set; }
+    public int Stock { get; set; }
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
@@ -20,10 +24,14 @@ public class CreateItemRequest
     public string Name { get; set; } = string.Empty;
     public string SAPCode { get; set; } = string.Empty;
     public string ItemType { get; set; } = string.Empty;
+    public string CoverImage { get; set; } = string.Empty;
+    public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
     public string? UomGroupId { get; set; }
     public CreateUomGroupRequest? UomGroup { get; set; }
     public string BaseUomCode { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public decimal Weight { get; set; }
+    public int Stock { get; set; }
     public bool IsActive { get; set; } = true;
 }
 
@@ -80,9 +88,8 @@ public class UomGroupDetailResponse : UomGroupDetailRequest
 public class PricingResponse
 {
     public string Id { get; set; } = string.Empty;
-    public string Code { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
-    public string CustomerGroupCode { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public bool IsActive { get; set; }
@@ -94,9 +101,8 @@ public class PricingResponse
 
 public class CreatePricingRequest
 {
-    public string Code { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
-    public string CustomerGroupCode { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public bool IsActive { get; set; } = true;
@@ -109,13 +115,16 @@ public class UpdatePricingRequest : CreatePricingRequest
 
 public class PricingDetailRequest
 {
-    public string ItemId { get; set; } = string.Empty;
+    public string CustomerGroupCode { get; set; } = string.Empty;
     public string UomCode { get; set; } = string.Empty;
     public decimal Price { get; set; }
 }
 
-public class PricingDetailResponse : PricingDetailRequest
+public class PricingDetailResponse
 {
+    public string CustomerGroupCode { get; set; } = string.Empty;
+    public string UomCode { get; set; } = string.Empty;
+    public decimal Price { get; set; }
 }
 
 public class PublicPriceLookupRequest
@@ -165,27 +174,10 @@ public class UpdateWarehouseRequest : CreateWarehouseRequest
 {
 }
 
-public class WarehouseStockResponse
+public class GoodsReceiveRequest
 {
-    public string Id { get; set; } = string.Empty;
-    public string BaseUomCode { get; set; } = string.Empty;
-    public string WarehouseId { get; set; } = string.Empty;
     public string ItemId { get; set; } = string.Empty;
-    public decimal QuantityOnHand { get; set; }
-    public decimal ReservedQuantity { get; set; }
-    public DateTime UpdatedAt { get; set; }
-    public string Alias { get; set; } = string.Empty;
-}
-
-public class CreateWarehouseStockRequest
-{
-    public string BaseUomCode { get; set; } = string.Empty;
-    public string WarehouseId { get; set; } = string.Empty;
-    public string ItemId { get; set; } = string.Empty;
-    public decimal QuantityOnHand { get; set; }
-    public decimal ReservedQuantity { get; set; }
-}
-
-public class UpdateWarehouseStockRequest : CreateWarehouseStockRequest
-{
+    public int Quantity { get; set; }
+    public string ReferenceId { get; set; } = string.Empty;
+    public string Note { get; set; } = string.Empty;
 }

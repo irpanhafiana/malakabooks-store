@@ -7,6 +7,7 @@ namespace MalakaBooks.Mediator.BookHandlers;
 
 public class GetBookByIdHandler(
     IBookRepository bookRepository,
+    IItemRepository itemRepository,
     IAuthorRepository authorRepository,
     IOrderRepository orderRepository,
     IReviewRepository reviewRepository) : IRequestHandler<GetBookByIdQuery, BookResponse?>
@@ -15,6 +16,12 @@ public class GetBookByIdHandler(
     {
         var book = await bookRepository.GetByIdAsync(request.Id, cancellationToken);
         if (book is null)
+        {
+            return null;
+        }
+
+        var item = await itemRepository.GetByIdAsync(book.ItemId, cancellationToken);
+        if (item is null)
         {
             return null;
         }
@@ -29,14 +36,14 @@ public class GetBookByIdHandler(
             }
         }
 
-        var response = book.ToResponse(authors);
+        var response = book.ToResponse(item, authors);
         var orders = await orderRepository.GetAllAsync(cancellationToken);
-        var reviews = await reviewRepository.GetByBookIdAsync(book.Id ?? string.Empty, cancellationToken);
+        var reviews = await reviewRepository.GetByItemIdAsync(book.ItemId, cancellationToken);
 
         response.QuantitySold = orders
             .Where(order => string.Equals(order.PaymentStatus, "paid", StringComparison.OrdinalIgnoreCase))
             .SelectMany(order => order.Items)
-            .Where(item => string.Equals(item.BookId, book.Id, StringComparison.OrdinalIgnoreCase))
+            .Where(orderItem => string.Equals(orderItem.ItemId, book.ItemId, StringComparison.OrdinalIgnoreCase))
             .Sum(item => item.Quantity);
 
         if (reviews.Count > 0)

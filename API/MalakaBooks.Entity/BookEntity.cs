@@ -5,8 +5,8 @@ namespace MalakaBooks.Entity;
 
 public class BookEntity : BaseObject
 {
-    public string Title { get; set; } = string.Empty;
-    public string SAPCode { get; set; } = string.Empty;
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string ItemId { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
     public List<string> AuthorIds { get; set; } = [];
@@ -16,23 +16,15 @@ public class BookEntity : BaseObject
     [BsonRepresentation(BsonType.ObjectId)]
     public string? CategoryId { get; set; } = null;
 
-    public decimal Price { get; set; }
-    public string Description { get; set; } = string.Empty;
-    public string CoverImage { get; set; } = string.Empty;
     public string Publisher { get; set; } = string.Empty;
     public int PublishedYear { get; set; }
     public int Pages { get; set; }
-    public decimal Weight { get; set; }
-    public int Stock { get; set; }
     public double AverageRating { get; set; }
     public int TotalReviews { get; set; }
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-    public List<AdditionalImage> AdditionalImages { get; set; } = [];
 }
-
 
 public class AdditionalImage
 {

@@ -8,7 +8,9 @@ public class CartItemEntity : BaseObject
     public string UserId { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string BookId { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
+
+    public string UomCode { get; set; } = string.Empty;
 
     public int Quantity { get; set; }
 }

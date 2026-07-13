@@ -9,7 +9,7 @@ public class CreateComplaintRequestValidator : AbstractValidator<CreateComplaint
     {
         RuleFor(x => x.UserId).NotEmpty();
         RuleFor(x => x.OrderId).NotEmpty();
-        RuleFor(x => x.BookId).NotEmpty();
+        RuleFor(x => x.ItemId).NotEmpty();
         RuleFor(x => x.Subject).NotEmpty();
         RuleFor(x => x.Description).NotEmpty();
     }

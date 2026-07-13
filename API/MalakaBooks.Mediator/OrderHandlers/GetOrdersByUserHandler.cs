@@ -5,30 +5,30 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.OrderHandlers;
 
-public class GetOrdersByUserHandler(IOrderRepository orderRepository, IBookRepository bookRepository) : IRequestHandler<GetOrdersByUserQuery, IReadOnlyCollection<OrderResponse>>
+public class GetOrdersByUserHandler(IOrderRepository orderRepository, IItemRepository itemRepository) : IRequestHandler<GetOrdersByUserQuery, IReadOnlyCollection<OrderResponse>>
 {
     public async Task<IReadOnlyCollection<OrderResponse>> Handle(GetOrdersByUserQuery request, CancellationToken cancellationToken)
     {
         var orders = await orderRepository.GetByUserIdAsync(request.UserId, cancellationToken);
-        var bookIds = orders.SelectMany(order => order.Items).Select(item => item.BookId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToArray();
-        var coverImagesByBookId = await LoadCoverImagesByBookIdAsync(bookRepository, bookIds, cancellationToken);
+        var itemIds = orders.SelectMany(order => order.Items).Select(item => item.ItemId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToArray();
+        var coverImagesByItemId = await LoadCoverImagesByItemIdAsync(itemRepository, itemIds, cancellationToken);
 
-        return [.. orders.OrderByDescending(_ => _.DateCreated).Select(orderEntity => orderEntity.ToResponse(coverImagesByBookId))];
+        return [.. orders.OrderByDescending(_ => _.DateCreated).Select(orderEntity => orderEntity.ToResponse(coverImagesByItemId))];
     }
 
-    private static async Task<IReadOnlyDictionary<string, string>> LoadCoverImagesByBookIdAsync(IBookRepository bookRepository, IEnumerable<string> bookIds, CancellationToken cancellationToken)
+    private static async Task<IReadOnlyDictionary<string, string>> LoadCoverImagesByItemIdAsync(IItemRepository itemRepository, IEnumerable<string> itemIds, CancellationToken cancellationToken)
     {
-        var coverImagesByBookId = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var coverImagesByItemId = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var bookId in bookIds)
+        foreach (var itemId in itemIds)
         {
-            var book = await bookRepository.GetByIdAsync(bookId, cancellationToken);
-            if (book is not null)
+            var item = await itemRepository.GetByIdAsync(itemId, cancellationToken);
+            if (item is not null)
             {
-                coverImagesByBookId[bookId] = book.CoverImage;
+                coverImagesByItemId[itemId] = item.CoverImage;
             }
         }
 
-        return coverImagesByBookId;
+        return coverImagesByItemId;
     }
 }

@@ -26,7 +26,9 @@ public class CartRepository : ICartRepository
     public async Task<IReadOnlyCollection<CartItemEntity>> AddItemAsync(string userId, CartItemEntity item, CancellationToken cancellationToken = default)
     {
         var cart = await _collection.Find(x => x.UserId == userId).FirstOrDefaultAsync(cancellationToken) ?? new CartDocument { UserId = userId };
-        var existing = cart.Items.FirstOrDefault(x => x.BookId == item.BookId);
+        var existing = cart.Items.FirstOrDefault(x =>
+            string.Equals(x.ItemId, item.ItemId, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(x.UomCode, item.UomCode, StringComparison.OrdinalIgnoreCase));
         if (existing is null)
         {
             cart.Items.Add(item);
@@ -40,7 +42,7 @@ public class CartRepository : ICartRepository
         return cart.Items;
     }
 
-    public async Task<IReadOnlyCollection<CartItemEntity>> RemoveItemAsync(string userId, string bookId, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<CartItemEntity>> RemoveItemAsync(string userId, string itemId, CancellationToken cancellationToken = default)
     {
         var cart = await _collection.Find(x => x.UserId == userId).FirstOrDefaultAsync(cancellationToken);
         if (cart is null)
@@ -48,7 +50,7 @@ public class CartRepository : ICartRepository
             return Array.Empty<CartItemEntity>();
         }
 
-        cart.Items.RemoveAll(x => x.BookId == bookId);
+        cart.Items.RemoveAll(x => string.Equals(x.ItemId, itemId, StringComparison.OrdinalIgnoreCase));
         await SaveAsync(cart, cancellationToken);
         return cart.Items;
     }

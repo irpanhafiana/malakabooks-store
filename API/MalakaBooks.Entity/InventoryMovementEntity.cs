@@ -6,9 +6,9 @@ namespace MalakaBooks.Entity;
 public class InventoryMovementEntity : BaseObject
 {
     [BsonRepresentation(BsonType.ObjectId)]
-    public string BookId { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
 
-    public string BookTitle { get; set; } = string.Empty;
+    public string ItemName { get; set; } = string.Empty;
     public string MovementType { get; set; } = string.Empty;
     public int QuantityDelta { get; set; }
     public int StockBefore { get; set; }

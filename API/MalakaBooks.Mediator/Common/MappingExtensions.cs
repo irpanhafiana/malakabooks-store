@@ -13,10 +13,14 @@ public static class MappingExtensions
         Name = entity.Name,
         SAPCode = entity.SAPCode,
         ItemType = entity.ItemType,
+        CoverImage = entity.CoverImage,
+        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList(),
         UomGroupId = entity.UomGroupId,
         UomGroup = uomGroup?.ToResponse(),
         BaseUomCode = entity.BaseUomCode,
         Description = entity.Description,
+        Weight = entity.Weight,
+        Stock = entity.Stock,
         IsActive = entity.IsActive,
         CreatedAt = entity.CreatedAt,
         UpdatedAt = entity.UpdatedAt
@@ -27,9 +31,13 @@ public static class MappingExtensions
         Name = request.Name.Trim(),
         SAPCode = request.SAPCode.Trim(),
         ItemType = request.ItemType.Trim(),
+        CoverImage = request.CoverImage.Trim(),
+        AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         UomGroupId = string.IsNullOrWhiteSpace(request.UomGroupId) ? null : request.UomGroupId.Trim(),
         BaseUomCode = request.BaseUomCode.Trim(),
         Description = request.Description.Trim(),
+        Weight = request.Weight,
+        Stock = request.Stock,
         IsActive = request.IsActive,
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow
@@ -40,9 +48,13 @@ public static class MappingExtensions
         entity.Name = request.Name.Trim();
         entity.SAPCode = request.SAPCode.Trim();
         entity.ItemType = request.ItemType.Trim();
+        entity.CoverImage = request.CoverImage.Trim();
+        entity.AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList();
         entity.UomGroupId = string.IsNullOrWhiteSpace(request.UomGroupId) ? null : request.UomGroupId.Trim();
         entity.BaseUomCode = request.BaseUomCode.Trim();
         entity.Description = request.Description.Trim();
+        entity.Weight = request.Weight;
+        entity.Stock = request.Stock;
         entity.IsActive = request.IsActive;
         entity.UpdatedAt = DateTime.UtcNow;
     }
@@ -135,9 +147,8 @@ public static class MappingExtensions
     public static PricingResponse ToResponse(this PricingEntity entity) => new()
     {
         Id = entity.Id ?? string.Empty,
-        Code = entity.Code,
         Name = entity.Name,
-        CustomerGroupCode = entity.CustomerGroupCode,
+        ItemId = entity.ItemId,
         StartDate = entity.StartDate,
         EndDate = entity.EndDate,
         IsActive = entity.IsActive,
@@ -149,41 +160,32 @@ public static class MappingExtensions
 
     public static PricingEntity ToEntity(this CreatePricingRequest request) => new()
     {
-        Code = request.Code.Trim(),
         Name = request.Name.Trim(),
-        CustomerGroupCode = request.CustomerGroupCode.Trim(),
+        ItemId = request.ItemId.Trim(),
         StartDate = request.StartDate,
         EndDate = request.EndDate,
         IsActive = request.IsActive,
-        Details = request.Details.Select(ToEntity).ToList(),
+        Details = new List<PricingDetailEntity>(),
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow
     };
 
     public static void UpdateFrom(this PricingEntity entity, UpdatePricingRequest request)
     {
-        entity.Code = request.Code.Trim();
         entity.Name = request.Name.Trim();
-        entity.CustomerGroupCode = request.CustomerGroupCode.Trim();
+        entity.ItemId = request.ItemId.Trim();
         entity.StartDate = request.StartDate;
         entity.EndDate = request.EndDate;
         entity.IsActive = request.IsActive;
-        entity.Details = request.Details.Select(ToEntity).ToList();
+        entity.Details = new List<PricingDetailEntity>();
         entity.UpdatedAt = DateTime.UtcNow;
     }
 
     public static PricingDetailResponse ToResponse(this PricingDetailEntity entity) => new()
     {
-        ItemId = entity.ItemId,
+        CustomerGroupCode = entity.CustomerGroupCode,
         UomCode = entity.UomCode,
         Price = entity.Price
-    };
-
-    public static PricingDetailEntity ToEntity(this PricingDetailRequest request) => new()
-    {
-        ItemId = request.ItemId.Trim(),
-        UomCode = request.UomCode.Trim(),
-        Price = request.Price
     };
 
     public static WarehouseResponse ToResponse(this WarehouseEntity entity) => new()
@@ -217,43 +219,11 @@ public static class MappingExtensions
         entity.UpdatedAt = DateTime.UtcNow;
     }
 
-    public static WarehouseStockResponse ToResponse(this WarehouseStockEntity entity) => new()
-    {
-        Id = entity.Id ?? string.Empty,
-        BaseUomCode = entity.BaseUomCode,
-        WarehouseId = entity.WarehouseId,
-        ItemId = entity.ItemId,
-        QuantityOnHand = entity.QuantityOnHand,
-        ReservedQuantity = entity.ReservedQuantity,
-        UpdatedAt = entity.UpdatedAt,
-        Alias = entity.Alias ?? string.Empty
-    };
-
-    public static WarehouseStockEntity ToEntity(this CreateWarehouseStockRequest request) => new()
-    {
-        BaseUomCode = request.BaseUomCode.Trim(),
-        WarehouseId = request.WarehouseId.Trim(),
-        ItemId = request.ItemId.Trim(),
-        QuantityOnHand = request.QuantityOnHand,
-        ReservedQuantity = request.ReservedQuantity,
-        UpdatedAt = DateTime.UtcNow
-    };
-
-    public static void UpdateFrom(this WarehouseStockEntity entity, UpdateWarehouseStockRequest request)
-    {
-        entity.BaseUomCode = request.BaseUomCode.Trim();
-        entity.WarehouseId = request.WarehouseId.Trim();
-        entity.ItemId = request.ItemId.Trim();
-        entity.QuantityOnHand = request.QuantityOnHand;
-        entity.ReservedQuantity = request.ReservedQuantity;
-        entity.UpdatedAt = DateTime.UtcNow;
-    }
-
     public static InventoryMovementResponse ToResponse(this InventoryMovementEntity entity) => new()
     {
         Id = entity.Id ?? string.Empty,
-        BookId = entity.BookId,
-        BookTitle = entity.BookTitle,
+        ItemId = entity.ItemId,
+        ItemName = entity.ItemName,
         MovementType = entity.MovementType,
         QuantityDelta = entity.QuantityDelta,
         StockBefore = entity.StockBefore,
@@ -263,60 +233,61 @@ public static class MappingExtensions
         CreatedAt = entity.CreatedAt
     };
 
-    public static BookResponse ToResponse(this BookEntity entity) => new()
+    public static BookResponse ToResponse(this BookEntity entity, ItemEntity? item = null) => new()
     {
         Id = entity.Id ?? string.Empty,
-        Title = entity.Title,
-        SAPCode = entity.SAPCode,
+        ItemId = entity.ItemId,
+        Title = item?.Name ?? string.Empty,
+        SAPCode = item?.SAPCode ?? string.Empty,
         AuthorIds = entity.AuthorIds.ToList(),
         Authors = [],
         Isbn = entity.Isbn,
         CategoryId = entity.CategoryId ?? string.Empty,
-        Price = entity.Price,
-        Description = entity.Description,
-        CoverImage = entity.CoverImage,
+        Price = 0,
+        Description = item?.Description ?? string.Empty,
+        CoverImage = item?.CoverImage ?? string.Empty,
         Publisher = entity.Publisher,
         PublishedYear = entity.PublishedYear,
         Pages = entity.Pages,
-        Weight = entity.Weight,
-        Stock = entity.Stock,
+        Weight = item?.Weight ?? 0,
+        Stock = item?.Stock ?? 0,
         QuantitySold = 0,
         Rating = entity.AverageRating,
         AverageRating = entity.AverageRating,
         TotalReviews = entity.TotalReviews,
         CreatedAt = entity.CreatedAt,
-        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList()
+        AdditionalImages = item?.AdditionalImages.Select(ToResponse).ToList() ?? []
     };
 
-    public static BookResponse ToResponse(this BookEntity entity, IEnumerable<AuthorEntity> authors) => new()
+    public static BookResponse ToResponse(this BookEntity entity, ItemEntity? item, IEnumerable<AuthorEntity> authors) => new()
     {
         Id = entity.Id ?? string.Empty,
-        Title = entity.Title,
-        SAPCode = entity.SAPCode,
+        ItemId = entity.ItemId,
+        Title = item?.Name ?? string.Empty,
+        SAPCode = item?.SAPCode ?? string.Empty,
         AuthorIds = entity.AuthorIds.ToList(),
         Authors = authors.Select(ToResponse).ToList(),
         Isbn = entity.Isbn,
         CategoryId = entity.CategoryId ?? string.Empty,
-        Price = entity.Price,
-        Description = entity.Description,
-        CoverImage = entity.CoverImage,
+        Price = 0,
+        Description = item?.Description ?? string.Empty,
+        CoverImage = item?.CoverImage ?? string.Empty,
         Publisher = entity.Publisher,
         PublishedYear = entity.PublishedYear,
         Pages = entity.Pages,
-        Weight = entity.Weight,
-        Stock = entity.Stock,
+        Weight = item?.Weight ?? 0,
+        Stock = item?.Stock ?? 0,
         QuantitySold = 0,
         Rating = entity.AverageRating,
         AverageRating = entity.AverageRating,
         TotalReviews = entity.TotalReviews,
         CreatedAt = entity.CreatedAt,
-        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList()
+        AdditionalImages = item?.AdditionalImages.Select(ToResponse).ToList() ?? []
     };
 
     public static BookEntity ToEntity(this CreateBookRequest request) => new()
     {
-        Title = request.Title.Trim(),
-        SAPCode = request.SAPCode.Trim(),
+        ItemId = request.ItemId?.Trim() ?? string.Empty,
         AuthorIds = request.AuthorIds
             .Where(authorId => !string.IsNullOrWhiteSpace(authorId))
             .Select(authorId => authorId.Trim())
@@ -324,24 +295,46 @@ public static class MappingExtensions
             .ToList(),
         Isbn = request.Isbn.Trim(),
         CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim(),
-        Price = request.Price,
-        Description = request.Description.Trim(),
-        CoverImage = request.CoverImage.Trim(),
         Publisher = request.Publisher.Trim(),
         PublishedYear = request.PublishedYear,
         Pages = request.Pages,
-        Weight = request.Weight,
-        Stock = request.Stock,
-        AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         AverageRating = 0,
         TotalReviews = 0,
         CreatedAt = DateTime.UtcNow
     };
 
+    public static ItemEntity ToItemEntity(this CreateBookRequest request) => new()
+    {
+        Name = request.Title.Trim(),
+        SAPCode = request.SAPCode.Trim(),
+        ItemType = "book",
+        CoverImage = request.CoverImage.Trim(),
+        AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
+        BaseUomCode = string.Empty,
+        Description = request.Description.Trim(),
+        Weight = request.Weight,
+        Stock = request.Stock,
+        IsActive = true,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
+    };
+
+    public static void UpdateItemFrom(this ItemEntity entity, UpdateBookRequest request)
+    {
+        entity.Name = request.Title.Trim();
+        entity.SAPCode = request.SAPCode.Trim();
+        entity.CoverImage = request.CoverImage.Trim();
+        entity.AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList();
+        entity.Description = request.Description.Trim();
+        entity.Weight = request.Weight;
+        entity.Stock = request.Stock;
+        entity.ItemType = string.IsNullOrWhiteSpace(entity.ItemType) ? "book" : entity.ItemType;
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
     public static void UpdateFrom(this BookEntity entity, UpdateBookRequest request)
     {
-        entity.Title = request.Title.Trim();
-        entity.SAPCode = request.SAPCode.Trim();
+        entity.ItemId = request.ItemId?.Trim() ?? entity.ItemId;
         entity.AuthorIds = request.AuthorIds
             .Where(authorId => !string.IsNullOrWhiteSpace(authorId))
             .Select(authorId => authorId.Trim())
@@ -349,15 +342,9 @@ public static class MappingExtensions
             .ToList();
         entity.Isbn = request.Isbn.Trim();
         entity.CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim();
-        entity.Price = request.Price;
-        entity.Description = request.Description.Trim();
-        entity.CoverImage = request.CoverImage.Trim();
         entity.Publisher = request.Publisher.Trim();
         entity.PublishedYear = request.PublishedYear;
         entity.Pages = request.Pages;
-        entity.Weight = request.Weight;
-        entity.Stock = request.Stock;
-        entity.AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList();
     }
 
     public static AdditionalImageRequest ToResponse(this AdditionalImage entity) => new()
@@ -514,8 +501,8 @@ public static class MappingExtensions
 
     public static OrderItemResponse ToResponse(this OrderItemEntity entity) => new()
     {
-        BookId = entity.BookId,
         ItemId = entity.ItemId,
+        ItemName = entity.ItemName,
         Title = entity.Title,
         UomCode = entity.UomCode,
         CoverImage = string.Empty,
@@ -525,22 +512,21 @@ public static class MappingExtensions
 
     public static OrderItemEntity ToEntity(this CreateOrderItemRequest request) => new()
     {
-        BookId = request.BookId.Trim(),
-        ItemId = string.IsNullOrWhiteSpace(request.ItemId) ? null : request.ItemId.Trim(),
-        BookName = request.BookName.Trim(),
+        ItemId = request.ItemId.Trim(),
+        ItemName = request.ItemName.Trim(),
         Title = request.Title.Trim(),
         UomCode = request.UomCode.Trim(),
         Price = request.Price ?? 0,
         Quantity = request.Quantity
     };
 
-    public static OrderItemResponse ToResponse(this OrderItemEntity entity, IReadOnlyDictionary<string, string> coverImagesByBookId) => new()
+    public static OrderItemResponse ToResponse(this OrderItemEntity entity, IReadOnlyDictionary<string, string> coverImagesByItemId) => new()
     {
-        BookId = entity.BookId,
         ItemId = entity.ItemId,
+        ItemName = entity.ItemName,
         Title = entity.Title,
         UomCode = entity.UomCode,
-        CoverImage = coverImagesByBookId.TryGetValue(entity.BookId, out var coverImage) ? coverImage : string.Empty,
+        CoverImage = coverImagesByItemId.TryGetValue(entity.ItemId, out var coverImage) ? coverImage : string.Empty,
         Price = entity.Price,
         Quantity = entity.Quantity
     };
@@ -831,13 +817,15 @@ public static class MappingExtensions
 
     public static CartItemResponse ToResponse(this CartItemEntity entity) => new()
     {
-        BookId = entity.BookId,
+        ItemId = entity.ItemId,
+        UomCode = entity.UomCode,
         Quantity = entity.Quantity
     };
 
     public static CartItemEntity ToEntity(this AddCartItemRequest request) => new()
     {
-        BookId = request.BookId.Trim(),
+        ItemId = request.ItemId.Trim(),
+        UomCode = request.UomCode.Trim(),
         Quantity = request.Quantity
     };
 
@@ -955,7 +943,7 @@ public static class MappingExtensions
     {
         Id = entity.Id ?? string.Empty,
         UserId = entity.UserId,
-        BookId = entity.BookId,
+        ItemId = entity.ItemId,
         OrderId = entity.OrderId,
         Rating = entity.Rating,
         Comment = entity.Comment,
@@ -966,27 +954,12 @@ public static class MappingExtensions
     public static ReviewEntity ToEntity(this CreateReviewRequest request) => new()
     {
         UserId = request.UserId.Trim(),
-        BookId = request.BookId.Trim(),
+        ItemId = request.ItemId.Trim(),
         OrderId = request.OrderId.Trim(),
         Rating = request.Rating,
         Comment = request.Comment.Trim(),
         AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         CreatedAt = DateTime.UtcNow
-    };
-
-    public static ComplaintResponse ToResponse(this ComplaintEntity entity) => new()
-    {
-        Id = entity.Id ?? string.Empty,
-        UserId = entity.UserId,
-        OrderId = entity.OrderId,
-        BookId = entity.BookId,
-        Subject = entity.Subject,
-        Description = entity.Description,
-        Status = entity.Status,
-        CreatedAt = entity.CreatedAt,
-        UpdatedAt = entity.UpdatedAt,
-        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList(),
-        Messages = entity.Messages.Select(ToResponse).ToList()
     };
 
     public static ComplaintMessageResponse ToResponse(this ComplaintMessageEntity entity) => new()
@@ -998,13 +971,28 @@ public static class MappingExtensions
         CreatedAt = entity.CreatedAt
     };
 
+    public static ComplaintResponse ToResponse(this ComplaintEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        UserId = entity.UserId,
+        OrderId = entity.OrderId,
+        ItemId = entity.ItemId,
+        Subject = entity.Subject,
+        Description = entity.Description,
+        Status = entity.Status,
+        CreatedAt = entity.CreatedAt,
+        UpdatedAt = entity.UpdatedAt,
+        AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList(),
+        Messages = entity.Messages.Select(ToResponse).ToList()
+    };
+
     public static ComplaintEntity ToEntity(this CreateComplaintRequest request) => new()
     {
-        UserId = request.UserId.Trim(),
-        OrderId = request.OrderId.Trim(),
-        BookId = request.BookId.Trim(),
-        Subject = request.Subject.Trim(),
-        Description = request.Description.Trim(),
+        UserId = (request.UserId ?? string.Empty).Trim(),
+        OrderId = (request.OrderId ?? string.Empty).Trim(),
+        ItemId = (request.ItemId ?? string.Empty).Trim(),
+        Subject = (request.Subject ?? string.Empty).Trim(),
+        Description = (request.Description ?? string.Empty).Trim(),
         AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         Status = "open",
         Messages =
@@ -1012,8 +1000,8 @@ public static class MappingExtensions
             new ComplaintMessageEntity
             {
                 SenderType = "customer",
-                SenderId = request.UserId.Trim(),
-                Message = request.Description.Trim(),
+                SenderId = (request.UserId ?? string.Empty).Trim(),
+                Message = (request.Description ?? string.Empty).Trim(),
                 AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
                 CreatedAt = DateTime.UtcNow
             }

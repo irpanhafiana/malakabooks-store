@@ -53,7 +53,7 @@ namespace MalakaBooks.DataValidator
         private async Task ValidateReviewAsync(ReviewEntity entity, bool isUpdate)
         {
             var userId = entity.UserId.Trim();
-            var bookId = entity.BookId.Trim();
+            var itemId = entity.ItemId.Trim();
             var orderId = entity.OrderId.Trim();
 
             var order = await _orderRepository.GetByIdAsync(orderId);
@@ -73,23 +73,23 @@ namespace MalakaBooks.DataValidator
                 Errors.Add("Review can only be created for delivered orders.");
             }
 
-            var purchasedBookExists = order.Items.Any(item => string.Equals(item.BookId, bookId, StringComparison.OrdinalIgnoreCase));
-            if (!purchasedBookExists)
+            var purchasedItemExists = order.Items.Any(item => string.Equals(item.ItemId, itemId, StringComparison.OrdinalIgnoreCase));
+            if (!purchasedItemExists)
             {
-                Errors.Add("Review book must exist in the specified order.");
+                Errors.Add("Review item must exist in the specified order.");
             }
 
             var existing = isUpdate
                 ? await _collection.Find(_ =>
                     _.UserId.ToLower() == userId.ToLower() &&
-                    _.BookId.ToLower() == bookId.ToLower() &&
+                    _.ItemId.ToLower() == itemId.ToLower() &&
                     _.OrderId.ToLower() == orderId.ToLower() &&
                     _.Id != entity.Id).FirstOrDefaultAsync()
-                : await _reviewRepository.GetByUserOrderAndBookAsync(userId, orderId, bookId);
+                : await _reviewRepository.GetByUserOrderAndItemAsync(userId, orderId, itemId);
 
             if (existing != null)
             {
-                Errors.Add("Review with same user, order and book already exist.");
+                Errors.Add("Review with same user, order and item already exist.");
             }
         }
 

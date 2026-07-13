@@ -1,5 +1,6 @@
 using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.Mediator.InventoryMovementHandlers;
+using MalakaBooks.ViewModel;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +27,19 @@ public class InventoryMovementsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Gets inventory movements, optionally filtered by book identifier.
+    /// Gets inventory movements, optionally filtered by item identifier.
     /// </summary>
-    /// <param name="bookId">The optional book identifier used to filter movement history.</param>
+    /// <param name="itemId">The optional item identifier used to filter movement history.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>An <see cref="IActionResult"/> containing the inventory movement records.</returns>
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] string? bookId, CancellationToken cancellationToken) =>
-        Success(await _mediator.Send(new GetInventoryMovementsQuery(bookId), cancellationToken));
+    public async Task<IActionResult> GetAll([FromQuery] string? itemId, CancellationToken cancellationToken) =>
+        Success(await _mediator.Send(new GetInventoryMovementsQuery(itemId), cancellationToken));
+
+    /// <summary>
+    /// Receives goods into item stock and records the inventory movement.
+    /// </summary>
+    [HttpPost("goods-receive")]
+    public async Task<IActionResult> ReceiveGoods([FromBody] GoodsReceiveRequest request, CancellationToken cancellationToken) =>
+        Success(await _mediator.Send(new ReceiveGoodsCommand(request), cancellationToken));
 }

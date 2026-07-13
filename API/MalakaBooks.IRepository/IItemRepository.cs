@@ -9,5 +9,7 @@ public interface IItemRepository
     Task<ItemEntity?> GetBySapCodeAsync(string sapCode, CancellationToken cancellationToken = default);
     Task<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default);
     Task<bool> UpdateAsync(string id, ItemEntity item, CancellationToken cancellationToken = default);
+    Task<ItemEntity?> AdjustStockAsync(string id, int quantityDelta, CancellationToken cancellationToken = default);
+    Task<ItemEntity?> SetStockAsync(string id, int newStock, CancellationToken cancellationToken = default);
     Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default);
 }

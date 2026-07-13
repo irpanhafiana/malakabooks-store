@@ -9,7 +9,7 @@ public class RemoveCartItemHandler(ICartRepository cartRepository) : IRequestHan
 {
     public async Task<CartResponse> Handle(RemoveCartItemCommand request, CancellationToken cancellationToken)
     {
-        var items = await cartRepository.RemoveItemAsync(request.Request.UserId, request.Request.BookId, cancellationToken);
+        var items = await cartRepository.RemoveItemAsync(request.Request.UserId, request.Request.ItemId, cancellationToken);
         return items.ToResponse(request.Request.UserId);
     }
 }

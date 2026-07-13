@@ -31,10 +31,10 @@ public class CartController(IMediator mediator) : ApiControllerBase
     }
 
     /// <summary>Remove item from cart</summary>
-    [HttpDelete("{userId}/items/{bookId}")]
-    public async Task<IActionResult> RemoveItem(string userId, string bookId, CancellationToken cancellationToken)
+    [HttpDelete("{userId}/items/{itemId}")]
+    public async Task<IActionResult> RemoveItem(string userId, string itemId, CancellationToken cancellationToken)
     {
-        var request = new RemoveCartItemRequest { UserId = userId, BookId = bookId };
+        var request = new RemoveCartItemRequest { UserId = userId, ItemId = itemId };
 
         return Success(await mediator.Send(new RemoveCartItemCommand(request), cancellationToken));
     }

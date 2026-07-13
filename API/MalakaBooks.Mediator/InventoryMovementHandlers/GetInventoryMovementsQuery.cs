@@ -3,4 +3,4 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.InventoryMovementHandlers;
 
-public record GetInventoryMovementsQuery(string? BookId) : IRequest<IReadOnlyCollection<InventoryMovementResponse>>;
+public record GetInventoryMovementsQuery(string? ItemId) : IRequest<IReadOnlyCollection<InventoryMovementResponse>>;

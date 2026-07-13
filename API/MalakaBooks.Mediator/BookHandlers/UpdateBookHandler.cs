@@ -7,7 +7,7 @@ namespace MalakaBooks.Mediator.BookHandlers;
 
 public class UpdateBookHandler(
     IBookRepository bookRepository,
-    IInventoryMovementRepository inventoryMovementRepository,
+    IItemRepository itemRepository,
     IBookEntityValidator validator) : IRequestHandler<UpdateBookCommand, bool>
 {
     private readonly IBookEntityValidator _validator = validator;
@@ -17,34 +17,24 @@ public class UpdateBookHandler(
         var entity = await bookRepository.GetByIdAsync(request.Id, cancellationToken);
         if (entity is null) return false;
 
-        var stockBefore = entity.Stock;
-
         var result = await _validator.UpdateValidateAsync(entity);
         if (result is not null) return false;
 
         entity.UpdateFrom(request.Request);
-        var isUpdated = await bookRepository.UpdateAsync(request.Id, entity, cancellationToken);
-        if (!isUpdated)
+        var item = await itemRepository.GetByIdAsync(entity.ItemId, cancellationToken);
+        if (item is null)
         {
             return false;
         }
 
-        if (stockBefore != entity.Stock)
+        item.UpdateItemFrom(request.Request);
+        var isItemUpdated = await itemRepository.UpdateAsync(item.Id!, item, cancellationToken);
+        if (!isItemUpdated)
         {
-            await inventoryMovementRepository.CreateAsync(new MalakaBooks.Entity.InventoryMovementEntity
-            {
-                BookId = entity.Id ?? request.Id,
-                BookTitle = entity.Title,
-                MovementType = "adjustment",
-                QuantityDelta = entity.Stock - stockBefore,
-                StockBefore = stockBefore,
-                StockAfter = entity.Stock,
-                ReferenceId = request.Id,
-                Note = $"Stock adjusted manually from admin book update for book '{request.Id}'.",
-                CreatedAt = DateTime.UtcNow
-            }, cancellationToken);
+            return false;
         }
 
-        return true;
+        var isUpdated = await bookRepository.UpdateAsync(request.Id, entity, cancellationToken);
+        return isUpdated;
     }
 }

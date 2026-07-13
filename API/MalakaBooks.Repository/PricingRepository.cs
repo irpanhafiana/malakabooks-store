@@ -21,16 +21,16 @@ public class PricingRepository : IPricingRepository
     public async Task<PricingEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 
-    public async Task<PricingEntity?> GetActiveByCustomerGroupCodeAsync(string customerGroupCode, DateTime asOfUtc, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<PricingEntity>> GetActiveByItemIdAsync(string itemId, DateTime asOfUtc, CancellationToken cancellationToken = default)
     {
         var filter = Builders<PricingEntity>.Filter.Where(pricing =>
             pricing.IsActive
-            && pricing.CustomerGroupCode == customerGroupCode
+            && pricing.ItemId == itemId
             && pricing.StartDate <= asOfUtc
             && pricing.EndDate >= asOfUtc);
 
         var sort = Builders<PricingEntity>.Sort.Descending(pricing => pricing.StartDate);
-        return await _collection.Find(filter).Sort(sort).FirstOrDefaultAsync(cancellationToken);
+        return await _collection.Find(filter).Sort(sort).ToListAsync(cancellationToken);
     }
 
     public async Task<PricingEntity> CreateAsync(PricingEntity pricing, CancellationToken cancellationToken = default)

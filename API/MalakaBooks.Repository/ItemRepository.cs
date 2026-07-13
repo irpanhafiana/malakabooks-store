@@ -37,6 +37,32 @@ public class ItemRepository : IItemRepository
         return result.ModifiedCount > 0;
     }
 
+    public async Task<ItemEntity?> AdjustStockAsync(string id, int quantityDelta, CancellationToken cancellationToken = default)
+    {
+        var update = Builders<ItemEntity>.Update.Inc(item => item.Stock, quantityDelta);
+        return await _collection.FindOneAndUpdateAsync(
+            item => item.Id == id,
+            update,
+            new FindOneAndUpdateOptions<ItemEntity>
+            {
+                ReturnDocument = ReturnDocument.After
+            },
+            cancellationToken);
+    }
+
+    public async Task<ItemEntity?> SetStockAsync(string id, int newStock, CancellationToken cancellationToken = default)
+    {
+        var update = Builders<ItemEntity>.Update.Set(item => item.Stock, newStock);
+        return await _collection.FindOneAndUpdateAsync(
+            item => item.Id == id,
+            update,
+            new FindOneAndUpdateOptions<ItemEntity>
+            {
+                ReturnDocument = ReturnDocument.After
+            },
+            cancellationToken);
+    }
+
     public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
     {
         var result = await _collection.DeleteOneAsync(x => x.Id == id, cancellationToken);

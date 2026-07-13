@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MalakaBooks.API.Controllers.Customer;
 /// <summary>
-/// Handles review-related API requests for customers, including retrieving reviews for a specific book and creating new
+/// Handles review-related API requests for customers, including retrieving reviews for a specific item and creating new
 /// reviews.
 /// </summary>
 /// <param name="mediator">The mediator used to send commands and queries related to reviews.</param>
@@ -15,10 +15,10 @@ namespace MalakaBooks.API.Controllers.Customer;
 [Authorize(Policy = "MalakaCustomerPolicy")]
 public class ReviewsController(IMediator mediator) : ApiControllerBase
 {
-    /// <summary>Get reviews by book</summary>
-    [HttpGet("book/{bookId}")]
-    public async Task<IActionResult> GetByBook(string bookId, CancellationToken cancellationToken) =>
-        Success(await mediator.Send(new GetReviewsByBookQuery(bookId), cancellationToken));
+    /// <summary>Get reviews by item</summary>
+    [HttpGet("items/{itemId}")]
+    public async Task<IActionResult> GetByItem(string itemId, CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetReviewsByItemQuery(itemId), cancellationToken));
 
     /// <summary>Write a review</summary>
     [HttpPost]
