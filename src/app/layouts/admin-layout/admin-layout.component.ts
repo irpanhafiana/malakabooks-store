@@ -23,6 +23,7 @@ export class AdminLayoutComponent {
   isSidebarOpen = signal<boolean>(false);
   activeRouteName = signal<string>('Dashboard');
   isMasterDataOpen = signal<boolean>(false);
+  isMardikaKopiOpen = signal<boolean>(false);
 
   unshippedOrdersCount = computed(() => {
     return this.orderStore.orders().filter(o => !o.trackingNumber && o.status !== 'cancelled').length;
@@ -39,15 +40,19 @@ export class AdminLayoutComponent {
           url.includes('/categories') ||
           url.includes('/promotion-banners') ||
           url.includes('/authors') ||
-          url.includes('/users') ||
-          url.includes('/uoms') ||
+          url.includes('/users');
+        if (isMasterRoute) {
+          this.isMasterDataOpen.set(true);
+        }
+
+        const isMardikaRoute = url.includes('/uoms') ||
           url.includes('/warehouses') ||
           url.includes('/items') ||
           url.includes('/stocks') ||
           url.includes('/pricings') ||
           url.includes('/inventory-movements');
-        if (isMasterRoute) {
-          this.isMasterDataOpen.set(true);
+        if (isMardikaRoute) {
+          this.isMardikaKopiOpen.set(true);
         }
 
         if (url.includes('/products')) {
@@ -98,6 +103,10 @@ export class AdminLayoutComponent {
 
   toggleMasterData() {
     this.isMasterDataOpen.update(v => !v);
+  }
+
+  toggleMardikaKopi() {
+    this.isMardikaKopiOpen.update(v => !v);
   }
 
   onSignOut() {

@@ -80,13 +80,57 @@
               <span>Kelola Kategori</span>
             </a>
 
-            <!-- UoM Groups -->
-            <a routerLink="/admin/uoms" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <!--  Banners -->
+            <a routerLink="/admin/promotion-banners" routerLinkActive="!bg-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
                 class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-              <span>Kelola UoM</span>
+              <span>Kelola Promosi</span>
+            </a>
+
+            <!-- Authors -->
+            <a routerLink="/admin/authors" routerLinkActive="!bg-primary-600 !text-white active-link"
+              (click)="closeSidebar()"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+              <app-icon name="minus" size="18"
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>kelola Penulis</span>
+            </a>
+
+            <!-- Users -->
+            <a routerLink="/admin/users" routerLinkActive="!bg-primary-600 !text-white active-link"
+              (click)="closeSidebar()"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+              <app-icon name="minus" size="18"
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>Data Pelanggan</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mardika Kopi Accordion -->
+        <div class="flex flex-col">
+          <button (click)="toggleMardikaKopi()"
+            class="flex items-center justify-between w-full px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+            <div class="flex items-center gap-3">
+              <app-icon name="coffee" size="20"
+                class="text-slate-400 group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>Mardika Kopi</span>
+            </div>
+            <app-icon [name]="isMardikaKopiOpen() ? 'chevron-down' : 'chevron-right'" size="16"
+              class="text-slate-400 group-hover:text-slate-600 transition-colors"></app-icon>
+          </button>
+
+          <!-- Accordion Menu Items -->
+          <div [class.hidden]="!isMardikaKopiOpen()" class="pl-4 flex flex-col gap-1 mt-1 transition-all duration-200">
+            <!-- Items -->
+            <a routerLink="/admin/items" routerLinkActive="!bg-primary-600 !text-white active-link"
+              (click)="closeSidebar()"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+              <app-icon name="minus" size="18"
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>Kelola Items</span>
             </a>
 
             <!-- Warehouses -->
@@ -98,13 +142,13 @@
               <span>Kelola Gudang</span>
             </a>
 
-            <!-- Items -->
-            <a routerLink="/admin/items" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <!-- UoM Groups -->
+            <a routerLink="/admin/uoms" routerLinkActive="!bg-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
                 class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-              <span>Kelola Items</span>
+              <span>Kelola UoM</span>
             </a>
 
             <!-- Stocks -->
@@ -132,33 +176,6 @@
               <app-icon name="minus" size="18"
                 class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
               <span>Mutasi Stok</span>
-            </a>
-
-            <!--  Banners -->
-            <a routerLink="/admin/promotion-banners" routerLinkActive="!bg-primary-600 !text-white active-link"
-              (click)="closeSidebar()"
-              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-              <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-              <span>Kelola Promosi</span>
-            </a>
-
-            <!-- Authors -->
-            <a routerLink="/admin/authors" routerLinkActive="!bg-primary-600 !text-white active-link"
-              (click)="closeSidebar()"
-              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-              <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-              <span>kelola Penulis</span>
-            </a>
-
-            <!-- Users -->
-            <a routerLink="/admin/users" routerLinkActive="!bg-primary-600 !text-white active-link"
-              (click)="closeSidebar()"
-              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-              <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-              <span>Data Pelanggan</span>
             </a>
           </div>
         </div>

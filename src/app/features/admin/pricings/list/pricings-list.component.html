@@ -61,7 +61,7 @@
         <td class="px-5 py-4 text-xs text-slate-500 font-medium">
           {{ pricing.startDate | date:'shortDate' }} s/d {{ pricing.endDate | date:'shortDate' }}
         </td>
-        <td class="px-5 py-4 text-xs text-slate-500">{{ pricing.details?.length || 0 }} Rincian</td>
+        <td class="px-5 py-4 text-xs text-slate-500">{{ pricing.details.length || 0 }} Rincian</td>
         <td class="px-5 py-4 text-xs">
           @if (pricing.isActive) {
             <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-100 text-green-700">Aktif</span>

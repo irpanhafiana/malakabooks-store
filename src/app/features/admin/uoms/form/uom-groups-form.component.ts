@@ -4,7 +4,6 @@ import { UomGroup, UomGroupDetail } from '../../../../core/models';
 import { UomGroupStore } from '../../../../store/uom-group.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
-import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 
@@ -12,7 +11,7 @@ import { IconComponent } from '../../../../shared/ui/icon/icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-uom-groups-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent, IconComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, IconComponent],
   templateUrl: './uom-groups-form.component.html'
 })
 export class UomGroupsFormComponent {

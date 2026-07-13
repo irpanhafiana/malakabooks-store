@@ -17,8 +17,10 @@ export class ProductCardComponent {
   private readonly productStore = inject(ProductStore);
 
   readonly product = input.required<Product>();
+  readonly customClick = input<boolean>(false);
 
   readonly addToCart = output<Product>();
+  readonly productClick = output<Product>();
 
   protected readonly Math = Math;
   protected readonly imageError = signal(false);
@@ -34,6 +36,10 @@ export class ProductCardComponent {
   }
 
   viewProductDetails() {
-    this.productStore.setSelectedProductId(this.product().id);
+    if (this.customClick()) {
+      this.productClick.emit(this.product());
+    } else {
+      this.productStore.setSelectedProductId(this.product().id);
+    }
   }
 }

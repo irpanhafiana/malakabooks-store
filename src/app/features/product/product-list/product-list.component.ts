@@ -1,4 +1,5 @@
 import { Component, inject, signal, effect, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Location } from '@angular/common';
 import { ProductStore } from '../../../store/product.store';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
@@ -21,6 +22,7 @@ export class ProductListComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
+  private readonly location = inject(Location);
   protected readonly Math = Math;
 
   ngOnInit() {
@@ -86,6 +88,9 @@ export class ProductListComponent implements OnInit {
     this.productStore.loadAll();
   }
 
+  goBack() {
+    this.location.back();
+  }
 
   filterButtonClass(catId: string | null): string {
     const base = 'w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold  cursor-pointer';

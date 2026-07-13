@@ -76,33 +76,32 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./features/home/home.component').then(c => c.HomeComponent),
         data: { preload: true }
+      },
+      {
+        path: 'mardika-kopi',
+        loadComponent: () => import('./features/mardika-kopi/mardika-kopi.component').then(c => c.MardikaKopiComponent),
+        data: { preload: true }
       }
     ]
   },
 
-  // Search layout (without top header, just bottom nav)
-  {
-    path: '',
-    loadComponent: () => import('./layouts/search-layout/search-layout.component').then(c => c.SearchLayoutComponent),
-    children: [
-      {
-        path: 'product',
-        loadComponent: () => import('./features/product/product-list/product-list.component').then(c => c.ProductListComponent),
-        data: { preload: true }
-      },
-      {
-        path: 'product/:id',
-        loadComponent: () => import('./features/product/product-detail/product-detail.component').then(c => c.ProductDetailComponent),
-        data: { preload: true }
-      }
-    ]
-  },
+
 
   // Inner page layout (without bottom nav, with back button)
   {
     path: '',
     loadComponent: () => import('./layouts/inner-page-layout/inner-page-layout.component').then(c => c.InnerPageLayoutComponent),
     children: [
+      {
+        path: 'product',
+        loadComponent: () => import('./features/product/product-list/product-list.component').then(c => c.ProductListComponent),
+        data: { hideHeader: true, preload: true }
+      },
+      {
+        path: 'product/:id',
+        loadComponent: () => import('./features/product/product-detail/product-detail.component').then(c => c.ProductDetailComponent),
+        data: { hideHeader: true, preload: true }
+      },
       {
         path: 'profile',
         loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),

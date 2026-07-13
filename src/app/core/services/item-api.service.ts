@@ -25,6 +25,17 @@ export class ItemApiService {
     }
   }
 
+  async getItemById(id: string): Promise<CatalogItem | null> {
+    try {
+      const endpoint = isAdminSession() ? `${this.BASE_URL}/admin/Items/${id}` : `${this.BASE_URL}/public/Items/${id}`;
+      const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem>>(endpoint));
+      return envelope?.data || null;
+    } catch (e) {
+      this.logger.error('ItemApiService.getItemById', `Gagal mengambil item ${id}:`, e);
+      return null;
+    }
+  }
+
   async saveItem(item: Partial<CatalogItem>): Promise<CatalogItem> {
     const isNew = !item.id;
     const body: Partial<CatalogItem> = {
