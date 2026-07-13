@@ -1,4 +1,4 @@
-import { Component, inject, input, output, effect, computed, ChangeDetectionStrategy, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, input, output, effect, computed, ChangeDetectionStrategy, signal, ChangeDetectorRef, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductStore } from '../../../../store/product.store';
 import { AuthorStore } from '../../../../store/author.store';
@@ -17,8 +17,9 @@ import { AlertService } from '../../../../core/services/alert.service';
   templateUrl: './products-form.component.html',
   styleUrl: './products-form.component.css'
 })
-export class ProductsFormComponent {
+export class ProductsFormComponent implements OnInit {
   readonly product = input<Product | null>(null);
+  readonly standaloneMode = input<boolean>(true);
   readonly onCancel = output<void>();
   readonly onSave = output<void>();
 
@@ -26,6 +27,11 @@ export class ProductsFormComponent {
   protected readonly authorStore = inject(AuthorStore);
   private readonly alertService = inject(AlertService);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  ngOnInit() {
+    this.productStore.loadCategories();
+    this.authorStore.loadAuthors();
+  }
 
   titleControl = new FormControl('', [Validators.required]);
   categoryControl = new FormControl('', [Validators.required]);
@@ -166,19 +172,8 @@ export class ProductsFormComponent {
     });
   }
 
-  async onSubmitForm() {
-    if (this.productForm.invalid) {
-      this.productForm.markAllAsTouched();
-      return;
-    }
-
-    const isConfirmed = await this.alertService.confirm(
-      'Simpan Produk?',
-      'Apakah Anda yakin ingin menyimpan perubahan data produk ini?'
-    );
-    if (!isConfirmed) return;
-
-    const catId = this.categoryControl.value || '';
+  getPayload(): Product {
+    const unformat = (v: any) => parseFloat(String(v || '0').replace(/\./g, ''));
 
     const allAdditionalImages = this.additionalImagesControls()
       .filter(img => img.image.trim() !== '')
@@ -187,9 +182,7 @@ export class ProductsFormComponent {
         image: img.image
       }));
 
-    const unformat = (v: any) => parseFloat(String(v || '0').replace(/\./g, ''));
-
-    const pData: Product = {
+    return {
       id: this.product()?.id || '',
       title: this.titleControl.value || '',
       sapCode: this.sapCodeControl.value || '',
@@ -197,7 +190,7 @@ export class ProductsFormComponent {
       authors: [],
       authorNames: '',
       isbn: this.isbnControl.value || '',
-      categoryId: catId,
+      categoryId: this.categoryControl.value || '',
       price: unformat(this.priceControl.value),
       description: this.descControl.value || '',
       coverImage: this.coverImageControl.value || '',
@@ -211,6 +204,21 @@ export class ProductsFormComponent {
       createdAt: this.product()?.createdAt || new Date().toISOString(),
       additionalImages: allAdditionalImages
     };
+  }
+
+  async onSubmitForm() {
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
+
+    const isConfirmed = await this.alertService.confirm(
+      'Simpan Produk?',
+      'Apakah Anda yakin ingin menyimpan perubahan data produk ini?'
+    );
+    if (!isConfirmed) return;
+
+    const pData = this.getPayload();
 
     await this.productStore.saveProduct(pData);
     this.alertService.success('Berhasil!', 'Data produk berhasil disimpan.');

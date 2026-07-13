@@ -41,7 +41,7 @@ export class ItemApiService {
     const body: Partial<CatalogItem> = {
       name: item.name,
       sapCode: item.sapCode,
-      itemType: item.itemType || 'Book',
+      itemType: item.itemType || 'mardika',
       uomGroupId: item.uomGroupId || undefined,
       baseUomCode: item.baseUomCode,
       description: item.description || '',

@@ -27,6 +27,7 @@ export class ProductApiService {
 
     return {
       id: book.id,
+      itemId: book.itemId,
       title: book.title,
       sapCode: book.sapCode || '',
       authorIds: book.authorIds || [],
@@ -106,7 +107,8 @@ export class ProductApiService {
       pages: product.pages,
       weight: product.weight,
       stock: product.stock,
-      sapCode: product.sapCode
+      sapCode: product.sapCode,
+      itemId: product.itemId
     };
 
     try {

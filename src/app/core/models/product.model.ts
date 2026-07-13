@@ -5,6 +5,7 @@ export interface AdditionalImage {
 
 export interface Product {
   id: string;
+  itemId?: string;
   title: string;
   sapCode: string;
   authorIds: string[];
@@ -40,6 +41,7 @@ export interface AdditionalImageDto {
 
 export interface BookDto {
   id: string;
+  itemId?: string;
   title: string;
   sapCode?: string;
   authorIds: string[];

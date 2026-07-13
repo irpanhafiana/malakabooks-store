@@ -130,9 +130,12 @@
     <app-editor [formControl]="descControl"></app-editor>
   </div>
 
-  <div class="sm:col-span-3 flex justify-end gap-2 mt-4">
-    <!-- <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Cancel</app-admin-button> -->
-    <app-admin-button (click)="onSubmitForm()" [disabled]="productForm.invalid" type="button" variant="primary"
-      size="lg">Simpan</app-admin-button>
-  </div>
+  @if (standaloneMode()) {
+    <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
+      <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
+      <app-admin-button (click)="onSubmitForm()" [disabled]="productForm.invalid" type="button" variant="primary" size="sm">
+        Simpan
+      </app-admin-button>
+    </div>
+  }
 </form>

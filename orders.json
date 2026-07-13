@@ -1,34 +1,22 @@
 {
-    "statusCode": 200,
-    "statusMessage": "OK",
-    "data": {
-        "id": "6a50c7c32260dfc66124655d",
-        "name": "safsadfsad",
-        "sapCode": "fsdf",
-        "itemType": "Book",
-        "uomGroupId": "6a50c7b72260dfc66124655c",
-        "uomGroup": {
-            "id": "6a50c7b72260dfc66124655c",
-            "name": "sdfsdfs",
-            "baseUomCode": "asdfsad",
-            "details": [
-                {
-                    "code": "asdfsad",
-                    "name": "sdfasd",
-                    "conversionFactor": 1,
-                    "isBaseUom": true,
-                    "sortOrder": 1,
-                    "isActive": true
-                }
-            ],
-            "isActive": true,
-            "alias": "ffb72ac0-dc79-4f77-bf18-fc307c4c8e7e"
-        },
-        "baseUomCode": "asdfsad",
-        "description": "sdafsadfs",
-        "isActive": true,
-        "createdAt": "2026-07-10T17:21:55.844+07:00",
-        "updatedAt": "2026-07-10T17:21:55.844+07:00"
-    },
-    "isSuccess": true
+    "itemId": "string",
+    "title": "string",
+    "sapCode": "string",
+    "authorIds": ["string"],
+    "isbn": "string",
+    "categoryId": "string",
+    "price": 0,
+    "description": "string",
+    "coverImage": "string",
+    "additionalImages": [
+        {
+            "no": 0,
+            "image": "string"
+        }
+    ],
+    "publisher": "string",
+    "publishedYear": 0,
+    "pages": 0,
+    "weight": 0,
+    "stock": 0
 }

@@ -100,10 +100,4 @@
   </div>
   }
 
-  <!-- Add/Edit Item Modal Form -->
-  <app-modal [(isOpen)]="isModalOpen" [title]="editItem() ? 'Edit Catalog Item' : 'Tambah Catalog Item Baru'">
-    <app-items-form [item]="editItem()" (onCancel)="closeModal()" (onSave)="closeModal()">
-    </app-items-form>
-  </app-modal>
-
 </div>

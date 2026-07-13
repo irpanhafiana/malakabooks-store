@@ -20,6 +20,7 @@ export class ItemsFormComponent {
   readonly item = input<CatalogItem | null>(null);
   readonly onCancel = output<void>();
   readonly onSave = output<void>();
+  readonly itemTypeChange = output<string>();
 
   private readonly itemStore = inject(ItemStore);
   protected readonly uomGroupStore = inject(UomGroupStore);
@@ -27,7 +28,7 @@ export class ItemsFormComponent {
 
   nameControl = new FormControl('', [Validators.required]);
   sapCodeControl = new FormControl('', [Validators.required]);
-  itemTypeControl = new FormControl('Book', [Validators.required]);
+  itemTypeControl = new FormControl('mardika', [Validators.required]);
   uomGroupIdControl = new FormControl('');
   baseUomCodeControl = new FormControl('', [Validators.required]);
   descriptionControl = new FormControl('');
@@ -52,8 +53,8 @@ export class ItemsFormComponent {
   });
 
   itemTypeOptions = [
-    { value: 'Book', label: 'Buku' },
-    { value: 'Other', label: 'Lainnya' }
+    { value: 'mardika', label: 'Item Kopi (Mardika)' },
+    { value: 'malaka', label: 'Buku (Malaka)' }
   ];
 
   constructor() {
@@ -70,7 +71,7 @@ export class ItemsFormComponent {
         this.descriptionControl.setValue(it.description || '');
         this.isActiveControl.setValue(it.isActive);
       } else {
-        this.formGroup.reset({ name: '', sapCode: '', itemType: 'Book', uomGroupId: '', baseUomCode: '', description: '', isActive: true });
+        this.formGroup.reset({ name: '', sapCode: '', itemType: 'mardika', uomGroupId: '', baseUomCode: '', description: '', isActive: true });
       }
     });
 
@@ -85,6 +86,23 @@ export class ItemsFormComponent {
         this.baseUomCodeControl.setValue('');
       }
     });
+
+    this.itemTypeControl.valueChanges.subscribe(val => {
+      this.itemTypeChange.emit(val || 'mardika');
+    });
+  }
+
+  getPayload(): Partial<CatalogItem> {
+    return {
+      id: this.item()?.id,
+      name: this.nameControl.value || '',
+      sapCode: this.sapCodeControl.value || '',
+      itemType: this.itemTypeControl.value || 'mardika',
+      uomGroupId: this.uomGroupIdControl.value || undefined,
+      baseUomCode: this.baseUomCodeControl.value || '',
+      description: this.descriptionControl.value || '',
+      isActive: this.isActiveControl.value ?? true
+    };
   }
 
   async onSubmitForm() {
@@ -99,16 +117,7 @@ export class ItemsFormComponent {
     );
     if (!isConfirmed) return;
 
-    const data: Partial<CatalogItem> = {
-      id: this.item()?.id,
-      name: this.nameControl.value || '',
-      sapCode: this.sapCodeControl.value || '',
-      itemType: this.itemTypeControl.value || 'Book',
-      uomGroupId: this.uomGroupIdControl.value || undefined,
-      baseUomCode: this.baseUomCodeControl.value || '',
-      description: this.descriptionControl.value || '',
-      isActive: this.isActiveControl.value ?? true
-    };
+    const data = this.getPayload();
 
     await this.itemStore.saveItem(data);
     this.onSave.emit();

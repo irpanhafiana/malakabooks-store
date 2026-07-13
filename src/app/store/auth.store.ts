@@ -159,9 +159,11 @@ export class AuthStore {
         this.persistSession(accessToken, userWithToken, refreshToken);
         this.state.set({ user: userWithToken, token: accessToken, error: null });
 
-        // Sync cart guest ke backend
-        const products = await this.productApi.getProducts();
-        await this.cartStore.syncOnLogin(user.id, products);
+        // Sync cart guest ke backend hanya untuk customer
+        if (user.role !== 'admin') {
+          const products = await this.productApi.getProducts();
+          await this.cartStore.syncOnLogin(user.id, products);
+        }
 
         this.toastService.success(`Selamat datang kembali, ${user.name}!`);
         return true;

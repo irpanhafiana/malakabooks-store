@@ -43,9 +43,11 @@ export class ItemStore {
       const saved = await this.itemApi.saveItem(item);
       await this.loadItems();
       this.toastService.success(`Item "${saved.name}" berhasil disimpan!`);
+      return saved;
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       this.toastService.error('Gagal menyimpan item.');
+      throw e;
     }
   }
 
