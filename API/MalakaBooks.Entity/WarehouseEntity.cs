@@ -15,20 +15,3 @@ public class WarehouseEntity : BaseObject
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
-
-public class WarehouseStockEntity : BaseObject
-{
-    public string BaseUomCode { get; set; } = string.Empty;
-
-    [MongoDB.Bson.Serialization.Attributes.BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-    public string WarehouseId { get; set; } = string.Empty;
-
-    [MongoDB.Bson.Serialization.Attributes.BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-    public string ItemId { get; set; } = string.Empty;
-
-    public decimal QuantityOnHand { get; set; }
-    public decimal ReservedQuantity { get; set; }
-
-    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-}

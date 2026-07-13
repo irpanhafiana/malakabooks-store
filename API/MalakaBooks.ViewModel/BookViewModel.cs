@@ -3,8 +3,8 @@ namespace MalakaBooks.ViewModel;
 public class InventoryMovementResponse
 {
     public string Id { get; set; } = string.Empty;
-    public string BookId { get; set; } = string.Empty;
-    public string BookTitle { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
+    public string ItemName { get; set; } = string.Empty;
     public string MovementType { get; set; } = string.Empty;
     public int QuantityDelta { get; set; }
     public int StockBefore { get; set; }
@@ -17,6 +17,7 @@ public class InventoryMovementResponse
 public class BookResponse
 {
     public string Id { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string SAPCode { get; set; } = string.Empty;
     public List<string> AuthorIds { get; set; } = [];
@@ -41,6 +42,7 @@ public class BookResponse
 
 public class CreateBookRequest
 {
+    public string? ItemId { get; set; }
     public string Title { get; set; } = string.Empty;
     public string SAPCode { get; set; } = string.Empty;
     public List<string> AuthorIds { get; set; } = [];
@@ -49,12 +51,12 @@ public class CreateBookRequest
     public decimal Price { get; set; }
     public string Description { get; set; } = string.Empty;
     public string CoverImage { get; set; } = string.Empty;
+    public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
     public string Publisher { get; set; } = string.Empty;
     public int PublishedYear { get; set; }
     public int Pages { get; set; }
     public decimal Weight { get; set; }
     public int Stock { get; set; }
-    public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
 }
 
 public class UpdateBookRequest : CreateBookRequest

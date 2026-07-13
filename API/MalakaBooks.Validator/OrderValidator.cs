@@ -31,8 +31,8 @@ public class CreateOrderItemRequestValidator : AbstractValidator<CreateOrderItem
     public CreateOrderItemRequestValidator()
     {
         RuleFor(x => x)
-            .Must(item => !string.IsNullOrWhiteSpace(item.BookId) || !string.IsNullOrWhiteSpace(item.ItemId))
-            .WithMessage("Either BookId or ItemId must be provided.");
+            .Must(item => !string.IsNullOrWhiteSpace(item.ItemId))
+            .WithMessage("ItemId must be provided.");
         RuleFor(x => x.Title).NotEmpty();
         RuleFor(x => x.UomCode).NotEmpty();
         RuleFor(x => x.Price).GreaterThanOrEqualTo(0).When(x => x.Price.HasValue);

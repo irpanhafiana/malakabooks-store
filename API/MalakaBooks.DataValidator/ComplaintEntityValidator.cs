@@ -25,14 +25,14 @@ namespace MalakaBooks.DataValidator
             {
                 var userId = entity.UserId.ToLower();
                 var orderId = entity.OrderId.ToLower();
-                var bookId = entity.BookId.ToLower();
+                var itemId = entity.ItemId.ToLower();
 
                 var existing = await _collection.Find(_ =>
                   _.UserId.ToLower() == userId &&
                   _.OrderId.ToLower() == orderId &&
-                  _.BookId.ToLower() == bookId).FirstOrDefaultAsync();
+                  _.ItemId.ToLower() == itemId).FirstOrDefaultAsync();
 
-                if (existing != null) Errors.Add("Complaint with same user, order, and book already exist.");
+                if (existing != null) Errors.Add("Complaint with same user, order, and item already exist.");
             }
 
             return GetErrorResult();
@@ -44,15 +44,15 @@ namespace MalakaBooks.DataValidator
             {
                 var userId = entity.UserId.ToLower();
                 var orderId = entity.OrderId.ToLower();
-                var bookId = entity.BookId.ToLower();
+                var itemId = entity.ItemId.ToLower();
 
                 var existing = await _collection.Find(_ =>
                   _.UserId.ToLower() == userId &&
                   _.OrderId.ToLower() == orderId &&
-                  _.BookId.ToLower() == bookId &&
+                  _.ItemId.ToLower() == itemId &&
                   _.Id != entity.Id).FirstOrDefaultAsync();
 
-                if (existing != null) Errors.Add("Complaint with same user, order, and book already exist.");
+                if (existing != null) Errors.Add("Complaint with same user, order, and item already exist.");
             }
 
             return GetErrorResult();

@@ -18,8 +18,8 @@ public class ComplaintRepository : IComplaintRepository
     public async Task<ComplaintEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 
-    public async Task<ComplaintEntity?> GetByUserOrderAndBookAsync(string userId, string orderId, string bookId, CancellationToken cancellationToken = default) =>
-        await _collection.Find(x => x.UserId == userId && x.OrderId == orderId && x.BookId == bookId).FirstOrDefaultAsync(cancellationToken);
+    public async Task<ComplaintEntity?> GetByUserOrderAndItemAsync(string userId, string orderId, string itemId, CancellationToken cancellationToken = default) =>
+        await _collection.Find(x => x.UserId == userId && x.OrderId == orderId && x.ItemId == itemId).FirstOrDefaultAsync(cancellationToken);
 
     public async Task<IReadOnlyCollection<ComplaintEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await _collection.Find(_ => true).ToListAsync(cancellationToken);

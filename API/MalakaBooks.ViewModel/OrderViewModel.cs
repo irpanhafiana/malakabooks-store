@@ -65,8 +65,8 @@ public class OrderShipmentBpikDetail
 
 public class OrderItemResponse
 {
-    public string BookId { get; set; } = string.Empty;
-    public string? ItemId { get; set; }
+    public string ItemId { get; set; } = string.Empty;
+    public string ItemName { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string UomCode { get; set; } = string.Empty;
     public decimal Price { get; set; }
@@ -145,9 +145,8 @@ public class SimasrimInsuranceData
 
 public class CreateOrderItemRequest
 {
-    public string BookId { get; set; } = string.Empty;
-    public string? ItemId { get; set; }
-    public string BookName { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
+    public string ItemName { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string UomCode { get; set; } = string.Empty;
     public decimal? Price { get; set; }

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace MalakaBooks.Mediator.OrderHandlers;
 
-public class GetOrderByIdHandler(IOrderRepository orderRepository, IBookRepository bookRepository) : IRequestHandler<GetOrderByIdQuery, OrderResponse?>
+public class GetOrderByIdHandler(IOrderRepository orderRepository, IItemRepository itemRepository) : IRequestHandler<GetOrderByIdQuery, OrderResponse?>
 {
     public async Task<OrderResponse?> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
     {
@@ -15,25 +15,25 @@ public class GetOrderByIdHandler(IOrderRepository orderRepository, IBookReposito
             return null;
         }
 
-        var bookIds = entity.Items.Select(item => item.BookId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToArray();
-        var coverImagesByBookId = await LoadCoverImagesByBookIdAsync(bookRepository, bookIds, cancellationToken);
+        var itemIds = entity.Items.Select(item => item.ItemId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToArray();
+        var coverImagesByItemId = await LoadCoverImagesByItemIdAsync(itemRepository, itemIds, cancellationToken);
 
-        return entity.ToResponse(coverImagesByBookId);
+        return entity.ToResponse(coverImagesByItemId);
     }
 
-    private static async Task<IReadOnlyDictionary<string, string>> LoadCoverImagesByBookIdAsync(IBookRepository bookRepository, IEnumerable<string> bookIds, CancellationToken cancellationToken)
+    private static async Task<IReadOnlyDictionary<string, string>> LoadCoverImagesByItemIdAsync(IItemRepository itemRepository, IEnumerable<string> itemIds, CancellationToken cancellationToken)
     {
-        var coverImagesByBookId = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var coverImagesByItemId = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var bookId in bookIds)
+        foreach (var itemId in itemIds)
         {
-            var book = await bookRepository.GetByIdAsync(bookId, cancellationToken);
-            if (book is not null)
+            var item = await itemRepository.GetByIdAsync(itemId, cancellationToken);
+            if (item is not null)
             {
-                coverImagesByBookId[bookId] = book.CoverImage;
+                coverImagesByItemId[itemId] = item.CoverImage;
             }
         }
 
-        return coverImagesByBookId;
+        return coverImagesByItemId;
     }
 }

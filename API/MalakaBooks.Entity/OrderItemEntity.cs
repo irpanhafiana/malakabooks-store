@@ -6,12 +6,9 @@ namespace MalakaBooks.Entity;
 public class OrderItemEntity : BaseObject
 {
     [BsonRepresentation(BsonType.ObjectId)]
-    public string BookId { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
 
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? ItemId { get; set; }
-
-    public string BookName { get; set; } = string.Empty;
+    public string ItemName { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string UomCode { get; set; } = string.Empty;
     public decimal Price { get; set; }

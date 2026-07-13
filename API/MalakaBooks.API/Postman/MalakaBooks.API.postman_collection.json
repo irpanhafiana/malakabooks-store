@@ -1,0 +1,816 @@
+{
+  "info": {
+    "_postman_id": "b3af9f4d-6f65-4f40-a77b-26df17b5c0d1",
+    "name": "MalakaBooks API",
+    "description": "Postman collection for MalakaBooks API. Includes admin, customer, public, and webhook endpoints with sample payloads.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://localhost:5001" },
+    { "key": "apiVersion", "value": "1" },
+    { "key": "itemId", "value": "67f0a1111111111111111111" },
+    { "key": "bookId", "value": "67f0b2222222222222222222" },
+    { "key": "authorId", "value": "67f0c3333333333333333333" },
+    { "key": "categoryId", "value": "67f0d4444444444444444444" },
+    { "key": "uomGroupId", "value": "67f0e5555555555555555555" },
+    { "key": "pricingId", "value": "67f0f6666666666666666666" },
+    { "key": "paymentId", "value": "67f107777777777777777777" },
+    { "key": "orderId", "value": "67f118888888888888888888" },
+    { "key": "userId", "value": "customer-001" },
+    { "key": "addressId", "value": "67f129999999999999999999" },
+    { "key": "homeAddressId", "value": "67f12aaaaaaaaaaaaaaaaaaa" },
+    { "key": "warehouseId", "value": "67f12bbbbbbbbbbbbbbbbbbb" },
+    { "key": "complaintId", "value": "67f12ccccccccccccccccccc" },
+    { "key": "promotionBannerId", "value": "67f12ddddddddddddddddddd" },
+    { "key": "awbNo", "value": "AWB-000123456789" }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      { "key": "addTokenTo", "value": "header", "type": "string" },
+      { "key": "grant_type", "value": "password", "type": "string" },
+      { "key": "accessTokenUrl", "value": "{{baseUrl}}/connect/token", "type": "string" },
+      { "key": "clientId", "value": "postman-client", "type": "string" },
+      { "key": "clientSecret", "value": "postman-secret", "type": "string" },
+      { "key": "username", "value": "admin@example.com", "type": "string" },
+      { "key": "password", "value": "P@ssword123", "type": "string" },
+      { "key": "scope", "value": "malakabooks.api", "type": "string" },
+      { "key": "tokenName", "value": "Admin OAuth2 Password Flow", "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "Admin",
+      "auth": {
+        "type": "oauth2",
+        "oauth2": [
+          { "key": "addTokenTo", "value": "header", "type": "string" },
+          { "key": "grant_type", "value": "password", "type": "string" },
+          { "key": "accessTokenUrl", "value": "{{baseUrl}}/connect/token", "type": "string" },
+          { "key": "clientId", "value": "postman-client", "type": "string" },
+          { "key": "clientSecret", "value": "postman-secret", "type": "string" },
+          { "key": "username", "value": "admin@example.com", "type": "string" },
+          { "key": "password", "value": "P@ssword123", "type": "string" },
+          { "key": "scope", "value": "malakabooks.api", "type": "string" },
+          { "key": "tokenName", "value": "Admin OAuth2 Password Flow", "type": "string" }
+        ]
+      },
+      "item": [
+        {
+          "name": "Authors",
+          "item": [
+            {
+              "name": "Get All Authors",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/authors"
+              }
+            },
+            {
+              "name": "Get Author By Id",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/authors/{{authorId}}"
+              }
+            },
+            {
+              "name": "Create Author",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Tere Liye\",\n  \"role\": \"Author\",\n  \"biography\": \"Indonesian novelist\",\n  \"photoUrl\": \"https://example.com/authors/tere-liye.jpg\"\n}"
+                },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/authors"
+              }
+            },
+            {
+              "name": "Update Author",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Tere Liye Updated\",\n  \"role\": \"Author\",\n  \"biography\": \"Updated biography\",\n  \"photoUrl\": \"https://example.com/authors/tere-liye-updated.jpg\"\n}"
+                },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/authors/{{authorId}}"
+              }
+            },
+            {
+              "name": "Delete Author",
+              "request": {
+                "method": "DELETE",
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/authors/{{authorId}}"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Books",
+          "item": [
+            {
+              "name": "Get All Books",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/books"
+              }
+            },
+            {
+              "name": "Get Book By Id",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/books/{{bookId}}"
+              }
+            },
+            {
+              "name": "Create Book",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"itemId\": null,\n  \"title\": \"Atomic Habits\",\n  \"sapCode\": \"BK-ATOMIC-001\",\n  \"authorIds\": [\"{{authorId}}\"],\n  \"isbn\": \"9780735211292\",\n  \"categoryId\": \"{{categoryId}}\",\n  \"price\": 125000,\n  \"description\": \"A practical book about habit formation.\",\n  \"coverImage\": \"https://example.com/books/atomic-habits.jpg\",\n  \"additionalImages\": [\n    {\n      \"no\": 1,\n      \"image\": \"https://example.com/books/atomic-habits-back.jpg\"\n    }\n  ],\n  \"publisher\": \"Penguin Random House\",\n  \"publishedYear\": 2018,\n  \"pages\": 320,\n  \"weight\": 0.45,\n  \"stock\": 25\n}"
+                },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/books"
+              }
+            },
+            {
+              "name": "Update Book",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"itemId\": \"{{itemId}}\",\n  \"title\": \"Atomic Habits - Revised\",\n  \"sapCode\": \"BK-ATOMIC-001\",\n  \"authorIds\": [\"{{authorId}}\"],\n  \"isbn\": \"9780735211292\",\n  \"categoryId\": \"{{categoryId}}\",\n  \"price\": 130000,\n  \"description\": \"Updated edition description.\",\n  \"coverImage\": \"https://example.com/books/atomic-habits-new.jpg\",\n  \"additionalImages\": [],\n  \"publisher\": \"Penguin Random House\",\n  \"publishedYear\": 2019,\n  \"pages\": 330,\n  \"weight\": 0.47,\n  \"stock\": 30\n}"
+                },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/books/{{bookId}}"
+              }
+            },
+            {
+              "name": "Delete Book",
+              "request": {
+                "method": "DELETE",
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/books/{{bookId}}"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Categories",
+          "item": [
+            {
+              "name": "Get All Categories",
+              "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/categories" }
+            },
+            {
+              "name": "Get Category By Id",
+              "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/categories/{{categoryId}}" }
+            },
+            {
+              "name": "Create Category",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Self Improvement\",\n  \"slug\": \"self-improvement\",\n  \"description\": \"Books for growth\",\n  \"icon\": \"sparkles\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/categories"
+              }
+            },
+            {
+              "name": "Update Category",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Business & Self Improvement\",\n  \"slug\": \"business-self-improvement\",\n  \"description\": \"Updated category description\",\n  \"icon\": \"briefcase\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/categories/{{categoryId}}"
+              }
+            },
+            { "name": "Delete Category", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/categories/{{categoryId}}" } }
+          ]
+        },
+        {
+          "name": "Items",
+          "item": [
+            { "name": "Get All Items", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/items" } },
+            { "name": "Get Item By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/items/{{itemId}}" } },
+            {
+              "name": "Create Item",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Premium Coffee Beans\",\n  \"sapCode\": \"ITM-COFFEE-001\",\n  \"itemType\": \"coffee\",\n  \"coverImage\": \"https://example.com/items/coffee.jpg\",\n  \"additionalImages\": [\n    {\n      \"no\": 1,\n      \"image\": \"https://example.com/items/coffee-side.jpg\"\n    }\n  ],\n  \"uomGroupId\": \"{{uomGroupId}}\",\n  \"uomGroup\": null,\n  \"baseUomCode\": \"PCS\",\n  \"description\": \"Arabica beans 250gr\",\n  \"weight\": 0.25,\n  \"stock\": 50,\n  \"isActive\": true\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/items"
+              }
+            },
+            {
+              "name": "Update Item",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Premium Coffee Beans 500gr\",\n  \"sapCode\": \"ITM-COFFEE-001\",\n  \"itemType\": \"coffee\",\n  \"coverImage\": \"https://example.com/items/coffee-500.jpg\",\n  \"additionalImages\": [],\n  \"uomGroupId\": \"{{uomGroupId}}\",\n  \"uomGroup\": null,\n  \"baseUomCode\": \"PCS\",\n  \"description\": \"Updated coffee pack\",\n  \"weight\": 0.5,\n  \"stock\": 75,\n  \"isActive\": true\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/items/{{itemId}}"
+              }
+            },
+            { "name": "Delete Item", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/items/{{itemId}}" } }
+          ]
+        },
+        {
+          "name": "Uom Groups",
+          "item": [
+            { "name": "Get All Uom Groups", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/uomgroups" } },
+            { "name": "Get Uom Group By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/uomgroups/{{uomGroupId}}" } },
+            {
+              "name": "Create Uom Group",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Piece Pack\",\n  \"baseUomCode\": \"PCS\",\n  \"details\": [\n    {\n      \"code\": \"PCS\",\n      \"name\": \"Pieces\",\n      \"conversionFactor\": 1,\n      \"isBaseUom\": true,\n      \"sortOrder\": 1,\n      \"isActive\": true\n    },\n    {\n      \"code\": \"BOX\",\n      \"name\": \"Box\",\n      \"conversionFactor\": 12,\n      \"isBaseUom\": false,\n      \"sortOrder\": 2,\n      \"isActive\": true\n    }\n  ],\n  \"isActive\": true\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/uomgroups"
+              }
+            },
+            {
+              "name": "Update Uom Group",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Piece Pack Updated\",\n  \"baseUomCode\": \"PCS\",\n  \"details\": [\n    {\n      \"code\": \"PCS\",\n      \"name\": \"Pieces\",\n      \"conversionFactor\": 1,\n      \"isBaseUom\": true,\n      \"sortOrder\": 1,\n      \"isActive\": true\n    }\n  ],\n  \"isActive\": true\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/uomgroups/{{uomGroupId}}"
+              }
+            },
+            { "name": "Delete Uom Group", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/uomgroups/{{uomGroupId}}" } }
+          ]
+        },
+        {
+          "name": "Pricings",
+          "item": [
+            { "name": "Get All Pricings", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/pricings" } },
+            { "name": "Get Pricing By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/pricings/{{pricingId}}" } },
+            {
+              "name": "Create Pricing",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Retail April 2025\",\n  \"itemId\": \"{{itemId}}\",\n  \"startDate\": \"2025-04-01T00:00:00Z\",\n  \"endDate\": \"2025-12-31T23:59:59Z\",\n  \"isActive\": true,\n  \"details\": [\n    {\n      \"customerGroupCode\": \"RETAIL\",\n      \"uomCode\": \"PCS\",\n      \"price\": 150000\n    },\n    {\n      \"customerGroupCode\": \"MEMBER\",\n      \"uomCode\": \"PCS\",\n      \"price\": 140000\n    }\n  ]\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/pricings"
+              }
+            },
+            {
+              "name": "Update Pricing",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Retail April 2025 Updated\",\n  \"itemId\": \"{{itemId}}\",\n  \"startDate\": \"2025-04-01T00:00:00Z\",\n  \"endDate\": \"2025-12-31T23:59:59Z\",\n  \"isActive\": true,\n  \"details\": [\n    {\n      \"customerGroupCode\": \"RETAIL\",\n      \"uomCode\": \"PCS\",\n      \"price\": 155000\n    }\n  ]\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/pricings/{{pricingId}}"
+              }
+            },
+            { "name": "Delete Pricing", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/pricings/{{pricingId}}" } }
+          ]
+        },
+        {
+          "name": "Payments",
+          "item": [
+            { "name": "Get All Payments", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/payments" } },
+            { "name": "Get Payment By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/payments/{{paymentId}}" } },
+            {
+              "name": "Create Payment",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"QRIS Gateway\",\n  \"methodType\": \"QRIS\",\n  \"fees\": [\n    {\n      \"code\": \"ADMIN\",\n      \"name\": \"Admin Fee\",\n      \"type\": \"flat\",\n      \"value\": 2500\n    }\n  ]\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/payments"
+              }
+            },
+            {
+              "name": "Update Payment",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"QRIS Gateway Updated\",\n  \"methodType\": \"QRIS\",\n  \"fees\": [\n    {\n      \"code\": \"ADMIN\",\n      \"name\": \"Admin Fee\",\n      \"type\": \"flat\",\n      \"value\": 3000\n    }\n  ]\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/payments/{{paymentId}}"
+              }
+            },
+            { "name": "Delete Payment", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/payments/{{paymentId}}" } }
+          ]
+        },
+        {
+          "name": "Orders",
+          "item": [
+            {
+              "name": "Get All Orders",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"pageNumber\": 1,\n  \"pageSize\": 20\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/orders"
+              }
+            },
+            {
+              "name": "Update Order Status",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"status\": \"ready_to_ship\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/orders/{{orderId}}/status"
+              }
+            },
+            { "name": "Create Shipment", "request": { "method": "POST", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/orders/{{orderId}}/shipment" } },
+            {
+              "name": "Create Shipments Batch",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"orderIds\": [\n    \"{{orderId}}\"\n  ]\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/orders/shipment"
+              }
+            },
+            { "name": "Recheck Shipment", "request": { "method": "POST", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/orders/{{orderId}}/shipment/recheck" } },
+            { "name": "Cancel Shipment", "request": { "method": "POST", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/orders/{{orderId}}/shipment/cancel" } },
+            {
+              "name": "Recheck Shipments Batch",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"orderIds\": [\n    \"{{orderId}}\"\n  ]\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/orders/shipment/recheck"
+              }
+            },
+            {
+              "name": "Get Shipment Detail Resi",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"courier\": \"jne\",\n  \"awbNo\": \"{{awbNo}}\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/orders/shipment/detail-resi"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Inventory Movements",
+          "item": [
+            { "name": "Get Inventory Movements", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/inventorymovements?itemId={{itemId}}" } },
+            {
+              "name": "Goods Receive",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"itemId\": \"{{itemId}}\",\n  \"quantity\": 20,\n  \"referenceId\": \"GR-2025-0001\",\n  \"note\": \"Initial stock receipt from supplier\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/inventorymovements/goods-receive"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Complaints",
+          "item": [
+            { "name": "Get All Complaints", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/complaints" } },
+            {
+              "name": "Respond Complaint",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"status\": \"in_progress\",\n  \"message\": \"We are reviewing your issue.\",\n  \"senderId\": \"admin-001\",\n  \"senderType\": \"admin\",\n  \"additionalImages\": []\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/complaints/{{complaintId}}/respond"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Home Addresses",
+          "item": [
+            { "name": "Get All Home Addresses", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/homeaddresses" } },
+            {
+              "name": "Create Home Address",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"label\": \"Main Warehouse\",\n  \"recipientName\": \"Malaka Warehouse\",\n  \"addressCode\": \"ADDR-001\",\n  \"phone\": \"081234567890\",\n  \"street\": \"Jl. Merdeka No. 1\",\n  \"province\": \"DKI Jakarta\",\n  \"city\": \"Jakarta Selatan\",\n  \"district\": \"Kebayoran Baru\",\n  \"subDistrict\": \"Senayan\",\n  \"postalCode\": \"12190\",\n  \"longitude\": 106.8001,\n  \"latitude\": -6.2244\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/homeaddresses"
+              }
+            },
+            {
+              "name": "Update Home Address",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"label\": \"Main Warehouse Updated\",\n  \"recipientName\": \"Malaka Warehouse\",\n  \"addressCode\": \"ADDR-001\",\n  \"phone\": \"081234567890\",\n  \"street\": \"Jl. Merdeka No. 2\",\n  \"province\": \"DKI Jakarta\",\n  \"city\": \"Jakarta Selatan\",\n  \"district\": \"Kebayoran Baru\",\n  \"subDistrict\": \"Senayan\",\n  \"postalCode\": \"12190\",\n  \"longitude\": 106.8002,\n  \"latitude\": -6.2245\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/homeaddresses/{{homeAddressId}}"
+              }
+            },
+            { "name": "Delete Home Address", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/homeaddresses/{{homeAddressId}}" } }
+          ]
+        },
+        {
+          "name": "Warehouses",
+          "item": [
+            { "name": "Get All Warehouses", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/warehouses" } },
+            { "name": "Get Warehouse By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/warehouses/{{warehouseId}}" } },
+            {
+              "name": "Create Warehouse",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"code\": \"WH-JKT-01\",\n  \"name\": \"Jakarta Main Warehouse\",\n  \"description\": \"Primary warehouse location\",\n  \"isActive\": true\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/warehouses"
+              }
+            },
+            {
+              "name": "Update Warehouse",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"code\": \"WH-JKT-01\",\n  \"name\": \"Jakarta Main Warehouse Updated\",\n  \"description\": \"Updated warehouse description\",\n  \"isActive\": true\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/warehouses/{{warehouseId}}"
+              }
+            },
+            { "name": "Delete Warehouse", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/warehouses/{{warehouseId}}" } }
+          ]
+        },
+        {
+          "name": "Promotion Banners",
+          "item": [
+            {
+              "name": "Create Promotion Banner",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"title\": \"Big Ramadan Sale\",\n  \"subtitle\": \"Up to 50% off\",\n  \"imageBase64\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA\",\n  \"targetUrl\": \"https://malakabooks.example/promo/ramadan-sale\",\n  \"buttonText\": \"Shop Now\",\n  \"targetType\": \"external\",\n  \"isActive\": true,\n  \"displayOrder\": 1,\n  \"startAt\": \"2025-03-01T00:00:00Z\",\n  \"endAt\": \"2025-03-31T23:59:59Z\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/promotionbanners"
+              }
+            },
+            {
+              "name": "Update Promotion Banner",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"title\": \"Big Ramadan Sale Updated\",\n  \"subtitle\": \"Up to 55% off\",\n  \"imageBase64\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA\",\n  \"targetUrl\": \"https://malakabooks.example/promo/ramadan-sale-updated\",\n  \"buttonText\": \"Buy Now\",\n  \"targetType\": \"external\",\n  \"isActive\": true,\n  \"displayOrder\": 1,\n  \"startAt\": \"2025-03-01T00:00:00Z\",\n  \"endAt\": \"2025-03-31T23:59:59Z\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/promotionbanners/{{promotionBannerId}}"
+              }
+            },
+            { "name": "Delete Promotion Banner", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/promotionbanners/{{promotionBannerId}}" } }
+          ]
+        },
+        {
+          "name": "Users",
+          "item": [
+            { "name": "Get All Users", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/users" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "auth": {
+        "type": "oauth2",
+        "oauth2": [
+          { "key": "addTokenTo", "value": "header", "type": "string" },
+          { "key": "grant_type", "value": "password", "type": "string" },
+          { "key": "accessTokenUrl", "value": "{{baseUrl}}/connect/token", "type": "string" },
+          { "key": "clientId", "value": "postman-client", "type": "string" },
+          { "key": "clientSecret", "value": "postman-secret", "type": "string" },
+          { "key": "username", "value": "customer@example.com", "type": "string" },
+          { "key": "password", "value": "P@ssword123", "type": "string" },
+          { "key": "scope", "value": "malakabooks.api", "type": "string" },
+          { "key": "tokenName", "value": "Customer OAuth2 Password Flow", "type": "string" }
+        ]
+      },
+      "item": [
+        {
+          "name": "Addresses",
+          "item": [
+            { "name": "Get Addresses By User", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/addresses/user/{{userId}}" } },
+            {
+              "name": "Create Address",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"label\": \"Home\",\n  \"recipientName\": \"John Doe\",\n  \"addressCode\": \"ADDR-CUST-001\",\n  \"phone\": \"081234567891\",\n  \"street\": \"Jl. Melati No. 10\",\n  \"province\": \"DKI Jakarta\",\n  \"city\": \"Jakarta Barat\",\n  \"district\": \"Palmerah\",\n  \"subDistrict\": \"Kemanggisan\",\n  \"postalCode\": \"11480\",\n  \"longitude\": 106.7821,\n  \"latitude\": -6.2012,\n  \"userId\": \"{{userId}}\",\n  \"isDefault\": true\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/addresses"
+              }
+            },
+            {
+              "name": "Update Address",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"label\": \"Office\",\n  \"recipientName\": \"John Doe\",\n  \"addressCode\": \"ADDR-CUST-001\",\n  \"phone\": \"081234567891\",\n  \"street\": \"Jl. Melati No. 11\",\n  \"province\": \"DKI Jakarta\",\n  \"city\": \"Jakarta Barat\",\n  \"district\": \"Palmerah\",\n  \"subDistrict\": \"Kemanggisan\",\n  \"postalCode\": \"11480\",\n  \"longitude\": 106.7822,\n  \"latitude\": -6.2011,\n  \"userId\": \"{{userId}}\",\n  \"isDefault\": false\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/addresses/{{addressId}}"
+              }
+            },
+            { "name": "Delete Address", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/addresses/{{addressId}}" } }
+          ]
+        },
+        {
+          "name": "Cart",
+          "item": [
+            { "name": "Get Cart", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/cart/{{userId}}" } },
+            {
+              "name": "Add Cart Item",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"itemId\": \"{{itemId}}\",\n  \"uomCode\": \"PCS\",\n  \"quantity\": 2\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/cart"
+              }
+            },
+            { "name": "Remove Cart Item", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/cart/{{userId}}/items/{{itemId}}" } }
+          ]
+        },
+        {
+          "name": "Complaints",
+          "item": [
+            { "name": "Get Complaints By User", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/complaints/user/{{userId}}" } },
+            {
+              "name": "Create Complaint",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"orderId\": \"{{orderId}}\",\n  \"itemId\": \"{{itemId}}\",\n  \"subject\": \"Damaged Item\",\n  \"description\": \"The item arrived with torn packaging.\",\n  \"additionalImages\": [\n    {\n      \"no\": 1,\n      \"image\": \"https://example.com/complaints/damage-1.jpg\"\n    }\n  ]\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/complaints"
+              }
+            },
+            {
+              "name": "Reply Complaint",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"status\": \"open\",\n  \"message\": \"Please update me on the replacement process.\",\n  \"senderId\": \"{{userId}}\",\n  \"senderType\": \"customer\",\n  \"additionalImages\": []\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/complaints/{{complaintId}}/reply"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Incoming Payments",
+          "item": [
+            {
+              "name": "Check DOKU Payment Status",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"{{orderId}}\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/incomingpayments/DOKU/CheckStatus"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Orders",
+          "item": [
+            {
+              "name": "Create Order",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"id\": \"\",\n  \"userId\": \"{{userId}}\",\n  \"items\": [\n    {\n      \"itemId\": \"{{itemId}}\",\n      \"itemName\": \"Premium Coffee Beans\",\n      \"title\": \"Premium Coffee Beans\",\n      \"uomCode\": \"PCS\",\n      \"price\": 150000,\n      \"quantity\": 2\n    }\n  ],\n  \"addressId\": \"{{addressId}}\",\n  \"paymentId\": \"{{paymentId}}\",\n  \"note\": \"Please pack safely\",\n  \"shippingCourier\": \"jne\",\n  \"shippingType\": \"REG\",\n  \"shippingEst\": \"2-3 days\",\n  \"shippingFee\": 18000,\n  \"insurance\": true,\n  \"shippingInsurance\": 2500\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/orders"
+              }
+            },
+            { "name": "Get Orders By User", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/orders/user/{{userId}}" } },
+            { "name": "Get Order By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/orders/{{orderId}}" } }
+          ]
+        },
+        {
+          "name": "Payments",
+          "item": [
+            {
+              "name": "Calculate Payment Fees",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"paymentId\": \"{{paymentId}}\",\n  \"itemsSubtotal\": 300000\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/payments/calculate-fees"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pricings",
+          "item": [
+            {
+              "name": "Lookup Customer Price",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"itemId\": \"{{itemId}}\",\n  \"uomCode\": \"PCS\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/pricings/lookup"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reviews",
+          "item": [
+            { "name": "Get Reviews By Item", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/reviews/items/{{itemId}}" } },
+            {
+              "name": "Create Review",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"itemId\": \"{{itemId}}\",\n  \"orderId\": \"{{orderId}}\",\n  \"rating\": 5,\n  \"comment\": \"Excellent quality and fast delivery.\",\n  \"additionalImages\": []\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/reviews"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Simasrim",
+          "item": [
+            { "name": "Get Provinces", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/simasrim/Province" } },
+            {
+              "name": "Get Cities",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"provinceId\": \"31\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/simasrim/City"
+              }
+            },
+            { "name": "Get Couriers", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/simasrim/Courier" } },
+            {
+              "name": "Get Districts",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"cityId\": \"3174\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/simasrim/District"
+              }
+            },
+            {
+              "name": "Get Tariff",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"origin\": \"317401\",\n  \"destination\": \"317302\",\n  \"weight\": 1000,\n  \"courier\": \"jne\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/simasrim/Tarif"
+              }
+            },
+            {
+              "name": "Get Insurance",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"nilaiBarang\": 300000\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/simasrim/Insurance"
+              }
+            },
+            { "name": "Track AWB", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/simasrim/TrackAwb/{{orderId}}" } }
+          ]
+        },
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "Register IS4 Profile",
+              "auth": { "type": "noauth" },
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"id\": \"customer-001\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"081234567891\",\n  \"avatar\": \"https://example.com/users/john.jpg\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"P@ssword123\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/users"
+              }
+            },
+            { "name": "Get Profile", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/users/{{userId}}/profile" } },
+            {
+              "name": "Update Profile",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe Updated\",\n  \"avatar\": \"https://example.com/users/john-updated.jpg\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/users/{{userId}}/profile"
+              }
+            },
+            {
+              "name": "Change Password",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"password\": \"P@ssword1234\",\n  \"confirmPassword\": \"P@ssword1234\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/users/change-password"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Public",
+      "auth": { "type": "noauth" },
+      "item": [
+        {
+          "name": "Authors",
+          "item": [
+            { "name": "Get All Authors", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/authors" } },
+            { "name": "Get Author By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/authors/{{authorId}}" } }
+          ]
+        },
+        {
+          "name": "Books",
+          "item": [
+            { "name": "Get All Books", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/books" } },
+            { "name": "Get Book By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/books/{{bookId}}" } }
+          ]
+        },
+        {
+          "name": "Categories",
+          "item": [
+            { "name": "Get All Categories", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/categories" } },
+            { "name": "Get Category By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/categories/{{categoryId}}" } }
+          ]
+        },
+        {
+          "name": "Home Addresses",
+          "item": [
+            { "name": "Get All Home Addresses", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/homeaddresses" } }
+          ]
+        },
+        {
+          "name": "Items",
+          "item": [
+            { "name": "Get All Items", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items" } },
+            { "name": "Get Item By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items/{{itemId}}" } }
+          ]
+        },
+        {
+          "name": "Item Sync",
+          "item": [
+            {
+              "name": "Sync Item",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"External Synced Product\",\n  \"sapCode\": \"EXT-001\",\n  \"itemType\": \"general\",\n  \"uomGroup\": {\n    \"name\": \"External PCS\",\n    \"baseUomCode\": \"PCS\",\n    \"details\": [\n      {\n        \"code\": \"PCS\",\n        \"name\": \"Pieces\",\n        \"conversionFactor\": 1,\n        \"isBaseUom\": true,\n        \"sortOrder\": 1,\n        \"isActive\": true\n      }\n    ],\n    \"isActive\": true\n  },\n  \"description\": \"Payload from external synchronization\",\n  \"isActive\": true\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/public/item-sync"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Payments",
+          "item": [
+            { "name": "Get All Payments", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/payments" } },
+            { "name": "Get Payment By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/payments/{{paymentId}}" } }
+          ]
+        },
+        {
+          "name": "Pricings",
+          "item": [
+            {
+              "name": "Lookup Public Price",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"itemId\": \"{{itemId}}\",\n  \"uomCode\": \"PCS\",\n  \"customerGroupCode\": \"RETAIL\"\n}" },
+                "url": "{{baseUrl}}/api/v{{apiVersion}}/public/pricings/lookup"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Promotion Banners",
+          "item": [
+            { "name": "Get Active Promotion Banners", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/promotionbanners" } }
+          ]
+        },
+        {
+          "name": "Uom Groups",
+          "item": [
+            { "name": "Get All Uom Groups", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/uomgroups" } },
+            { "name": "Get Uom Group By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/uomgroups/{{uomGroupId}}" } }
+          ]
+        },
+        {
+          "name": "Warehouses",
+          "item": [
+            { "name": "Get All Warehouses", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/warehouses" } },
+            { "name": "Get Warehouse By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/warehouses/{{warehouseId}}" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "auth": { "type": "noauth" },
+      "item": [
+        {
+          "name": "DOKU Notify",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"{{orderId}}\",\n  \"transactionStatus\": \"SUCCESS\",\n  \"paymentMethod\": \"QRIS\",\n  \"amount\": 318000,\n  \"currency\": \"IDR\",\n  \"gatewayReference\": \"DOKU-REF-001\",\n  \"gatewayInvoiceNumber\": \"INV-001\",\n  \"paidAt\": \"2025-04-05T10:00:00Z\",\n  \"rawPayload\": \"sample raw payload\"\n}" },
+            "url": "{{baseUrl}}/api/v{{apiVersion}}/ExternalMessage/DOKU/Notify"
+          }
+        },
+        {
+          "name": "SIMASRIM Notify",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"200\",\n  \"status\": \"Success\",\n  \"message\": \"Webhook received\",\n  \"data\": {\n    \"transaction_no\": \"{{orderId}}\",\n    \"awb_no\": \"{{awbNo}}\",\n    \"description\": \"Shipment created\"\n  }\n}" },
+            "url": "{{baseUrl}}/api/v{{apiVersion}}/ExternalMessage/SIMASRIM/Notify"
+          }
+        }
+      ]
+    }
+  ]
+}

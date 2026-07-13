@@ -20,8 +20,8 @@ public class InventoryMovementRepository : IInventoryMovementRepository
             .SortByDescending(movement => movement.CreatedAt)
             .ToListAsync(cancellationToken);
 
-    public async Task<IReadOnlyCollection<InventoryMovementEntity>> GetByBookIdAsync(string bookId, CancellationToken cancellationToken = default) =>
-        await _collection.Find(movement => movement.BookId == bookId)
+    public async Task<IReadOnlyCollection<InventoryMovementEntity>> GetByItemIdAsync(string itemId, CancellationToken cancellationToken = default) =>
+        await _collection.Find(movement => movement.ItemId == itemId)
             .SortByDescending(movement => movement.CreatedAt)
             .ToListAsync(cancellationToken);
 

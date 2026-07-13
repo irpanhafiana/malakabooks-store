@@ -8,7 +8,7 @@ namespace MalakaBooks.Mediator.IncomingPaymentHandlers;
 public class ProcessDokuPaymentNotificationHandler(
     IOrderRepository orderRepository,
     IIncomingPaymentRepository incomingPaymentRepository,
-    IBookRepository bookRepository,
+    IItemRepository itemRepository,
     IInventoryMovementRepository inventoryMovementRepository)
     : IRequestHandler<ProcessDokuPaymentNotificationCommand, ProcessDokuPaymentResult>
 {
@@ -161,29 +161,29 @@ public class ProcessDokuPaymentNotificationHandler(
 
     private async Task DeductStockAsync(OrderEntity order, CancellationToken cancellationToken)
     {
-        foreach (var item in order.Items.Where(item => !string.IsNullOrWhiteSpace(item.BookId) && item.Quantity > 0))
+        foreach (var item in order.Items.Where(item => !string.IsNullOrWhiteSpace(item.ItemId) && item.Quantity > 0))
         {
-            var currentBook = await bookRepository.GetByIdAsync(item.BookId, cancellationToken);
-            if (currentBook is null)
+            var currentItem = await itemRepository.GetByIdAsync(item.ItemId, cancellationToken);
+            if (currentItem is null)
             {
                 continue;
             }
 
-            var stockBefore = currentBook.Stock;
-            var updatedBook = await bookRepository.AdjustStockAsync(item.BookId, -item.Quantity, cancellationToken);
-            if (updatedBook is null)
+            var stockBefore = currentItem.Stock;
+            var updatedItem = await itemRepository.AdjustStockAsync(item.ItemId, -item.Quantity, cancellationToken);
+            if (updatedItem is null)
             {
                 continue;
             }
 
             await inventoryMovementRepository.CreateAsync(new InventoryMovementEntity
             {
-                BookId = item.BookId,
-                BookTitle = string.IsNullOrWhiteSpace(currentBook.Title) ? item.Title : currentBook.Title,
+                ItemId = item.ItemId,
+                ItemName = string.IsNullOrWhiteSpace(item.ItemName) ? item.Title : item.ItemName,
                 MovementType = "sale",
                 QuantityDelta = -item.Quantity,
                 StockBefore = stockBefore,
-                StockAfter = updatedBook.Stock,
+                StockAfter = updatedItem.Stock,
                 ReferenceId = order.Id ?? string.Empty,
                 Note = $"Stock deducted after payment confirmation for order '{order.Id}'.",
                 CreatedAt = DateTime.UtcNow

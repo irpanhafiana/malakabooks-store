@@ -5,7 +5,7 @@ public class ComplaintResponse
     public string Id { get; set; } = string.Empty;
     public string UserId { get; set; } = string.Empty;
     public string OrderId { get; set; } = string.Empty;
-    public string BookId { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
     public string Subject { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
@@ -28,7 +28,7 @@ public class CreateComplaintRequest
 {
     public string UserId { get; set; } = string.Empty;
     public string OrderId { get; set; } = string.Empty;
-    public string BookId { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
     public string Subject { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];

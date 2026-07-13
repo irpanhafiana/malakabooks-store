@@ -12,17 +12,18 @@ public class CreateComplaintHandler(IComplaintRepository complaintRepository, IC
 
     public async Task<ValidationResult?> Handle(CreateComplaintCommand request, CancellationToken cancellationToken)
     {
-        var existingComplaint = await complaintRepository.GetByUserOrderAndBookAsync(
-            request.Request.UserId.Trim(),
-            request.Request.OrderId.Trim(),
-            request.Request.BookId.Trim(),
+        var requestModel = request.Request;
+        var existingComplaint = await complaintRepository.GetByUserOrderAndItemAsync(
+            requestModel.UserId.Trim(),
+            requestModel.OrderId.Trim(),
+            requestModel.ItemId.Trim(),
             cancellationToken);
         if (existingComplaint is not null)
         {
-            return new ValidationResult("Complaint with same user, order, and book already exist.");
+            return new ValidationResult("Complaint with same user, order, and item already exist.");
         }
 
-        var entity = request.Request.ToEntity();
+        var entity = requestModel.ToEntity();
         var result = await _validator.CreateValidateAsync(entity);
         if (result is null)
         {

@@ -1,4 +1,5 @@
 using MalakaBooks.ConfigSetting;
+using MalakaBooks.Entity;
 using MalakaBooks.IRepository;
 using MalakaBooks.Mediator.Common;
 using MalakaBooks.ViewModel;
@@ -30,10 +31,12 @@ public class GetPricingByIdHandler(IPricingRepository pricingRepository) : IRequ
 
 public class GetPublicPriceHandler(
     IPricingRepository pricingRepository,
+    IItemRepository itemRepository,
     IOptions<AppSetting> appOptions) : IRequestHandler<GetPublicPriceQuery, PublicPriceLookupResponse?>
 {
     private readonly AppSetting _appSetting = appOptions.Value;
     private readonly IPricingRepository _pricingRepository = pricingRepository;
+    private readonly IItemRepository _itemRepository = itemRepository;
 
     public async Task<PublicPriceLookupResponse?> Handle(GetPublicPriceQuery request, CancellationToken cancellationToken)
     {
@@ -44,15 +47,17 @@ public class GetPublicPriceHandler(
             return null;
         }
 
-        return await PricingLookupHelper.ResolvePriceAsync(_pricingRepository, request.Request.ItemId, request.Request.UomCode, customerGroupCode, cancellationToken);
+        return await PricingLookupHelper.ResolvePriceAsync(_pricingRepository, _itemRepository, request.Request.ItemId, request.Request.UomCode, customerGroupCode, cancellationToken);
     }
 }
 
 public class GetCustomerPriceHandler(
     IPricingRepository pricingRepository,
+    IItemRepository itemRepository,
     IHttpContextAccessor httpContextAccessor) : IRequestHandler<GetCustomerPriceQuery, PublicPriceLookupResponse?>
 {
     private readonly IPricingRepository _pricingRepository = pricingRepository;
+    private readonly IItemRepository _itemRepository = itemRepository;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     public async Task<PublicPriceLookupResponse?> Handle(GetCustomerPriceQuery request, CancellationToken cancellationToken)
@@ -63,7 +68,7 @@ public class GetCustomerPriceHandler(
             return null;
         }
 
-        return await PricingLookupHelper.ResolvePriceAsync(_pricingRepository, request.Request.ItemId, request.Request.UomCode, customerGroupCode, cancellationToken);
+        return await PricingLookupHelper.ResolvePriceAsync(_pricingRepository, _itemRepository, request.Request.ItemId, request.Request.UomCode, customerGroupCode, cancellationToken);
     }
 
     private string GetCustomerGroupCode()
@@ -96,14 +101,28 @@ internal static class PricingLookupHelper
 {
     internal static async Task<PublicPriceLookupResponse?> ResolvePriceAsync(
         IPricingRepository pricingRepository,
+        IItemRepository itemRepository,
         string itemId,
         string uomCode,
         string customerGroupCode,
         CancellationToken cancellationToken)
     {
-        var pricing = await pricingRepository.GetActiveByCustomerGroupCodeAsync(customerGroupCode, DateTime.UtcNow, cancellationToken);
+        var resolvedItemId = itemId;
+        if (!string.IsNullOrWhiteSpace(itemId))
+        {
+            var item = await itemRepository.GetByIdAsync(itemId, cancellationToken)
+                ?? await itemRepository.GetBySapCodeAsync(itemId, cancellationToken);
+
+            if (item is not null)
+            {
+                resolvedItemId = item.Id ?? itemId;
+            }
+        }
+
+        var pricings = await pricingRepository.GetActiveByItemIdAsync(resolvedItemId, DateTime.UtcNow, cancellationToken);
+        var pricing = pricings.FirstOrDefault();
         var detail = pricing?.Details.FirstOrDefault(detail =>
-            string.Equals(detail.ItemId, itemId, StringComparison.OrdinalIgnoreCase)
+            string.Equals(detail.CustomerGroupCode, customerGroupCode, StringComparison.OrdinalIgnoreCase)
             && string.Equals(detail.UomCode, uomCode, StringComparison.OrdinalIgnoreCase));
 
         if (pricing is null || detail is null)
@@ -113,7 +132,7 @@ internal static class PricingLookupHelper
 
         return new PublicPriceLookupResponse
         {
-            ItemId = itemId,
+            ItemId = resolvedItemId,
             UomCode = uomCode,
             CustomerGroupCode = customerGroupCode,
             Price = detail.Price,
@@ -123,16 +142,56 @@ internal static class PricingLookupHelper
     }
 }
 
-public class CreatePricingHandler(IPricingRepository pricingRepository) : IRequestHandler<CreatePricingCommand, bool>
+public class CreatePricingHandler(IPricingRepository pricingRepository, IItemRepository itemRepository) : IRequestHandler<CreatePricingCommand, bool>
 {
     public async Task<bool> Handle(CreatePricingCommand request, CancellationToken cancellationToken)
     {
-        await pricingRepository.CreateAsync(request.Request.ToEntity(), cancellationToken);
+        var entity = request.Request.ToEntity();
+        entity.ItemId = await ResolveItemIdAsync(request.Request.ItemId, cancellationToken);
+        if (string.IsNullOrWhiteSpace(entity.ItemId))
+        {
+            return false;
+        }
+
+        var details = ResolvePricingDetails(request.Request.Details);
+        if (details.Count == 0)
+        {
+            return false;
+        }
+
+        entity.Details = details;
+        await pricingRepository.CreateAsync(entity, cancellationToken);
         return true;
+    }
+
+    private List<PricingDetailEntity> ResolvePricingDetails(
+        IEnumerable<PricingDetailRequest> requests)
+    {
+        var details = new List<PricingDetailEntity>();
+
+        foreach (var detailRequest in requests)
+        {
+            details.Add(new PricingDetailEntity
+            {
+                CustomerGroupCode = detailRequest.CustomerGroupCode.Trim(),
+                UomCode = detailRequest.UomCode.Trim(),
+                Price = detailRequest.Price
+            });
+        }
+
+        return details;
+    }
+
+    private async Task<string> ResolveItemIdAsync(string itemIdOrCode, CancellationToken cancellationToken)
+    {
+        var item = await itemRepository.GetByIdAsync(itemIdOrCode.Trim(), cancellationToken)
+            ?? await itemRepository.GetBySapCodeAsync(itemIdOrCode.Trim(), cancellationToken);
+
+        return item?.Id ?? string.Empty;
     }
 }
 
-public class UpdatePricingHandler(IPricingRepository pricingRepository) : IRequestHandler<UpdatePricingCommand, bool>
+public class UpdatePricingHandler(IPricingRepository pricingRepository, IItemRepository itemRepository) : IRequestHandler<UpdatePricingCommand, bool>
 {
     public async Task<bool> Handle(UpdatePricingCommand request, CancellationToken cancellationToken)
     {
@@ -140,7 +199,46 @@ public class UpdatePricingHandler(IPricingRepository pricingRepository) : IReque
         if (entity is null) return false;
 
         entity.UpdateFrom(request.Request);
+        entity.ItemId = await ResolveItemIdAsync(request.Request.ItemId, cancellationToken);
+        if (string.IsNullOrWhiteSpace(entity.ItemId))
+        {
+            return false;
+        }
+
+        var details = ResolvePricingDetails(request.Request.Details);
+        if (details.Count == 0)
+        {
+            return false;
+        }
+
+        entity.Details = details;
         return await pricingRepository.UpdateAsync(request.Id, entity, cancellationToken);
+    }
+
+    private List<PricingDetailEntity> ResolvePricingDetails(
+        IEnumerable<PricingDetailRequest> requests)
+    {
+        var details = new List<PricingDetailEntity>();
+
+        foreach (var detailRequest in requests)
+        {
+            details.Add(new PricingDetailEntity
+            {
+                CustomerGroupCode = detailRequest.CustomerGroupCode.Trim(),
+                UomCode = detailRequest.UomCode.Trim(),
+                Price = detailRequest.Price
+            });
+        }
+
+        return details;
+    }
+
+    private async Task<string> ResolveItemIdAsync(string itemIdOrCode, CancellationToken cancellationToken)
+    {
+        var item = await itemRepository.GetByIdAsync(itemIdOrCode.Trim(), cancellationToken)
+            ?? await itemRepository.GetBySapCodeAsync(itemIdOrCode.Trim(), cancellationToken);
+
+        return item?.Id ?? string.Empty;
     }
 }
 

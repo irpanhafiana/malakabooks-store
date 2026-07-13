@@ -8,7 +8,7 @@ public class ReviewEntity : BaseObject
     public string UserId { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string BookId { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
     public string OrderId { get; set; } = string.Empty;

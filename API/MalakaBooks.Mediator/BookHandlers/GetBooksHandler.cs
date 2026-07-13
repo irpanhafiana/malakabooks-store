@@ -8,6 +8,7 @@ namespace MalakaBooks.Mediator.BookHandlers;
 
 public class GetBooksHandler(
     IBookRepository bookRepository,
+    IItemRepository itemRepository,
     IAuthorRepository authorRepository,
     IOrderRepository orderRepository,
     IReviewRepository reviewRepository) : IRequestHandler<GetBooksQuery, IReadOnlyCollection<BookResponse>>
@@ -15,21 +16,23 @@ public class GetBooksHandler(
     public async Task<IReadOnlyCollection<BookResponse>> Handle(GetBooksQuery request, CancellationToken cancellationToken)
     {
         var books = await bookRepository.GetAllAsync(cancellationToken);
+        var items = await itemRepository.GetAllAsync(cancellationToken);
         var authors = await authorRepository.GetAllAsync(cancellationToken);
         var orders = await orderRepository.GetAllAsync(cancellationToken);
         var reviews = await reviewRepository.GetAllAsync(cancellationToken);
         var authorsById = authors.ToDictionary(author => author.Id ?? string.Empty, StringComparer.OrdinalIgnoreCase);
+        var itemsById = items.Where(item => !string.IsNullOrWhiteSpace(item.Id)).ToDictionary(item => item.Id!, StringComparer.OrdinalIgnoreCase);
 
-        var quantitySoldByBookId = orders
+        var quantitySoldByItemId = orders
             .Where(order => string.Equals(order.PaymentStatus, "paid", StringComparison.OrdinalIgnoreCase))
             .SelectMany(order => order.Items)
-            .Where(item => !string.IsNullOrWhiteSpace(item.BookId))
-            .GroupBy(item => item.BookId, StringComparer.OrdinalIgnoreCase)
+            .Where(item => !string.IsNullOrWhiteSpace(item.ItemId))
+            .GroupBy(item => item.ItemId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Sum(item => item.Quantity), StringComparer.OrdinalIgnoreCase);
 
-        var ratingByBookId = reviews
-            .Where(review => !string.IsNullOrWhiteSpace(review.BookId))
-            .GroupBy(review => review.BookId, StringComparer.OrdinalIgnoreCase)
+        var ratingByItemId = reviews
+            .Where(review => !string.IsNullOrWhiteSpace(review.ItemId))
+            .GroupBy(review => review.ItemId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(
                 group => group.Key,
                 group => new
@@ -49,14 +52,15 @@ public class GetBooksHandler(
                     .Cast<AuthorEntity>()
                     .ToList();
 
-                var response = bookEntity.ToResponse(bookAuthors);
+                itemsById.TryGetValue(bookEntity.ItemId, out var itemEntity);
+                var response = bookEntity.ToResponse(itemEntity, bookAuthors);
 
-                if (!string.IsNullOrWhiteSpace(bookEntity.Id) && quantitySoldByBookId.TryGetValue(bookEntity.Id, out var quantitySold))
+                if (!string.IsNullOrWhiteSpace(bookEntity.ItemId) && quantitySoldByItemId.TryGetValue(bookEntity.ItemId, out var quantitySold))
                 {
                     response.QuantitySold = quantitySold;
                 }
 
-                if (!string.IsNullOrWhiteSpace(bookEntity.Id) && ratingByBookId.TryGetValue(bookEntity.Id, out var rating))
+                if (!string.IsNullOrWhiteSpace(bookEntity.ItemId) && ratingByItemId.TryGetValue(bookEntity.ItemId, out var rating))
                 {
                     response.Rating = rating.Rating;
                     response.AverageRating = rating.Rating;

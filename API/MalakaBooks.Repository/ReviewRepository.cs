@@ -18,11 +18,11 @@ public class ReviewRepository : IReviewRepository
     public async Task<IReadOnlyCollection<ReviewEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await _collection.Find(Builders<ReviewEntity>.Filter.Empty).ToListAsync(cancellationToken);
 
-    public async Task<IReadOnlyCollection<ReviewEntity>> GetByBookIdAsync(string bookId, CancellationToken cancellationToken = default) =>
-        await _collection.Find(x => x.BookId == bookId).ToListAsync(cancellationToken);
+    public async Task<IReadOnlyCollection<ReviewEntity>> GetByItemIdAsync(string itemId, CancellationToken cancellationToken = default) =>
+        await _collection.Find(x => x.ItemId == itemId).ToListAsync(cancellationToken);
 
-    public async Task<ReviewEntity?> GetByUserOrderAndBookAsync(string userId, string orderId, string bookId, CancellationToken cancellationToken = default) =>
-        await _collection.Find(x => x.UserId == userId && x.OrderId == orderId && x.BookId == bookId).FirstOrDefaultAsync(cancellationToken);
+    public async Task<ReviewEntity?> GetByUserOrderAndItemAsync(string userId, string orderId, string itemId, CancellationToken cancellationToken = default) =>
+        await _collection.Find(x => x.UserId == userId && x.OrderId == orderId && x.ItemId == itemId).FirstOrDefaultAsync(cancellationToken);
 
     public async Task<ReviewEntity> CreateAsync(ReviewEntity review, CancellationToken cancellationToken = default)
     {

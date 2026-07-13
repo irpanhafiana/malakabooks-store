@@ -21,6 +21,9 @@ public class BookRepository : IBookRepository
     public async Task<BookEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 
+    public async Task<BookEntity?> GetByItemIdAsync(string itemId, CancellationToken cancellationToken = default) =>
+        await _collection.Find(x => x.ItemId == itemId).FirstOrDefaultAsync(cancellationToken);
+
     public async Task<BookEntity> CreateAsync(BookEntity book, CancellationToken cancellationToken = default)
     {
         await _collection.InsertOneAsync(book, cancellationToken: cancellationToken);
@@ -32,32 +35,6 @@ public class BookRepository : IBookRepository
         book.Id = id;
         var result = await _collection.ReplaceOneAsync(x => x.Id == id, book, cancellationToken: cancellationToken);
         return result.ModifiedCount > 0;
-    }
-
-    public async Task<BookEntity?> AdjustStockAsync(string id, int quantityDelta, CancellationToken cancellationToken = default)
-    {
-        var update = Builders<BookEntity>.Update.Inc(book => book.Stock, quantityDelta);
-        return await _collection.FindOneAndUpdateAsync(
-            book => book.Id == id,
-            update,
-            new FindOneAndUpdateOptions<BookEntity>
-            {
-                ReturnDocument = ReturnDocument.After
-            },
-            cancellationToken);
-    }
-
-    public async Task<BookEntity?> SetStockAsync(string id, int newStock, CancellationToken cancellationToken = default)
-    {
-        var update = Builders<BookEntity>.Update.Set(book => book.Stock, newStock);
-        return await _collection.FindOneAndUpdateAsync(
-            book => book.Id == id,
-            update,
-            new FindOneAndUpdateOptions<BookEntity>
-            {
-                ReturnDocument = ReturnDocument.After
-            },
-            cancellationToken);
     }
 
     public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)

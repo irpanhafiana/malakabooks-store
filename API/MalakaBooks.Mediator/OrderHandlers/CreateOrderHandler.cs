@@ -213,7 +213,7 @@ public class CreateOrderHandler(
         AddressEntity receiverAddress)
     {
         var itemTitles = request.Items
-            .Select(item => string.IsNullOrWhiteSpace(item.BookName) ? item.Title : item.BookName)
+            .Select(item => string.IsNullOrWhiteSpace(item.ItemName) ? item.Title : item.ItemName)
             .Where(title => !string.IsNullOrWhiteSpace(title))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -222,7 +222,7 @@ public class CreateOrderHandler(
         var bpik = insuranceEnabled
             ? request.Items.Select(item => new OrderShipmentBpikDetail
             {
-                GoodsName = item.BookName,
+                GoodsName = item.ItemName,
                 GoodsType = "buku",
                 Quantity = item.Quantity
             }).ToList()
@@ -263,7 +263,7 @@ public class CreateOrderHandler(
             SenderLatitude = senderAddress.Latitude.ToString(),
             ReceiverLongitude = receiverAddress.Longitude.ToString(),
             ReceiverLatitude = receiverAddress.Latitude.ToString(),
-            ItemCode = string.Join(",", request.Items.Select(item => item.BookId.Trim()).Where(id => !string.IsNullOrWhiteSpace(id))),
+            ItemCode = string.Join(",", request.Items.Select(item => item.ItemId.Trim()).Where(id => !string.IsNullOrWhiteSpace(id))),
             ItemCategory = request.ShippingCourier.ToUpper() == "JNTC" ? "bm000007" : "SHTPC",
             Bpik = bpik,
         };
@@ -296,20 +296,6 @@ public class CreateOrderHandler(
         IUomGroupRepository uomGroupRepository,
         CancellationToken cancellationToken)
     {
-        var pricing = await pricingRepository.GetActiveByCustomerGroupCodeAsync(customerGroupCode, DateTime.UtcNow, cancellationToken);
-        if (pricing is null)
-        {
-            return new CreateOrderResponse
-            {
-                IsSuccess = false,
-                Message = "No active pricing found for the customer group.",
-                Errors = new Dictionary<string, string>
-                {
-                    ["1"] = "No active pricing found for the customer group."
-                }
-            };
-        }
-
         for (var index = 0; index < request.Items.Count; index++)
         {
             var requestItem = request.Items[index];
@@ -374,9 +360,13 @@ public class CreateOrderHandler(
                 };
             }
 
-            var pricingDetail = pricing.Details.FirstOrDefault(detail =>
-                string.Equals(detail.ItemId, orderItem.ItemId, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(detail.UomCode, orderItem.UomCode, StringComparison.OrdinalIgnoreCase));
+            var pricingHeaders = await pricingRepository.GetActiveByItemIdAsync(orderItem.ItemId, DateTime.UtcNow, cancellationToken);
+            var pricingDetail = pricingHeaders
+                .SelectMany(header => header.Details.Select(detail => new { header, detail }))
+                .Where(entry => string.Equals(entry.detail.CustomerGroupCode, customerGroupCode, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(entry.detail.UomCode, orderItem.UomCode, StringComparison.OrdinalIgnoreCase))
+                .Select(entry => entry.detail)
+                .FirstOrDefault();
 
             if (pricingDetail is null)
             {
@@ -393,12 +383,16 @@ public class CreateOrderHandler(
 
             orderItem.Price = pricingDetail.Price;
             orderItem.Title = string.IsNullOrWhiteSpace(orderItem.Title) ? item.Name : orderItem.Title;
-            if (string.IsNullOrWhiteSpace(orderItem.BookName))
+            if (string.IsNullOrWhiteSpace(orderItem.ItemName))
             {
-                orderItem.BookName = item.Name;
+                orderItem.ItemName = item.Name;
             }
 
             requestItem.Price = pricingDetail.Price;
+            if (string.IsNullOrWhiteSpace(requestItem.ItemName))
+            {
+                requestItem.ItemName = item.Name;
+            }
         }
 
         entity.ItemsSubtotal = entity.Items.Sum(item => item.Price * item.Quantity);
@@ -443,8 +437,8 @@ public class CreateOrderHandler(
 
         var detail = request.Items.Select(item => new Line_Items
         {
-            id = item.BookId,
-            name = string.IsNullOrWhiteSpace(item.BookName) ? RemoveInvalidCharacters(item.Title) : RemoveInvalidCharacters(item.BookName),
+            id = item.ItemId,
+            name = string.IsNullOrWhiteSpace(item.ItemName) ? RemoveInvalidCharacters(item.Title) : RemoveInvalidCharacters(item.ItemName),
             quantity = item.Quantity,
             price = Convert.ToInt32(item.Price),
             type = "PRODUCT"
