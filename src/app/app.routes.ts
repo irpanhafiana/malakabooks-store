@@ -34,6 +34,8 @@ export const routes: Routes = [
       { path: 'items/detail/:id', loadComponent: () => import('./features/admin/items/detail/items-detail.component').then(c => c.ItemsDetailComponent) },
       { path: 'stocks', loadComponent: () => import('./features/admin/stocks/list/stocks-list.component').then(c => c.StocksListComponent) },
       { path: 'pricings', loadComponent: () => import('./features/admin/pricings/list/pricings-list.component').then(c => c.PricingsListComponent) },
+      { path: 'pricings/new', loadComponent: () => import('./features/admin/pricings/form-page/pricings-form-page.component').then(c => c.PricingsFormPageComponent) },
+      { path: 'pricings/edit/:id', loadComponent: () => import('./features/admin/pricings/form-page/pricings-form-page.component').then(c => c.PricingsFormPageComponent) },
       { path: 'inventory-movements', loadComponent: () => import('./features/admin/inventory-movements/inventory-movements.component').then(c => c.InventoryMovementsComponent) },
       { path: 'payment-methods', loadComponent: () => import('./features/admin/payment-methods/list/payment-methods-list.component').then(c => c.PaymentMethodsListComponent) },
       { path: 'authors', loadComponent: () => import('./features/admin/authors/list/authors-list.component').then(c => c.AuthorsListComponent) },

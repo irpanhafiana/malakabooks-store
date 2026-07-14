@@ -1,14 +1,13 @@
 export interface PricingDetail {
-  itemId: string;
+  customerGroupCode: string;
   uomCode: string;
   price: number;
 }
 
 export interface Pricing {
   id: string;
-  code: string;
   name: string;
-  customerGroupCode: string;
+  itemId: string;
   startDate: string;
   endDate: string;
   isActive: boolean;
@@ -19,9 +18,8 @@ export interface Pricing {
 }
 
 export interface CreatePricingPayload {
-  code: string;
   name: string;
-  customerGroupCode: string;
+  itemId: string;
   startDate: string;
   endDate: string;
   isActive: boolean;

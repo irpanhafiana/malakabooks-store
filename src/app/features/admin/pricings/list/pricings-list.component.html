@@ -39,9 +39,8 @@
   } @else {
   <app-table>
     <tr table-headers>
-      <th class="px-5 py-4">Kode Aturan</th>
       <th class="px-5 py-4">Nama Aturan</th>
-      <th class="px-5 py-4">Customer Group</th>
+      <th class="px-5 py-4">Item / Buku</th>
       <th class="px-5 py-4">Masa Berlaku</th>
       <th class="px-5 py-4">Total Rincian</th>
       <th class="px-5 py-4">Status</th>
@@ -51,13 +50,12 @@
     <ng-container table-rows>
       @for (pricing of pagination.paged(); track pricing.id) {
       <tr class="hover:bg-slate-50/50 transition-colors">
-        <td class="px-5 py-4 text-xs font-semibold text-slate-500">
-          <code class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-primary-600 font-mono">{{ pricing.code }}</code>
-        </td>
         <td class="px-5 py-4 font-bold text-slate-800 text-xs">
           {{ pricing.name }}
         </td>
-        <td class="px-5 py-4 text-xs text-slate-500 font-semibold">{{ pricing.customerGroupCode }}</td>
+        <td class="px-5 py-4 text-xs font-semibold text-slate-700">
+          {{ itemMap().get(pricing.itemId)?.name || pricing.itemId || '-' }}
+        </td>
         <td class="px-5 py-4 text-xs text-slate-500 font-medium">
           {{ pricing.startDate | date:'shortDate' }} s/d {{ pricing.endDate | date:'shortDate' }}
         </td>
@@ -72,11 +70,26 @@
         <td class="px-5 py-4 text-right">
           <div class="flex justify-end gap-1.5">
             <button (click)="openEditModal(pricing)"
-              class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer transition-colors">
+              class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer transition-colors"
+              title="Edit Data">
               <app-icon name="edit" size="14"></app-icon>
             </button>
+            @if (!pricing.isActive) {
+              <button (click)="onToggleActive(pricing, true)"
+                class="p-1.5 rounded-lg hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 cursor-pointer transition-colors"
+                title="Publish Pricing">
+                <app-icon name="check-circle" size="14"></app-icon>
+              </button>
+            } @else {
+              <button (click)="onToggleActive(pricing, false)"
+                class="p-1.5 rounded-lg hover:bg-amber-50 text-slate-400 hover:text-amber-600 cursor-pointer transition-colors"
+                title="Nonaktifkan Pricing">
+                <app-icon name="x-circle" size="14"></app-icon>
+              </button>
+            }
             <button (click)="onDelete(pricing.id)"
-              class="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors">
+              class="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors"
+              title="Hapus Pricing">
               <app-icon name="trash" size="14"></app-icon>
             </button>
           </div>
@@ -99,11 +112,5 @@
       (pageChange)="pagination.setPage($event)"></app-pagination>
   </div>
   }
-
-  <!-- Add/Edit Pricing Modal Form -->
-  <app-modal [(isOpen)]="isModalOpen" [title]="editPricing() ? 'Edit Pricing Master' : 'Tambah Pricing Master Baru'">
-    <app-pricings-form [pricing]="editPricing()" (onCancel)="closeModal()" (onSave)="closeModal()">
-    </app-pricings-form>
-  </app-modal>
 
 </div>

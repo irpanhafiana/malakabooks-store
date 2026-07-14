@@ -32,8 +32,8 @@ export class ItemStore {
       const items = await this.itemApi.getItems();
       this.state.update(s => ({ ...s, items, loading: false, error: null }));
     } catch (e) {
-      this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat catalog items.' }));
-      this.toastService.error('Gagal memuat catalog items.');
+      this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat produk.' }));
+      this.toastService.error('Gagal memuat produk.');
     }
   }
 
@@ -42,11 +42,11 @@ export class ItemStore {
     try {
       const saved = await this.itemApi.saveItem(item);
       await this.loadItems();
-      this.toastService.success(`Item "${saved.name}" berhasil disimpan!`);
+      this.toastService.success(`Produk berhasil disimpan!`);
       return saved;
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menyimpan item.');
+      this.toastService.error('Gagal menyimpan produk.');
       throw e;
     }
   }

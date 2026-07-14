@@ -9,6 +9,7 @@ export interface Product {
   itemType?: 'malaka' | 'mardika';
   title: string;
   sapCode: string;
+  baseUomCode?: string;
   authorIds: string[];
   authors: {
     id: string;

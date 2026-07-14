@@ -42,7 +42,7 @@ export class ItemsFormComponent {
   descriptionControl = new FormControl('');
   isActiveControl = new FormControl(false, [Validators.required]);
   coverImageControl = new FormControl('');
-  
+
   // Additional images
   additionalImagesControl = new FormArray<FormControl<string | null>>([]);
 
@@ -55,7 +55,7 @@ export class ItemsFormComponent {
   priceControl = new FormControl<number>(0);
   weightControl = new FormControl<number>(0);
   stockControl = new FormControl<number>(0);
-  
+
   authorIdControl = new FormControl('');
 
   formGroup = new FormGroup({
@@ -125,15 +125,15 @@ export class ItemsFormComponent {
         this.descriptionControl.setValue(it.description || '');
         this.isActiveControl.setValue(it.isActive ?? false);
         this.coverImageControl.setValue(it.coverImage || '');
-        
+
         this.additionalImagesControl.clear();
         if (it.additionalImages && Array.isArray(it.additionalImages)) {
-           const sorted = [...it.additionalImages].sort((a, b) => (a.no || 0) - (b.no || 0));
-           sorted.forEach(img => {
-             this.additionalImagesControl.push(new FormControl(img.image || ''));
-           });
+          const sorted = [...it.additionalImages].sort((a, b) => (a.no || 0) - (b.no || 0));
+          sorted.forEach(img => {
+            this.additionalImagesControl.push(new FormControl(img.image || ''));
+          });
         }
-        
+
         // Book fields
         this.isbnControl.setValue(it.isbn || '');
         this.categoryIdControl.setValue(it.categoryId || '');
@@ -143,7 +143,7 @@ export class ItemsFormComponent {
         this.priceControl.setValue(it.price || 0);
         this.weightControl.setValue(it.weight || 0);
         this.stockControl.setValue(it.stock || 0);
-        
+
         if (it.authorIds && it.authorIds.length > 0) {
           this.authorIdControl.setValue(it.authorIds[0]);
         } else {
@@ -151,7 +151,7 @@ export class ItemsFormComponent {
         }
       } else {
         this.additionalImagesControl.clear();
-        this.formGroup.reset({ 
+        this.formGroup.reset({
           name: '', sapCode: '', itemType: 'mardika', uomGroupId: '', baseUomCode: '', description: '', isActive: false,
           coverImage: '',
           isbn: '', categoryId: '', publisher: '', publishedYear: new Date().getFullYear(), pages: 0, price: 0, weight: 0, stock: 0, authorId: ''
@@ -211,17 +211,17 @@ export class ItemsFormComponent {
     };
 
     if (payload.itemType === 'malaka') {
-       payload.bookId = this.item()?.bookId;
-       payload.title = this.nameControl.value || '';
-       payload.isbn = this.isbnControl.value || '';
-       payload.categoryId = this.categoryIdControl.value || undefined;
-       payload.publisher = this.publisherControl.value || '';
-       payload.publishedYear = this.publishedYearControl.value || 0;
-       payload.pages = this.pagesControl.value || 0;
-       payload.price = this.priceControl.value || 0;
-       payload.weight = this.weightControl.value || 0;
-       payload.stock = this.stockControl.value || 0;
-       payload.authorIds = this.authorIdControl.value ? [this.authorIdControl.value] : [];
+      payload.bookId = this.item()?.bookId;
+      payload.title = this.nameControl.value || '';
+      payload.isbn = this.isbnControl.value || '';
+      payload.categoryId = this.categoryIdControl.value || undefined;
+      payload.publisher = this.publisherControl.value || '';
+      payload.publishedYear = this.publishedYearControl.value || 0;
+      payload.pages = this.pagesControl.value || 0;
+      payload.price = this.priceControl.value || 0;
+      payload.weight = this.weightControl.value || 0;
+      payload.stock = this.stockControl.value || 0;
+      payload.authorIds = this.authorIdControl.value ? [this.authorIdControl.value] : [];
     }
 
     return payload;
@@ -234,8 +234,8 @@ export class ItemsFormComponent {
     }
 
     const isConfirmed = await this.alertService.confirm(
-      'Simpan Catalog Item?',
-      'Apakah Anda yakin ingin menyimpan perubahan data catalog item ini?'
+      'Simpan Produk?',
+      'Apakah Anda yakin ingin menyimpan perubahan data produk ini?'
     );
     if (!isConfirmed) return;
 
@@ -258,7 +258,7 @@ export class ItemsFormComponent {
       console.error('Failed to read image file');
     };
     reader.readAsDataURL(file);
-    
+
     // Reset so same file can be selected again
     input.value = '';
   }

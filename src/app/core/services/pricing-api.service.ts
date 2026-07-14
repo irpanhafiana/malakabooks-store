@@ -26,9 +26,8 @@ export class PricingApiService {
   async savePricing(pricing: Partial<Pricing>): Promise<Pricing> {
     const isNew = !pricing.id;
     const body: Partial<Pricing> = {
-      code: pricing.code,
       name: pricing.name,
-      customerGroupCode: pricing.customerGroupCode,
+      itemId: pricing.itemId,
       startDate: pricing.startDate,
       endDate: pricing.endDate,
       isActive: pricing.isActive ?? true,

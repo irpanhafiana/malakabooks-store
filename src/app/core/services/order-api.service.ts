@@ -224,32 +224,26 @@ export class OrderApiService {
   }
 
   async saveOrder(order: Order): Promise<Order> {
-    const nameParts = (order.userName || '').trim().split(' ');
-    const firstName = nameParts[0] || '';
-    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-    const currentUser = getStoredSessionUser();
-    const phone = currentUser?.phone || order.shippingAddress?.phone || '';
-
     const externalProfileId = localStorage.getItem('externalProfileId');
     const body: any = {
       userId: order.userId,
-      firstName,
-      lastName,
-      phone,
       items: order.items.map(item => ({
-        bookId: item.product.id,
-        bookName: item.product.title,
+        itemId: item.product.id,
+        itemName: item.product.title,
         title: item.product.title,
+        uomCode: item.uomCode || item.product.baseUomCode || '',
         price: item.product.price,
         quantity: item.quantity
       })),
       addressId: order.shippingAddress.id,
       paymentId: order.paymentMethod,
       note: '',
-      shippingFee: order.shippingCost || 0,
       shippingCourier: order.shippingCourier || '',
       shippingType: order.shippingType || '',
-      shippingEst: order.shippingEst || ''
+      shippingEst: order.shippingEst || '',
+      shippingFee: order.shippingCost || 0,
+      insurance: true,
+      shippingInsurance: 0
     };
 
     if (externalProfileId) {

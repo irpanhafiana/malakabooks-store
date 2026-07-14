@@ -10,7 +10,7 @@
     <app-admin-input label="Jumlah Stok Dipesan (Reserved)" type="number" placeholder="0" [control]="reservedQuantityControl"></app-admin-input>
   </div>
 
-  <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
+  <div class="border-t border-slate-100 pt-4 flex justify-end gap-3 mt-6">
     <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
     <app-admin-button (click)="onSubmitForm()" [disabled]="formGroup.invalid" type="button" variant="primary" size="sm">
       Simpan

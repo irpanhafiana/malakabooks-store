@@ -61,7 +61,7 @@ export class AdminLayoutComponent {
         } else if (url.includes('/warehouses')) {
           this.activeRouteName.set('Kelola Gudang');
         } else if (url.includes('/items')) {
-          this.activeRouteName.set('Kelola Catalog Items');
+          this.activeRouteName.set('Kelola Produk');
         } else if (url.includes('/stocks')) {
           this.activeRouteName.set('Kelola Stok Gudang');
         } else if (url.includes('/pricings')) {

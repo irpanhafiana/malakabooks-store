@@ -1,20 +1,16 @@
 <div class="flex flex-col gap-6 pb-20">
   <div class="flex items-center justify-between">
-    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">{{ isEditing() ? 'Edit Produk' : 'Tambah
-      Produk Baru' }}</h2>
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">{{ isEditing() ? 'Edit Pricing Master' : 'Tambah Pricing Master Baru' }}</h2>
 
     <app-admin-button (click)="onCancel()" variant="outline" size="md" class="shrink-0">
       <app-icon name="chevron-left" size="14"></app-icon>
-      Kembali ke Daftar Item
+      Kembali ke Daftar Pricing
     </app-admin-button>
   </div>
 
   <!-- Form Container -->
   <div class="bg-white p-6 rounded-2xl border border-slate-200">
-    <app-items-form [item]="editItem()" (onCancel)="onCancel()" (onSave)="onSave()"
-      (itemTypeChange)="onItemTypeChange($event)">
-    </app-items-form>
+    <app-pricings-form [pricing]="editPricing()" (onCancel)="onCancel()" (onSave)="onSave()">
+    </app-pricings-form>
   </div>
-
-
 </div>

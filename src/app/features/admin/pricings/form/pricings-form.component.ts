@@ -27,17 +27,15 @@ export class PricingsFormComponent {
   protected readonly itemStore = inject(ItemStore);
   private readonly alertService = inject(AlertService);
 
-  codeControl = new FormControl('', [Validators.required]);
   nameControl = new FormControl('', [Validators.required]);
-  customerGroupCodeControl = new FormControl('', [Validators.required]);
+  itemIdControl = new FormControl('', [Validators.required]);
   startDateControl = new FormControl('', [Validators.required]);
   endDateControl = new FormControl('', [Validators.required]);
   isActiveControl = new FormControl(true, [Validators.required]);
 
   formGroup = new FormGroup({
-    code: this.codeControl,
     name: this.nameControl,
-    customerGroupCode: this.customerGroupCodeControl,
+    itemId: this.itemIdControl,
     startDate: this.startDateControl,
     endDate: this.endDateControl,
     isActive: this.isActiveControl
@@ -46,7 +44,7 @@ export class PricingsFormComponent {
   details = signal<PricingDetail[]>([]);
 
   // Add detail form controls
-  detailItemId = new FormControl('', [Validators.required]);
+  detailCustomerGroupCode = new FormControl('PUBLIC', [Validators.required]);
   detailUomCode = new FormControl('', [Validators.required]);
   detailPrice = new FormControl(0, [Validators.required, Validators.min(0)]);
 
@@ -76,21 +74,20 @@ export class PricingsFormComponent {
     effect(() => {
       const pr = this.pricing();
       if (pr) {
-        this.codeControl.setValue(pr.code);
         this.nameControl.setValue(pr.name);
-        this.customerGroupCodeControl.setValue(pr.customerGroupCode);
+        this.itemIdControl.setValue(pr.itemId);
         this.startDateControl.setValue(pr.startDate ? pr.startDate.substring(0, 10) : '');
         this.endDateControl.setValue(pr.endDate ? pr.endDate.substring(0, 10) : '');
         this.isActiveControl.setValue(pr.isActive);
         this.details.set(pr.details || []);
       } else {
-        this.formGroup.reset({ code: '', name: '', customerGroupCode: 'PUBLIC', startDate: '', endDate: '', isActive: true });
+        this.formGroup.reset({ name: '', itemId: '', startDate: '', endDate: '', isActive: true });
         this.details.set([]);
       }
     });
 
-    // Auto set UoM code when item is picked
-    this.detailItemId.valueChanges.subscribe(itemId => {
+    // Auto set UoM code when header item is picked (for default detail uom)
+    this.itemIdControl.valueChanges.subscribe(itemId => {
       if (itemId) {
         const item = this.itemMap().get(itemId);
         if (item) {
@@ -103,27 +100,27 @@ export class PricingsFormComponent {
   }
 
   addDetail() {
-    const itemId = this.detailItemId.value;
+    const customerGroupCode = this.detailCustomerGroupCode.value;
     const uomCode = this.detailUomCode.value?.trim();
     const price = this.detailPrice.value ?? 0;
 
-    if (!itemId || !uomCode) {
-      this.alertService.error('Detail Tidak Lengkap!', 'Item dan Kode UoM wajib diisi.');
+    if (!customerGroupCode || !uomCode) {
+      this.alertService.error('Detail Tidak Lengkap!', 'Customer Group dan Kode UoM wajib diisi.');
       return;
     }
 
-    const newDetail: PricingDetail = { itemId, uomCode, price };
+    const newDetail: PricingDetail = { customerGroupCode, uomCode, price };
     const current = [...this.details()];
-    // Prevent duplicate item + uom combination
-    const exists = current.some(d => d.itemId === itemId && d.uomCode === uomCode);
+    // Prevent duplicate customer group + uom combination
+    const exists = current.some(d => d.customerGroupCode === customerGroupCode && d.uomCode === uomCode);
     if (exists) {
-      this.alertService.error('Duplikat Detail!', 'Item dan UoM ini sudah ada di daftar.');
+      this.alertService.error('Duplikat Detail!', 'Customer Group dan UoM ini sudah ada di daftar.');
       return;
     }
 
     this.details.set([...current, newDetail]);
-    this.detailItemId.reset('');
-    this.detailUomCode.reset('');
+    this.detailCustomerGroupCode.reset('PUBLIC');
+    // keep detailUomCode to what it was
     this.detailPrice.reset(0);
   }
 
@@ -150,9 +147,8 @@ export class PricingsFormComponent {
 
     const data: Partial<Pricing> = {
       id: this.pricing()?.id,
-      code: this.codeControl.value || '',
       name: this.nameControl.value || '',
-      customerGroupCode: this.customerGroupCodeControl.value || '',
+      itemId: this.itemIdControl.value || '',
       startDate: new Date(this.startDateControl.value || '').toISOString(),
       endDate: new Date(this.endDateControl.value || '').toISOString(),
       isActive: this.isActiveControl.value ?? true,

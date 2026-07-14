@@ -36,8 +36,8 @@ export class ItemsListComponent implements OnInit {
     const items = this.itemStore.items() || [];
 
     if (!query) return items;
-    return items.filter(i => 
-      i.name.toLowerCase().includes(query) || 
+    return items.filter(i =>
+      i.name.toLowerCase().includes(query) ||
       i.sapCode.toLowerCase().includes(query) ||
       i.itemType?.toLowerCase().includes(query) ||
       i.baseUomCode.toLowerCase().includes(query)
@@ -68,8 +68,8 @@ export class ItemsListComponent implements OnInit {
   async onToggleActive(item: CatalogItem, active: boolean) {
     const actionText = active ? 'mengaktifkan' : 'menonaktifkan';
     const isConfirmed = await this.alertService.confirm(
-      active ? 'Publish Item?' : 'Nonaktifkan Item?',
-      `Apakah Anda yakin ingin ${actionText} item "${item.name}"?`
+      active ? 'Publish Produk?' : 'Nonaktifkan Produk?',
+      `Apakah Anda yakin ingin ${actionText} produk "${item.name}"?`
     );
     if (isConfirmed) {
       await this.itemStore.saveItem({ ...item, isActive: active });
@@ -78,8 +78,8 @@ export class ItemsListComponent implements OnInit {
 
   async onDelete(id: string) {
     const isConfirmed = await this.alertService.confirm(
-      'Hapus Catalog Item?',
-      'Apakah Anda yakin ingin menghapus catalog item ini?'
+      'Hapus Produk?',
+      'Apakah Anda yakin ingin menghapus produk ini?'
     );
     if (isConfirmed) {
       await this.itemStore.deleteItem(id);
