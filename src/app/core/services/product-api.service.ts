@@ -62,7 +62,7 @@ export class ProductApiService {
       const endpoint = isAdminSession() ? `${this.BASE_URL}/admin/Items` : `${this.BASE_URL}/public/Items`;
       const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
       const allItems = envelope?.data || [];
-      const malakaItems = allItems.filter(i => i.itemType === 'malaka');
+      const itemsToProcess = allItems;
 
       const booksEndpoint = isAdminSession() ? `${this.BASE_URL}/admin/Books` : `${this.BASE_URL}/public/Books`;
       let books: BookDto[] = [];
@@ -80,7 +80,7 @@ export class ProductApiService {
       const isCustomerLoggedIn = currentUser !== null && currentUser.role !== 'admin';
 
       const products: Product[] = [];
-      for (const item of malakaItems) {
+      for (const item of itemsToProcess) {
         let price = 0;
         try {
           if (isCustomerLoggedIn) {

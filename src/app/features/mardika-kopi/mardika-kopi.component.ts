@@ -188,7 +188,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
           categoryName: item.itemType,
           price: price,
           description: item.description,
-          coverImage: '',
+          coverImage: (item as any).coverImage || '',
           publisher: '',
           publishedYear: new Date().getFullYear(),
           pages: 0,
@@ -197,7 +197,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
           averageRating: 5,
           totalReviews: 12,
           createdAt: item.createdAt || new Date().toISOString(),
-          additionalImages: []
+          additionalImages: (item as any).additionalImages || []
         });
       }
       this.kopiItems.set(products);
