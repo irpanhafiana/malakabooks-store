@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal, ChangeDetectionStrategy, ViewChild }
 import { Router, ActivatedRoute } from '@angular/router';
 import { ItemStore } from '../../../../store/item.store';
 import { CatalogItem } from '../../../../core/models';
+import { ItemApiService } from '../../../../core/services/item-api.service';
 import { ItemsFormComponent } from '../form/items-form.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
@@ -17,6 +18,7 @@ export class ItemsFormPageComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly itemStore = inject(ItemStore);
+  private readonly itemApi = inject(ItemApiService);
 
   @ViewChild(ItemsFormComponent) itemsForm!: ItemsFormComponent;
 
@@ -24,25 +26,19 @@ export class ItemsFormPageComponent implements OnInit {
   protected readonly isEditing = signal(false);
   protected selectedItemType = signal<string>('mardika');
 
-  ngOnInit() {
+  async ngOnInit() {
     this.itemStore.loadItems();
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditing.set(true);
       
-      const item = this.itemStore.items()?.find((p: CatalogItem) => p.id === id);
+      const item = await this.itemApi.getItemById(id);
       if (item) {
         this.editItem.set(item);
-      } else {
-        const checkInterval = setInterval(() => {
-          const loadedItem = this.itemStore.items()?.find((p: CatalogItem) => p.id === id);
-          if (loadedItem) {
-            this.editItem.set(loadedItem);
-            clearInterval(checkInterval);
-          }
-        }, 100);
-        setTimeout(() => clearInterval(checkInterval), 3000);
+        if (item.itemType) {
+          this.selectedItemType.set(item.itemType);
+        }
       }
     } else {
       this.isEditing.set(false);
