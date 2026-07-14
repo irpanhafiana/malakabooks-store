@@ -147,7 +147,7 @@ public class CreatePricingHandler(IPricingRepository pricingRepository, IItemRep
     public async Task<bool> Handle(CreatePricingCommand request, CancellationToken cancellationToken)
     {
         var entity = request.Request.ToEntity();
-        entity.ItemId = await ResolveItemIdAsync(request.Request.ItemId, cancellationToken);
+        entity.ItemId = await ResolveItemIdAsync(request.Request.ItemCode, cancellationToken);
         if (string.IsNullOrWhiteSpace(entity.ItemId))
         {
             return false;
@@ -182,10 +182,9 @@ public class CreatePricingHandler(IPricingRepository pricingRepository, IItemRep
         return details;
     }
 
-    private async Task<string> ResolveItemIdAsync(string itemIdOrCode, CancellationToken cancellationToken)
+    private async Task<string> ResolveItemIdAsync(string itemCode, CancellationToken cancellationToken)
     {
-        var item = await itemRepository.GetByIdAsync(itemIdOrCode.Trim(), cancellationToken)
-            ?? await itemRepository.GetBySapCodeAsync(itemIdOrCode.Trim(), cancellationToken);
+        var item = await itemRepository.GetBySapCodeAsync(itemCode.Trim(), cancellationToken);
 
         return item?.Id ?? string.Empty;
     }
@@ -199,7 +198,7 @@ public class UpdatePricingHandler(IPricingRepository pricingRepository, IItemRep
         if (entity is null) return false;
 
         entity.UpdateFrom(request.Request);
-        entity.ItemId = await ResolveItemIdAsync(request.Request.ItemId, cancellationToken);
+        entity.ItemId = await ResolveItemIdAsync(request.Request.ItemCode, cancellationToken);
         if (string.IsNullOrWhiteSpace(entity.ItemId))
         {
             return false;
@@ -233,10 +232,9 @@ public class UpdatePricingHandler(IPricingRepository pricingRepository, IItemRep
         return details;
     }
 
-    private async Task<string> ResolveItemIdAsync(string itemIdOrCode, CancellationToken cancellationToken)
+    private async Task<string> ResolveItemIdAsync(string itemCode, CancellationToken cancellationToken)
     {
-        var item = await itemRepository.GetByIdAsync(itemIdOrCode.Trim(), cancellationToken)
-            ?? await itemRepository.GetBySapCodeAsync(itemIdOrCode.Trim(), cancellationToken);
+        var item = await itemRepository.GetBySapCodeAsync(itemCode.Trim(), cancellationToken);
 
         return item?.Id ?? string.Empty;
     }

@@ -13,6 +13,7 @@ public static class MappingExtensions
         Name = entity.Name,
         SAPCode = entity.SAPCode,
         ItemType = entity.ItemType,
+        CategoryId = entity.CategoryId,
         CoverImage = entity.CoverImage,
         AdditionalImages = entity.AdditionalImages.Select(ToResponse).ToList(),
         UomGroupId = entity.UomGroupId,
@@ -31,6 +32,7 @@ public static class MappingExtensions
         Name = request.Name.Trim(),
         SAPCode = request.SAPCode.Trim(),
         ItemType = request.ItemType.Trim(),
+        CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim(),
         CoverImage = request.CoverImage.Trim(),
         AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         UomGroupId = string.IsNullOrWhiteSpace(request.UomGroupId) ? null : request.UomGroupId.Trim(),
@@ -48,6 +50,7 @@ public static class MappingExtensions
         entity.Name = request.Name.Trim();
         entity.SAPCode = request.SAPCode.Trim();
         entity.ItemType = request.ItemType.Trim();
+        entity.CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim();
         entity.CoverImage = request.CoverImage.Trim();
         entity.AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList();
         entity.UomGroupId = string.IsNullOrWhiteSpace(request.UomGroupId) ? null : request.UomGroupId.Trim();
@@ -130,6 +133,7 @@ public static class MappingExtensions
         Name = entity.Name,
         ConversionFactor = entity.ConversionFactor,
         IsBaseUom = entity.IsBaseUom,
+        IsDefaultForSales = entity.IsDefaultForSales,
         SortOrder = entity.SortOrder,
         IsActive = entity.IsActive
     };
@@ -140,6 +144,7 @@ public static class MappingExtensions
         Name = request.Name.Trim(),
         ConversionFactor = request.ConversionFactor,
         IsBaseUom = request.IsBaseUom,
+        IsDefaultForSales = request.IsDefaultForSales,
         SortOrder = request.SortOrder,
         IsActive = request.IsActive
     };
@@ -161,7 +166,7 @@ public static class MappingExtensions
     public static PricingEntity ToEntity(this CreatePricingRequest request) => new()
     {
         Name = request.Name.Trim(),
-        ItemId = request.ItemId.Trim(),
+        ItemId = string.Empty,
         StartDate = request.StartDate,
         EndDate = request.EndDate,
         IsActive = request.IsActive,
@@ -173,7 +178,6 @@ public static class MappingExtensions
     public static void UpdateFrom(this PricingEntity entity, UpdatePricingRequest request)
     {
         entity.Name = request.Name.Trim();
-        entity.ItemId = request.ItemId.Trim();
         entity.StartDate = request.StartDate;
         entity.EndDate = request.EndDate;
         entity.IsActive = request.IsActive;
@@ -242,7 +246,7 @@ public static class MappingExtensions
         AuthorIds = entity.AuthorIds.ToList(),
         Authors = [],
         Isbn = entity.Isbn,
-        CategoryId = entity.CategoryId ?? string.Empty,
+        CategoryId = item?.CategoryId ?? string.Empty,
         Price = 0,
         Description = item?.Description ?? string.Empty,
         CoverImage = item?.CoverImage ?? string.Empty,
@@ -268,7 +272,7 @@ public static class MappingExtensions
         AuthorIds = entity.AuthorIds.ToList(),
         Authors = authors.Select(ToResponse).ToList(),
         Isbn = entity.Isbn,
-        CategoryId = entity.CategoryId ?? string.Empty,
+        CategoryId = item?.CategoryId ?? string.Empty,
         Price = 0,
         Description = item?.Description ?? string.Empty,
         CoverImage = item?.CoverImage ?? string.Empty,
@@ -294,7 +298,6 @@ public static class MappingExtensions
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList(),
         Isbn = request.Isbn.Trim(),
-        CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim(),
         Publisher = request.Publisher.Trim(),
         PublishedYear = request.PublishedYear,
         Pages = request.Pages,
@@ -308,6 +311,7 @@ public static class MappingExtensions
         Name = request.Title.Trim(),
         SAPCode = request.SAPCode.Trim(),
         ItemType = "book",
+        CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim(),
         CoverImage = request.CoverImage.Trim(),
         AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         BaseUomCode = string.Empty,
@@ -323,6 +327,7 @@ public static class MappingExtensions
     {
         entity.Name = request.Title.Trim();
         entity.SAPCode = request.SAPCode.Trim();
+        entity.CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim();
         entity.CoverImage = request.CoverImage.Trim();
         entity.AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList();
         entity.Description = request.Description.Trim();
@@ -341,7 +346,6 @@ public static class MappingExtensions
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
         entity.Isbn = request.Isbn.Trim();
-        entity.CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim();
         entity.Publisher = request.Publisher.Trim();
         entity.PublishedYear = request.PublishedYear;
         entity.Pages = request.Pages;

@@ -8,6 +8,7 @@
   "variable": [
     { "key": "baseUrl", "value": "https://localhost:5001" },
     { "key": "apiVersion", "value": "1" },
+    { "key": "itemType", "value": "book" },
     { "key": "itemId", "value": "67f0a1111111111111111111" },
     { "key": "bookId", "value": "67f0b2222222222222222222" },
     { "key": "authorId", "value": "67f0c3333333333333333333" },
@@ -224,7 +225,7 @@
               "request": {
                 "method": "POST",
                 "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Piece Pack\",\n  \"baseUomCode\": \"PCS\",\n  \"details\": [\n    {\n      \"code\": \"PCS\",\n      \"name\": \"Pieces\",\n      \"conversionFactor\": 1,\n      \"isBaseUom\": true,\n      \"sortOrder\": 1,\n      \"isActive\": true\n    },\n    {\n      \"code\": \"BOX\",\n      \"name\": \"Box\",\n      \"conversionFactor\": 12,\n      \"isBaseUom\": false,\n      \"sortOrder\": 2,\n      \"isActive\": true\n    }\n  ],\n  \"isActive\": true\n}" },
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Piece Pack\",\n  \"baseUomCode\": \"PCS\",\n  \"details\": [\n    {\n      \"code\": \"PCS\",\n      \"name\": \"Pieces\",\n      \"conversionFactor\": 1,\n      \"isBaseUom\": true,\n      \"isDefaultForSales\": false,\n      \"sortOrder\": 1,\n      \"isActive\": true\n    },\n    {\n      \"code\": \"BOX\",\n      \"name\": \"Box\",\n      \"conversionFactor\": 12,\n      \"isBaseUom\": false,\n      \"isDefaultForSales\": true,\n      \"sortOrder\": 2,\n      \"isActive\": true\n    }\n  ],\n  \"isActive\": true\n}" },
                 "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/uomgroups"
               }
             },
@@ -233,7 +234,7 @@
               "request": {
                 "method": "PUT",
                 "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Piece Pack Updated\",\n  \"baseUomCode\": \"PCS\",\n  \"details\": [\n    {\n      \"code\": \"PCS\",\n      \"name\": \"Pieces\",\n      \"conversionFactor\": 1,\n      \"isBaseUom\": true,\n      \"sortOrder\": 1,\n      \"isActive\": true\n    }\n  ],\n  \"isActive\": true\n}" },
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Piece Pack Updated\",\n  \"baseUomCode\": \"PCS\",\n  \"details\": [\n    {\n      \"code\": \"PCS\",\n      \"name\": \"Pieces\",\n      \"conversionFactor\": 1,\n      \"isBaseUom\": true,\n      \"isDefaultForSales\": true,\n      \"sortOrder\": 1,\n      \"isActive\": true\n    }\n  ],\n  \"isActive\": true\n}" },
                 "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/uomgroups/{{uomGroupId}}"
               }
             },
@@ -517,6 +518,14 @@
           ]
         },
         {
+          "name": "Categories",
+          "item": [
+            { "name": "Get All Categories", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/categories" } },
+            { "name": "Get Categories By Item Type", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/categories/type/{{itemType}}" } },
+            { "name": "Get Category By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/categories/{{categoryId}}" } }
+          ]
+        },
+        {
           "name": "Complaints",
           "item": [
             { "name": "Get Complaints By User", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/complaints/user/{{userId}}" } },
@@ -552,6 +561,13 @@
                 "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/incomingpayments/DOKU/CheckStatus"
               }
             }
+          ]
+        },
+        {
+          "name": "Items",
+          "item": [
+            { "name": "Get Priced Items", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/items/priced" } },
+            { "name": "Get Priced Items By Type", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/customer/items/priced/type/{{itemType}}" } }
           ]
         },
         {
@@ -715,6 +731,7 @@
           "name": "Categories",
           "item": [
             { "name": "Get All Categories", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/categories" } },
+            { "name": "Get Categories By Item Type", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/categories/type/{{itemType}}" } },
             { "name": "Get Category By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/categories/{{categoryId}}" } }
           ]
         },
@@ -728,6 +745,8 @@
           "name": "Items",
           "item": [
             { "name": "Get All Items", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items" } },
+            { "name": "Get Priced Items", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items/priced" } },
+            { "name": "Get Priced Items By Type", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items/priced/type/{{itemType}}" } },
             { "name": "Get Item By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items/{{itemId}}" } }
           ]
         },

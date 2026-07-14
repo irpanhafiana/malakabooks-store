@@ -6,7 +6,7 @@
 ## Development Process
 - Continue implementation through approved plans without waiting for additional user prompts or check-ins until the work is fully complete. This includes maintaining momentum until the task is fully executed. User prefers implementation to continue through completion without stopping for extra check-ins once scope is clear.
 - Brainstorm and confirm understanding before adding new feature code, especially for larger integrations like payment gateways. For larger integrations, port the architecture pattern from the reference repo and ensure understanding before implementation.
-- In MalakaBooks, use Item as the single master product model for all product types (book, FMCG, coffee, etc.), keeping shared fields on Item and UomGroup/UomGroupDetails, and putting only non-generic fields in type-specific detail entities such as Book details.
+- In MalakaBooks, use Item as the single master product model for all product types (book, FMCG, coffee, etc.), keeping shared fields on Item and UomGroup/UomGroupDetails, and putting only non-generic fields in type-specific detail entities such as Book details. **Category should be a global product attribute stored on Item, not a book-only field on BookEntity.**
 - In MalakaBooks phase 1, User acts as the Customer in orders, and customer group should come from IS4 claims only; do not keep a separate CustomerGroupEntity or customer-group CRUD endpoints in the API. The customer group will be exposed as an IS4 claim so the API can resolve pricing and customer context from the token. **Authenticated customer pricing lookup must always resolve customer group from IS4 claims and never trust a customer-group value from the request.**
 - In MalakaBooks, prefer a single master item/product model that can represent books and other sellable item types, with type-specific detail entities layered on top.
 - In MalakaBooks, do not defer combining Book and Item to a later phase; unify them now and update dependent flows such as order and cart immediately.
@@ -24,9 +24,11 @@
 - In MalakaBooks, coffee pack sizes such as 100GR, 150GR, and 1KG should be modeled as UoMs in the existing Item -> UoMGroup -> UoMGroupDetail structure rather than as separate item variants.
 - For MalakaBooks, prefer a phased migration: add generic multi-UoM support for coffee/FMCG first and migrate books later to avoid changing the existing book flow immediately.
 - For MalakaBooks third-party item sync, external callers will not know or send internal UoM group ids; the contract should rely solely on embedded item-oriented data rather than UomGroupId. Additionally, external callers will not send Item.BaseUomCode; the backend should derive it internally from the embedded UoM group detail where IsBaseUom is true.
-- In MalakaBooks admin pricing create flow, external/admin payloads should send ItemCode instead of ItemId, and the backend should resolve and persist the internal ItemId silently, similar to Item/UoM group handling.
+- In MalakaBooks admin pricing create flow, external/admin payloads should send ItemCode instead of ItemId, and the backend should resolve and persist the internal ItemId silently, similar to Item/UoM group handling. 
 - In MalakaBooks, remove warehouse-level stock tracking and use Item.Stock as the master quantity, auditing all changes through InventoryMovement; inbound stock should be handled via a goods-receive style endpoint while paid orders deduct stock.
 - When generating API test assets for MalakaBooks, include sample payloads for request bodies.
+- For catalog pricing display, do not add SalesUomCode on Item. Use a new IsDefaultForSales flag on UomGroupDetail because some items are sold in multiple UoMs and the default display UoM should come from the UoM group.
+- When updating related API/Postman contract examples, update the whole connected flow at once instead of only a partial subset.
 
 ## Postman Collection
 - For the MalakaBooks Postman collection, use parent/folder-level OAuth2 password flow authorization instead of adminToken/customerToken variables, with separate Admin and Customer folders.

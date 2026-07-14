@@ -18,6 +18,17 @@ public class CategoryRepository : ICategoryRepository
     public async Task<IReadOnlyCollection<CategoryEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await _collection.Find(Builders<CategoryEntity>.Filter.Empty).ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<CategoryEntity>> GetByIdsAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken = default)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        var filter = Builders<CategoryEntity>.Filter.In(category => category.Id, ids);
+        return await _collection.Find(filter).ToListAsync(cancellationToken);
+    }
+
     public async Task<CategoryEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 
