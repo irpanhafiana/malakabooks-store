@@ -77,9 +77,23 @@
               <app-icon name="show" size="14"></app-icon>
             </button>
             <button (click)="openEditModal(item)"
-              class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer transition-colors">
+              class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer transition-colors"
+              title="Edit Data">
               <app-icon name="edit" size="14"></app-icon>
             </button>
+            @if (!item.isActive) {
+              <button (click)="onToggleActive(item, true)"
+                class="p-1.5 rounded-lg hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 cursor-pointer transition-colors"
+                title="Publish Item">
+                <app-icon name="check-circle" size="14"></app-icon>
+              </button>
+            } @else {
+              <button (click)="onToggleActive(item, false)"
+                class="p-1.5 rounded-lg hover:bg-amber-50 text-slate-400 hover:text-amber-600 cursor-pointer transition-colors"
+                title="Nonaktifkan Item">
+                <app-icon name="x-circle" size="14"></app-icon>
+              </button>
+            }
             <button (click)="onDelete(item.id)"
               class="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors">
               <app-icon name="trash" size="14"></app-icon>

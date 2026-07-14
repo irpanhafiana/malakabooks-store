@@ -65,6 +65,17 @@ export class ItemsListComponent implements OnInit {
     this.router.navigate(['/admin/items/edit', item.id]);
   }
 
+  async onToggleActive(item: CatalogItem, active: boolean) {
+    const actionText = active ? 'mengaktifkan' : 'menonaktifkan';
+    const isConfirmed = await this.alertService.confirm(
+      active ? 'Publish Item?' : 'Nonaktifkan Item?',
+      `Apakah Anda yakin ingin ${actionText} item "${item.name}"?`
+    );
+    if (isConfirmed) {
+      await this.itemStore.saveItem({ ...item, isActive: active });
+    }
+  }
+
   async onDelete(id: string) {
     const isConfirmed = await this.alertService.confirm(
       'Hapus Catalog Item?',

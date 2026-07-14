@@ -10,13 +10,88 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <app-admin-input label="Base UoM Code" placeholder="Contoh: PCS" [control]="baseUomCodeControl" [readonly]="uomGroupIdControl.value !== ''"></app-admin-input>
-    <div class="flex items-center gap-2 pt-6">
-      <input type="checkbox" id="isActive" [formControl]="isActiveControl" class="w-4 h-4 text-primary-600 border-slate-300 rounded focus:ring-primary-500">
-      <label for="isActive" class="text-sm font-medium text-slate-700">Aktif</label>
+  </div>
+
+  <div class="flex flex-col gap-6 mt-2 mb-4">
+    <div class="p-5 border border-slate-200 rounded-2xl bg-white shadow-sm grid grid-cols-1 md:grid-cols-4 gap-8">
+      
+      <!-- Cover Image -->
+      <div class="flex flex-col gap-2 md:col-span-1 border-b md:border-b-0 md:border-r border-slate-100 pb-6 md:pb-0 md:pr-6">
+        <label class="text-sm font-semibold text-slate-800">Cover Image</label>
+        <p class="text-xs text-slate-500 mb-1">Gambar utama yang akan ditampilkan di halaman produk.</p>
+        <div class="relative border-2 border-dashed border-slate-300 rounded-xl hover:bg-slate-50 hover:border-brand-300 transition-colors flex flex-col items-center justify-center p-6 w-full cursor-pointer overflow-hidden aspect-[3/4]"
+             (click)="coverInput.click()">
+          @if (coverImageControl.value) {
+            <img [src]="coverImageControl.value" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+               <span class="text-white text-sm font-medium">Ubah</span>
+            </div>
+            <button type="button" class="absolute top-2 right-2 bg-white rounded-full p-2 shadow-sm text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors z-10" 
+                    (click)="coverImageControl.setValue(''); $event.stopPropagation()">
+               <app-icon name="trash" size="18"></app-icon>
+            </button>
+          } @else {
+            <div class="bg-brand-50 text-brand-600 rounded-full p-3 mb-3">
+              <app-icon name="image-add" size="28"></app-icon>
+            </div>
+            <span class="text-sm font-semibold text-slate-700">Upload Cover</span>
+            <span class="text-[10px] text-slate-500 mt-1 text-center">JPG/PNG</span>
+          }
+        </div>
+        <input #coverInput type="file" accept="image/*" class="hidden" (change)="onImageUpload($event, coverImageControl)">
+      </div>
+
+      <!-- Additional Images -->
+      <div class="flex flex-col gap-2 md:col-span-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2">
+          <div>
+            <label class="text-sm font-semibold text-slate-800">Gambar Tambahan</label>
+            <p class="text-xs text-slate-500">Gambar pendukung untuk memperlihatkan detail produk.</p>
+          </div>
+          <app-admin-button type="button" variant="outline" size="sm" (click)="addAdditionalImage()">
+            <div class="flex items-center gap-1.5">
+              <app-icon name="plus" size="16"></app-icon>
+              <span>Tambah</span>
+            </div>
+          </app-admin-button>
+        </div>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          @for (ctrl of additionalImagesControl.controls; track $index) {
+            <div class="relative border-2 border-dashed border-slate-300 rounded-xl hover:bg-slate-50 hover:border-brand-300 transition-colors flex flex-col items-center justify-center cursor-pointer overflow-hidden aspect-square group"
+                 (click)="addInput.click()">
+              @if (ctrl.value) {
+                <img [src]="ctrl.value" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <span class="text-white text-xs font-medium">Ubah</span>
+                </div>
+                <button type="button" class="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-sm text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors z-10" 
+                        (click)="removeAdditionalImage($index); $event.stopPropagation()">
+                   <app-icon name="trash" size="16"></app-icon>
+                </button>
+              } @else {
+                <app-icon name="image-add" size="24" class="text-slate-400 mb-2"></app-icon>
+                <span class="text-xs text-slate-500 font-medium">Upload</span>
+              }
+            </div>
+            <input #addInput type="file" accept="image/*" class="hidden" (change)="onImageUpload($event, ctrl)">
+          }
+
+          @if (additionalImagesControl.controls.length === 0) {
+             <div class="col-span-full border-2 border-dashed border-slate-200 rounded-xl p-8 flex flex-col items-center justify-center text-slate-400 bg-slate-50/50">
+               <app-icon name="images" size="32" class="mb-3 opacity-30"></app-icon>
+               <p class="text-sm font-medium text-slate-500">Belum ada gambar tambahan</p>
+             </div>
+          }
+        </div>
+      </div>
     </div>
   </div>
 
-  <app-admin-input label="Deskripsi" placeholder="Masukkan deskripsi item ..." [control]="descriptionControl"></app-admin-input>
+  <div class="flex flex-col gap-1.5">
+    <label class="text-sm font-semibold text-slate-700">Deskripsi</label>
+    <app-editor [formControl]="descriptionControl"></app-editor>
+  </div>
 
   @if (itemTypeControl.value === 'malaka') {
     <div class="border-t border-slate-100 pt-4 mt-2">

@@ -2,14 +2,14 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ItemApiService } from '../../../../core/services/item-api.service';
 import { CatalogItem } from '../../../../core/models';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
+import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-items-detail',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, IconComponent, RouterLink],
+  imports: [CommonModule, IconComponent, AdminButtonComponent, RouterLink],
   templateUrl: './items-detail.component.html'
 })
 export class ItemsDetailComponent implements OnInit {

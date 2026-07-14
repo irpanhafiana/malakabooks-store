@@ -1,5 +1,5 @@
-import { Component, input, output, effect, inject, ChangeDetectionStrategy, signal } from '@angular/core';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, input, output, effect, inject, ChangeDetectionStrategy, signal, ChangeDetectorRef } from '@angular/core';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { ItemStore } from '../../../../store/item.store';
 import { UomGroupStore } from '../../../../store/uom-group.store';
 import { AuthorStore } from '../../../../store/author.store';
@@ -9,12 +9,14 @@ import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-b
 import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { computed } from '@angular/core';
+import { EditorComponent } from '../../../../shared/ui/editor/editor.component';
+import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-items-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent, EditorComponent, IconComponent],
   templateUrl: './items-form.component.html'
 })
 export class ItemsFormComponent {
@@ -28,6 +30,7 @@ export class ItemsFormComponent {
   protected readonly authorStore = inject(AuthorStore);
   private readonly categoryApi = inject(CategoryApiService);
   private readonly alertService = inject(AlertService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly categories = signal<any[]>([]);
 
@@ -37,7 +40,11 @@ export class ItemsFormComponent {
   uomGroupIdControl = new FormControl('');
   baseUomCodeControl = new FormControl('', [Validators.required]);
   descriptionControl = new FormControl('');
-  isActiveControl = new FormControl(true, [Validators.required]);
+  isActiveControl = new FormControl(false, [Validators.required]);
+  coverImageControl = new FormControl('');
+  
+  // Additional images
+  additionalImagesControl = new FormArray<FormControl<string | null>>([]);
 
   // Book specific fields
   isbnControl = new FormControl('');
@@ -49,10 +56,6 @@ export class ItemsFormComponent {
   weightControl = new FormControl<number>(0);
   stockControl = new FormControl<number>(0);
   
-  // Note: For authors, we can just use a simple string array or manage multiple selects.
-  // For simplicity since admin-select might not support multi-select, we'll store a single authorId or handle it in a custom way.
-  // We'll use a single select for author for now, or just comma separated.
-  // If authorIds is an array, we can use a basic select and just pick one author.
   authorIdControl = new FormControl('');
 
   formGroup = new FormGroup({
@@ -63,9 +66,12 @@ export class ItemsFormComponent {
     baseUomCode: this.baseUomCodeControl,
     description: this.descriptionControl,
     isActive: this.isActiveControl,
+    coverImage: this.coverImageControl,
+    additionalImages: this.additionalImagesControl,
     isbn: this.isbnControl,
     categoryId: this.categoryIdControl,
     publisher: this.publisherControl,
+
     publishedYear: this.publishedYearControl,
     pages: this.pagesControl,
     price: this.priceControl,
@@ -117,7 +123,16 @@ export class ItemsFormComponent {
         this.uomGroupIdControl.setValue(it.uomGroupId || '');
         this.baseUomCodeControl.setValue(it.baseUomCode || '');
         this.descriptionControl.setValue(it.description || '');
-        this.isActiveControl.setValue(it.isActive ?? true);
+        this.isActiveControl.setValue(it.isActive ?? false);
+        this.coverImageControl.setValue(it.coverImage || '');
+        
+        this.additionalImagesControl.clear();
+        if (it.additionalImages && Array.isArray(it.additionalImages)) {
+           const sorted = [...it.additionalImages].sort((a, b) => (a.no || 0) - (b.no || 0));
+           sorted.forEach(img => {
+             this.additionalImagesControl.push(new FormControl(img.image || ''));
+           });
+        }
         
         // Book fields
         this.isbnControl.setValue(it.isbn || '');
@@ -135,8 +150,10 @@ export class ItemsFormComponent {
           this.authorIdControl.setValue('');
         }
       } else {
+        this.additionalImagesControl.clear();
         this.formGroup.reset({ 
-          name: '', sapCode: '', itemType: 'mardika', uomGroupId: '', baseUomCode: '', description: '', isActive: true,
+          name: '', sapCode: '', itemType: 'mardika', uomGroupId: '', baseUomCode: '', description: '', isActive: false,
+          coverImage: '',
           isbn: '', categoryId: '', publisher: '', publishedYear: new Date().getFullYear(), pages: 0, price: 0, weight: 0, stock: 0, authorId: ''
         });
       }
@@ -167,7 +184,19 @@ export class ItemsFormComponent {
     }
   }
 
+  addAdditionalImage() {
+    this.additionalImagesControl.push(new FormControl(''));
+  }
+
+  removeAdditionalImage(index: number) {
+    this.additionalImagesControl.removeAt(index);
+  }
+
   getPayload(): any {
+    const additionalImgs = this.additionalImagesControl.controls
+      .map((ctrl, i) => ({ no: i + 1, image: ctrl.value }))
+      .filter(img => !!img.image);
+
     const payload: any = {
       id: this.item()?.id,
       name: this.nameControl.value || '',
@@ -176,7 +205,9 @@ export class ItemsFormComponent {
       uomGroupId: this.uomGroupIdControl.value || undefined,
       baseUomCode: this.baseUomCodeControl.value || '',
       description: this.descriptionControl.value || '',
-      isActive: this.isActiveControl.value ?? true
+      isActive: this.isActiveControl.value ?? false,
+      coverImage: this.coverImageControl.value || '',
+      additionalImages: additionalImgs
     };
 
     if (payload.itemType === 'malaka') {
@@ -211,5 +242,24 @@ export class ItemsFormComponent {
     const data = this.getPayload();
     await this.itemStore.saveItem(data);
     this.onSave.emit();
+  }
+
+  onImageUpload(event: Event, control: FormControl) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      control.setValue(reader.result as string);
+      this.cdr.markForCheck();
+    };
+    reader.onerror = () => {
+      console.error('Failed to read image file');
+    };
+    reader.readAsDataURL(file);
+    
+    // Reset so same file can be selected again
+    input.value = '';
   }
 }

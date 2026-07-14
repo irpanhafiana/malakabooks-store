@@ -1,44 +1,56 @@
-<div class="flex flex-col h-full bg-white relative">
-  <!-- Header -->
-  <header class="flex items-center justify-between px-6 py-4 border-b border-slate-100 shrink-0">
-    <div class="flex items-center gap-3">
-      <button type="button" routerLink="/admin/items"
-        class="p-2 -ml-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors">
-        <app-icon name="arrow-back" size="20"></app-icon>
-      </button>
-      <div>
-        <h1 class="text-xl font-display font-black text-slate-800 tracking-tight">Detail Item</h1>
-        <p class="text-sm font-medium text-slate-500">Lihat rincian informasi item dan buku</p>
-      </div>
-    </div>
-  </header>
+<div class="flex flex-col gap-6 pb-20">
+  <div class="flex items-center justify-between">
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Detail{{ item()?.name ? ' ' +
+      item()?.name : '' }}</h2>
+
+    <app-admin-button routerLink="/admin/items" variant="outline" size="md" class="shrink-0">
+      <app-icon name="chevron-left" size="14"></app-icon>
+      Kembali ke Daftar Item
+    </app-admin-button>
+  </div>
 
   <!-- Content -->
-  <div class="flex-1 overflow-y-auto p-6 bg-slate-50/50">
+  <div>
     @if (loading()) {
-      <div class="flex items-center justify-center h-40">
-        <div class="w-8 h-8 border-4 border-slate-200 border-t-primary-500 rounded-full animate-spin"></div>
-      </div>
+    <div class="flex items-center justify-center h-40">
+      <div class="w-8 h-8 border-4 border-slate-200 border-t-primary-500 rounded-full animate-spin"></div>
+    </div>
     } @else if (error()) {
-      <div class="p-6 bg-red-50 text-red-600 rounded-2xl text-center">
-        <app-icon name="error" size="32" class="mb-2 opacity-50"></app-icon>
-        <p class="font-medium">{{ error() }}</p>
-        <button type="button" routerLink="/admin/items" class="mt-4 text-sm font-semibold underline underline-offset-2">Kembali ke Daftar</button>
-      </div>
+    <div class="p-6 bg-red-50 text-red-600 rounded-2xl text-center">
+      <app-icon name="error" size="32" class="mb-2 opacity-50"></app-icon>
+      <p class="font-medium">{{ error() }}</p>
+      <button type="button" routerLink="/admin/items"
+        class="mt-4 text-sm font-semibold underline underline-offset-2">Kembali ke Daftar</button>
+    </div>
     } @else if (item(); as data) {
-      <div class="max-w-4xl mx-auto space-y-6">
-        
-        <!-- Kartu Item Utama -->
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
-          <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-            <h2 class="font-display font-bold text-slate-800">Informasi Dasar Item</h2>
-            <span class="px-2.5 py-1 text-xs font-bold rounded-lg uppercase tracking-wider" 
-              [ngClass]="data.itemType === 'malaka' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'">
-              {{ data.itemType }}
-            </span>
-          </div>
-          <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+    <div class="space-y-6">
+
+      <!-- Kartu Item Utama -->
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+          <h2 class="font-display font-bold text-slate-800">Informasi Dasar Item</h2>
+          <span class="px-2.5 py-1 text-xs font-bold rounded-lg uppercase tracking-wider"
+            [ngClass]="data.itemType === 'malaka' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'">
+            {{ data.itemType }}
+          </span>
+        </div>
+        <div class="p-6">
+          <div class="flex flex-col md:flex-row gap-8">
+            <!-- Cover Image -->
+            <div class="shrink-0 w-full md:w-48 flex flex-col">
+              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Cover Image</span>
+              @if (data.coverImage) {
+                <img [src]="data.coverImage" class="w-full aspect-[3/4] object-cover rounded-xl border border-slate-200 bg-slate-50 shadow-sm" alt="Cover">
+              } @else {
+                <div class="w-full aspect-[3/4] rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center text-slate-400">
+                  <app-icon name="image" size="32" class="opacity-30 mb-2"></app-icon>
+                  <span class="text-xs font-medium">Belum ada cover</span>
+                </div>
+              }
+            </div>
+
+            <!-- Basic Details -->
+            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8 content-start">
               <div>
                 <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">ID Item</span>
                 <span class="block text-sm font-medium text-slate-800">{{ data.id }}</span>
@@ -55,61 +67,78 @@
                 <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">UoM Dasar</span>
                 <span class="block text-sm font-medium text-slate-800">{{ data.baseUomCode }}</span>
               </div>
-              <div>
+              <div class="sm:col-span-2">
                 <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Status Aktif</span>
-                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium"
-                  [ngClass]="data.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'">
-                  <span class="w-1.5 h-1.5 rounded-full" [ngClass]="data.isActive ? 'bg-emerald-500' : 'bg-rose-500'"></span>
-                  {{ data.isActive ? 'Aktif' : 'Nonaktif' }}
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold"
+                  [ngClass]="data.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'">
+                  <span class="w-1.5 h-1.5 rounded-full"
+                    [ngClass]="data.isActive ? 'bg-emerald-500' : 'bg-slate-400'"></span>
+                  {{ data.isActive ? 'Aktif (Ditampilkan)' : 'Nonaktif (Disembunyikan)' }}
                 </span>
               </div>
             </div>
+          </div>
 
-            <div class="mt-6 pt-6 border-t border-slate-100">
-              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Deskripsi</span>
-              <div class="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl leading-relaxed whitespace-pre-wrap">{{ data.description || 'Tidak ada deskripsi.' }}</div>
+          <div class="mt-8 pt-6 border-t border-slate-100">
+            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Deskripsi</span>
+            <div class="text-sm text-slate-700 bg-slate-50/80 p-5 rounded-xl border border-slate-100 prose prose-sm max-w-none"
+                 [innerHTML]="data.description || '<i>Tidak ada deskripsi.</i>'"></div>
+          </div>
+
+          @if (data.additionalImages && data.additionalImages.length > 0) {
+            <div class="mt-8 pt-6 border-t border-slate-100">
+              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Gambar Tambahan ({{ data.additionalImages.length }})</span>
+              <div class="flex flex-wrap gap-4">
+                @for (img of data.additionalImages; track img.no) {
+                  <div class="relative group rounded-xl border border-slate-200 overflow-hidden shadow-sm bg-slate-50">
+                    <img [src]="img.image" class="w-28 h-28 object-cover" alt="Additional Image {{ img.no }}">
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Kartu Tambahan Buku (Jika Malaka) -->
+      @if (data.itemType === 'malaka') {
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 bg-indigo-50/50 flex justify-between items-center">
+          <h2 class="font-display font-bold text-slate-800">Spesifikasi Buku (Malaka)</h2>
+          <app-icon name="book" size="18" class="text-indigo-500"></app-icon>
+        </div>
+        <div class="p-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-6">
+            <div>
+              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">ISBN</span>
+              <span class="block text-sm font-bold text-slate-800">{{ data.isbn || '-' }}</span>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Penerbit</span>
+              <span class="block text-sm font-medium text-slate-800">{{ data.publisher || '-' }}</span>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tahun Terbit</span>
+              <span class="block text-sm font-medium text-slate-800">{{ data.publishedYear || '-' }}</span>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Halaman</span>
+              <span class="block text-sm font-medium text-slate-800">{{ data.pages || 0 }} hlm</span>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Berat</span>
+              <span class="block text-sm font-medium text-slate-800">{{ data.weight || 0 }} gr</span>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Harga Dasar
+                (Buku)</span>
+              <span class="block text-sm font-bold text-red-600">Rp {{ (data.price || 0) | number:'1.0-0' }}</span>
             </div>
           </div>
         </div>
-
-        <!-- Kartu Tambahan Buku (Jika Malaka) -->
-        @if (data.itemType === 'malaka') {
-          <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 bg-indigo-50/50 flex justify-between items-center">
-              <h2 class="font-display font-bold text-slate-800">Spesifikasi Buku (Malaka)</h2>
-              <app-icon name="book" size="18" class="text-indigo-500"></app-icon>
-            </div>
-            <div class="p-6">
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-6">
-                <div>
-                  <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">ISBN</span>
-                  <span class="block text-sm font-bold text-slate-800">{{ data.isbn || '-' }}</span>
-                </div>
-                <div>
-                  <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Penerbit</span>
-                  <span class="block text-sm font-medium text-slate-800">{{ data.publisher || '-' }}</span>
-                </div>
-                <div>
-                  <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tahun Terbit</span>
-                  <span class="block text-sm font-medium text-slate-800">{{ data.publishedYear || '-' }}</span>
-                </div>
-                <div>
-                  <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Halaman</span>
-                  <span class="block text-sm font-medium text-slate-800">{{ data.pages || 0 }} hlm</span>
-                </div>
-                <div>
-                  <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Berat</span>
-                  <span class="block text-sm font-medium text-slate-800">{{ data.weight || 0 }} gr</span>
-                </div>
-                <div>
-                  <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Harga Dasar (Buku)</span>
-                  <span class="block text-sm font-bold text-red-600">Rp {{ (data.price || 0) | number:'1.0-0' }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        }
       </div>
+      }
+    </div>
     }
   </div>
 </div>
