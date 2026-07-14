@@ -22,7 +22,7 @@ describe('AuthInterceptor', () => {
   });
 
   it('should attach Authorization header if token exists', () => {
-    localStorage.setItem(SESSION_TOKEN_KEY, 'fake-token');
+    localStorage.setItem(SESSION_TOKEN_KEY, 'header.eyJleHAiOjk5OTk5OTk5OTl9.signature');
     
     let resultReq: HttpRequest<any> | undefined;
     const next: HttpHandlerFn = (req) => {
@@ -33,7 +33,7 @@ describe('AuthInterceptor', () => {
     TestBed.runInInjectionContext(() => {
       const req = new HttpRequest('GET', '/api/test');
       authInterceptor(req, next).subscribe();
-      expect(resultReq?.headers.get('Authorization')).toBe('Bearer fake-token');
+      expect(resultReq?.headers.get('Authorization')).toBe('Bearer header.eyJleHAiOjk5OTk5OTk5OTl9.signature');
     });
   });
 

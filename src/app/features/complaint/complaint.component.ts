@@ -51,7 +51,7 @@ export class ComplaintComponent implements OnInit {
 
   protected readonly form = this.fb.group({
     orderId: ['', Validators.required],
-    bookId: ['', Validators.required],
+    itemId: ['', Validators.required],
     subject: ['', [Validators.required, Validators.maxLength(100)]],
     description: ['', [Validators.required, Validators.maxLength(1000)]]
   });
@@ -73,8 +73,8 @@ export class ComplaintComponent implements OnInit {
     const target = event.target as HTMLSelectElement;
     const orderId = target.value;
     if (orderId) {
-      this.form.controls.bookId.reset();
-      this.form.controls.bookId.setValue('');
+      this.form.controls.itemId.reset();
+      this.form.controls.itemId.setValue('');
       const order = await this.orderApi.getOrderById(orderId);
       if (order) {
         this.selectedOrderItems.set(order.items);
@@ -85,7 +85,7 @@ export class ComplaintComponent implements OnInit {
   }
 
   protected openForm() {
-    this.form.reset({ orderId: '', bookId: '', subject: '', description: '' });
+    this.form.reset({ orderId: '', itemId: '', subject: '', description: '' });
     this.complaintImages.set([]);
     this.selectedOrderItems.set([]);
     this.isFormOpen.set(true);
@@ -182,11 +182,11 @@ export class ComplaintComponent implements OnInit {
     if (!user) return;
 
     this.submitting.set(true);
-    const { orderId, bookId, subject, description } = this.form.value;
+    const { orderId, itemId, subject, description } = this.form.value;
     const ok = await this.complaintStore.create({
       userId: user.id,
       orderId: orderId!,
-      bookId: bookId!,
+      itemId: itemId!,
       subject: subject!.trim(),
       description: description!.trim(),
       additionalImages: this.complaintImages()

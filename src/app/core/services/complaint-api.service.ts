@@ -18,7 +18,7 @@ export class ComplaintApiService {
       id: c.id,
       userId: c.userId,
       orderId: c.orderId,
-      bookId: c.bookId,
+      itemId: c.itemId,
       subject: c.subject,
       description: c.description,
       status: c.status,

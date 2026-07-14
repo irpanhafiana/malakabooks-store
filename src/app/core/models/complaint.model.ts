@@ -12,7 +12,7 @@ export interface Complaint {
   id: string;
   userId: string;
   orderId: string;
-  bookId?: string;
+  itemId?: string;
   subject: string;
   description: string;
   status: ComplaintStatus;
@@ -25,7 +25,7 @@ export interface Complaint {
 export interface CreateComplaintPayload {
   userId: string;
   orderId: string;
-  bookId: string;
+  itemId: string;
   subject: string;
   description: string;
   additionalImages?: { no: number; image: string; }[];

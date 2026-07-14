@@ -30,7 +30,7 @@ export interface Order {
 }
 
 export interface OrderItemDto {
-  bookId: string;
+  itemId: string;
   title: string;
   price: number;
   coverImage?: string;

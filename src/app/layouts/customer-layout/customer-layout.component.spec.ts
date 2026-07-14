@@ -28,7 +28,10 @@ describe('CustomerLayoutComponent', () => {
     setQtyModalOpen: vi.fn(),
     qtyQuantity: signal(1),
     setQtyQuantity: vi.fn(),
-    activeProduct: signal(null)
+    activeProduct: signal(null),
+    qtyAction: signal('cart'),
+    reopenDetailOnQtyClose: vi.fn(),
+    setReopenDetailOnQtyClose: vi.fn()
   };
 
   const mockToast = { success: vi.fn(), toasts: signal([]) };

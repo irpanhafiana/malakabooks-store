@@ -5,10 +5,10 @@
     <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Riwayat Mutasi Stok (Inventory Movements)</h2>
 
     <div class="flex flex-row gap-2 justify-center items-center">
-      <!-- Book Filter Dropdown -->
-      <select (change)="onBookChange($event)" [value]="selectedBookId()"
+      <!-- Item Filter Dropdown -->
+      <select (change)="onItemChange($event)" [value]="selectedItemId()"
         class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
-        @for (opt of bookOptions(); track opt.id) {
+        @for (opt of itemOptions(); track opt.id) {
           <option [value]="opt.id">{{ opt.title }}</option>
         }
       </select>
@@ -29,7 +29,7 @@
   } @else {
   <app-table>
     <tr table-headers>
-      <th class="px-5 py-4">Buku</th>
+      <th class="px-5 py-4">Item</th>
       <th class="px-5 py-4">Tipe Mutasi</th>
       <th class="px-5 py-4">Quantity Delta</th>
       <th class="px-5 py-4">Stok Sebelum</th>
@@ -43,7 +43,7 @@
       @for (log of pagination.paged(); track log.id) {
       <tr class="hover:bg-slate-50/50 transition-colors">
         <td class="px-5 py-4 font-bold text-slate-800 text-xs">
-          {{ log.bookTitle }}
+          {{ log.itemTitle }}
         </td>
         <td class="px-5 py-4 text-xs font-semibold">
           @if (log.movementType === 'STOCK_IN' || log.quantityDelta > 0) {

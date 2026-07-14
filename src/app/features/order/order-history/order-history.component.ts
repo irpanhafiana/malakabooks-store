@@ -121,7 +121,7 @@ export class OrderHistoryComponent implements OnInit {
       await this.reviewApi.addReview({
         id: '',
         userId: '',
-        bookId: product.id,
+        itemId: product.id,
         orderId: orderId,
         rating: rating,
         comment: comment,

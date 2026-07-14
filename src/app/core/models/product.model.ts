@@ -6,6 +6,7 @@ export interface AdditionalImage {
 export interface Product {
   id: string;
   itemId?: string;
+  itemType?: 'malaka' | 'mardika';
   title: string;
   sapCode: string;
   authorIds: string[];
@@ -42,6 +43,7 @@ export interface AdditionalImageDto {
 export interface BookDto {
   id: string;
   itemId?: string;
+  itemType?: 'malaka' | 'mardika';
   title: string;
   sapCode?: string;
   authorIds: string[];

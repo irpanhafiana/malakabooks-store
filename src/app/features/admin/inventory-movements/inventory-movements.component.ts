@@ -20,12 +20,12 @@ export class InventoryMovementsComponent implements OnInit {
   protected readonly movementStore = inject(InventoryMovementStore);
   protected readonly productStore = inject(ProductStore);
 
-  selectedBookId = signal<string>('');
+  selectedItemId = signal<string>('');
 
-  bookOptions = computed(() => {
+  itemOptions = computed(() => {
     const list = this.productStore.products() || [];
     return [
-      { id: '', title: '-- Semua Buku --' },
+      { id: '', title: '-- Semua Item --' },
       ...list.map(p => ({ id: p.id, title: p.title }))
     ];
   });
@@ -40,17 +40,17 @@ export class InventoryMovementsComponent implements OnInit {
     this.productStore.loadProducts();
   }
 
-  onBookChange(event: Event) {
+  onItemChange(event: Event) {
     const target = event.target as HTMLSelectElement;
-    const bookId = target.value;
-    this.selectedBookId.set(bookId);
-    this.movementStore.loadInventoryMovements(bookId || undefined);
+    const itemId = target.value;
+    this.selectedItemId.set(itemId);
+    this.movementStore.loadInventoryMovements(itemId || undefined);
     this.pagination.setPage(1);
   }
 
   onRefresh() {
-    const bookId = this.selectedBookId();
-    this.movementStore.loadInventoryMovements(bookId || undefined);
+    const itemId = this.selectedItemId();
+    this.movementStore.loadInventoryMovements(itemId || undefined);
     this.productStore.loadProducts();
   }
 }

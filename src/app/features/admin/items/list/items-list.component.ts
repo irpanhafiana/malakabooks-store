@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ItemStore } from '../../../../store/item.store';
 import { UomGroupStore } from '../../../../store/uom-group.store';
 import { CatalogItem } from '../../../../core/models';
@@ -15,7 +15,7 @@ import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-items-list',
   standalone: true,
-  imports: [TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent],
+  imports: [TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent, RouterLink],
   templateUrl: './items-list.component.html'
 })
 export class ItemsListComponent implements OnInit {

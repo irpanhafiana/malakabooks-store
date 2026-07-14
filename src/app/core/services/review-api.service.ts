@@ -22,14 +22,14 @@ export class ReviewApiService {
 
     try {
       const envelope = await firstValueFrom(
-        this.http.get<ApiResponse<ReviewDto[]>>(`${this.BASE_URL}/customer/Reviews/book/${productId}`)
+        this.http.get<ApiResponse<ReviewDto[]>>(`${this.BASE_URL}/customer/Reviews/items/${productId}`)
       );
       const reviews = envelope?.data || [];
 
       return reviews.map((r: ReviewDto) => ({
         id: r.id,
         userId: r.userId,
-        bookId: r.bookId,
+        itemId: r.itemId,
         orderId: r.orderId,
         rating: r.rating,
         comment: r.comment,
@@ -54,7 +54,7 @@ export class ReviewApiService {
         );
         const orders = envelope?.data || [];
         const matchingOrder = orders.find((o: OrderDto) =>
-          o.items?.some((item: OrderItemDto) => item.bookId === review.bookId)
+          o.items?.some((item: OrderItemDto) => item.itemId === review.itemId)
         );
         if (matchingOrder) orderId = matchingOrder.id;
       } catch {
@@ -64,7 +64,7 @@ export class ReviewApiService {
 
     const body = {
       userId: currentUser.id,
-      bookId: review.bookId,
+      itemId: review.itemId,
       orderId,
       rating: review.rating,
       comment: review.comment,
@@ -83,7 +83,7 @@ export class ReviewApiService {
     return {
       id: data.id,
       userId: data.userId,
-      bookId: data.bookId,
+      itemId: data.itemId,
       orderId: data.orderId,
       rating: data.rating,
       comment: data.comment,

@@ -70,7 +70,12 @@ export class CartStore {
     const saved = localStorage.getItem(SESSION_CART_KEY);
     if (saved) {
       try {
-        const items = JSON.parse(saved);
+        const items: CartItem[] = JSON.parse(saved);
+        // Fallback backward compatibility: if any old format is found, clear it
+        if (items.some(i => (i as any).bookId || ((i as any).product && !(i.product as any).itemId))) {
+          localStorage.removeItem(SESSION_CART_KEY);
+          return;
+        }
         this.state.update(s => ({ ...s, items }));
       } catch {
         localStorage.removeItem(SESSION_CART_KEY);
@@ -100,7 +105,7 @@ export class CartStore {
 
     const merged: CartItem[] = backendItems
       .map(bi => {
-        const product = productMap.get(bi.bookId);
+        const product = productMap.get(bi.itemId);
         return product ? { product, quantity: bi.quantity } : null;
       })
       .filter((i): i is CartItem => i !== null);

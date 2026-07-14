@@ -13,11 +13,11 @@ export class InventoryMovementApiService {
   private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
-  async getInventoryMovements(bookId?: string): Promise<InventoryMovement[]> {
+  async getInventoryMovements(itemId?: string): Promise<InventoryMovement[]> {
     try {
       let url = `${this.BASE_URL}/admin/InventoryMovements`;
-      if (bookId) {
-        url += `?bookId=${bookId}`;
+      if (itemId) {
+        url += `?itemId=${itemId}`;
       }
       const envelope = await firstValueFrom(this.http.get<ApiResponse<InventoryMovement[]>>(url));
       return envelope?.data || [];

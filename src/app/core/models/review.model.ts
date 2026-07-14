@@ -1,7 +1,7 @@
 export interface Review {
   id: string;
   userId: string;
-  bookId: string;
+  itemId: string;
   orderId: string;
   rating: number;
   comment: string;
@@ -12,7 +12,7 @@ export interface Review {
 export interface ReviewDto {
   id: string;
   userId: string;
-  bookId: string;
+  itemId: string;
   orderId: string;
   rating: number;
   comment: string;

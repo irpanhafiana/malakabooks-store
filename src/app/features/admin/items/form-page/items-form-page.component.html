@@ -14,17 +14,5 @@
     </app-items-form>
   </div>
 
-  @if (selectedItemType() === 'malaka') {
-    <div class="bg-white p-6 rounded-2xl border border-slate-200 mt-6 animate-fade-in relative pb-16">
-      <h3 class="font-display font-bold text-slate-800 text-lg mb-4">Detail Buku (Hanya untuk Tipe Malaka)</h3>
-      <app-products-form [standaloneMode]="false" (onCancel)="onCancel()" (onSave)="onSave()"></app-products-form>
 
-      <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-6 py-4 rounded-b-2xl flex justify-end gap-3">
-        <app-admin-button (click)="onCancel()" type="button" variant="outline" size="sm">Batal</app-admin-button>
-        <app-admin-button (click)="saveCombined()" type="button" variant="primary" size="sm">
-          Simpan Semua
-        </app-admin-button>
-      </div>
-    </div>
-  }
 </div>

@@ -156,7 +156,8 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
   async loadKopiItems() {
     this.kopiLoading.set(true);
     try {
-      const items = await this.itemApi.getItems();
+      const allItems = await this.itemApi.getItems();
+      const items = allItems.filter(i => i.itemType === 'mardika');
       const products: Product[] = [];
       const currentUser = getStoredSessionUser();
       const isCustomerLoggedIn = currentUser !== null && currentUser.role !== 'admin';

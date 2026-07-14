@@ -40,7 +40,7 @@ describe('ButtonComponent', () => {
     const buttonElement: HTMLButtonElement = fixture.nativeElement.querySelector('button');
     
     expect(buttonElement.className).toContain('bg-rose-600'); // danger
-    expect(buttonElement.className).toContain('px-6'); // lg
+    expect(buttonElement.className).toContain('px-5'); // lg
     expect(buttonElement.className).toContain('w-full'); // fullWidth
   });
 

@@ -71,6 +71,11 @@
         </td>
         <td class="px-5 py-4 text-right">
           <div class="flex justify-end gap-1.5">
+            <button routerLink="/admin/items/detail/{{item.id}}"
+              class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-indigo-600 cursor-pointer transition-colors"
+              title="Lihat Detail">
+              <app-icon name="show" size="14"></app-icon>
+            </button>
             <button (click)="openEditModal(item)"
               class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer transition-colors">
               <app-icon name="edit" size="14"></app-icon>

@@ -26,10 +26,10 @@ export class InventoryMovementStore {
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
 
-  async loadInventoryMovements(bookId?: string) {
+  async loadInventoryMovements(itemId?: string) {
     this.state.update(s => ({ ...s, loading: true, error: null }));
     try {
-      const movements = await this.movementApi.getInventoryMovements(bookId);
+      const movements = await this.movementApi.getInventoryMovements(itemId);
       this.state.update(s => ({ ...s, movements, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat riwayat mutasi stok.' }));

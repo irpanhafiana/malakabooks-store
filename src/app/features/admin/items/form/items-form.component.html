@@ -1,7 +1,6 @@
 <form [formGroup]="formGroup" class="flex flex-col gap-4 text-slate-700">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <app-admin-input label="Nama Item" placeholder="Contoh: Novel Laskar Pelangi" [control]="nameControl"></app-admin-input>
-    <app-admin-input label="SAP Code" placeholder="Contoh: SAP-00091" [control]="sapCodeControl"></app-admin-input>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -19,12 +18,31 @@
 
   <app-admin-input label="Deskripsi" placeholder="Masukkan deskripsi item ..." [control]="descriptionControl"></app-admin-input>
 
-  @if (itemTypeControl.value !== 'malaka') {
-    <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
-      <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
-      <app-admin-button (click)="onSubmitForm()" [disabled]="formGroup.invalid" type="button" variant="primary" size="sm">
-        Simpan
-      </app-admin-button>
+  @if (itemTypeControl.value === 'malaka') {
+    <div class="border-t border-slate-100 pt-4 mt-2">
+      <h3 class="text-sm font-semibold text-slate-800 mb-4">Informasi Buku (Malaka)</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <app-admin-input label="ISBN" placeholder="Contoh: 978-602-03-0221-5" [control]="isbnControl"></app-admin-input>
+        <app-admin-select label="Kategori" [control]="$any(categoryIdControl)" [options]="categoryOptions()"></app-admin-select>
+        
+        <app-admin-select label="Penulis" [control]="$any(authorIdControl)" [options]="authorOptions()"></app-admin-select>
+        <app-admin-input label="Penerbit" placeholder="Contoh: Gramedia" [control]="publisherControl"></app-admin-input>
+        
+        <app-admin-input label="Tahun Terbit" type="number" [control]="publishedYearControl"></app-admin-input>
+        <app-admin-input label="Jumlah Halaman" type="number" [control]="pagesControl"></app-admin-input>
+        
+        <app-admin-input label="Harga (Rp)" type="number" [control]="priceControl"></app-admin-input>
+        <app-admin-input label="Berat (gram)" type="number" [control]="weightControl"></app-admin-input>
+        
+        <app-admin-input label="Stok" type="number" [control]="stockControl"></app-admin-input>
+      </div>
     </div>
   }
+
+  <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
+    <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
+    <app-admin-button (click)="onSubmitForm()" [disabled]="formGroup.invalid" type="button" variant="primary" size="sm">
+      Simpan
+    </app-admin-button>
+  </div>
 </form>

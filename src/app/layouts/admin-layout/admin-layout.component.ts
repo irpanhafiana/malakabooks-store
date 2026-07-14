@@ -36,8 +36,7 @@ export class AdminLayoutComponent {
       )
       .subscribe(() => {
         const url = this.router.url;
-        const isMasterRoute = url.includes('/products') ||
-          url.includes('/categories') ||
+        const isMasterRoute = url.includes('/categories') ||
           url.includes('/promotion-banners') ||
           url.includes('/authors') ||
           url.includes('/users');
@@ -55,9 +54,7 @@ export class AdminLayoutComponent {
           this.isMardikaKopiOpen.set(true);
         }
 
-        if (url.includes('/products')) {
-          this.activeRouteName.set('Kelola Produk');
-        } else if (url.includes('/categories')) {
+        if (url.includes('/categories')) {
           this.activeRouteName.set('Kelola Kategori');
         } else if (url.includes('/uoms')) {
           this.activeRouteName.set('Kelola Satuan Ukuran (UoM)');

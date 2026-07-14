@@ -7,7 +7,7 @@ import { LoggerService } from './logger.service';
 import { ApiResponse } from '../models/api-response.model';
 
 interface CartItemResponse {
-  bookId: string;
+  itemId: string;
   quantity: number;
 }
 interface CartData {
@@ -22,19 +22,19 @@ export class CartApiService {
   private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
-  async getCart(userId: string): Promise<{ bookId: string; quantity: number }[]> {
+  async getCart(userId: string): Promise<{ itemId: string; quantity: number }[]> {
     try {
       const res = await firstValueFrom(this.http.get<ApiResponse<CartData>>(`${this.BASE_URL}/customer/Cart/${userId}`));
-      return (res?.data?.items || []).map((item: CartItemResponse) => ({ bookId: item.bookId, quantity: item.quantity }));
+      return (res?.data?.items || []).map((item: CartItemResponse) => ({ itemId: item.itemId, quantity: item.quantity }));
     } catch (e) {
       this.logger.error('CartApiService.getCart', 'Gagal mengambil cart:', e);
       return [];
     }
   }
 
-  async addCartItem(userId: string, bookId: string, quantity: number): Promise<boolean> {
+  async addCartItem(userId: string, itemId: string, quantity: number): Promise<boolean> {
     try {
-      await firstValueFrom(this.http.post(`${this.BASE_URL}/customer/Cart`, { userId, bookId, quantity }));
+      await firstValueFrom(this.http.post(`${this.BASE_URL}/customer/Cart`, { userId, itemId, quantity }));
       return true;
     } catch (e) {
       this.logger.error('CartApiService.addCartItem', 'Gagal menambah item cart:', e);
@@ -42,9 +42,9 @@ export class CartApiService {
     }
   }
 
-  async removeCartItem(userId: string, bookId: string): Promise<boolean> {
+  async removeCartItem(userId: string, itemId: string): Promise<boolean> {
     try {
-      await firstValueFrom(this.http.delete(`${this.BASE_URL}/customer/Cart/${userId}/items/${bookId}`));
+      await firstValueFrom(this.http.delete(`${this.BASE_URL}/customer/Cart/${userId}/items/${itemId}`));
       return true;
     } catch (e) {
       this.logger.error('CartApiService.removeCartItem', 'Gagal menghapus item cart:', e);
