@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MalakaBooks.Entity;
 
+[BsonIgnoreExtraElements]
 public class OrderItemEntity : BaseObject
 {
     [BsonRepresentation(BsonType.ObjectId)]

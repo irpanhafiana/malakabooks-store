@@ -22,6 +22,13 @@ public class ItemsController(IMediator mediator) : ApiControllerBase
         Success(await mediator.Send(new GetItemsQuery(), cancellationToken));
 
     /// <summary>
+    /// Retrieves items filtered by item type.
+    /// </summary>
+    [HttpGet("type/{itemType}")]
+    public async Task<IActionResult> GetByType(string itemType, CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetItemsByTypeQuery(itemType), cancellationToken));
+
+    /// <summary>
     /// Retrieves an item by identifier.
     /// </summary>
     [HttpGet("{id}")]
