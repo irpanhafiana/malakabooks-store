@@ -20,18 +20,20 @@ public class UpdateBookHandler(
         var result = await _validator.UpdateValidateAsync(entity);
         if (result is not null) return false;
 
-        entity.UpdateFrom(request.Request);
         var item = await itemRepository.GetByIdAsync(entity.ItemId, cancellationToken);
         if (item is null)
         {
             return false;
         }
 
-        item.UpdateItemFrom(request.Request);
-        var isItemUpdated = await itemRepository.UpdateAsync(item.Id!, item, cancellationToken);
-        if (!isItemUpdated)
+        entity.UpdateFrom(request.Request);
+        if (!string.Equals(entity.ItemId, item.Id, StringComparison.OrdinalIgnoreCase))
         {
-            return false;
+            var targetItem = await itemRepository.GetByIdAsync(entity.ItemId, cancellationToken);
+            if (targetItem is null)
+            {
+                return false;
+            }
         }
 
         var isUpdated = await bookRepository.UpdateAsync(request.Id, entity, cancellationToken);

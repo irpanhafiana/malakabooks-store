@@ -12,14 +12,17 @@ public class CreateBookHandler(IBookRepository bookRepository, IItemRepository i
 
     public async Task<ValidationResult?> Handle(CreateBookCommand request, CancellationToken cancellationToken)
     {
+        var item = await itemRepository.GetByIdAsync(request.Request.ItemId, cancellationToken);
+        if (item is null)
+        {
+            return new ValidationResult("Selected item was not found.");
+        }
+
         var entity = request.Request.ToEntity();
-        var item = request.Request.ToItemEntity();
 
         var result = await _validator.CreateValidateAsync(entity);
         if (result is null)
         {
-            var createdItem = await itemRepository.CreateAsync(item, cancellationToken);
-            entity.ItemId = createdItem.Id ?? string.Empty;
             await bookRepository.CreateAsync(entity, cancellationToken);
         }
 

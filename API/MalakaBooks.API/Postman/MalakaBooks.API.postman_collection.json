@@ -131,7 +131,7 @@
                 "header": [{ "key": "Content-Type", "value": "application/json" }],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"itemId\": null,\n  \"title\": \"Atomic Habits\",\n  \"sapCode\": \"BK-ATOMIC-001\",\n  \"authorIds\": [\"{{authorId}}\"],\n  \"isbn\": \"9780735211292\",\n  \"categoryId\": \"{{categoryId}}\",\n  \"price\": 125000,\n  \"description\": \"A practical book about habit formation.\",\n  \"coverImage\": \"https://example.com/books/atomic-habits.jpg\",\n  \"additionalImages\": [\n    {\n      \"no\": 1,\n      \"image\": \"https://example.com/books/atomic-habits-back.jpg\"\n    }\n  ],\n  \"publisher\": \"Penguin Random House\",\n  \"publishedYear\": 2018,\n  \"pages\": 320,\n  \"weight\": 0.45,\n  \"stock\": 25\n}"
+                  "raw": "{\n  \"itemId\": \"{{itemId}}\",\n  \"authorIds\": [\"{{authorId}}\"],\n  \"isbn\": \"9780735211292\",\n  \"publisher\": \"Penguin Random House\",\n  \"publishedYear\": 2018,\n  \"pages\": 320\n}"
                 },
                 "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/books"
               }
@@ -143,7 +143,7 @@
                 "header": [{ "key": "Content-Type", "value": "application/json" }],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"itemId\": \"{{itemId}}\",\n  \"title\": \"Atomic Habits - Revised\",\n  \"sapCode\": \"BK-ATOMIC-001\",\n  \"authorIds\": [\"{{authorId}}\"],\n  \"isbn\": \"9780735211292\",\n  \"categoryId\": \"{{categoryId}}\",\n  \"price\": 130000,\n  \"description\": \"Updated edition description.\",\n  \"coverImage\": \"https://example.com/books/atomic-habits-new.jpg\",\n  \"additionalImages\": [],\n  \"publisher\": \"Penguin Random House\",\n  \"publishedYear\": 2019,\n  \"pages\": 330,\n  \"weight\": 0.47,\n  \"stock\": 30\n}"
+                  "raw": "{\n  \"itemId\": \"{{itemId}}\",\n  \"authorIds\": [\"{{authorId}}\"],\n  \"isbn\": \"9780735211292\",\n  \"publisher\": \"Penguin Random House\",\n  \"publishedYear\": 2019,\n  \"pages\": 330\n}"
                 },
                 "url": "{{baseUrl}}/api/v{{apiVersion}}/admin/books/{{bookId}}"
               }
@@ -745,6 +745,7 @@
           "name": "Items",
           "item": [
             { "name": "Get All Items", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items" } },
+            { "name": "Get Items By Type", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items/type/{{itemType}}" } },
             { "name": "Get Priced Items", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items/priced" } },
             { "name": "Get Priced Items By Type", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items/priced/type/{{itemType}}" } },
             { "name": "Get Item By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/v{{apiVersion}}/public/items/{{itemId}}" } }

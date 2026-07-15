@@ -7,7 +7,7 @@ namespace MalakaBooks.Mediator.Common;
 
 public static class MappingExtensions
 {
-    public static ItemResponse ToResponse(this ItemEntity entity, UomGroupEntity? uomGroup = null) => new()
+    public static ItemResponse ToResponse(this ItemEntity entity, UomGroupEntity? uomGroup = null, ItemMetadataResponse? metadata = null) => new()
     {
         Id = entity.Id ?? string.Empty,
         Name = entity.Name,
@@ -23,8 +23,28 @@ public static class MappingExtensions
         Weight = entity.Weight,
         Stock = entity.Stock,
         IsActive = entity.IsActive,
+        Metadata = metadata,
         CreatedAt = entity.CreatedAt,
         UpdatedAt = entity.UpdatedAt
+    };
+
+    public static ItemMetadataResponse ToMetadataResponse(this BookEntity entity, IEnumerable<AuthorEntity>? authors = null) => new()
+    {
+        Book = new BookItemMetadataResponse
+        {
+            Id = entity.Id ?? string.Empty,
+            Isbn = entity.Isbn,
+            Authors = (authors ?? []).Select(ToMetadataResponse).ToList(),
+            Publisher = entity.Publisher,
+            PublishedYear = entity.PublishedYear,
+            Pages = entity.Pages
+        }
+    };
+
+    public static ItemMetadataAuthorResponse ToMetadataResponse(this AuthorEntity entity) => new()
+    {
+        Id = entity.Id ?? string.Empty,
+        Name = entity.Name
     };
 
     public static ItemEntity ToEntity(this CreateItemRequest request) => new()
@@ -247,7 +267,6 @@ public static class MappingExtensions
         Authors = [],
         Isbn = entity.Isbn,
         CategoryId = item?.CategoryId ?? string.Empty,
-        Price = 0,
         Description = item?.Description ?? string.Empty,
         CoverImage = item?.CoverImage ?? string.Empty,
         Publisher = entity.Publisher,
@@ -273,7 +292,6 @@ public static class MappingExtensions
         Authors = authors.Select(ToResponse).ToList(),
         Isbn = entity.Isbn,
         CategoryId = item?.CategoryId ?? string.Empty,
-        Price = 0,
         Description = item?.Description ?? string.Empty,
         CoverImage = item?.CoverImage ?? string.Empty,
         Publisher = entity.Publisher,
@@ -291,7 +309,7 @@ public static class MappingExtensions
 
     public static BookEntity ToEntity(this CreateBookRequest request) => new()
     {
-        ItemId = request.ItemId?.Trim() ?? string.Empty,
+        ItemId = request.ItemId.Trim(),
         AuthorIds = request.AuthorIds
             .Where(authorId => !string.IsNullOrWhiteSpace(authorId))
             .Select(authorId => authorId.Trim())
@@ -306,40 +324,9 @@ public static class MappingExtensions
         CreatedAt = DateTime.UtcNow
     };
 
-    public static ItemEntity ToItemEntity(this CreateBookRequest request) => new()
-    {
-        Name = request.Title.Trim(),
-        SAPCode = request.SAPCode.Trim(),
-        ItemType = "book",
-        CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim(),
-        CoverImage = request.CoverImage.Trim(),
-        AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
-        BaseUomCode = string.Empty,
-        Description = request.Description.Trim(),
-        Weight = request.Weight,
-        Stock = request.Stock,
-        IsActive = true,
-        CreatedAt = DateTime.UtcNow,
-        UpdatedAt = DateTime.UtcNow
-    };
-
-    public static void UpdateItemFrom(this ItemEntity entity, UpdateBookRequest request)
-    {
-        entity.Name = request.Title.Trim();
-        entity.SAPCode = request.SAPCode.Trim();
-        entity.CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim();
-        entity.CoverImage = request.CoverImage.Trim();
-        entity.AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList();
-        entity.Description = request.Description.Trim();
-        entity.Weight = request.Weight;
-        entity.Stock = request.Stock;
-        entity.ItemType = string.IsNullOrWhiteSpace(entity.ItemType) ? "book" : entity.ItemType;
-        entity.UpdatedAt = DateTime.UtcNow;
-    }
-
     public static void UpdateFrom(this BookEntity entity, UpdateBookRequest request)
     {
-        entity.ItemId = request.ItemId?.Trim() ?? entity.ItemId;
+        entity.ItemId = string.IsNullOrWhiteSpace(request.ItemId) ? entity.ItemId : request.ItemId.Trim();
         entity.AuthorIds = request.AuthorIds
             .Where(authorId => !string.IsNullOrWhiteSpace(authorId))
             .Select(authorId => authorId.Trim())
