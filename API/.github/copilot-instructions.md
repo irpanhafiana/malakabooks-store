@@ -23,12 +23,13 @@
 - In MalakaBooks, keep fee rules inside PaymentEntity, while OrderEntity should store only grand total and shipping-related information rather than a fee breakdown snapshot.
 - In MalakaBooks, coffee pack sizes such as 100GR, 150GR, and 1KG should be modeled as UoMs in the existing Item -> UoMGroup -> UoMGroupDetail structure rather than as separate item variants.
 - For MalakaBooks, prefer a phased migration: add generic multi-UoM support for coffee/FMCG first and migrate books later to avoid changing the existing book flow immediately.
-- For MalakaBooks third-party item sync, external callers will not know or send internal UoM group ids; the contract should rely solely on embedded item-oriented data rather than UomGroupId. Additionally, external callers will not send Item.BaseUomCode; the backend should derive it internally from the embedded UoM group detail where IsBaseUom is true.
+- In MalakaBooks third-party item sync, external callers will not know or send internal UoM group ids; the contract should rely solely on embedded item-oriented data rather than UomGroupId. Additionally, external callers will not send Item.BaseUomCode; the backend should derive it internally from the embedded UoM group detail where IsBaseUom is true.
 - In MalakaBooks admin pricing create flow, external/admin payloads should send ItemCode instead of ItemId, and the backend should resolve and persist the internal ItemId silently, similar to Item/UoM group handling. 
 - In MalakaBooks, remove warehouse-level stock tracking and use Item.Stock as the master quantity, auditing all changes through InventoryMovement; inbound stock should be handled via a goods-receive style endpoint while paid orders deduct stock.
 - When generating API test assets for MalakaBooks, include sample payloads for request bodies.
 - For catalog pricing display, do not add SalesUomCode on Item. Use a new IsDefaultForSales flag on UomGroupDetail because some items are sold in multiple UoMs and the default display UoM should come from the UoM group.
 - When updating related API/Postman contract examples, update the whole connected flow at once instead of only a partial subset.
+- In MalakaBooks, external SAP item sync treats products generically as items and can only pass ItemType; avoid introducing a required ProductKind field that would force manual maintenance. Product specialization should be inferred by backend data such as the presence of type-specific detail records rather than requiring SAP to send another classifier.
 
 ## Postman Collection
 - For the MalakaBooks Postman collection, use parent/folder-level OAuth2 password flow authorization instead of adminToken/customerToken variables, with separate Admin and Customer folders.

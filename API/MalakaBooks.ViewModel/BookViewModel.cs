@@ -24,7 +24,6 @@ public class BookResponse
     public List<AuthorResponse> Authors { get; set; } = [];
     public string Isbn { get; set; } = string.Empty;
     public string? CategoryId { get; set; }
-    public decimal Price { get; set; }
     public string Description { get; set; } = string.Empty;
     public string CoverImage { get; set; } = string.Empty;
     public string Publisher { get; set; } = string.Empty;
@@ -42,21 +41,12 @@ public class BookResponse
 
 public class CreateBookRequest
 {
-    public string? ItemId { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string SAPCode { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
     public List<string> AuthorIds { get; set; } = [];
     public string Isbn { get; set; } = string.Empty;
-    public string? CategoryId { get; set; } = null;
-    public decimal Price { get; set; }
-    public string Description { get; set; } = string.Empty;
-    public string CoverImage { get; set; } = string.Empty;
-    public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
     public string Publisher { get; set; } = string.Empty;
     public int PublishedYear { get; set; }
     public int Pages { get; set; }
-    public decimal Weight { get; set; }
-    public int Stock { get; set; }
 }
 
 public class UpdateBookRequest : CreateBookRequest

@@ -16,8 +16,30 @@ public class ItemResponse
     public decimal Weight { get; set; }
     public int Stock { get; set; }
     public bool IsActive { get; set; }
+    public ItemMetadataResponse? Metadata { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+}
+
+public class ItemMetadataResponse
+{
+    public BookItemMetadataResponse? Book { get; set; }
+}
+
+public class BookItemMetadataResponse
+{
+    public string Id { get; set; } = string.Empty;
+    public string Isbn { get; set; } = string.Empty;
+    public List<ItemMetadataAuthorResponse> Authors { get; set; } = [];
+    public string Publisher { get; set; } = string.Empty;
+    public int PublishedYear { get; set; }
+    public int Pages { get; set; }
+}
+
+public class ItemMetadataAuthorResponse
+{
+    public string Id { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 }
 
 public class PricedItemResponse : ItemResponse

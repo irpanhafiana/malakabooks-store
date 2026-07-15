@@ -13,44 +13,118 @@ public record GetItemsByTypeQuery(string ItemType) : IRequest<IReadOnlyCollectio
 public record GetItemByIdQuery(string Id) : IRequest<ItemResponse?>;
 public record GetPublicPricedItemsQuery(string? ItemType = null) : IRequest<IReadOnlyCollection<PricedItemResponse>>;
 public record GetCustomerPricedItemsQuery(string? ItemType = null) : IRequest<IReadOnlyCollection<PricedItemResponse>>;
-public record CreateItemCommand(CreateItemRequest Request) : IRequest<bool>;
+public record CreateItemCommand(CreateItemRequest Request) : IRequest<ItemResponse>;
 public record UpdateItemCommand(string Id, UpdateItemRequest Request) : IRequest<bool>;
 public record SyncItemCommand(SyncItemRequest Request) : IRequest<bool>;
 public record DeleteItemCommand(string Id) : IRequest<bool>;
 
-public class GetItemsHandler(IItemRepository itemRepository, IUomGroupRepository uomGroupRepository) : IRequestHandler<GetItemsQuery, IReadOnlyCollection<ItemResponse>>
+internal static class ItemMetadataResolver
+{
+    internal static ItemMetadataResponse? Resolve(
+        Entity.ItemEntity item,
+        IReadOnlyDictionary<string, Entity.BookEntity> booksByItemId,
+        IReadOnlyDictionary<string, Entity.AuthorEntity> authorsById)
+    {
+        if (string.IsNullOrWhiteSpace(item.Id) || !booksByItemId.TryGetValue(item.Id, out var book))
+        {
+            return null;
+        }
+
+        var authors = book.AuthorIds
+            .Where(authorId => !string.IsNullOrWhiteSpace(authorId))
+            .Select(authorId => authorsById.GetValueOrDefault(authorId))
+            .Where(author => author is not null)
+            .Cast<Entity.AuthorEntity>()
+            .ToArray();
+
+        return book.ToMetadataResponse(authors);
+    }
+
+    internal static async Task<IReadOnlyCollection<Entity.AuthorEntity>> ResolveAuthorsAsync(
+        IEnumerable<string> authorIds,
+        IAuthorRepository authorRepository,
+        CancellationToken cancellationToken)
+    {
+        var authors = new List<Entity.AuthorEntity>();
+
+        foreach (var authorId in authorIds.Where(authorId => !string.IsNullOrWhiteSpace(authorId)))
+        {
+            var author = await authorRepository.GetByIdAsync(authorId, cancellationToken);
+            if (author is not null)
+            {
+                authors.Add(author);
+            }
+        }
+
+        return authors;
+    }
+}
+
+public class GetItemsHandler(
+    IItemRepository itemRepository,
+    IUomGroupRepository uomGroupRepository,
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository) : IRequestHandler<GetItemsQuery, IReadOnlyCollection<ItemResponse>>
 {
     public async Task<IReadOnlyCollection<ItemResponse>> Handle(GetItemsQuery request, CancellationToken cancellationToken)
     {
         var items = await itemRepository.GetAllAsync(cancellationToken);
         var uomGroups = await uomGroupRepository.GetAllAsync(cancellationToken);
+        var books = await bookRepository.GetAllAsync(cancellationToken);
+        var authors = await authorRepository.GetAllAsync(cancellationToken);
         var uomGroupsById = uomGroups
             .Where(group => !string.IsNullOrWhiteSpace(group.Id))
             .ToDictionary(group => group.Id!, group => group);
+        var booksByItemId = books
+            .Where(book => !string.IsNullOrWhiteSpace(book.ItemId))
+            .ToDictionary(book => book.ItemId, book => book, StringComparer.Ordinal);
+        var authorsById = authors
+            .Where(author => !string.IsNullOrWhiteSpace(author.Id))
+            .ToDictionary(author => author.Id!, author => author, StringComparer.Ordinal);
 
         return items
-            .Select(entity => entity.ToResponse(uomGroupsById.GetValueOrDefault(entity.UomGroupId ?? string.Empty)))
+            .Select(entity => entity.ToResponse(
+                uomGroupsById.GetValueOrDefault(entity.UomGroupId ?? string.Empty),
+                ItemMetadataResolver.Resolve(entity, booksByItemId, authorsById)))
             .ToArray();
     }
 }
 
-public class GetItemsByTypeHandler(IItemRepository itemRepository, IUomGroupRepository uomGroupRepository) : IRequestHandler<GetItemsByTypeQuery, IReadOnlyCollection<ItemResponse>>
+public class GetItemsByTypeHandler(
+    IItemRepository itemRepository,
+    IUomGroupRepository uomGroupRepository,
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository) : IRequestHandler<GetItemsByTypeQuery, IReadOnlyCollection<ItemResponse>>
 {
     public async Task<IReadOnlyCollection<ItemResponse>> Handle(GetItemsByTypeQuery request, CancellationToken cancellationToken)
     {
         var items = await itemRepository.GetByItemTypeAsync(request.ItemType, cancellationToken);
         var uomGroups = await uomGroupRepository.GetAllAsync(cancellationToken);
+        var books = await bookRepository.GetAllAsync(cancellationToken);
+        var authors = await authorRepository.GetAllAsync(cancellationToken);
         var uomGroupsById = uomGroups
             .Where(group => !string.IsNullOrWhiteSpace(group.Id))
             .ToDictionary(group => group.Id!, group => group);
+        var booksByItemId = books
+            .Where(book => !string.IsNullOrWhiteSpace(book.ItemId))
+            .ToDictionary(book => book.ItemId, book => book, StringComparer.Ordinal);
+        var authorsById = authors
+            .Where(author => !string.IsNullOrWhiteSpace(author.Id))
+            .ToDictionary(author => author.Id!, author => author, StringComparer.Ordinal);
 
         return items
-            .Select(entity => entity.ToResponse(uomGroupsById.GetValueOrDefault(entity.UomGroupId ?? string.Empty)))
+            .Select(entity => entity.ToResponse(
+                uomGroupsById.GetValueOrDefault(entity.UomGroupId ?? string.Empty),
+                ItemMetadataResolver.Resolve(entity, booksByItemId, authorsById)))
             .ToArray();
     }
 }
 
-public class GetItemByIdHandler(IItemRepository itemRepository, IUomGroupRepository uomGroupRepository) : IRequestHandler<GetItemByIdQuery, ItemResponse?>
+public class GetItemByIdHandler(
+    IItemRepository itemRepository,
+    IUomGroupRepository uomGroupRepository,
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository) : IRequestHandler<GetItemByIdQuery, ItemResponse?>
 {
     public async Task<ItemResponse?> Handle(GetItemByIdQuery request, CancellationToken cancellationToken)
     {
@@ -63,14 +137,26 @@ public class GetItemByIdHandler(IItemRepository itemRepository, IUomGroupReposit
         var uomGroup = string.IsNullOrWhiteSpace(item.UomGroupId)
             ? null
             : await uomGroupRepository.GetByIdAsync(item.UomGroupId, cancellationToken);
+        var book = string.IsNullOrWhiteSpace(item.Id)
+            ? null
+            : await bookRepository.GetByItemIdAsync(item.Id, cancellationToken);
 
-        return item.ToResponse(uomGroup);
+        ItemMetadataResponse? metadata = null;
+        if (book is not null)
+        {
+            var authors = await ItemMetadataResolver.ResolveAuthorsAsync(book.AuthorIds, authorRepository, cancellationToken);
+            metadata = book.ToMetadataResponse(authors);
+        }
+
+        return item.ToResponse(uomGroup, metadata);
     }
 }
 
 public class GetPublicPricedItemsHandler(
     IItemRepository itemRepository,
     IUomGroupRepository uomGroupRepository,
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository,
     IPricingRepository pricingRepository,
     IOptions<AppSetting> appOptions) : IRequestHandler<GetPublicPricedItemsQuery, IReadOnlyCollection<PricedItemResponse>>
 {
@@ -81,6 +167,8 @@ public class GetPublicPricedItemsHandler(
         return await PricedItemResolver.ResolveAsync(
             itemRepository,
             uomGroupRepository,
+            bookRepository,
+            authorRepository,
             pricingRepository,
             request.ItemType,
             _defaultCustomerGroupCode,
@@ -91,6 +179,8 @@ public class GetPublicPricedItemsHandler(
 public class GetCustomerPricedItemsHandler(
     IItemRepository itemRepository,
     IUomGroupRepository uomGroupRepository,
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository,
     IPricingRepository pricingRepository,
     IHttpContextAccessor httpContextAccessor) : IRequestHandler<GetCustomerPricedItemsQuery, IReadOnlyCollection<PricedItemResponse>>
 {
@@ -101,6 +191,8 @@ public class GetCustomerPricedItemsHandler(
         return await PricedItemResolver.ResolveAsync(
             itemRepository,
             uomGroupRepository,
+            bookRepository,
+            authorRepository,
             pricingRepository,
             request.ItemType,
             ResolveCustomerGroupCode(),
@@ -126,6 +218,8 @@ internal static class PricedItemResolver
     internal static async Task<IReadOnlyCollection<PricedItemResponse>> ResolveAsync(
         IItemRepository itemRepository,
         IUomGroupRepository uomGroupRepository,
+        IBookRepository bookRepository,
+        IAuthorRepository authorRepository,
         IPricingRepository pricingRepository,
         string? itemType,
         string customerGroupCode,
@@ -137,9 +231,17 @@ internal static class PricedItemResolver
 
         var itemList = items.ToArray();
         var uomGroups = await uomGroupRepository.GetAllAsync(cancellationToken);
+        var books = await bookRepository.GetAllAsync(cancellationToken);
+        var authors = await authorRepository.GetAllAsync(cancellationToken);
         var uomGroupsById = uomGroups
             .Where(group => !string.IsNullOrWhiteSpace(group.Id))
             .ToDictionary(group => group.Id!, group => group);
+        var booksByItemId = books
+            .Where(book => !string.IsNullOrWhiteSpace(book.ItemId))
+            .ToDictionary(book => book.ItemId, book => book, StringComparer.Ordinal);
+        var authorsById = authors
+            .Where(author => !string.IsNullOrWhiteSpace(author.Id))
+            .ToDictionary(author => author.Id!, author => author, StringComparer.Ordinal);
 
         var itemIds = itemList
             .Where(item => !string.IsNullOrWhiteSpace(item.Id))
@@ -155,7 +257,12 @@ internal static class PricedItemResolver
             .ToDictionary(group => group.Key, group => group.ToArray(), StringComparer.Ordinal);
 
         return itemList
-            .Select(item => ToPricedResponse(item, uomGroupsById.GetValueOrDefault(item.UomGroupId ?? string.Empty), pricingByItemId, customerGroupCode))
+            .Select(item => ToPricedResponse(
+                item,
+                uomGroupsById.GetValueOrDefault(item.UomGroupId ?? string.Empty),
+                pricingByItemId,
+                customerGroupCode,
+                ItemMetadataResolver.Resolve(item, booksByItemId, authorsById)))
             .ToArray();
     }
 
@@ -163,9 +270,10 @@ internal static class PricedItemResolver
         Entity.ItemEntity item,
         Entity.UomGroupEntity? uomGroup,
         IReadOnlyDictionary<string, Entity.PricingEntity[]> pricingByItemId,
-        string customerGroupCode)
+        string customerGroupCode,
+        ItemMetadataResponse? metadata)
     {
-        var baseResponse = item.ToResponse(uomGroup);
+        var baseResponse = item.ToResponse(uomGroup, metadata);
         var response = new PricedItemResponse
         {
             Id = baseResponse.Id,
@@ -182,6 +290,7 @@ internal static class PricedItemResolver
             Weight = baseResponse.Weight,
             Stock = baseResponse.Stock,
             IsActive = baseResponse.IsActive,
+            Metadata = baseResponse.Metadata,
             CreatedAt = baseResponse.CreatedAt,
             UpdatedAt = baseResponse.UpdatedAt,
             CustomerGroupCode = customerGroupCode
@@ -230,30 +339,36 @@ internal static class PricedItemResolver
     }
 }
 
-public class CreateItemHandler(IItemRepository itemRepository, IUomGroupRepository uomGroupRepository) : IRequestHandler<CreateItemCommand, bool>
+public class CreateItemHandler(IItemRepository itemRepository, IUomGroupRepository uomGroupRepository) : IRequestHandler<CreateItemCommand, ItemResponse>
 {
-    public async Task<bool> Handle(CreateItemCommand request, CancellationToken cancellationToken)
+    public async Task<ItemResponse> Handle(CreateItemCommand request, CancellationToken cancellationToken)
     {
         var entity = request.Request.ToEntity();
-        entity.UomGroupId = await ResolveUomGroupIdAsync(request.Request, cancellationToken);
+        var uomGroup = await ResolveUomGroupAsync(request.Request, cancellationToken);
+        entity.UomGroupId = uomGroup?.Id;
+
+        if (uomGroup is null && !string.IsNullOrWhiteSpace(request.Request.UomGroupId))
+        {
+            uomGroup = await uomGroupRepository.GetByIdAsync(request.Request.UomGroupId.Trim(), cancellationToken);
+        }
+
         if (string.IsNullOrWhiteSpace(entity.BaseUomCode) && request.Request.UomGroup is not null)
         {
             entity.BaseUomCode = request.Request.UomGroup.ResolveBaseUomCode();
         }
 
-        await itemRepository.CreateAsync(entity, cancellationToken);
-        return true;
+        var createdItem = await itemRepository.CreateAsync(entity, cancellationToken);
+        return createdItem.ToResponse(uomGroup);
     }
 
-    private async Task<string?> ResolveUomGroupIdAsync(CreateItemRequest request, CancellationToken cancellationToken)
+    private async Task<Entity.UomGroupEntity?> ResolveUomGroupAsync(CreateItemRequest request, CancellationToken cancellationToken)
     {
         if (!request.HasEmbeddedUomGroup())
         {
-            return string.IsNullOrWhiteSpace(request.UomGroupId) ? null : request.UomGroupId.Trim();
+            return null;
         }
 
-        var uomGroup = await uomGroupRepository.UpsertByDefinitionAsync(request.UomGroup!.ToEntity(), cancellationToken);
-        return uomGroup.Id;
+        return await uomGroupRepository.UpsertByDefinitionAsync(request.UomGroup!.ToEntity(), cancellationToken);
     }
 }
 
