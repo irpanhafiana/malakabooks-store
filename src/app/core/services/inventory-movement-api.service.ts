@@ -26,4 +26,14 @@ export class InventoryMovementApiService {
       return [];
     }
   }
+  async receiveGoods(payload: { itemId: string; quantity: number; referenceId?: string; note: string }): Promise<boolean> {
+    try {
+      const url = `${this.BASE_URL}/admin/InventoryMovements/goods-receive`;
+      await firstValueFrom(this.http.post(url, payload));
+      return true;
+    } catch (e) {
+      this.logger.error('InventoryMovementApiService.receiveGoods', 'Gagal memproses goods receive:', e);
+      return false;
+    }
+  }
 }

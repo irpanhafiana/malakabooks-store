@@ -12,13 +12,14 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-badge.component';
 import { DrawerComponent } from '../../../../shared/ui/drawer/drawer.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-orders-list',
   standalone: true,
-  imports: [DatePipe, NgClass, JsonPipe, TableComponent, PriceComponent, PaginationComponent, SpinnerComponent, StatusBadgeComponent, IconComponent, DrawerComponent, AdminButtonComponent],
+  imports: [DatePipe, NgClass, JsonPipe, TableComponent, PriceComponent, PaginationComponent, SpinnerComponent, StatusBadgeComponent, IconComponent, DrawerComponent, AdminButtonComponent, TooltipDirective],
   templateUrl: './orders-list.component.html',
   styleUrl: './orders-list.component.css'
 })

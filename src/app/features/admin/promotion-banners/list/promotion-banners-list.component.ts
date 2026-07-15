@@ -11,12 +11,13 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { PromotionBannersFormComponent } from '../form/promotion-banners-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { NgClass } from '@angular/common';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-promotion-banners-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, PromotionBannersFormComponent, SpinnerComponent, NgClass],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, PromotionBannersFormComponent, SpinnerComponent, NgClass, TooltipDirective],
   templateUrl: './promotion-banners-list.component.html'
 })
 export class PromotionBannersListComponent implements OnInit {

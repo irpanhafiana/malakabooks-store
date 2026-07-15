@@ -40,7 +40,7 @@
       <nav class="flex flex-col gap-1 w-full overflow-y-auto no-scrollbar max-h-[calc(100vh-380px)]">
         <!-- Dashboard -->
         <a routerLink="/admin" [routerLinkActiveOptions]="{exact: true}"
-          routerLinkActive="!bg-primary-600 !text-white active-link" (click)="closeSidebar()"
+          routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link" (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <app-icon name="dashboard" size="20"
             class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
@@ -48,7 +48,7 @@
         </a>
 
         <!-- Orders -->
-        <a routerLink="/admin/orders" routerLinkActive="!bg-primary-600 !text-white active-link"
+        <a routerLink="/admin/orders" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
           (click)="closeSidebar()"
           class="flex items-center justify-between px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <div class="flex items-center gap-3">
@@ -65,7 +65,7 @@
         </a>
 
         <!-- Complaints -->
-        <a routerLink="/admin/complaints" routerLinkActive="!bg-primary-600 !text-white active-link"
+        <a routerLink="/admin/complaints" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
           (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <app-icon name="message-square" size="20"
@@ -74,7 +74,7 @@
         </a>
 
         <!-- Mutasi Stok -->
-        <a routerLink="/admin/inventory-movements" routerLinkActive="!bg-primary-600 !text-white active-link"
+        <a routerLink="/admin/inventory-movements" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
           (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <app-icon name="credit-card" size="20"
@@ -83,7 +83,7 @@
         </a>
 
         <!-- Addresses -->
-        <a routerLink="/admin/home-addresses" routerLinkActive="!bg-primary-600 !text-white active-link"
+        <a routerLink="/admin/home-addresses" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
           (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <app-icon name="map-pin" size="20"
@@ -107,7 +107,7 @@
           <!-- Accordion Menu Items -->
           <div [class.hidden]="!isMasterDataOpen()" class="pl-4 flex flex-col gap-1 mt-1 transition-all duration-200">
             <!-- Kelola Items -->
-            <a routerLink="/admin/items" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <a routerLink="/admin/items" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
@@ -116,7 +116,7 @@
             </a>
 
             <!-- Kelola Kategori -->
-            <a routerLink="/admin/categories" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <a routerLink="/admin/categories" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
@@ -125,7 +125,7 @@
             </a>
 
             <!-- Kelola UoM -->
-            <a routerLink="/admin/uoms" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <a routerLink="/admin/uoms" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
@@ -134,7 +134,7 @@
             </a>
 
             <!-- Kelola Gudang -->
-            <a routerLink="/admin/warehouses" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <a routerLink="/admin/warehouses" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
@@ -143,7 +143,7 @@
             </a>
 
             <!-- Kelola Stok -->
-            <a routerLink="/admin/stocks" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <a routerLink="/admin/stocks" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
@@ -152,7 +152,7 @@
             </a>
 
             <!-- Kelola Harga -->
-            <a routerLink="/admin/pricings" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <a routerLink="/admin/pricings" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
@@ -161,7 +161,7 @@
             </a>
 
             <!-- Kelola Promosi -->
-            <a routerLink="/admin/promotion-banners" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <a routerLink="/admin/promotion-banners" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
@@ -170,7 +170,7 @@
             </a>
 
             <!-- Kelola Penulis -->
-            <a routerLink="/admin/authors" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <a routerLink="/admin/authors" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
@@ -179,7 +179,7 @@
             </a>
 
             <!-- Kelola Mtd Pembayaran -->
-            <a routerLink="/admin/payment-methods" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <a routerLink="/admin/payment-methods" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
@@ -188,7 +188,7 @@
             </a>
 
             <!-- Data Pelanggan -->
-            <a routerLink="/admin/users" routerLinkActive="!bg-primary-600 !text-white active-link"
+            <a routerLink="/admin/users" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
@@ -199,7 +199,7 @@
         </div>
 
         <!-- Reports -->
-        <a routerLink="/admin/reports" routerLinkActive="!bg-primary-600 !text-white active-link"
+        <a routerLink="/admin/reports" routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
           (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <app-icon name="bar-chart" size="20"

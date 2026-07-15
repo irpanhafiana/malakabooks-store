@@ -10,12 +10,13 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { UomGroupsFormComponent } from '../form/uom-groups-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-uom-groups-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, UomGroupsFormComponent, SpinnerComponent],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, UomGroupsFormComponent, SpinnerComponent, TooltipDirective],
   templateUrl: './uom-groups-list.component.html'
 })
 export class UomGroupsListComponent implements OnInit {

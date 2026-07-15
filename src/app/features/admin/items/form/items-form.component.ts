@@ -11,12 +11,13 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { computed } from '@angular/core';
 import { EditorComponent } from '../../../../shared/ui/editor/editor.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-items-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent, EditorComponent, IconComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent, EditorComponent, IconComponent, TooltipDirective],
   templateUrl: './items-form.component.html'
 })
 export class ItemsFormComponent {

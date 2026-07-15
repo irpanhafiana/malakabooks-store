@@ -11,7 +11,7 @@
         <input type="text" placeholder="Cari Pricing ..." [value]="searchQuery()" (input)="onSearch($event)"
           class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
       </div>
-      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0" title="Refresh Data">
+      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0">
         <app-icon name="refresh" size="14"></app-icon>
         Segarkan
       </app-admin-button>
@@ -62,34 +62,34 @@
         <td class="px-5 py-4 text-xs text-slate-500">{{ pricing.details.length || 0 }} Rincian</td>
         <td class="px-5 py-4 text-xs">
           @if (pricing.isActive) {
-            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-100 text-green-700">Aktif</span>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-100 text-green-700">Aktif</span>
           } @else {
-            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 text-slate-500">Non-Aktif</span>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 text-slate-500">Non-Aktif</span>
           }
         </td>
         <td class="px-5 py-4 text-right">
           <div class="flex justify-end gap-1.5">
             <button (click)="openEditModal(pricing)"
               class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer transition-colors"
-              title="Edit Data">
+              appTooltip="Edit Data">
               <app-icon name="edit" size="14"></app-icon>
             </button>
             @if (!pricing.isActive) {
-              <button (click)="onToggleActive(pricing, true)"
-                class="p-1.5 rounded-lg hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 cursor-pointer transition-colors"
-                title="Publish Pricing">
-                <app-icon name="check-circle" size="14"></app-icon>
-              </button>
+            <button (click)="onToggleActive(pricing, true)"
+              class="p-1.5 rounded-lg hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 cursor-pointer transition-colors"
+              appTooltip="Publish Pricing">
+              <app-icon name="check-circle" size="14"></app-icon>
+            </button>
             } @else {
-              <button (click)="onToggleActive(pricing, false)"
-                class="p-1.5 rounded-lg hover:bg-amber-50 text-slate-400 hover:text-amber-600 cursor-pointer transition-colors"
-                title="Nonaktifkan Pricing">
-                <app-icon name="x-circle" size="14"></app-icon>
-              </button>
+            <button (click)="onToggleActive(pricing, false)"
+              class="p-1.5 rounded-lg hover:bg-amber-50 text-slate-400 hover:text-amber-600 cursor-pointer transition-colors"
+              appTooltip="Nonaktifkan Pricing">
+              <app-icon name="x-circle" size="14"></app-icon>
+            </button>
             }
             <button (click)="onDelete(pricing.id)"
               class="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors"
-              title="Hapus Pricing">
+              appTooltip="Hapus Pricing">
               <app-icon name="trash" size="14"></app-icon>
             </button>
           </div>

@@ -30,3 +30,5 @@ Dokumen ini berisi sekumpulan aturan khusus (*rules*) untuk agen AI (seperti Ant
 - Prioritaskan menampilkan blok kode langsung atau poin solusi teknis yang ringkas untuk menghemat token.
 - Gunakan penjelasan teks seminimal mungkin, hanya untuk bagian yang krusial atau arsitektural.
 
+## 6. Validasi Perubahan (Build Check)
+- Setiap kali ada tugas (task) yang mengharuskan untuk mengubah (mengedit) kode atau menambahkan file baru, **WAJIB** mengeksekusi perintah build (misal: `npx ng build` atau validasi serupa) pada terminal di akhir proses untuk memastikan kode tersebut bersih dari *error* dan *compiler* berjalan dengan lancar.

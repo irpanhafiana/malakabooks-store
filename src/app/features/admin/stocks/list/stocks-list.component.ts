@@ -12,12 +12,13 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { StocksFormComponent } from '../form/stocks-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-stocks-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, StocksFormComponent, SpinnerComponent],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, StocksFormComponent, SpinnerComponent, TooltipDirective],
   templateUrl: './stocks-list.component.html'
 })
 export class StocksListComponent implements OnInit {

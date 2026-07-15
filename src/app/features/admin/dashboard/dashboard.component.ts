@@ -27,11 +27,11 @@ export class DashboardComponent implements OnInit {
   chartPoints = computed(() => {
     const data = this.metrics();
     if (!data || data.salesHistory.length === 0) return [];
-    
+
     const width = 1000;
     const height = 200;
     const padding = 15;
-    
+
     const xSpacing = (width - padding * 2) / (data.salesHistory.length - 1);
     const yMax = Math.max(...data.salesHistory.map(s => s.amount)) || 100;
     const graphHeight = height - padding * 2;

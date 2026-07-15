@@ -2,20 +2,25 @@
 
   <!-- Top Action bar & Search -->
   <div class="flex items-center justify-between">
-    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Riwayat Mutasi Stok (Inventory Movements)</h2>
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Riwayat Mutasi Stok</h2>
 
     <div class="flex flex-row gap-2 justify-center items-center">
       <!-- Item Filter Dropdown -->
       <select (change)="onItemChange($event)" [value]="selectedItemId()"
         class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
         @for (opt of itemOptions(); track opt.id) {
-          <option [value]="opt.id">{{ opt.title }}</option>
+        <option [value]="opt.id">{{ opt.title }}</option>
         }
       </select>
 
-      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0" title="Refresh Data">
+      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0">
         <app-icon name="refresh" size="14"></app-icon>
         Segarkan
+      </app-admin-button>
+
+      <app-admin-button (click)="openAddModal()" variant="primary" size="md" class="shrink-0">
+        <app-icon name="plus" size="14"></app-icon>
+        Tambah Data Mutasi Stok
       </app-admin-button>
     </div>
 
@@ -47,14 +52,13 @@
         </td>
         <td class="px-5 py-4 text-xs font-semibold">
           @if (log.movementType === 'STOCK_IN' || log.quantityDelta > 0) {
-            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-100 text-green-700">Masuk</span>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-100 text-green-700">Masuk</span>
           } @else {
-            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-100 text-rose-700">Keluar</span>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-100 text-rose-700">Keluar</span>
           }
         </td>
-        <td class="px-5 py-4 text-xs font-semibold"
-            [class.text-green-600]="log.quantityDelta > 0"
-            [class.text-rose-600]="log.quantityDelta < 0">
+        <td class="px-5 py-4 text-xs font-semibold" [class.text-green-600]="log.quantityDelta > 0"
+          [class.text-rose-600]="log.quantityDelta < 0">
           {{ log.quantityDelta > 0 ? '+' : '' }}{{ log.quantityDelta }}
         </td>
         <td class="px-5 py-4 text-xs text-slate-500 font-semibold">
@@ -64,7 +68,8 @@
           {{ log.stockAfter }}
         </td>
         <td class="px-5 py-4 text-xs font-semibold text-slate-500">
-          <code class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-slate-600 font-mono">{{ log.referenceId || '-' }}</code>
+          <code
+            class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-slate-600 font-mono">{{ log.referenceId || '-' }}</code>
         </td>
         <td class="px-5 py-4 text-xs text-slate-500">{{ log.note }}</td>
         <td class="px-5 py-4 text-xs text-slate-400 font-semibold">{{ log.createdAt | date:'medium' }}</td>
@@ -88,3 +93,37 @@
   }
 
 </div>
+
+<!-- Modal Tambah Data Mutasi Stok -->
+<app-modal [(isOpen)]="isModalOpen" appTooltip="Tambah Data Mutasi Stok">
+  <form [formGroup]="mutationForm" (ngSubmit)="submitMutation()" class="flex flex-col gap-4">
+    <!-- Item (Dropdown) -->
+    <app-admin-select label="Produk (Item)" [control]="$any(mutationForm.get('itemId'))" [options]="productOptions()"
+      placeholder="-- Pilih Produk --">
+    </app-admin-select>
+
+    <!-- Quantity -->
+    <app-admin-input label="Quantity (Jumlah Mutasi)" type="number" [control]="$any(mutationForm.get('quantity'))"
+      placeholder="Masukkan jumlah mutasi">
+    </app-admin-input>
+
+    <!-- Reference ID -->
+    <app-admin-input label="Reference ID (Opsional)" [control]="$any(mutationForm.get('referenceId'))"
+      placeholder="Contoh: INV-20230101">
+    </app-admin-input>
+
+    <!-- Note -->
+    <app-admin-input label="Catatan" [control]="$any(mutationForm.get('note'))"
+      placeholder="Contoh: Penyesuaian stok gudang">
+    </app-admin-input>
+
+    <div class="flex justify-end gap-3 mt-4">
+      <app-admin-button type="button" variant="outline" size="md" (click)="closeModal()">
+        Batal
+      </app-admin-button>
+      <app-admin-button type="submit" variant="primary" size="md" [disabled]="mutationForm.invalid">
+        Simpan Mutasi
+      </app-admin-button>
+    </div>
+  </form>
+</app-modal>

@@ -10,12 +10,13 @@ import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-s
 import { AlertService } from '../../../../core/services/alert.service';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { computed } from '@angular/core';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pricings-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent, IconComponent, DecimalPipe],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent, IconComponent, DecimalPipe, TooltipDirective],
   templateUrl: './pricings-form.component.html'
 })
 export class PricingsFormComponent {

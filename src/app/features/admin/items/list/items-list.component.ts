@@ -10,12 +10,13 @@ import { PaginationComponent } from '../../../../shared/ui/pagination/pagination
 import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-items-list',
   standalone: true,
-  imports: [TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent, RouterLink],
+  imports: [TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent, RouterLink, TooltipDirective],
   templateUrl: './items-list.component.html'
 })
 export class ItemsListComponent implements OnInit {

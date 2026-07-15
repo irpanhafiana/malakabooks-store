@@ -11,12 +11,13 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pricings-list',
   standalone: true,
-  imports: [CommonModule, TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent],
+  imports: [CommonModule, TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent, TooltipDirective],
   templateUrl: './pricings-list.component.html'
 })
 export class PricingsListComponent implements OnInit {

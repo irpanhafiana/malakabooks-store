@@ -10,12 +10,13 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { CategoriesFormComponent } from '../form/categories-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-categories-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, CategoriesFormComponent, SpinnerComponent],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, CategoriesFormComponent, SpinnerComponent, TooltipDirective],
   templateUrl: './categories-list.component.html',
   styleUrl: './categories-list.component.css'
 })

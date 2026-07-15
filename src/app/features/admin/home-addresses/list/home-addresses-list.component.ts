@@ -10,12 +10,13 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { HomeAddressesFormComponent } from '../form/home-addresses-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home-addresses-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, HomeAddressesFormComponent, SpinnerComponent],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, HomeAddressesFormComponent, SpinnerComponent, TooltipDirective],
   templateUrl: './home-addresses-list.component.html'
 })
 export class HomeAddressesListComponent implements OnInit {

@@ -10,12 +10,13 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-list',
   standalone: true,
-  imports: [TableComponent, BadgeComponent, AdminButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent, IconComponent],
+  imports: [TableComponent, BadgeComponent, AdminButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent, IconComponent, TooltipDirective],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'
 })

@@ -10,12 +10,13 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { PaymentMethodsFormComponent } from '../form/payment-methods-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-payment-methods-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, PaymentMethodsFormComponent, SpinnerComponent],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, PaymentMethodsFormComponent, SpinnerComponent, TooltipDirective],
   templateUrl: './payment-methods-list.component.html'
 })
 export class PaymentMethodsListComponent implements OnInit {

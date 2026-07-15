@@ -11,7 +11,7 @@
         <input type="text" placeholder="Cari komplain..." [value]="searchQuery()" (input)="onSearch($event)"
           class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
       </div>
-      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0" title="Refresh Data">
+      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0">
         <app-icon name="refresh" size="14"></app-icon>
         Segarkan
       </app-admin-button>
@@ -86,7 +86,7 @@
 </div>
 
 <!-- Respond Modal -->
-<app-modal title="Respons Komplain" [(isOpen)]="isModalOpen" [hasFooter]="false">
+<app-modal appTooltip="Respons Komplain" [(isOpen)]="isModalOpen" [hasFooter]="false">
   @if (selected()) {
   <app-complaints-form [complaint]="selected()" (onCancel)="closeModal()" (onSave)="closeModal()">
   </app-complaints-form>

@@ -42,7 +42,7 @@
             [control]="$any(feeForm.get('value'))"></app-admin-input>
         </div>
 
-        <button type="button" (click)="removeFee($index)" 
+        <button appTooltip="Hapus Data" type="button" (click)="removeFee($index)" 
           class="mt-5 p-2 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors shrink-0">
           <app-icon name="trash" size="16"></app-icon>
         </button>

@@ -30,7 +30,7 @@
             class="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
             <span class="text-white text-sm font-medium">Ubah</span>
           </div>
-          <button type="button"
+          <button appTooltip="Hapus Data" type="button"
             class="absolute top-2 right-2 bg-white rounded-full p-2 text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors z-10"
             (click)="coverImageControl.setValue(''); $event.stopPropagation()">
             <app-icon name="trash" size="18"></app-icon>
@@ -73,7 +73,7 @@
               class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <span class="text-white text-xs font-medium">Ubah</span>
             </div>
-            <button type="button"
+            <button appTooltip="Hapus Data" type="button"
               class="absolute top-2 right-2 bg-white rounded-full p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors z-10"
               (click)="removeAdditionalImage($index); $event.stopPropagation()">
               <app-icon name="trash" size="16"></app-icon>

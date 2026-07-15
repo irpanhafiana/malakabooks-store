@@ -11,7 +11,7 @@
         <input type="text" placeholder="Cari Stok Gudang ..." [value]="searchQuery()" (input)="onSearch($event)"
           class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
       </div>
-      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0" title="Refresh Data">
+      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0">
         <app-icon name="refresh" size="14"></app-icon>
         Segarkan
       </app-admin-button>
@@ -63,15 +63,16 @@
           {{ stock.reservedQuantity }}
         </td>
         <td class="px-5 py-4 text-xs font-semibold text-slate-500">
-          <code class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-slate-600 font-mono">{{ stock.baseUomCode }}</code>
+          <code
+            class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-slate-600 font-mono">{{ stock.baseUomCode }}</code>
         </td>
         <td class="px-5 py-4 text-right">
           <div class="flex justify-end gap-1.5">
-            <button (click)="openEditModal(stock)"
+            <button appTooltip="Edit Data" (click)="openEditModal(stock)"
               class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer transition-colors">
               <app-icon name="edit" size="14"></app-icon>
             </button>
-            <button (click)="onDelete(stock.id)"
+            <button appTooltip="Hapus Data" (click)="onDelete(stock.id)"
               class="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors">
               <app-icon name="trash" size="14"></app-icon>
             </button>

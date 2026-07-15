@@ -6,12 +6,13 @@ import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-inp
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-uom-groups-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, IconComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, IconComponent, TooltipDirective],
   templateUrl: './uom-groups-form.component.html'
 })
 export class UomGroupsFormComponent {

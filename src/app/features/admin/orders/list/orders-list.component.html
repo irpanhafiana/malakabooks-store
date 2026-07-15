@@ -13,7 +13,7 @@
 
     <div class="flex flex-row gap-2 justify-center items-center">
       @if (selectedOrderIds().length > 0) {
-      <button (click)="onBulkCreateShipment()"
+      <button appTooltip="Buat Pengiriman Massal" (click)="onBulkCreateShipment()"
         class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded-xl text-sm cursor-pointer flex items-center gap-1.5  shrink-0">
         <i class="bx bx-package text-sm"></i>
         Bulk Shipment
@@ -26,7 +26,7 @@
         <input type="text" placeholder="Cari pesanan..." [value]="searchQuery()" (input)="onSearch($event)"
           class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600">
       </div>
-      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0" title="Refresh Data">
+      <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0">
         <app-icon name="refresh" size="14"></app-icon>
         Segarkan
       </app-admin-button>
@@ -88,17 +88,17 @@
         <td class="px-5 py-4 text-center">
           @if (order.trackingNumber) {
           <div class="flex items-center justify-center gap-1.5">
-            <button (click)="onDetailResi(order)"
+            <button appTooltip="Lihat Detail Resi" (click)="onDetailResi(order)"
               class="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-1.5 px-3 rounded-xl text-[10px] cursor-pointer">
               Detail Resi
             </button>
-            <button (click)="onCancelShipment(order)"
+            <button appTooltip="Batalkan Resi Pengiriman" (click)="onCancelShipment(order)"
               class="bg-rose-500 hover:bg-rose-600 text-white font-semibold py-1.5 px-3 rounded-xl text-[10px] cursor-pointer">
               Batalkan Resi
             </button>
           </div>
           } @else {
-          <button (click)="onCreateShipment(order.id)"
+          <button appTooltip="Buat Pengiriman Pesanan" (click)="onCreateShipment(order.id)"
             class="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-1.5 px-3 rounded-xl text-[10px] cursor-pointer">
             Buat Pengiriman
           </button>
@@ -125,7 +125,7 @@
 </div>
 
 <!-- Detail Resi Drawer -->
-<app-drawer [isOpen]="detailResiOpen()" (isOpenChange)="closeDetailResi()" title="Detail Resi Pengiriman">
+<app-drawer [isOpen]="detailResiOpen()" (isOpenChange)="closeDetailResi()" appTooltip="Detail Resi Pengiriman">
   <div class="p-5 overflow-y-auto h-full flex flex-col gap-5 text-xs">
 
     <!-- Loading -->

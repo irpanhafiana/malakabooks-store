@@ -36,4 +36,17 @@ export class InventoryMovementStore {
       this.toastService.error('Gagal memuat riwayat mutasi stok.');
     }
   }
+  async receiveGoods(payload: { itemId: string; quantity: number; referenceId?: string; note: string }): Promise<boolean> {
+    this.state.update(s => ({ ...s, loading: true, error: null }));
+    const success = await this.movementApi.receiveGoods(payload);
+    if (success) {
+      this.toastService.success('Berhasil menyimpan data mutasi stok.');
+      await this.loadInventoryMovements();
+      return true;
+    } else {
+      this.state.update(s => ({ ...s, loading: false, error: 'Gagal menyimpan mutasi stok.' }));
+      this.toastService.error('Gagal menyimpan mutasi stok.');
+      return false;
+    }
+  }
 }
