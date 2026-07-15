@@ -7,6 +7,18 @@ export interface CatalogItem {
   baseUomCode: string;
   description: string;
   isActive: boolean;
+  categoryId?: string;
+  coverImage?: string;
+  additionalImages?: { no: number; image: string }[];
+  weight?: number;
+  stock?: number;
+  bookId?: string;
+  isbn?: string;
+  authorIds?: string[];
+  publisher?: string;
+  publishedYear?: number;
+  pages?: number;
+  price?: number;
   createdAt?: string;
   updatedAt?: string;
 }

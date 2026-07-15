@@ -1,4 +1,5 @@
 import { Component, input, output, effect, inject, ChangeDetectionStrategy, signal, ChangeDetectorRef } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { ItemStore } from '../../../../store/item.store';
 import { UomGroupStore } from '../../../../store/uom-group.store';
@@ -53,11 +54,17 @@ export class ItemsFormComponent {
   publisherControl = new FormControl('');
   publishedYearControl = new FormControl<number>(new Date().getFullYear());
   pagesControl = new FormControl<number>(0);
-  priceControl = new FormControl<number>(0);
   weightControl = new FormControl<number>(0);
-  stockControl = new FormControl<number>(0);
 
-  authorIdControl = new FormControl('');
+  selectedAuthorIds = signal<string[]>([]);
+  authorSelectControl = new FormControl('');
+
+  categoryIdSignal = toSignal(this.categoryIdControl.valueChanges, { initialValue: this.categoryIdControl.value });
+  isMerchandise = computed(() => {
+    const catId = this.categoryIdSignal();
+    const cat = this.categories().find(c => c.id === catId);
+    return cat ? cat.name.toLowerCase() === 'merchandise' : false;
+  });
 
   formGroup = new FormGroup({
     name: this.nameControl,
@@ -75,10 +82,7 @@ export class ItemsFormComponent {
 
     publishedYear: this.publishedYearControl,
     pages: this.pagesControl,
-    price: this.priceControl,
-    weight: this.weightControl,
-    stock: this.stockControl,
-    authorId: this.authorIdControl
+    weight: this.weightControl
   });
 
   uomGroupOptions = computed(() => {
@@ -141,21 +145,20 @@ export class ItemsFormComponent {
         this.publisherControl.setValue(it.publisher || '');
         this.publishedYearControl.setValue(it.publishedYear || new Date().getFullYear());
         this.pagesControl.setValue(it.pages || 0);
-        this.priceControl.setValue(it.price || 0);
         this.weightControl.setValue(it.weight || 0);
-        this.stockControl.setValue(it.stock || 0);
 
-        if (it.authorIds && it.authorIds.length > 0) {
-          this.authorIdControl.setValue(it.authorIds[0]);
+        if (it.authorIds && Array.isArray(it.authorIds)) {
+          this.selectedAuthorIds.set(it.authorIds);
         } else {
-          this.authorIdControl.setValue('');
+          this.selectedAuthorIds.set([]);
         }
       } else {
         this.additionalImagesControl.clear();
+        this.selectedAuthorIds.set([]);
         this.formGroup.reset({
           name: '', sapCode: '', itemType: 'mardika', uomGroupId: '', baseUomCode: '', description: '', isActive: false,
           coverImage: '',
-          isbn: '', categoryId: '', publisher: '', publishedYear: new Date().getFullYear(), pages: 0, price: 0, weight: 0, stock: 0, authorId: ''
+          isbn: '', categoryId: '', publisher: '', publishedYear: new Date().getFullYear(), pages: 0, weight: 0
         });
       }
     });
@@ -174,6 +177,25 @@ export class ItemsFormComponent {
     this.itemTypeControl.valueChanges.subscribe(val => {
       this.itemTypeChange.emit(val || 'mardika');
     });
+
+    this.authorSelectControl.valueChanges.subscribe(authorId => {
+      if (authorId) {
+        const current = this.selectedAuthorIds();
+        if (!current.includes(authorId)) {
+          this.selectedAuthorIds.set([...current, authorId]);
+        }
+        // Reset control so user can pick again
+        setTimeout(() => this.authorSelectControl.setValue('', { emitEvent: false }), 0);
+      }
+    });
+  }
+
+  removeAuthor(authorId: string) {
+    this.selectedAuthorIds.update(ids => ids.filter(id => id !== authorId));
+  }
+
+  getAuthorName(id: string): string {
+    return this.authorStore.authors().find(a => a.id === id)?.name || id;
   }
 
   async loadCategories() {
@@ -198,31 +220,40 @@ export class ItemsFormComponent {
       .map((ctrl, i) => ({ no: i + 1, image: ctrl.value }))
       .filter(img => !!img.image);
 
+    const selectedCat = this.categories().find(c => c.id === this.categoryIdControl.value);
+    const categoryName = selectedCat ? selectedCat.name : '';
+
     const payload: any = {
       id: this.item()?.id,
       name: this.nameControl.value || '',
       sapCode: this.sapCodeControl.value || '',
       itemType: this.itemTypeControl.value || 'mardika',
+      categoryId: this.categoryIdControl.value || undefined,
       uomGroupId: this.uomGroupIdControl.value || undefined,
       baseUomCode: this.baseUomCodeControl.value || '',
       description: this.descriptionControl.value || '',
       isActive: this.isActiveControl.value ?? false,
       coverImage: this.coverImageControl.value || '',
-      additionalImages: additionalImgs
+      additionalImages: additionalImgs,
+      weight: this.weightControl.value || 0,
+      stock: 0,
+      categoryName: categoryName
     };
+
+    if (payload.uomGroupId) {
+      const uomGroupObj = this.uomGroupStore.uomGroups().find(g => g.id === payload.uomGroupId);
+      if (uomGroupObj) {
+        payload.uomGroup = uomGroupObj;
+      }
+    }
 
     if (payload.itemType === 'malaka') {
       payload.bookId = this.item()?.bookId;
-      payload.title = this.nameControl.value || '';
       payload.isbn = this.isbnControl.value || '';
-      payload.categoryId = this.categoryIdControl.value || undefined;
       payload.publisher = this.publisherControl.value || '';
       payload.publishedYear = this.publishedYearControl.value || 0;
       payload.pages = this.pagesControl.value || 0;
-      payload.price = this.priceControl.value || 0;
-      payload.weight = this.weightControl.value || 0;
-      payload.stock = this.stockControl.value || 0;
-      payload.authorIds = this.authorIdControl.value ? [this.authorIdControl.value] : [];
+      payload.authorIds = this.selectedAuthorIds();
     }
 
     return payload;

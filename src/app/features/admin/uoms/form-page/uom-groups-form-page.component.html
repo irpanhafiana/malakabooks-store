@@ -1,0 +1,16 @@
+<div class="flex flex-col gap-6 pb-20">
+  <div class="flex items-center justify-between">
+    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">{{ pageTitle() }}</h2>
+
+    <app-admin-button (click)="onCancel()" variant="outline" size="md" class="shrink-0">
+      <app-icon name="chevron-left" size="14"></app-icon>
+      Kembali ke Daftar UoM
+    </app-admin-button>
+  </div>
+
+  <!-- Form Container -->
+  <div class="bg-white p-6 rounded-2xl border border-slate-200">
+    <app-uom-groups-form [uomGroup]="editUomGroup()" (onCancel)="onCancel()" (onSave)="onSave()">
+    </app-uom-groups-form>
+  </div>
+</div>

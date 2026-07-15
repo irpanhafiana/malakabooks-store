@@ -3,6 +3,7 @@ export interface UomGroupDetail {
   name: string;
   conversionFactor: number;
   isBaseUom: boolean;
+  isDefaultForSales: boolean;
   sortOrder: number;
   isActive: boolean;
 }

@@ -65,34 +65,61 @@ export class ItemApiService {
   async saveItem(item: Partial<CatalogItem> & any): Promise<CatalogItem> {
     const isNew = !item.id;
 
-    if (item.itemType === 'malaka') {
+    const itemBody: any = {
+      ...item,
+      name: item.name || item.title,
+      sapCode: item.sapCode || '',
+      itemType: item.itemType || 'mardika',
+      categoryId: item.categoryId || undefined,
+      uomGroupId: item.uomGroupId || undefined,
+      uomGroup: item.uomGroup || undefined,
+      baseUomCode: item.baseUomCode || '',
+      description: item.description || '',
+      coverImage: item.coverImage || '',
+      additionalImages: item.additionalImages || [],
+      weight: item.weight || 0,
+      stock: item.stock || 0,
+      isActive: item.isActive ?? false
+    };
+
+    let savedItem: any;
+
+    try {
+      if (isNew) {
+        const envelope = await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.BASE_URL}/admin/Items`, itemBody));
+        savedItem = envelope?.data;
+      } else {
+        const envelope = await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.BASE_URL}/admin/Items/${item.id}`, itemBody));
+        savedItem = envelope?.data;
+      }
+    } catch (e) {
+      this.logger.error('ItemApiService.saveItem', 'Gagal menyimpan item:', e);
+      throw e;
+    }
+
+    // Determine the itemId correctly whether the API returns an object or a string ID
+    const extractedItemId = savedItem?.id || (typeof savedItem === 'string' ? savedItem : item.id);
+
+    const isMerchandise = item.categoryName && item.categoryName.toLowerCase() === 'merchandise';
+
+    if (item.itemType === 'malaka' && !isMerchandise) {
       const bookPayload = {
-        itemId: item.id || undefined,
-        title: item.name || '',
-        sapCode: item.sapCode || '',
+        itemId: extractedItemId,
         authorIds: item.authorIds || [],
         isbn: item.isbn || '',
-        categoryId: item.categoryId || null,
-        price: item.price || 0,
-        description: item.description || '',
-        coverImage: item.coverImage || '',
-        additionalImages: item.additionalImages || [],
         publisher: item.publisher || '',
         publishedYear: item.publishedYear || 0,
-        pages: item.pages || 0,
-        weight: item.weight || 0,
-        stock: item.stock || 0
+        pages: item.pages || 0
       };
 
       try {
         if (isNew) {
-          const envelope = await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.BASE_URL}/admin/Books`, bookPayload));
-          return envelope?.data;
+          await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.BASE_URL}/admin/Books`, bookPayload));
         } else {
           let bookId = item.bookId;
           if (!bookId) {
             const booksEnv = await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.BASE_URL}/admin/Books`));
-            const book = booksEnv?.data?.find(b => b.itemId === item.id);
+            const book = booksEnv?.data?.find(b => b.itemId === extractedItemId);
             if (book) {
               bookId = book.id;
             }
@@ -101,10 +128,8 @@ export class ItemApiService {
           if (bookId) {
             await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.BASE_URL}/admin/Books/${bookId}`, bookPayload));
           } else {
-            bookPayload.itemId = item.id;
             await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.BASE_URL}/admin/Books`, bookPayload));
           }
-          return item as CatalogItem;
         }
       } catch (e) {
         this.logger.error('ItemApiService.saveItem', 'Gagal menyimpan buku:', e);
@@ -112,31 +137,20 @@ export class ItemApiService {
       }
     }
 
-    const body: any = {
-      ...item,
-      name: item.name || item.title,
-      sapCode: item.sapCode,
-      itemType: item.itemType || 'mardika',
-      uomGroupId: item.uomGroupId || undefined,
-      baseUomCode: item.baseUomCode,
-      description: item.description || '',
-      isActive: item.isActive ?? true
-    };
-
-    try {
-      let result: CatalogItem;
-      if (isNew) {
-        const envelope = await firstValueFrom(this.http.post<ApiResponse<CatalogItem>>(`${this.BASE_URL}/admin/Items`, body));
-        result = envelope?.data;
-      } else {
-        const envelope = await firstValueFrom(this.http.put<ApiResponse<CatalogItem>>(`${this.BASE_URL}/admin/Items/${item.id}`, body));
-        result = envelope?.data;
+    // If it's a book but converted to merchandise, clean up the old book data
+    if (item.itemType === 'malaka' && isMerchandise && !isNew) {
+      try {
+        const booksEnv = await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.BASE_URL}/admin/Books`));
+        const book = booksEnv?.data?.find(b => b.itemId === extractedItemId);
+        if (book) {
+          await firstValueFrom(this.http.delete(`${this.BASE_URL}/admin/Books/${book.id}`));
+        }
+      } catch (e) {
+        this.logger.error('ItemApiService.saveItem', 'Gagal menghapus buku lama untuk produk merchandise:', e);
       }
-      return result;
-    } catch (e) {
-      this.logger.error('ItemApiService.saveItem', 'Gagal menyimpan item:', e);
-      throw e;
     }
+
+    return savedItem;
   }
 
   async deleteItem(id: string): Promise<boolean> {

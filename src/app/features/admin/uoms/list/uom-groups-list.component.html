@@ -95,10 +95,4 @@
   </div>
   }
 
-  <!-- Add/Edit UoM Modal Form -->
-  <app-modal [(isOpen)]="isModalOpen" [title]="editUomGroup() ? 'Edit Group UoM' : 'Tambah Group UoM Baru'">
-    <app-uom-groups-form [uomGroup]="editUomGroup()" (onCancel)="closeModal()" (onSave)="closeModal()">
-    </app-uom-groups-form>
-  </app-modal>
-
 </div>

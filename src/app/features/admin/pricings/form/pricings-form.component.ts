@@ -4,6 +4,7 @@ import { DecimalPipe } from '@angular/common';
 import { Pricing, PricingDetail } from '../../../../core/models';
 import { PricingStore } from '../../../../store/pricing.store';
 import { ItemStore } from '../../../../store/item.store';
+import { UomGroupStore } from '../../../../store/uom-group.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
@@ -26,6 +27,7 @@ export class PricingsFormComponent {
 
   private readonly pricingStore = inject(PricingStore);
   protected readonly itemStore = inject(ItemStore);
+  private readonly uomGroupStore = inject(UomGroupStore);
   private readonly alertService = inject(AlertService);
 
   nameControl = new FormControl('', [Validators.required]);
@@ -43,17 +45,20 @@ export class PricingsFormComponent {
   });
 
   details = signal<PricingDetail[]>([]);
+  selectedItemId = signal<string>('');
 
   // Add detail form controls
-  detailCustomerGroupCode = new FormControl('PUBLIC', [Validators.required]);
+  detailCustomerGroupCode = new FormControl('100', [Validators.required]);
   detailUomCode = new FormControl('', [Validators.required]);
   detailPrice = new FormControl(0, [Validators.required, Validators.min(0)]);
 
   customerGroupOptions = [
-    { value: 'PUBLIC', label: 'Umum (Public)' },
-    { value: 'VIP', label: 'Pelanggan VIP' },
-    { value: 'WHOLESALER', label: 'Grosir / Wholesaler' },
-    { value: 'RESELLER', label: 'Reseller' }
+    { value: '100', label: 'Mitra' },
+    { value: '102', label: 'Warung' },
+    { value: '103', label: 'Online' },
+    { value: '104', label: 'Grosir' },
+    { value: '105', label: 'Member' },
+    { value: '106', label: 'Non Member' }
   ];
 
   itemOptions = computed(() => {
@@ -69,8 +74,40 @@ export class PricingsFormComponent {
     return new Map(list.map(i => [i.id, i]));
   });
 
+  uomOptions = computed(() => {
+    const selectedId = this.selectedItemId();
+    const items = this.itemMap();
+    const uomGroups = this.uomGroupStore.uomGroups() || [];
+
+    let availableUoms: string[] = [];
+
+    if (selectedId && items.has(selectedId)) {
+      const item = items.get(selectedId);
+      if (item?.uomGroupId) {
+        const group = uomGroups.find(g => g.id === item.uomGroupId);
+        if (group && group.details) {
+          availableUoms = group.details.map(d => d.code);
+        }
+      }
+      if (availableUoms.length === 0 && item?.baseUomCode) {
+        availableUoms = [item.baseUomCode];
+      }
+    }
+
+    if (availableUoms.length === 0) {
+      const allUoms = new Set<string>();
+      uomGroups.forEach(g => {
+        g.details?.forEach(d => allUoms.add(d.code));
+      });
+      availableUoms = Array.from(allUoms);
+    }
+    
+    return availableUoms.map(code => ({ value: code, label: code }));
+  });
+
   constructor() {
     this.itemStore.loadItems();
+    this.uomGroupStore.loadUomGroups();
 
     effect(() => {
       const pr = this.pricing();
@@ -89,6 +126,7 @@ export class PricingsFormComponent {
 
     // Auto set UoM code when header item is picked (for default detail uom)
     this.itemIdControl.valueChanges.subscribe(itemId => {
+      this.selectedItemId.set(itemId || '');
       if (itemId) {
         const item = this.itemMap().get(itemId);
         if (item) {
@@ -120,7 +158,7 @@ export class PricingsFormComponent {
     }
 
     this.details.set([...current, newDetail]);
-    this.detailCustomerGroupCode.reset('PUBLIC');
+    this.detailCustomerGroupCode.reset('100');
     // keep detailUomCode to what it was
     this.detailPrice.reset(0);
   }

@@ -27,6 +27,8 @@ export const routes: Routes = [
       },
       { path: 'categories', loadComponent: () => import('./features/admin/categories/list/categories-list.component').then(c => c.CategoriesListComponent) },
       { path: 'uoms', loadComponent: () => import('./features/admin/uoms/list/uom-groups-list.component').then(c => c.UomGroupsListComponent) },
+      { path: 'uoms/new', loadComponent: () => import('./features/admin/uoms/form-page/uom-groups-form-page.component').then(c => c.UomGroupsFormPageComponent) },
+      { path: 'uoms/edit/:id', loadComponent: () => import('./features/admin/uoms/form-page/uom-groups-form-page.component').then(c => c.UomGroupsFormPageComponent) },
       { path: 'warehouses', loadComponent: () => import('./features/admin/warehouses/list/warehouses-list.component').then(c => c.WarehousesListComponent) },
       { path: 'items', loadComponent: () => import('./features/admin/items/list/items-list.component').then(c => c.ItemsListComponent) },
       { path: 'items/new', loadComponent: () => import('./features/admin/items/form-page/items-form-page.component').then(c => c.ItemsFormPageComponent) },

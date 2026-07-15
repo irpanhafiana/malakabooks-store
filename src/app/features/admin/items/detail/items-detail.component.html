@@ -69,6 +69,10 @@
                 <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">UoM Dasar</span>
                 <span class="block text-sm font-medium text-slate-800">{{ data.baseUomCode }}</span>
               </div>
+              <div>
+                <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Berat</span>
+                <span class="block text-sm font-medium text-slate-800">{{ data.weight || 0 }} gr</span>
+              </div>
               <div class="sm:col-span-2">
                 <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Status
                   Aktif</span>
@@ -116,28 +120,31 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-6">
             <div>
               <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">ISBN</span>
-              <span class="block text-sm font-bold text-slate-800">{{ data.isbn || '-' }}</span>
+              <span class="block text-sm font-bold text-slate-800">{{ data.metadata?.book?.isbn || '-' }}</span>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Penulis</span>
+              <span class="block text-sm font-medium text-slate-800">
+                @if (data.metadata?.book?.authors?.length) {
+                  @for (author of data.metadata.book.authors; track author.id) {
+                    <span class="inline-block bg-slate-100 px-2.5 py-1 rounded-md text-xs font-medium mr-2 mb-1">{{ author.name }}</span>
+                  }
+                } @else {
+                  -
+                }
+              </span>
             </div>
             <div>
               <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Penerbit</span>
-              <span class="block text-sm font-medium text-slate-800">{{ data.publisher || '-' }}</span>
+              <span class="block text-sm font-medium text-slate-800">{{ data.metadata?.book?.publisher || '-' }}</span>
             </div>
             <div>
               <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tahun Terbit</span>
-              <span class="block text-sm font-medium text-slate-800">{{ data.publishedYear || '-' }}</span>
+              <span class="block text-sm font-medium text-slate-800">{{ data.metadata?.book?.publishedYear || '-' }}</span>
             </div>
             <div>
               <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Halaman</span>
-              <span class="block text-sm font-medium text-slate-800">{{ data.pages || 0 }} hlm</span>
-            </div>
-            <div>
-              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Berat</span>
-              <span class="block text-sm font-medium text-slate-800">{{ data.weight || 0 }} gr</span>
-            </div>
-            <div>
-              <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Harga Dasar
-                (Buku)</span>
-              <span class="block text-sm font-bold text-red-600">Rp {{ (data.price || 0) | number:'1.0-0' }}</span>
+              <span class="block text-sm font-medium text-slate-800">{{ data.metadata?.book?.pages || 0 }} hlm</span>
             </div>
           </div>
         </div>

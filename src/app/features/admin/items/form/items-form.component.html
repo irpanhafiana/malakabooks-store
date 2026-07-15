@@ -13,6 +13,12 @@
       [readonly]="uomGroupIdControl.value !== ''"></app-admin-input>
   </div>
 
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <app-admin-select label="Kategori" [control]="$any(categoryIdControl)"
+      [options]="categoryOptions()"></app-admin-select>
+    <app-admin-input label="Berat (gram)" type="number" [control]="weightControl"></app-admin-input>
+  </div>
+
   <div class="flex flex-col gap-6 mt-2 mb-4">
     <div class="p-5 border border-slate-200 rounded-2xl bg-white grid grid-cols-1 md:grid-cols-4 gap-8">
 
@@ -103,25 +109,30 @@
     <app-editor [formControl]="descriptionControl"></app-editor>
   </div>
 
-  @if (itemTypeControl.value === 'malaka') {
+  @if (itemTypeControl.value === 'malaka' && !isMerchandise()) {
   <div class="border-t border-slate-100 pt-4 mt-2">
     <h3 class="text-sm font-semibold text-slate-800 mb-4">Informasi Buku (Malaka)</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <app-admin-input label="ISBN" placeholder="Contoh: 978-602-03-0221-5" [control]="isbnControl"></app-admin-input>
-      <app-admin-select label="Kategori" [control]="$any(categoryIdControl)"
-        [options]="categoryOptions()"></app-admin-select>
+      
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-medium text-slate-700">Penulis</label>
+        <div class="flex flex-wrap gap-2 mb-2">
+          @for (authorId of selectedAuthorIds(); track authorId) {
+          <div class="bg-brand-50 text-brand-700 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 border border-brand-200">
+            {{ getAuthorName(authorId) }}
+            <button type="button" class="hover:text-red-600 transition-colors" (click)="removeAuthor(authorId)">
+              <app-icon name="x" size="14"></app-icon>
+            </button>
+          </div>
+          }
+        </div>
+        <app-admin-select [control]="$any(authorSelectControl)" [options]="authorOptions()" placeholder="Tambah Penulis..."></app-admin-select>
+      </div>
 
-      <app-admin-select label="Penulis" [control]="$any(authorIdControl)"
-        [options]="authorOptions()"></app-admin-select>
       <app-admin-input label="Penerbit" placeholder="Contoh: Gramedia" [control]="publisherControl"></app-admin-input>
-
       <app-admin-input label="Tahun Terbit" type="number" [control]="publishedYearControl"></app-admin-input>
       <app-admin-input label="Jumlah Halaman" type="number" [control]="pagesControl"></app-admin-input>
-
-      <app-admin-input label="Harga (Rp)" type="number" [control]="priceControl"></app-admin-input>
-      <app-admin-input label="Berat (gram)" type="number" [control]="weightControl"></app-admin-input>
-
-      <app-admin-input label="Stok" type="number" [control]="stockControl"></app-admin-input>
     </div>
   </div>
   }

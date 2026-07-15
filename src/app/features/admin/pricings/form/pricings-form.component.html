@@ -37,7 +37,12 @@
         </div>
         <div>
           <label class="text-[10px] font-semibold text-slate-600 block mb-1">Kode UoM</label>
-          <input type="text" [formControl]="detailUomCode" placeholder="PCS" class="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-primary-400 bg-white">
+          <select [formControl]="detailUomCode" class="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-primary-400 bg-white">
+            <option value="">-- Pilih UoM --</option>
+            @for (uom of uomOptions(); track uom.value) {
+              <option [value]="uom.value">{{ uom.label }}</option>
+            }
+          </select>
         </div>
         <div>
           <label class="text-[10px] font-semibold text-slate-600 block mb-1">Nominal Harga (Rp)</label>
