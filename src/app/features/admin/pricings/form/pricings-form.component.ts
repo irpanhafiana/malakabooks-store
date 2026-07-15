@@ -8,6 +8,7 @@ import { UomGroupStore } from '../../../../store/uom-group.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
+import { AdminCheckboxComponent } from '../../../../shared/ui/admin-checkbox/admin-checkbox.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { computed } from '@angular/core';
@@ -17,7 +18,7 @@ import { TooltipDirective } from '../../../../shared/directives/tooltip.directiv
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pricings-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent, IconComponent, DecimalPipe, TooltipDirective],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent, AdminCheckboxComponent, IconComponent, DecimalPipe, TooltipDirective],
   templateUrl: './pricings-form.component.html'
 })
 export class PricingsFormComponent {
@@ -74,35 +75,50 @@ export class PricingsFormComponent {
     return new Map(list.map(i => [i.id, i]));
   });
 
+  selectedItemUomGroupName = computed(() => {
+    const selectedId = this.selectedItemId();
+    if (selectedId) {
+      const item = this.itemMap().get(selectedId);
+      if (item && item.uomGroupId) {
+        const group = this.uomGroupStore.uomGroups()?.find(g => g.id === item.uomGroupId);
+        if (group) return group.name;
+      }
+      if (item && item.baseUomCode) return item.baseUomCode;
+    }
+    return '';
+  });
+
+  uomGroupControl = new FormControl({ value: '', disabled: true });
+
   uomOptions = computed(() => {
     const selectedId = this.selectedItemId();
     const items = this.itemMap();
     const uomGroups = this.uomGroupStore.uomGroups() || [];
 
-    let availableUoms: string[] = [];
+    let availableUoms: {value: string, label: string}[] = [];
 
     if (selectedId && items.has(selectedId)) {
       const item = items.get(selectedId);
       if (item?.uomGroupId) {
         const group = uomGroups.find(g => g.id === item.uomGroupId);
         if (group && group.details) {
-          availableUoms = group.details.map(d => d.code);
+          availableUoms = group.details.map(d => ({ value: d.code, label: `${d.code} - ${d.name}` }));
         }
       }
       if (availableUoms.length === 0 && item?.baseUomCode) {
-        availableUoms = [item.baseUomCode];
+        availableUoms = [{ value: item.baseUomCode, label: item.baseUomCode }];
       }
     }
 
     if (availableUoms.length === 0) {
-      const allUoms = new Set<string>();
+      const allUoms = new Map<string, string>();
       uomGroups.forEach(g => {
-        g.details?.forEach(d => allUoms.add(d.code));
+        g.details?.forEach(d => allUoms.set(d.code, d.name));
       });
-      availableUoms = Array.from(allUoms);
+      availableUoms = Array.from(allUoms.entries()).map(([code, name]) => ({ value: code, label: `${code} - ${name}` }));
     }
     
-    return availableUoms.map(code => ({ value: code, label: code }));
+    return availableUoms;
   });
 
   constructor() {
@@ -113,7 +129,7 @@ export class PricingsFormComponent {
       const pr = this.pricing();
       if (pr) {
         this.nameControl.setValue(pr.name);
-        this.itemIdControl.setValue(pr.itemId);
+        this.itemIdControl.setValue(pr.itemId || '');
         this.startDateControl.setValue(pr.startDate ? pr.startDate.substring(0, 10) : '');
         this.endDateControl.setValue(pr.endDate ? pr.endDate.substring(0, 10) : '');
         this.isActiveControl.setValue(pr.isActive);
@@ -122,6 +138,10 @@ export class PricingsFormComponent {
         this.formGroup.reset({ name: '', itemId: '', startDate: '', endDate: '', isActive: true });
         this.details.set([]);
       }
+    });
+
+    effect(() => {
+      this.uomGroupControl.setValue(this.selectedItemUomGroupName());
     });
 
     // Auto set UoM code when header item is picked (for default detail uom)
@@ -184,10 +204,20 @@ export class PricingsFormComponent {
     );
     if (!isConfirmed) return;
 
+    let itemCode = '';
+    const itemId = this.itemIdControl.value || '';
+    if (itemId) {
+      const item = this.itemMap().get(itemId);
+      if (item) {
+        itemCode = item.sapCode;
+      }
+    }
+
     const data: Partial<Pricing> = {
       id: this.pricing()?.id,
       name: this.nameControl.value || '',
-      itemId: this.itemIdControl.value || '',
+      itemId: itemId,
+      itemCode: itemCode,
       startDate: new Date(this.startDateControl.value || '').toISOString(),
       endDate: new Date(this.endDateControl.value || '').toISOString(),
       isActive: this.isActiveControl.value ?? true,

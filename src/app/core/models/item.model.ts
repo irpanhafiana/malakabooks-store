@@ -1,9 +1,12 @@
+import { UomGroup } from './uom-group.model';
+
 export interface CatalogItem {
   id: string;
   name: string;
   sapCode: string;
   itemType: string;
   uomGroupId?: string;
+  uomGroup?: UomGroup;
   baseUomCode: string;
   description: string;
   isActive: boolean;

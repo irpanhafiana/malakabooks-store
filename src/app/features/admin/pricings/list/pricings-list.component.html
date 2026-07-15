@@ -54,7 +54,7 @@
           {{ pricing.name }}
         </td>
         <td class="px-5 py-4 text-xs font-semibold text-slate-700">
-          {{ itemMap().get(pricing.itemId)?.name || pricing.itemId || '-' }}
+          {{ itemMap().get(pricing.itemId || '')?.name || pricing.itemId || '-' }}
         </td>
         <td class="px-5 py-4 text-xs text-slate-500 font-medium">
           {{ pricing.startDate | date:'shortDate' }} s/d {{ pricing.endDate | date:'shortDate' }}

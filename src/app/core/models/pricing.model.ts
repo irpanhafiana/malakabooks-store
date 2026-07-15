@@ -7,7 +7,8 @@ export interface PricingDetail {
 export interface Pricing {
   id: string;
   name: string;
-  itemId: string;
+  itemId?: string;
+  itemCode?: string;
   startDate: string;
   endDate: string;
   isActive: boolean;
@@ -19,7 +20,8 @@ export interface Pricing {
 
 export interface CreatePricingPayload {
   name: string;
-  itemId: string;
+  itemId?: string;
+  itemCode?: string;
   startDate: string;
   endDate: string;
   isActive: boolean;

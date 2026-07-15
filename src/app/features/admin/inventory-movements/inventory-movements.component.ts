@@ -10,10 +10,8 @@ import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { AdminInputComponent } from '../../../shared/ui/admin-input/admin-input.component';
 import { AdminSelectComponent } from '../../../shared/ui/admin-select/admin-select.component';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-inventory-movements',
@@ -29,7 +27,7 @@ import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
     ModalComponent,
     AdminInputComponent,
     AdminSelectComponent
-  , TooltipDirective],
+  ],
   templateUrl: './inventory-movements.component.html'
 })
 export class InventoryMovementsComponent implements OnInit {
@@ -37,6 +35,7 @@ export class InventoryMovementsComponent implements OnInit {
   protected readonly itemStore = inject(ItemStore);
 
   selectedItemId = signal<string>('');
+  filterControl = new FormControl('');
   isModalOpen = signal<boolean>(false);
 
   private readonly fb = inject(FormBuilder);
@@ -56,8 +55,8 @@ export class InventoryMovementsComponent implements OnInit {
   itemOptions = computed(() => {
     const list = this.itemStore.items() || [];
     return [
-      { id: '', title: '-- Semua Item --' },
-      ...list.map(p => ({ id: p.id, title: p.name }))
+      { value: '', label: '-- Semua Item --' },
+      ...list.map(p => ({ value: p.id, label: p.name }))
     ];
   });
 
@@ -69,6 +68,12 @@ export class InventoryMovementsComponent implements OnInit {
   ngOnInit() {
     this.movementStore.loadInventoryMovements();
     this.itemStore.loadItems();
+
+    this.filterControl.valueChanges.subscribe(val => {
+      this.selectedItemId.set(val || '');
+      this.movementStore.loadInventoryMovements(val || undefined);
+      this.pagination.setPage(1);
+    });
   }
 
   onItemChange(event: Event) {
@@ -80,7 +85,7 @@ export class InventoryMovementsComponent implements OnInit {
   }
 
   onRefresh() {
-    const itemId = this.selectedItemId();
+    const itemId = this.filterControl.value;
     this.movementStore.loadInventoryMovements(itemId || undefined);
     this.itemStore.loadItems();
   }

@@ -33,7 +33,7 @@ export class PricingsListComponent implements OnInit {
     if (!query) return pricings;
     return pricings.filter(p => 
       p.name.toLowerCase().includes(query) || 
-      p.itemId.toLowerCase().includes(query)
+      (p.itemId || '').toLowerCase().includes(query)
     );
   });
 
