@@ -14,6 +14,7 @@ public class UomGroupDetailEntity
     public string Name { get; set; } = string.Empty;
     public decimal ConversionFactor { get; set; }
     public bool IsBaseUom { get; set; }
+    public bool IsDefaultForSales { get; set; }
     public int SortOrder { get; set; }
     public bool IsActive { get; set; } = true;
 }

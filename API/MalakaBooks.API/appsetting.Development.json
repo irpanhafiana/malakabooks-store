@@ -37,7 +37,7 @@
             "SimasrimDetailResiMethod": "POST"
         },
         "PricingSetting": {
-            "DefaultPublicCustomerGroupCode": "Non Member"
+            "DefaultPublicCustomerGroupCode": "106"
         }
     },
     "Logging": {

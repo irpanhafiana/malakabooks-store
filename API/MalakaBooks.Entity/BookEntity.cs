@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MalakaBooks.Entity;
 
+[BsonIgnoreExtraElements]
 public class BookEntity : BaseObject
 {
     [BsonRepresentation(BsonType.ObjectId)]
@@ -12,9 +13,6 @@ public class BookEntity : BaseObject
     public List<string> AuthorIds { get; set; } = [];
 
     public string Isbn { get; set; } = string.Empty;
-
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? CategoryId { get; set; } = null;
 
     public string Publisher { get; set; } = string.Empty;
     public int PublishedYear { get; set; }

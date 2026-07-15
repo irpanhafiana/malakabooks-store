@@ -12,6 +12,9 @@ public class ItemEntity : BaseObject
     public List<AdditionalImage> AdditionalImages { get; set; } = [];
 
     [BsonRepresentation(BsonType.ObjectId)]
+    public string? CategoryId { get; set; }
+
+    [BsonRepresentation(BsonType.ObjectId)]
     public string? UomGroupId { get; set; }
 
     public string BaseUomCode { get; set; } = string.Empty;

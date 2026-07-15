@@ -6,6 +6,7 @@ public class ItemResponse
     public string Name { get; set; } = string.Empty;
     public string SAPCode { get; set; } = string.Empty;
     public string ItemType { get; set; } = string.Empty;
+    public string? CategoryId { get; set; }
     public string CoverImage { get; set; } = string.Empty;
     public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
     public string? UomGroupId { get; set; }
@@ -19,11 +20,21 @@ public class ItemResponse
     public DateTime UpdatedAt { get; set; }
 }
 
+public class PricedItemResponse : ItemResponse
+{
+    public string SalesUomCode { get; set; } = string.Empty;
+    public string CustomerGroupCode { get; set; } = string.Empty;
+    public decimal? Price { get; set; }
+    public DateTime? PriceStartDate { get; set; }
+    public DateTime? PriceEndDate { get; set; }
+}
+
 public class CreateItemRequest
 {
     public string Name { get; set; } = string.Empty;
     public string SAPCode { get; set; } = string.Empty;
     public string ItemType { get; set; } = string.Empty;
+    public string? CategoryId { get; set; }
     public string CoverImage { get; set; } = string.Empty;
     public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
     public string? UomGroupId { get; set; }
@@ -77,6 +88,7 @@ public class UomGroupDetailRequest
     public string Name { get; set; } = string.Empty;
     public decimal ConversionFactor { get; set; }
     public bool IsBaseUom { get; set; }
+    public bool IsDefaultForSales { get; set; }
     public int SortOrder { get; set; }
     public bool IsActive { get; set; } = true;
 }
@@ -102,7 +114,7 @@ public class PricingResponse
 public class CreatePricingRequest
 {
     public string Name { get; set; } = string.Empty;
-    public string ItemId { get; set; } = string.Empty;
+    public string ItemCode { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public bool IsActive { get; set; } = true;

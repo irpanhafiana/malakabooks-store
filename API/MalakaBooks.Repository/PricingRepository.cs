@@ -33,6 +33,26 @@ public class PricingRepository : IPricingRepository
         return await _collection.Find(filter).Sort(sort).ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyCollection<PricingEntity>> GetActiveByItemIdsAsync(IReadOnlyCollection<string> itemIds, DateTime asOfUtc, CancellationToken cancellationToken = default)
+    {
+        if (itemIds.Count == 0)
+        {
+            return [];
+        }
+
+        var filter = Builders<PricingEntity>.Filter.Where(pricing =>
+            pricing.IsActive
+            && itemIds.Contains(pricing.ItemId)
+            && pricing.StartDate <= asOfUtc
+            && pricing.EndDate >= asOfUtc);
+
+        var sort = Builders<PricingEntity>.Sort
+            .Ascending(pricing => pricing.ItemId)
+            .Descending(pricing => pricing.StartDate);
+
+        return await _collection.Find(filter).Sort(sort).ToListAsync(cancellationToken);
+    }
+
     public async Task<PricingEntity> CreateAsync(PricingEntity pricing, CancellationToken cancellationToken = default)
     {
         await _collection.InsertOneAsync(pricing, cancellationToken: cancellationToken);
