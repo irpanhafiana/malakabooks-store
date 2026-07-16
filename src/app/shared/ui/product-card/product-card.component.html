@@ -29,8 +29,37 @@
         {{ prod.title }}</h3>
 
       <!-- Price -->
-      <div class="flex flex-col">
-        <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold text-base"></app-price>
+      <div class="flex flex-col mt-1 w-full">
+        @if (authStore.isLoggedIn()) {
+          @if (prod.compareAtPrice && prod.compareAtPrice! > prod.price) {
+          <div class="flex justify-between items-center w-full gap-2">
+            <!-- Left: Prices (harga coret on top, harga asli/jual below) -->
+            <div class="flex flex-col items-start gap-1">
+              <span class="text-[10px] text-slate-400 line-through font-medium leading-none">
+                Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }}
+              </span>
+              <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold text-base leading-none"></app-price>
+            </div>
+            <!-- Right: Discount Badge -->
+            <span class="text-[9px] font-extrabold text-rose-600 bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded-sm shrink-0">
+              -{{ Math.round(((prod.compareAtPrice! - prod.price) / prod.compareAtPrice!) * 100) }}%
+            </span>
+          </div>
+          } @else {
+          <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold text-base"></app-price>
+          }
+        } @else {
+          <!-- Tamu / Belum Login: Tampilkan harga mahal, beri info diskon member jika ada -->
+          <div class="flex flex-col items-start gap-1 w-full">
+            <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold text-base"></app-price>
+            @if (prod.compareAtPrice && prod.compareAtPrice! < prod.price) {
+            <div class="flex items-center gap-1 text-[9px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded-sm">
+              <i class="bx bxs-key text-[10px]"></i>
+              <span>Member: Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }}</span>
+            </div>
+            }
+          </div>
+        }
       </div>
     </div>
   </div>

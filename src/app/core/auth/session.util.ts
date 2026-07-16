@@ -33,6 +33,11 @@ export function isAdminSession(): boolean {
   return getStoredSessionUser()?.role === 'admin';
 }
 
+export function isCustomerSession(): boolean {
+  const user = getStoredSessionUser();
+  return user !== null && user.role !== 'admin';
+}
+
 export function getSessionUserId(): string | null {
   return getStoredSessionUser()?.id ?? null;
 }

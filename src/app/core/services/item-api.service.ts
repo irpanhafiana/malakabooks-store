@@ -4,7 +4,7 @@ import { CatalogItem, ApiResponse } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
-import { isAdminSession } from '../auth/session.util';
+import { isAdminSession, isCustomerSession } from '../auth/session.util';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,12 @@ export class ItemApiService {
 
   async getItems(): Promise<CatalogItem[]> {
     try {
-      const endpoint = isAdminSession() ? `${this.BASE_URL}/admin/Items` : `${this.BASE_URL}/public/Items`;
+      let endpoint = `${this.BASE_URL}/public/Items/priced`;
+      if (isAdminSession()) {
+        endpoint = `${this.BASE_URL}/admin/Items`;
+      } else if (isCustomerSession()) {
+        endpoint = `${this.BASE_URL}/customer/Items/priced`;
+      }
       const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
       return envelope?.data || [];
     } catch (e) {

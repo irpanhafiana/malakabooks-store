@@ -109,6 +109,20 @@ export class UomGroupsFormComponent {
     }
   }
 
+  toggleDefaultForSales(index: number) {
+    const current = [...this.details()];
+    const isCurrentlyDefault = current[index].isDefaultForSales;
+    
+    // If setting to true, we optionally can unset others, 
+    // but typically a product group can only have 1 default sales uom.
+    if (!isCurrentlyDefault) {
+      current.forEach(d => d.isDefaultForSales = false);
+    }
+    
+    current[index] = { ...current[index], isDefaultForSales: !isCurrentlyDefault };
+    this.details.set(current);
+  }
+
   async onSubmitForm() {
     if (this.formGroup.invalid) {
       this.formGroup.markAllAsTouched();

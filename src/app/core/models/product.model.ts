@@ -32,6 +32,13 @@ export interface Product {
   categoryName?: string;
   averageRating: number;
   totalReviews: number;
+  salesUomCode?: string;
+  customerGroupCode?: string;
+  priceStartDate?: string;
+  priceEndDate?: string;
+  compareAtPrice?: number;
+  compareAtPriceStartDate?: string;
+  compareAtPriceEndDate?: string;
   createdAt: string;
   additionalImages: AdditionalImage[];
 }

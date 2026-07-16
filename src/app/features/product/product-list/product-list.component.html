@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-2  pb-28">
+<div class="flex flex-col gap-4 pb-28">
   <!-- Search Bar & Filter Button -->
   <div class="sticky top-0 z-30 -mx-4 pb-2 bg-gray-50">
 
@@ -19,32 +19,45 @@
         <app-icon name="filter" size="20"></app-icon>
       </button>
     </div>
-
-    <!-- Horizontal Categories (Full Width) -->
-    @if (productStore.searchQuery()) {
-    <div class="mt-3 mb-1 w-full overflow-hidden">
-      <div class="flex gap-2 overflow-x-auto no-scrollbar px-4">
-        <button type="button" (click)="onCategorySelect(null)"
-          [class]="productStore.selectedCategoryId() === null ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px]  whitespace-nowrap cursor-pointer' : 'bg-white border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px] text-slate-600  whitespace-nowrap cursor-pointer hover:bg-slate-50'">
-          <i class="bx bx-category text-lg"></i>
-          Semua
-        </button>
-        @for (cat of productStore.activeSearchCategories(); track cat.id) {
-        <button type="button" (click)="onCategorySelect(cat.id)"
-          [class]="productStore.selectedCategoryId() === cat.id ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px]  whitespace-nowrap cursor-pointer' : 'bg-white border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2 rounded-xl text-[12px] text-slate-600  whitespace-nowrap cursor-pointer hover:bg-slate-50'">
-          <app-icon [name]="cat.icon" size="18"></app-icon>
-          {{ cat.name }}
-        </button>
-        }
-      </div>
-    </div>
-    }
   </div>
 
-  <!-- Product List (Card-List / Horizontal Row Layout) -->
-  <div class="w-full flex flex-col gap-1.5">
+  <!-- Section Header + Category Chips -->
+  <section class="flex flex-col gap-4">
+    <div class="flex flex-col gap-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-display font-extrabold text-slate-800 text-base">Semua Produk</h2>
+          <p class="text-[12px] text-slate-400 mt-0.5">Pilihan buku dan aksesori premium terbaik</p>
+        </div>
+      </div>
+
+      <!-- Category Chips (Always Visible) -->
+      <section class="flex flex-col gap-2">
+        <div class="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4">
+          <button type="button" (click)="onCategorySelect(null)"
+            [class]="productStore.selectedCategoryId() === null ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] text-slate-600 whitespace-nowrap cursor-pointer'">
+            <i class="bx bx-category text-lg"></i>
+            Semua
+          </button>
+          @for (cat of productStore.categories(); track cat.id) {
+          <button type="button" (click)="onCategorySelect(cat.id)"
+            [class]="productStore.selectedCategoryId() === cat.id ? 'bg-primary-600 border border-primary-700 text-white font-medium flex flex-row gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] whitespace-nowrap cursor-pointer' : 'bg-slate-100 border border-slate-200 flex flex-row font-medium gap-2 items-center pl-4 pr-5 py-2.5 rounded-xl text-[12px] text-slate-600 whitespace-nowrap cursor-pointer'">
+            <app-icon [name]="cat.icon" size="18"></app-icon>
+            {{ cat.name }}
+          </button>
+          }
+        </div>
+      </section>
+    </div>
+
+    <!-- Product Grid (Masonry Layout — same as Home) -->
     @if (productStore.loading()) {
-    <app-skeleton type="horizontal-card" [count]="9"></app-skeleton>
+    <div class="grid grid-cols-2 gap-2">
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+    </div>
     } @else if (productStore.error()) {
     <app-empty-state icon="error" title="Gagal Memuat Produk" [description]="productStore.error() || ''"
       actionText="Coba Lagi" (actionClick)="retryLoading()"></app-empty-state>
@@ -53,61 +66,13 @@
       description="Kami tidak menemukan produk yang cocok dengan pencarian Anda. Coba ubah kata kunci atau hapus filter."
       actionText="Reset Semua Filter" (actionClick)="resetAllFilters()"></app-empty-state>
     } @else {
-    @for (prod of productStore.filteredProducts(); track prod.id) {
-    <div
-      class="card-product flex-row! border border-slate-100/80 shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 cursor-pointer active:scale-[0.99] group"
-      (click)="viewProductDetails(prod.id)">
-      <!-- Thumbnail Image (matching product-card aspect & styling) -->
-      <div class="aspect-square min-h-32.5 shrink-0 bg-slate-50 overflow-hidden relative">
-        @if (prod.coverImage && !failedImageIds().has(prod.id)) {
-        <img [src]="prod.coverImage" [alt]="prod.title" (error)="onImageError(prod.id)"
-          class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105  " loading="lazy" />
-        } @else {
-        <div
-          class="absolute inset-0 flex items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-300">
-          <app-icon name="book-open" size="32"></app-icon>
-        </div>
-        }
-        <div class="badge-uom">{{ prod.categoryName }}</div>
-      </div>
-
-      <!-- Info Section -->
-      <div class="flex flex-col flex-1 min-w-0 justify-between px-3 py-3">
-        <!-- Top: Author, Title, Ratings & Love Button -->
-        <div>
-          <div class="flex justify-between items-start gap-2">
-            <div class="flex-1 min-w-0">
-              <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">{{
-                prod.authorNames }}</span>
-              <h3
-                class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600  leading-tight">
-                {{ prod.title }}</h3>
-            </div>
-
-          </div>
-
-          <!-- Ratings -->
-          <div class="flex items-center gap-1 mt-0.5">
-            <app-icon name="star" size="12" class="text-amber-400 fill-amber-400"></app-icon>
-            <span class="text-xs font-semibold text-slate-700">{{ prod.averageRating }}</span>
-            <span class="text-[10px] text-slate-400">({{ prod.totalReviews }})</span>
-          </div>
-        </div>
-
-        <!-- Bottom: Price & Sold (same as product-card pricing row) -->
-        <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-50 mt-2">
-          <div class="flex flex-col">
-            <app-price [value]="prod.price" size="md" class="text-primary-600 font-bold"></app-price>
-          </div>
-          <span class="text-[10px] text-slate-500 font-medium">
-            {{ prod.totalReviews * 12 + (prod.stock % 7) + 5 }} Terjual
-          </span>
-        </div>
-      </div>
-    </div>
+    <app-masonry-grid [items]="productStore.filteredProducts()">
+      <ng-template let-prod>
+        <app-product-card [product]="prod" (addToCart)="onAddToCart($event)"></app-product-card>
+      </ng-template>
+    </app-masonry-grid>
     }
-    }
-  </div>
+  </section>
 
 </div>
 

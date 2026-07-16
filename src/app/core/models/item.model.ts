@@ -22,6 +22,13 @@ export interface CatalogItem {
   publishedYear?: number;
   pages?: number;
   price?: number;
+  salesUomCode?: string;
+  customerGroupCode?: string;
+  priceStartDate?: string;
+  priceEndDate?: string;
+  compareAtPrice?: number;
+  compareAtPriceStartDate?: string;
+  compareAtPriceEndDate?: string;
   createdAt?: string;
   updatedAt?: string;
 }

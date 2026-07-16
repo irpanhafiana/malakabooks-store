@@ -3,37 +3,36 @@ import { RouterLink } from '@angular/router';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import { ProductStore } from '../../store/product.store';
+import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
-import { AuthorStore } from '../../store/author.store';
 import { UserStore } from '../../store/user.store';
-import { Author, Product } from '../../core/models';
+import { Product } from '../../core/models';
 import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
-import { PriceComponent } from '../../shared/ui/price/price.component';
+import { MardikaKopiDetailComponent } from './mardika-kopi-detail/mardika-kopi-detail.component';
 import { AlertService } from '../../core/services/alert.service';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
 import { ItemApiService } from '../../core/services/item-api.service';
-import { PricingApiService } from '../../core/services/pricing-api.service';
-import { getStoredSessionUser } from '../../core/auth/session.util';
+
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-mardika-kopi',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, SkeletonComponent, MasonryGridComponent, BottomSheetComponent, PriceComponent],
+  imports: [RouterLink, ProductCardComponent, SkeletonComponent, MasonryGridComponent, BottomSheetComponent, MardikaKopiDetailComponent],
   templateUrl: './mardika-kopi.component.html'
 })
 export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly productStore = inject(ProductStore);
+  protected readonly authStore = inject(AuthStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
-  protected readonly authorStore = inject(AuthorStore);
+
   protected readonly alertService = inject(AlertService);
   protected readonly bannerStore = inject(PromotionBannerStore);
   private readonly itemApi = inject(ItemApiService);
-  private readonly pricingApi = inject(PricingApiService);
 
   slides = [
     {
@@ -69,28 +68,17 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   currentSlide = signal<number>(0);
-  currentAuthorSlide = signal<number>(0);
-
   kopiItems = signal<Product[]>([]);
   kopiLoading = signal(true);
 
   private embla?: EmblaCarouselType;
-  private authorEmbla?: EmblaCarouselType;
   private bestSellerEmbla?: EmblaCarouselType;
-  private merchandiseEmbla?: EmblaCarouselType;
 
   @ViewChild('carouselViewport') carouselViewport!: ElementRef<HTMLElement>;
-  @ViewChild('authorCarouselViewport') authorCarouselViewport?: ElementRef<HTMLElement>;
-  @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport?: ElementRef<HTMLElement>;
-  @ViewChild('merchandiseCarouselViewport') merchandiseCarouselViewport?: ElementRef<HTMLElement>;
-
-  isAuthorSheetOpen = signal(false);
-  selectedAuthor = signal<Author | null>(null);
-  selectedAuthorProducts = signal<Product[]>([]);
+  @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport!: ElementRef<HTMLElement>;
 
   isItemSheetOpen = signal(false);
-  selectedKopiItem = signal<Product | null>(null);
-  selectedKopiItemLoading = signal(false);
+  selectedKopiId = signal<string | null>(null);
 
   constructor() {
     effect(() => {
@@ -102,29 +90,6 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
             if (autoplay) {
               autoplay.reset();
               autoplay.play();
-            }
-          }
-          if (this.merchandiseEmbla) {
-            this.merchandiseEmbla.reInit();
-            const merchAutoplay = this.merchandiseEmbla.plugins()['autoplay'];
-            if (merchAutoplay) {
-              merchAutoplay.reset();
-              merchAutoplay.play();
-            }
-          }
-        }, 100);
-      }
-    });
-
-    effect(() => {
-      if (this.authorStore.authors().length > 0) {
-        setTimeout(() => {
-          if (this.authorEmbla) {
-            this.authorEmbla.reInit();
-            const authAutoplay = this.authorEmbla.plugins()['autoplay'];
-            if (authAutoplay) {
-              authAutoplay.reset();
-              authAutoplay.play();
             }
           }
         }, 100);
@@ -148,7 +113,6 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.authorStore.loadAuthors();
     this.bannerStore.loadActiveBanners();
     this.loadKopiItems();
   }
@@ -159,23 +123,8 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
       const allItems = await this.itemApi.getItems();
       const items = allItems.filter(i => i.itemType === 'mardika');
       const products: Product[] = [];
-      const currentUser = getStoredSessionUser();
-      const isCustomerLoggedIn = currentUser !== null && currentUser.role !== 'admin';
 
       for (const item of items) {
-        let price = 0;
-        if (isCustomerLoggedIn) {
-          try {
-            const res = await this.pricingApi.lookupCustomerPrice(item.id, item.baseUomCode);
-            if (res && res.price > 0) price = res.price;
-          } catch (e) {}
-        } else {
-           try {
-            const res = await this.pricingApi.lookupPublicPrice(item.id, item.baseUomCode);
-            if (res && res.price > 0) price = res.price;
-          } catch (e) {}
-        }
-
         products.push({
           id: item.id,
           title: item.name,
@@ -186,7 +135,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
           isbn: '',
           categoryId: '',
           categoryName: item.itemType,
-          price: price,
+          price: item.price || 0,
           description: item.description,
           coverImage: (item as any).coverImage || '',
           publisher: '',
@@ -196,6 +145,13 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
           stock: 99,
           averageRating: 5,
           totalReviews: 12,
+          salesUomCode: item.salesUomCode,
+          customerGroupCode: item.customerGroupCode,
+          priceStartDate: item.priceStartDate,
+          priceEndDate: item.priceEndDate,
+          compareAtPrice: item.compareAtPrice,
+          compareAtPriceStartDate: item.compareAtPriceStartDate,
+          compareAtPriceEndDate: item.compareAtPriceEndDate,
           createdAt: item.createdAt || new Date().toISOString(),
           additionalImages: (item as any).additionalImages || []
         });
@@ -220,24 +176,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
     this.embla.on('select', onSelect);
     onSelect();
 
-    if (this.authorCarouselViewport) {
-      this.authorEmbla = EmblaCarousel(
-        this.authorCarouselViewport.nativeElement,
-        { loop: true, align: 'start', duration: 40 },
-        [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
-      );
-      const onAuthorSelect = () => this.currentAuthorSlide.set(this.authorEmbla!.selectedScrollSnap());
-      this.authorEmbla.on('select', onAuthorSelect);
-      onAuthorSelect();
-    }
 
-    if (this.merchandiseCarouselViewport) {
-      this.merchandiseEmbla = EmblaCarousel(
-        this.merchandiseCarouselViewport.nativeElement,
-        { loop: true, align: 'start', duration: 40 },
-        [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
-      );
-    }
 
     if (this.bestSellerCarouselViewport) {
       this.bestSellerEmbla = EmblaCarousel(
@@ -250,9 +189,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.embla?.destroy();
-    this.authorEmbla?.destroy();
     this.bestSellerEmbla?.destroy();
-    this.merchandiseEmbla?.destroy();
   }
 
   // Invoked when user taps on dot indicators
@@ -277,47 +214,14 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
     this.alertService.success('Berhasil!', 'Produk berhasil ditambahkan ke keranjang');
   }
 
-  openAuthorSheet(author: Author) {
-    this.selectedAuthor.set(author);
-    this.selectedAuthorProducts.set(this.productStore.products().filter(p => p.authorIds.includes(author.id)));
-    this.isAuthorSheetOpen.set(true);
-  }
-
-  closeAuthorSheet() {
-    this.isAuthorSheetOpen.set(false);
-  }
-
-  async openItemSheet(prod: Product) {
-    // Open sheet immediately with skeleton loader
-    this.selectedKopiItem.set(null);
-    this.selectedKopiItemLoading.set(true);
+  openItemSheet(prod: Product) {
+    this.selectedKopiId.set(prod.id);
     this.isItemSheetOpen.set(true);
-
-    try {
-      // Fetch details
-      const detail = await this.itemApi.getItemById(prod.id);
-      if (detail) {
-        // We reuse the price from the 'prod' input since the list already fetched it
-        // Or we could fetch it again if needed.
-        this.selectedKopiItem.set({
-          ...prod,
-          description: detail.description,
-          title: detail.name,
-          sapCode: detail.sapCode,
-          categoryName: detail.itemType
-        });
-      } else {
-        this.selectedKopiItem.set(prod); // fallback to list item
-      }
-    } catch (e) {
-      console.error(e);
-      this.selectedKopiItem.set(prod);
-    } finally {
-      this.selectedKopiItemLoading.set(false);
-    }
   }
 
   closeItemSheet() {
     this.isItemSheetOpen.set(false);
+    this.selectedKopiId.set(null);
   }
+
 }

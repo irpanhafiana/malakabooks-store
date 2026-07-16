@@ -1,7 +1,1 @@
-/* Product list card styles */
-h3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+/* Product list — no custom styles needed, handled by shared components and Tailwind */

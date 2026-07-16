@@ -15,7 +15,8 @@
     }
 
     <!-- Embla viewport -->
-    <div #carouselViewport class="overflow-hidden h-45" [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
+    <div #carouselViewport class="overflow-hidden h-45"
+      [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
       <!-- Embla container -->
       <div class="flex -ml-3 items-center h-full">
         @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
@@ -50,7 +51,8 @@
     </div>
 
     <!-- Dot Indicators -->
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10" [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10"
+      [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
       @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
       <button type="button" (click)="scrollToSlide(i)"
         [class]="i === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"
@@ -99,146 +101,7 @@
     </div>
   </section>
 
-  <!-- Best seller product -->
-  <section class="flex flex-col gap-4 mt-2">
-    <div class="flex items-start justify-between">
-      <div>
-        <h2 class="font-display font-extrabold text-slate-800 text-base">Merchandise</h2>
-        <p class="text-[12px] text-slate-400 mt-0.5">Lorem Ipsum Dolor Sit Amet Anum</p>
-      </div>
 
-    </div>
-
-    <!-- Best Seller Carousel -->
-    <div #merchandiseCarouselViewport class="overflow-hidden pl-2">
-      <div class="flex -ml-3 cursor-grab active:cursor-grabbing">
-        @if (kopiLoading()) {
-        @for (i of [1, 2, 3]; track i) {
-        <div class="flex-[0_0_170px] min-w-0 pl-2">
-          <app-skeleton type="card" [count]="1"></app-skeleton>
-        </div>
-        }
-        } @else {
-        @for (prod of kopiItems(); track prod.id) {
-        <div class="flex-[0_0_170px] min-w-0 pl-2">
-          <app-product-card [product]="prod" [customClick]="true" (productClick)="openItemSheet($event)" (addToCart)="openQtyModal($event)"></app-product-card>
-        </div>
-        }
-        @for (prod of kopiItems(); track prod.id + '-clone1') {
-        <div class="flex-[0_0_170px] min-w-0 pl-2" aria-hidden="true">
-          <app-product-card [product]="prod" [customClick]="true" (productClick)="openItemSheet($event)" (addToCart)="openQtyModal($event)"></app-product-card>
-        </div>
-        }
-        @for (prod of kopiItems(); track prod.id + '-clone2') {
-        <div class="flex-[0_0_170px] min-w-0 pl-2" aria-hidden="true">
-          <app-product-card [product]="prod" [customClick]="true" (productClick)="openItemSheet($event)" (addToCart)="openQtyModal($event)"></app-product-card>
-        </div>
-        }
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- Author Slideshow -->
-  <section class="flex flex-col gap-4 mt-2">
-    <div class="flex items-start justify-start">
-      <div>
-        <h2 class="font-display font-extrabold text-slate-800 text-base">Penulis dan Kontributor</h2>
-        <p class="text-[12px] text-slate-400 mt-0.5">Lorem Ipsum Dolor Sit Amet Anum</p>
-      </div>
-    </div>
-
-    <div #authorCarouselViewport class="overflow-hidden pl-2 pb-2">
-      <div class="flex -ml-3 items-center h-full">
-        @if (authorStore.loading()) {
-        @for (i of [1, 2, 3]; track i) {
-        <div class="flex-[0_0_170px] pl-2 h-full flex items-center justify-center">
-          <div class="w-full h-45 bg-slate-200/60 animate-pulse rounded-none"></div>
-        </div>
-        }
-        } @else {
-        @for (author of authorStore.authors(); track author.id) {
-        <div class="flex-[0_0_170px] pl-2 h-full flex items-center justify-center">
-          <div
-            class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
-            (click)="openAuthorSheet(author)">
-
-            <!-- Image fading to bottom -->
-            <img [src]="author.photoUrl"
-              class="absolute top-0 left-0 w-full h-[80%] object-cover object-top transition-all duration-700 group-hover:scale-105"
-              style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
-
-            <!-- Content (relative z-10) -->
-            <div class="relative z-10 flex flex-col h-full">
-              <!-- Bottom Text -->
-              <div class="mt-auto flex flex-col gap-1.5">
-                <h3 class="text-lg font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
-                  {{
-                  author.name }}</h3>
-                <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
-                  {{ author.role }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        }
-        @for (author of authorStore.authors(); track author.id + '-clone1') {
-        <div class="flex-[0_0_170px] pl-2 h-full flex items-center justify-center">
-          <div
-            class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
-            (click)="openAuthorSheet(author)">
-
-            <!-- Image fading to bottom -->
-            <img [src]="author.photoUrl"
-              class="absolute top-0 left-0 w-full h-[80%] object-cover object-top transition-all duration-700 group-hover:scale-105"
-              style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
-
-            <!-- Content (relative z-10) -->
-            <div class="relative z-10 flex flex-col h-full">
-              <!-- Bottom Text -->
-              <div class="mt-auto flex flex-col gap-1.5">
-                <h3 class="text-lg font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
-                  {{
-                  author.name }}</h3>
-                <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
-                  {{ author.role }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        }
-        @for (author of authorStore.authors(); track author.id + '-clone2') {
-        <div class="flex-[0_0_170px] pl-2 h-full flex items-center justify-center">
-          <div
-            class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
-            (click)="openAuthorSheet(author)">
-
-            <!-- Image fading to bottom -->
-            <img [src]="author.photoUrl"
-              class="absolute top-0 left-0 w-full h-[80%] object-cover object-top transition-all duration-700 group-hover:scale-105"
-              style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
-
-            <!-- Content (relative z-10) -->
-            <div class="relative z-10 flex flex-col h-full">
-              <!-- Bottom Text -->
-              <div class="mt-auto flex flex-col gap-1.5">
-                <h3 class="text-lg font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
-                  {{
-                  author.name }}</h3>
-                <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
-                  Content Creator
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        }
-        }
-      </div>
-    </div>
-  </section>
 
   <!-- Recommended/Featured Products grid -->
   <section class="flex flex-col gap-4">
@@ -269,129 +132,10 @@
 
 </div>
 
-<!-- Bottom Sheet for Author Products -->
-<app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true">
-  <div class="flex flex-col h-full overflow-hidden bg-white relative">
-    <!-- Top Navigation Header -->
-    <header class="sticky top-0 z-50 bg-white px-4 py-0 flex items-center justify-start h-14 shrink-0">
-      <button type="button" (click)="closeAuthorSheet()"
-        class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0">
-        <i class="bx bx-left-arrow-alt text-2xl"></i>
-      </button>
-      <h1 class="font-display font-extrabold text-slate-800 text-base text-center truncate px-2">Penulis dan Kontributor
-      </h1>
-    </header>
-
-    <!-- Scrollable Content -->
-    <div class="flex-1 overflow-y-auto">
-      @let auth = selectedAuthor();
-
-      @if (auth) {
-      <!-- Author Profile -->
-      <div class="px-4 flex flex-col items-start justify-start gap-4">
-        <!-- Photo -->
-        @if (auth.photoUrl) {
-        <img [src]="auth.photoUrl" [alt]="auth.name" class="w-full h-full object-cover" />
-        } @else {
-        <div class="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-          <i class="bx bx-user text-3xl"></i>
-        </div>
-        }
-
-        <div class="flex flex-col justify-between items-start gap-2">
-          <!-- Name & Role -->
-          <div class="flex flex-col items-start">
-            <h2 class="font-display font-extrabold text-slate-800 text-xl text-center">{{ auth.name }}</h2>
-            @if (auth.role) {
-            <p class="text-sm font-medium text-slate-400">{{ auth.role }}</p>
-            }
-          </div>
-        </div>
-      </div>
-
-      <div class="px-4 pt-4">
-        <h3 class="font-display font-bold text-slate-800 text-base">Tentang </h3>
-        <!-- Biography -->
-        @if (auth.biography) {
-        <div class="text-sm" [innerHTML]="auth.biography">
-        </div>
-        }
-      </div>
-
-
-      <!-- Products by Author -->
-      <div class="px-4 pt-4 pb-12">
-        <h3 class="font-display font-bold text-slate-800 text-base mb-1">Karya </h3>
-
-        @let products = selectedAuthorProducts();
-
-        @if (products.length > 0) {
-        <div class="grid grid-cols-2 gap-3">
-          @for (prod of products; track prod.id) {
-          <app-product-card [product]="prod" [customClick]="true" (productClick)="openItemSheet($event)" (addToCart)="openQtyModal($event)"></app-product-card>
-          }
-        </div>
-        } @else {
-        <div class="flex flex-col items-center justify-center py-12 text-slate-400">
-          <i class="bx bx-book-open text-4xl mb-3"></i>
-          <p class="text-sm">Belum ada karya yang tersedia.</p>
-        </div>
-        }
-      </div>
-      }
-    </div>
-  </div>
-</app-bottom-sheet>
-
 <!-- Bottom Sheet for Item Details -->
 <app-bottom-sheet [isOpen]="isItemSheetOpen()" (closed)="closeItemSheet()" [fullHeight]="true">
-  <div class="flex flex-col h-full overflow-hidden bg-white relative">
-    <!-- Top Navigation Header -->
-    <header class="sticky top-0 z-50 bg-white px-4 py-0 flex items-center justify-start h-14 shrink-0">
-      <button type="button" (click)="closeItemSheet()"
-        class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0">
-        <i class="bx bx-left-arrow-alt text-2xl"></i>
-      </button>
-      <h1 class="font-display font-extrabold text-slate-800 text-base text-center truncate px-2">Detail Produk
-      </h1>
-    </header>
-
-    <!-- Scrollable Content -->
-    <div class="flex-1 overflow-y-auto">
-      @if (selectedKopiItemLoading()) {
-      <div class="p-6">
-        <app-skeleton type="card" [count]="1"></app-skeleton>
-      </div>
-      } @else {
-      @let item = selectedKopiItem();
-      @if (item) {
-      <div class="px-4 flex flex-col items-start justify-start gap-4 pb-20">
-        <!-- Photo placeholder -->
-        <div class="w-full h-48 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400">
-          <i class="bx bx-coffee text-5xl"></i>
-        </div>
-
-        <div class="flex flex-col justify-between items-start gap-2 w-full">
-          <h2 class="font-display font-extrabold text-slate-800 text-xl">{{ item.title }}</h2>
-          <app-price [value]="item.price" size="lg" class="text-primary-600 font-bold text-xl"></app-price>
-        </div>
-
-        <div class="pt-2 w-full">
-          <h3 class="font-display font-bold text-slate-800 text-base mb-2">Deskripsi </h3>
-          <p class="text-sm text-slate-600">{{ item.description }}</p>
-        </div>
-      </div>
-      
-      <!-- Sticky Add to Cart -->
-      <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 pb-safe flex gap-3">
-        <button type="button" (click)="openQtyModal(item); closeItemSheet()"
-          class="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all cursor-pointer shadow-md shadow-primary-600/20 active:scale-95 flex items-center justify-center gap-2">
-          <i class="bx bx-cart-add text-xl"></i>
-          Tambah ke Keranjang
-        </button>
-      </div>
-      }
-      }
-    </div>
-  </div>
+  <app-mardika-kopi-detail [productId]="selectedKopiId()" (closed)="closeItemSheet()"></app-mardika-kopi-detail>
 </app-bottom-sheet>
+
+
+

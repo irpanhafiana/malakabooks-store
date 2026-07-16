@@ -1,5 +1,6 @@
 import { Component, input, output, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ProductStore } from '../../../store/product.store';
+import { AuthStore } from '../../../store/auth.store';
 import { Product } from '../../../core/models';
 import { IconComponent } from '../icon/icon.component';
 import { PriceComponent } from '../price/price.component';
@@ -15,6 +16,7 @@ import { PriceComponent } from '../price/price.component';
 })
 export class ProductCardComponent {
   private readonly productStore = inject(ProductStore);
+  protected readonly authStore = inject(AuthStore);
 
   readonly product = input.required<Product>();
   readonly customClick = input<boolean>(false);

@@ -3,18 +3,21 @@ import { Location } from '@angular/common';
 import { ProductStore } from '../../../store/product.store';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
+import { Product } from '../../../core/models';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { BottomSheetComponent } from '../../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 import { SearchBarComponent } from '../../../shared/ui/search-bar/search-bar.component';
-import { PriceComponent } from '../../../shared/ui/price/price.component';
+import { ProductCardComponent } from '../../../shared/ui/product-card/product-card.component';
+import { MasonryGridComponent } from '../../../shared/ui/masonry-grid/masonry-grid.component';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-list',
   standalone: true,
-  imports: [SkeletonComponent, IconComponent, BottomSheetComponent, EmptyStateComponent, SearchBarComponent, PriceComponent],
+  imports: [SkeletonComponent, IconComponent, BottomSheetComponent, EmptyStateComponent, SearchBarComponent, ProductCardComponent, MasonryGridComponent],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
@@ -23,7 +26,7 @@ export class ProductListComponent implements OnInit {
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   private readonly location = inject(Location);
-  protected readonly Math = Math;
+  private readonly alertService = inject(AlertService);
 
   ngOnInit() {
     this.productStore.loadAll();
@@ -31,7 +34,6 @@ export class ProductListComponent implements OnInit {
 
   isFiltersOpen = signal<boolean>(false);
   activeCategoryName = signal<string | null>(null);
-  failedImageIds = signal<Set<string>>(new Set());
 
   constructor() {
     // React to category updates reactively using Angular signal effect
@@ -55,10 +57,6 @@ export class ProductListComponent implements OnInit {
   }
 
   onCategorySelect(catId: string | null) {
-    this.productStore.setCategoryFilter(catId);
-  }
-
-  onCategorySelectMobile(catId: string | null) {
     this.productStore.setCategoryFilter(catId);
   }
 
@@ -92,25 +90,8 @@ export class ProductListComponent implements OnInit {
     this.location.back();
   }
 
-  filterButtonClass(catId: string | null): string {
-    const base = 'w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold  cursor-pointer';
-    const active = this.productStore.selectedCategoryId() === catId
-      ? 'bg-primary-50 text-primary-700 font-bold border-l-4 border-primary-600'
-      : 'bg-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-800 border-l-4 border-transparent';
-    return `${base} ${active}`;
-  }
-
-  filterChipClass(catId: string | null): string {
-    const base = 'font-medium px-4 py-2.5 rounded-full text-[13px]  border whitespace-nowrap cursor-pointer';
-    const active = this.productStore.selectedCategoryId() === catId
-      ? 'bg-primary-600 border-primary-700 text-white'
-      : 'bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200/50';
-    return `${base} ${active}`;
-  }
-
-  onImageError(productId: string) {
-    const set = new Set(this.failedImageIds());
-    set.add(productId);
-    this.failedImageIds.set(set);
+  onAddToCart(product: Product) {
+    this.cartStore.addItem(product, 1);
+    this.alertService.success('Berhasil!', 'Produk berhasil ditambahkan ke keranjang');
   }
 }

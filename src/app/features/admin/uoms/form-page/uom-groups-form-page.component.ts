@@ -20,11 +20,11 @@ export class UomGroupsFormPageComponent implements OnInit {
   @ViewChild(UomGroupsFormComponent) uomGroupsForm!: UomGroupsFormComponent;
 
   editUomGroup = signal<UomGroup | null>(null);
-  pageTitle = signal<string>('Tambah Master UoM');
+  pageTitle = signal<string>('Tambah Grup UoM');
 
   ngOnInit() {
     this.uomGroupStore.loadUomGroups();
-    
+
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {

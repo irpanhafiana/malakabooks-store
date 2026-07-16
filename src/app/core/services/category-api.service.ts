@@ -17,6 +17,8 @@ export class CategoryApiService {
   private categoryCache: { data: Category[]; ts: number } | null = null;
   private readonly CATEGORY_TTL_MS = 5 * 60 * 1000;
 
+  private activeRequest: Promise<Category[]> | null = null;
+
   async getCategories(): Promise<Category[]> {
     const now = Date.now();
     const isAdmin = isAdminSession();
@@ -24,25 +26,36 @@ export class CategoryApiService {
     if (!isAdmin && this.categoryCache && now - this.categoryCache.ts < this.CATEGORY_TTL_MS) {
       return this.categoryCache.data;
     }
-    try {
-      const endpoint = isAdmin ? `${this.BASE_URL}/admin/Categories` : `${this.BASE_URL}/public/Categories`;
-      const envelope = await firstValueFrom(this.http.get<ApiResponse<Category[]>>(endpoint));
-      const list = envelope?.data || [];
-      const data = list.map((c: Category) => ({
-        id: c.id,
-        name: c.name,
-        slug: c.slug || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        icon: c.icon || 'book',
-        description: c.description || ''
-      }));
-      if (!isAdmin) {
-        this.categoryCache = { data, ts: now };
-      }
-      return data;
-    } catch (e) {
-      this.logger.error('CategoryApiService.getCategories', 'Gagal mengambil kategori:', e);
-      return [];
+
+    if (this.activeRequest) {
+      return this.activeRequest;
     }
+
+    this.activeRequest = (async () => {
+      try {
+        const endpoint = isAdmin ? `${this.BASE_URL}/admin/Categories` : `${this.BASE_URL}/public/Categories`;
+        const envelope = await firstValueFrom(this.http.get<ApiResponse<Category[]>>(endpoint));
+        const list = envelope?.data || [];
+        const data = list.map((c: Category) => ({
+          id: c.id,
+          name: c.name,
+          slug: c.slug || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+          icon: c.icon || 'book',
+          description: c.description || ''
+        }));
+        if (!isAdmin) {
+          this.categoryCache = { data, ts: Date.now() };
+        }
+        return data;
+      } catch (e) {
+        this.logger.error('CategoryApiService.getCategories', 'Gagal mengambil kategori:', e);
+        return [];
+      } finally {
+        this.activeRequest = null;
+      }
+    })();
+
+    return this.activeRequest;
   }
 
   private invalidateCategoryCache() {
