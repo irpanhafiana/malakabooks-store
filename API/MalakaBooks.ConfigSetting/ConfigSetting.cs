@@ -13,6 +13,8 @@ namespace MalakaBooks.ConfigSetting
     public class PricingSetting
     {
         public string DefaultPublicCustomerGroupCode { get; set; } = string.Empty;
+        public string? SecondaryPublicCustomerGroupCode { get; set; }
+        public string? SecondaryCustomerGroupCode { get; set; }
     }
 
     public class SimasrimSetting
