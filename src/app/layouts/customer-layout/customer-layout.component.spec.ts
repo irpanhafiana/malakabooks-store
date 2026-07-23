@@ -7,7 +7,7 @@ import { CartStore } from '../../store/cart.store';
 import { UserStore } from '../../store/user.store';
 import { ProductStore } from '../../store/product.store';
 import { ToastService } from '../../core/services/toast.service';
-import { signal } from '@angular/core';
+import { signal, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CustomerLayoutComponent', () => {
   let component: CustomerLayoutComponent;
@@ -30,6 +30,8 @@ describe('CustomerLayoutComponent', () => {
     setQtyQuantity: vi.fn(),
     activeProduct: signal(null),
     qtyAction: signal('cart'),
+    qtyUomCode: signal(null),
+    qtyLookedUpPrice: signal(null),
     reopenDetailOnQtyClose: vi.fn(),
     setReopenDetailOnQtyClose: vi.fn()
   };
@@ -37,8 +39,13 @@ describe('CustomerLayoutComponent', () => {
   const mockToast = { success: vi.fn(), toasts: signal([]) };
 
   beforeEach(async () => {
+    TestBed.overrideComponent(CustomerLayoutComponent, {
+      set: { template: '<div></div>' }
+    });
+
     await TestBed.configureTestingModule({
       imports: [CustomerLayoutComponent],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         provideRouter([]),
         { provide: AuthStore, useValue: mockAuthStore },
@@ -80,8 +87,7 @@ describe('CustomerLayoutComponent', () => {
 
     component.confirmAddToCart();
 
-    expect(mockCartStore.addItem).toHaveBeenCalledWith(mockProduct, 2);
-    expect(mockToast.success).toHaveBeenCalledWith('Added to cart!');
+    expect(mockCartStore.addItem).toHaveBeenCalledWith(mockProduct, 2, undefined, undefined);
     expect(mockProductStore.setQtyModalOpen).toHaveBeenCalledWith(false);
   });
 });

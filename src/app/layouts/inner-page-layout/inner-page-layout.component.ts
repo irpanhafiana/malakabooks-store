@@ -5,11 +5,13 @@ import { ToastService } from '../../core/services/toast.service';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { ToastContainerComponent } from '../../shared/ui/toast-container/toast-container.component';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-inner-page-layout',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ToastContainerComponent],
   templateUrl: './inner-page-layout.component.html',
   styleUrl: './inner-page-layout.component.css'
 })

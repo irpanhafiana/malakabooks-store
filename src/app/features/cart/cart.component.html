@@ -13,35 +13,36 @@
       @for (item of cartStore.items(); track item.product.id) {
       <div
         class="card-product flex-row! bg-gray-50 border border-slate-100/80 shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 group flex">
-        <!-- Thumbnail Image (matching product-list aspect & styling) -->
-        <div class="aspect-square w-32.5 shrink-0 bg-slate-50 overflow-hidden relative cursor-pointer"
-          (click)="productStore.setSelectedProductId(item.product.id)">
-          <img [src]="item.product.coverImage" [alt]="item.product.title"
-            class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105" />
-          <div class="badge-uom">{{ item.product.categoryName }}</div>
-        </div>
+          <!-- Thumbnail Image (matching product-list aspect & styling) -->
+          <div class="aspect-square w-32.5 shrink-0 bg-slate-50 overflow-hidden relative cursor-pointer"
+            (click)="productStore.setSelectedProductId(item.product.id)">
+            <img [src]="item.product.coverImage" [alt]="item.product.title"
+              class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105" />
+            <div class="badge-uom">{{ item.uomCode || item.product.categoryName }}</div>
+          </div>
 
-        <!-- Info Section -->
-        <div class="flex flex-col flex-1 min-w-0 justify-between px-3 py-3">
-          <!-- Top: Category, Title, Price -->
-          <div>
-            <div class="flex justify-between items-start gap-2">
-              <div class="flex-1 min-w-0">
-                <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">{{
-                  item.product.categoryName }}</span>
-                <h3
-                  class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 leading-tight cursor-pointer"
-                  (click)="productStore.setSelectedProductId(item.product.id)">
-                  {{ item.product.title }}</h3>
+          <!-- Info Section -->
+          <div class="flex flex-col flex-1 min-w-0 justify-between px-3 py-3">
+            <!-- Top: Category, Title, Price -->
+            <div>
+              <div class="flex justify-between items-start gap-2">
+                <div class="flex-1 min-w-0">
+                  <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">
+                    {{ item.product.categoryName }}@if (item.uomCode) { • Satuan: {{ item.uomCode }} }
+                  </span>
+                  <h3
+                    class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 leading-tight cursor-pointer"
+                    (click)="productStore.setSelectedProductId(item.product.id)">
+                    {{ item.product.title }}</h3>
+                </div>
+              </div>
+
+              <!-- Price -->
+              <div class="flex flex-col mt-0.5">
+                <app-price [value]="(item.price ?? item.product.price) * item.quantity" size="md"
+                  class="text-primary-600 font-bold"></app-price>
               </div>
             </div>
-
-            <!-- Price -->
-            <div class="flex flex-col mt-0.5">
-              <app-price [value]="item.product.price * item.quantity" size="md"
-                class="text-primary-600 font-bold"></app-price>
-            </div>
-          </div>
 
           <!-- Bottom: Quantity & Delete (matches product pricing row style) -->
           <div class="flex items-center justify-between gap-2">

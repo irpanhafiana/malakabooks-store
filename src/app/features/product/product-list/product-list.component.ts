@@ -11,7 +11,6 @@ import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.
 import { SearchBarComponent } from '../../../shared/ui/search-bar/search-bar.component';
 import { ProductCardComponent } from '../../../shared/ui/product-card/product-card.component';
 import { MasonryGridComponent } from '../../../shared/ui/masonry-grid/masonry-grid.component';
-import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +25,6 @@ export class ProductListComponent implements OnInit {
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   private readonly location = inject(Location);
-  private readonly alertService = inject(AlertService);
 
   ngOnInit() {
     this.productStore.loadAll();
@@ -91,7 +89,9 @@ export class ProductListComponent implements OnInit {
   }
 
   onAddToCart(product: Product) {
-    this.cartStore.addItem(product, 1);
-    this.alertService.success('Berhasil!', 'Produk berhasil ditambahkan ke keranjang');
+    this.productStore.setActiveProduct(product);
+    this.productStore.setQtyQuantity(1);
+    this.productStore.setQtyAction('cart');
+    this.productStore.setQtyModalOpen(true);
   }
 }

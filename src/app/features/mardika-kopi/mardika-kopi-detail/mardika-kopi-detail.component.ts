@@ -13,7 +13,6 @@ import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
-import { AlertService } from '../../../core/services/alert.service';
 import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
@@ -45,7 +44,6 @@ export class MardikaKopiDetailComponent implements OnInit {
   private readonly toastService = inject(ToastService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly location = inject(Location);
-  private readonly alertService = inject(AlertService);
 
   loading = signal<boolean>(true);
   product = signal<Product | null>(null);
@@ -127,11 +125,11 @@ export class MardikaKopiDetailComponent implements OnInit {
 
   openQuantityModal(event: Event) {
     event.stopPropagation();
-    const prod = this.product();
-    if (prod) {
-      this.cartStore.addItem(prod, 1);
-      this.alertService.success('Berhasil!', 'Produk berhasil ditambahkan ke keranjang');
-    }
+    this.productStore.setQtyQuantity(1);
+    this.productStore.setQtyAction('cart');
+    this.productStore.setReopenDetailOnQtyClose(true);
+    this.productStore.setQtyModalOpen(true);
+    this.closed.emit();
   }
 
   buyNow(event: Event) {

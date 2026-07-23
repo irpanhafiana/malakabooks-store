@@ -10,8 +10,8 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './pagination.component.css'
 })
 export class PaginationComponent {
-  readonly currentPage = input.required<number>();
-  readonly totalPages = input.required<number>();
+  readonly currentPage = input<number>(1);
+  readonly totalPages = input<number>(1);
   readonly pageChange = output<number>();
 
   // Computes which pages to display, including ellipsis breakpoints

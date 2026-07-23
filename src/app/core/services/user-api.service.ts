@@ -82,7 +82,9 @@ export class UserApiService {
 
   async getUserById(id: string): Promise<User | undefined> {
     try {
-      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Users/${id}/profile`));
+      const currentUser = getStoredSessionUser();
+      const profileKey = currentUser?.name ? currentUser.name : id;
+      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Users/${encodeURIComponent(profileKey)}/profile`));
       const userRes = envelope?.data;
       if (!userRes) return undefined;
       const addresses = await this.getAddressesByUserId(userRes.id);

@@ -11,7 +11,7 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './input.component.css'
 })
 export class InputComponent {
-  readonly control = input.required<FormControl>();
+  readonly control = input<FormControl>(new FormControl());
   readonly id = input<string>('input-' + Math.random().toString(36).substring(2, 9));
   readonly label = input<string>('');
   readonly type = input<string>('text');

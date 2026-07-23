@@ -12,11 +12,15 @@ import { QuantitySelectorComponent } from '../../shared/ui/quantity-selector/qua
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { PriceComponent } from '../../shared/ui/price/price.component';
 
+import { PricingApiService } from '../../core/services/pricing-api.service';
+
+import { ToastContainerComponent } from '../../shared/ui/toast-container/toast-container.component';
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-customer-layout',
     standalone: true,
-    imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, QuantitySelectorComponent, ButtonComponent, PriceComponent],
+    imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, QuantitySelectorComponent, ButtonComponent, PriceComponent, ToastContainerComponent],
     templateUrl: './customer-layout.component.html',
     styleUrl: './customer-layout.component.css'
 })
@@ -25,6 +29,7 @@ export class CustomerLayoutComponent {
     protected readonly cartStore = inject(CartStore);
     protected readonly userStore = inject(UserStore);
     protected readonly productStore = inject(ProductStore);
+    protected readonly pricingApi = inject(PricingApiService);
     protected readonly toastService = inject(ToastService);
     private readonly router = inject(Router);
 
@@ -46,6 +51,45 @@ export class CustomerLayoutComponent {
                 }, 300);
             }
         });
+
+        // Effect for Qty Modal opening
+        effect(() => {
+            const isOpen = this.productStore.isQtyModalOpen();
+            const prod = this.productStore.activeProduct();
+            if (isOpen && prod) {
+                const initialUom = prod.baseUomCode || (prod.uomGroup?.details?.[0]?.code) || null;
+                this.productStore.setQtyUomCode(initialUom);
+                this.productStore.setQtyLookedUpPrice(prod.price); // Set initial fallback
+                
+                if (initialUom) {
+                    this.lookupPrice(prod.id, initialUom);
+                }
+            }
+        });
+    }
+
+    async lookupPrice(itemId: string, uomCode: string) {
+        this.productStore.setIsQtyLookupLoading(true);
+        try {
+            if (this.authStore.isLoggedIn()) {
+                const res = await this.pricingApi.lookupCustomerPrice(itemId, uomCode);
+                if (res) this.productStore.setQtyLookedUpPrice(res.price);
+            } else {
+                const prod = this.productStore.activeProduct();
+                const res = await this.pricingApi.lookupPublicPrice(itemId, uomCode, prod?.customerGroupCode);
+                if (res) this.productStore.setQtyLookedUpPrice(res.price);
+            }
+        } finally {
+            this.productStore.setIsQtyLookupLoading(false);
+        }
+    }
+
+    selectUom(code: string) {
+        this.productStore.setQtyUomCode(code);
+        const prod = this.productStore.activeProduct();
+        if (prod) {
+            this.lookupPrice(prod.id, code);
+        }
     }
 
     closeProductDetails() {
@@ -90,12 +134,13 @@ export class CustomerLayoutComponent {
         const prod = this.productStore.activeProduct();
         const qty = this.productStore.qtyQuantity();
         const action = this.productStore.qtyAction();
+        const uom = this.productStore.qtyUomCode();
+        const price = this.productStore.qtyLookedUpPrice();
+
         if (prod) {
-            this.cartStore.addItem(prod, qty);
+            this.cartStore.addItem(prod, qty, uom || undefined, price || undefined);
             if (action === 'buy') {
                 this.router.navigate(['/checkout']);
-            } else {
-                this.toastService.success('Added to cart!');
             }
         }
         this.closeQty(true);

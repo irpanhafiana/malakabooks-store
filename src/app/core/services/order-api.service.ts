@@ -48,7 +48,7 @@ export class OrderApiService {
             userEmail: u ? (u.email || u.phone || 'No Contact') : (res.user?.phone || 'No Contact'),
             items: res.items.map((item: any) => ({
               product: {
-                id: item.bookId,
+                id: item.itemId || item.bookId || item.id,
                 name: item.title,
                 description: '',
                 price: item.price,
@@ -122,7 +122,7 @@ export class OrderApiService {
           userEmail: res.user?.phone || 'No Contact',
           items: res.items.map((item: any) => ({
             product: {
-              id: item.bookId,
+              id: item.itemId || item.bookId || item.id,
               name: item.title,
               description: '',
               price: item.price,
@@ -190,7 +190,7 @@ export class OrderApiService {
         userEmail: currentUser ? currentUser.email : '',
         items: res.items.map((item: any) => ({
           product: {
-            id: item.bookId,
+            id: item.itemId || item.bookId || item.id,
             name: item.title,
             description: '',
             price: item.price,
@@ -232,7 +232,7 @@ export class OrderApiService {
         itemName: item.product.title,
         title: item.product.title,
         uomCode: item.uomCode || item.product.baseUomCode || '',
-        price: item.product.price,
+        price: item.price ?? item.product.price,
         quantity: item.quantity
       })),
       addressId: order.shippingAddress.id,
@@ -242,8 +242,8 @@ export class OrderApiService {
       shippingType: order.shippingType || '',
       shippingEst: order.shippingEst || '',
       shippingFee: order.shippingCost || 0,
-      insurance: true,
-      shippingInsurance: 0
+      insurance: (order as any).insurance ?? false,
+      shippingInsurance: (order as any).shippingInsurance || 0
     };
 
     if (externalProfileId) {

@@ -32,7 +32,7 @@ export class CartStore {
   readonly error = computed(() => this.state().error);
 
   readonly subtotal = computed(() =>
-    this.items().reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
+    this.items().reduce((sum, item) => sum + ((item.price ?? item.product.price) * item.quantity), 0)
   );
 
   readonly discount = computed(() =>
@@ -96,7 +96,7 @@ export class CartStore {
 
     // Kirim item guest ke backend
     for (const item of guestItems) {
-      await this.cartApi.addCartItem(userId, item.product.id, item.quantity);
+      await this.cartApi.addCartItem(userId, item.product.id, item.quantity, item.uomCode);
     }
 
     // Ambil cart dari backend sebagai sumber kebenaran
@@ -104,9 +104,14 @@ export class CartStore {
     const productMap = new Map(products.map(p => [p.id, p]));
 
     const merged: CartItem[] = backendItems
-      .map(bi => {
+      .map((bi): CartItem | null => {
         const product = productMap.get(bi.itemId);
-        return product ? { product, quantity: bi.quantity } : null;
+        if (!product) return null;
+        return {
+          product,
+          quantity: bi.quantity,
+          uomCode: bi.uomCode
+        };
       })
       .filter((i): i is CartItem => i !== null);
 
@@ -118,14 +123,18 @@ export class CartStore {
     this.clearCart();
   }
 
-  async addItem(product: Product, quantity = 1) {
+  async addItem(product: Product, quantity = 1, uomCode?: string, price?: number) {
     if (product.stock <= 0) {
       this.toastService.error('Maaf, produk ini kehabisan stok!');
       return;
     }
 
+    const previousItems = [...this.items()];
     const currentItems = [...this.items()];
-    const index = currentItems.findIndex(item => item.product.id === product.id);
+    const targetUom = uomCode || product.baseUomCode || undefined;
+    const targetPrice = (price !== undefined && price > 0) ? price : product.price;
+
+    const index = currentItems.findIndex(item => item.product.id === product.id && item.uomCode === targetUom);
     let newQty = quantity;
 
     if (index >= 0) {
@@ -134,24 +143,45 @@ export class CartStore {
         this.toastService.error(`Hanya tersisa ${product.stock} barang.`);
         return;
       }
-      currentItems[index] = { ...currentItems[index], quantity: newQty };
+      currentItems[index] = {
+        ...currentItems[index],
+        quantity: newQty,
+        price: targetPrice,
+        uomCode: targetUom
+      };
     } else {
-      currentItems.push({ product, quantity });
+      currentItems.push({
+        product,
+        quantity,
+        uomCode: targetUom,
+        price: targetPrice
+      });
     }
 
     this.persistLocal(currentItems);
-    this.toastService.success(`"${product.title}" berhasil ditambahkan ke keranjang.`);
 
-    // Sync ke backend
+    // Sync ke backend jika user terautentikasi
     const userId = this.getCurrentUserId();
     if (userId) {
       this.state.update(s => ({ ...s, loading: true }));
       try {
-        await this.cartApi.addCartItem(userId, product.id, index >= 0 ? newQty : quantity);
+        const success = await this.cartApi.addCartItem(userId, product.id, index >= 0 ? newQty : quantity, targetUom);
+        if (!success) {
+          // Rollback local state jika sinkronisasi backend gagal
+          this.persistLocal(previousItems);
+          this.toastService.error('Gagal menyinkronkan keranjang dengan server.');
+          return;
+        }
+      } catch {
+        this.persistLocal(previousItems);
+        this.toastService.error('Terjadi kesalahan koneksi saat menambah keranjang.');
+        return;
       } finally {
         this.state.update(s => ({ ...s, loading: false }));
       }
     }
+
+    this.toastService.success(`"${product.title}" berhasil ditambahkan ke keranjang.`);
   }
 
   async removeItem(productId: string) {

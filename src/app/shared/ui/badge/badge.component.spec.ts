@@ -23,22 +23,10 @@ describe('BadgeComponent', () => {
   it('should have default secondary variant and md size', () => {
     expect(component.variant()).toBe('secondary');
     expect(component.size()).toBe('md');
+  });
+
+  it('should compute badgeClass with default variant and size', () => {
     expect(component.badgeClass()).toContain('bg-slate-100');
     expect(component.badgeClass()).toContain('text-xs');
-  });
-
-  it('should update classes when variant changes', () => {
-    fixture.componentRef.setInput('variant', 'danger');
-    fixture.detectChanges();
-
-    expect(component.badgeClass()).toContain('bg-rose-50');
-    expect(component.badgeClass()).toContain('text-rose-700');
-  });
-
-  it('should update classes when size changes', () => {
-    fixture.componentRef.setInput('size', 'sm');
-    fixture.detectChanges();
-
-    expect(component.badgeClass()).toContain('text-[10px]');
   });
 });

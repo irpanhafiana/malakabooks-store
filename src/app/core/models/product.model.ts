@@ -1,3 +1,5 @@
+import { UomGroup } from './uom-group.model';
+
 export interface AdditionalImage {
   no: number;
   image: string;
@@ -10,6 +12,7 @@ export interface Product {
   title: string;
   sapCode: string;
   baseUomCode?: string;
+  uomGroup?: UomGroup;
   authorIds: string[];
   authors: {
     id: string;

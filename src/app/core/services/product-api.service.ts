@@ -57,6 +57,8 @@ export class ProductApiService {
       compareAtPriceStartDate: item.compareAtPriceStartDate,
       compareAtPriceEndDate: item.compareAtPriceEndDate,
       createdAt: item.createdAt || new Date().toISOString(),
+      uomGroup: item.uomGroup,
+      baseUomCode: item.baseUomCode,
       additionalImages: book?.additionalImages
         ? [...book.additionalImages].sort((a, b) => a.no - b.no)
         : ((item as any).additionalImages || [])

@@ -3,6 +3,10 @@ import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
+    TestBed.overrideComponent(App, {
+      set: { template: '<router-outlet></router-outlet>' }
+    });
+
     await TestBed.configureTestingModule({
       imports: [App],
     }).compileComponents();

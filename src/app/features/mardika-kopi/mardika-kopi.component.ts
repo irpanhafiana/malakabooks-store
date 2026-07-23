@@ -12,7 +12,6 @@ import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { MardikaKopiDetailComponent } from './mardika-kopi-detail/mardika-kopi-detail.component';
-import { AlertService } from '../../core/services/alert.service';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
 import { ItemApiService } from '../../core/services/item-api.service';
 
@@ -30,7 +29,6 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
 
-  protected readonly alertService = inject(AlertService);
   protected readonly bannerStore = inject(PromotionBannerStore);
   private readonly itemApi = inject(ItemApiService);
 
@@ -153,6 +151,8 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
           compareAtPriceStartDate: item.compareAtPriceStartDate,
           compareAtPriceEndDate: item.compareAtPriceEndDate,
           createdAt: item.createdAt || new Date().toISOString(),
+          uomGroup: item.uomGroup,
+          baseUomCode: item.baseUomCode,
           additionalImages: (item as any).additionalImages || []
         });
       }
@@ -210,8 +210,10 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openQtyModal(product: any) {
-    this.cartStore.addItem(product, 1);
-    this.alertService.success('Berhasil!', 'Produk berhasil ditambahkan ke keranjang');
+    this.productStore.setActiveProduct(product);
+    this.productStore.setQtyQuantity(1);
+    this.productStore.setQtyAction('cart');
+    this.productStore.setQtyModalOpen(true);
   }
 
   openItemSheet(prod: Product) {

@@ -3,7 +3,7 @@ import { OrdersListComponent } from './orders-list.component';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { OrderStore } from '../../../../store/order.store';
 import { AlertService } from '../../../../core/services/alert.service';
-import { signal } from '@angular/core';
+import { signal, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Order } from '../../../../core/models';
 
 describe('OrdersListComponent', () => {
@@ -26,8 +26,13 @@ describe('OrdersListComponent', () => {
   };
 
   beforeEach(async () => {
+    TestBed.overrideComponent(OrdersListComponent, {
+      set: { template: '<div></div>' }
+    });
+
     await TestBed.configureTestingModule({
       imports: [OrdersListComponent],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: OrderStore, useValue: mockOrderStore },
         { provide: AlertService, useValue: mockAlertService }

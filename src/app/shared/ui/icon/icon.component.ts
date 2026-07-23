@@ -8,7 +8,7 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
   styleUrl: './icon.component.css'
 })
 export class IconComponent {
-  readonly name = input.required<string>();
+  readonly name = input<string>('');
   readonly size = input<number | string>(24);
   readonly customClass = input<string>('', { alias: 'class' });
 

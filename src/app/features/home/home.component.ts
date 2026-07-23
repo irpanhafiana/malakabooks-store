@@ -12,7 +12,6 @@ import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
-import { AlertService } from '../../core/services/alert.service';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
 
 @Component({
@@ -27,7 +26,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   protected readonly authorStore = inject(AuthorStore);
-  protected readonly alertService = inject(AlertService);
   protected readonly bannerStore = inject(PromotionBannerStore);
 
   slides = [
@@ -206,8 +204,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openQtyModal(product: any) {
-    this.cartStore.addItem(product, 1);
-    this.alertService.success('Berhasil!', 'Produk berhasil ditambahkan ke keranjang');
+    this.productStore.setActiveProduct(product);
+    this.productStore.setQtyQuantity(1);
+    this.productStore.setQtyAction('cart');
+    this.productStore.setQtyModalOpen(true);
   }
 
   openAuthorSheet(author: Author) {

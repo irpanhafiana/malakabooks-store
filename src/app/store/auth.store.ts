@@ -41,6 +41,7 @@ export class AuthStore {
   readonly isAdmin = computed(() => this.state().user?.role === 'admin');
 
   private _refreshToken: string | null = null;
+  private refreshPromise: Promise<boolean> | null = null;
 
   constructor() {
     this.loadSession();
@@ -112,36 +113,46 @@ export class AuthStore {
   }
 
   async refreshToken(): Promise<boolean> {
-    const refreshToken = this._refreshToken;
-    if (!refreshToken) return false;
-
-    try {
-      const result = await this.authApi.refreshToken(refreshToken);
-      if (!result) return false;
-
-      // Update the stored token
-      localStorage.setItem(SESSION_TOKEN_KEY, result.accessToken);
-
-      // Update refresh token if a new one was issued
-      if (result.refreshToken) {
-        localStorage.setItem(SESSION_REFRESH_KEY, result.refreshToken);
-        this._refreshToken = result.refreshToken;
-      }
-
-      // Update the user object with the new token
-      const currentUser = this.state().user;
-      if (currentUser) {
-        const userWithToken = { ...currentUser, token: result.accessToken };
-        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
-        this.state.set({ user: userWithToken, token: result.accessToken, error: null });
-      } else {
-        this.state.update(s => ({ ...s, token: result.accessToken }));
-      }
-
-      return true;
-    } catch {
-      return false;
+    if (this.refreshPromise) {
+      return this.refreshPromise;
     }
+
+    this.refreshPromise = (async () => {
+      const refreshToken = this._refreshToken;
+      if (!refreshToken) return false;
+
+      try {
+        const result = await this.authApi.refreshToken(refreshToken);
+        if (!result) return false;
+
+        // Update the stored token
+        localStorage.setItem(SESSION_TOKEN_KEY, result.accessToken);
+
+        // Update refresh token if a new one was issued
+        if (result.refreshToken) {
+          localStorage.setItem(SESSION_REFRESH_KEY, result.refreshToken);
+          this._refreshToken = result.refreshToken;
+        }
+
+        // Update the user object with the new token
+        const currentUser = this.state().user;
+        if (currentUser) {
+          const userWithToken = { ...currentUser, token: result.accessToken };
+          localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
+          this.state.set({ user: userWithToken, token: result.accessToken, error: null });
+        } else {
+          this.state.update(s => ({ ...s, token: result.accessToken }));
+        }
+
+        return true;
+      } catch {
+        return false;
+      } finally {
+        this.refreshPromise = null;
+      }
+    })();
+
+    return this.refreshPromise;
   }
 
   async login(username: string, password: string): Promise<boolean> {

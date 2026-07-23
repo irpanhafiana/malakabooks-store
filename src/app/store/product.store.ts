@@ -17,6 +17,9 @@ interface ProductState {
   isQtyModalOpen: boolean;
   qtyQuantity: number;
   qtyAction: 'cart' | 'buy';
+  qtyUomCode: string | null;
+  qtyLookedUpPrice: number;
+  isQtyLookupLoading: boolean;
   reopenDetailOnQtyClose: boolean;
 }
 
@@ -41,6 +44,9 @@ export class ProductStore {
     isQtyModalOpen: false,
     qtyQuantity: 1,
     qtyAction: 'cart',
+    qtyUomCode: null,
+    qtyLookedUpPrice: 0,
+    isQtyLookupLoading: false,
     reopenDetailOnQtyClose: false
   });
 
@@ -57,6 +63,9 @@ export class ProductStore {
   readonly isQtyModalOpen = computed(() => this.state().isQtyModalOpen);
   readonly qtyQuantity = computed(() => this.state().qtyQuantity);
   readonly qtyAction = computed(() => this.state().qtyAction);
+  readonly qtyUomCode = computed(() => this.state().qtyUomCode);
+  readonly qtyLookedUpPrice = computed(() => this.state().qtyLookedUpPrice);
+  readonly isQtyLookupLoading = computed(() => this.state().isQtyLookupLoading);
   readonly reopenDetailOnQtyClose = computed(() => this.state().reopenDetailOnQtyClose);
 
   readonly activeSearchCategories = computed(() => {
@@ -181,6 +190,18 @@ export class ProductStore {
 
   setQtyAction(action: 'cart' | 'buy') {
     this.state.update(s => ({ ...s, qtyAction: action }));
+  }
+
+  setQtyUomCode(code: string | null) {
+    this.state.update(s => ({ ...s, qtyUomCode: code }));
+  }
+
+  setQtyLookedUpPrice(price: number) {
+    this.state.update(s => ({ ...s, qtyLookedUpPrice: price }));
+  }
+
+  setIsQtyLookupLoading(loading: boolean) {
+    this.state.update(s => ({ ...s, isQtyLookupLoading: loading }));
   }
 
   setReopenDetailOnQtyClose(reopen: boolean) {

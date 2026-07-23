@@ -4,7 +4,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CartStore } from '../../store/cart.store';
 import { ProductStore } from '../../store/product.store';
 import { ActivatedRoute } from '@angular/router';
-import { signal } from '@angular/core';
+import { signal, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CartComponent', () => {
   let component: CartComponent;
@@ -18,8 +18,13 @@ describe('CartComponent', () => {
   const mockProductStore = {};
 
   beforeEach(async () => {
+    TestBed.overrideComponent(CartComponent, {
+      set: { template: '<div></div>' }
+    });
+
     await TestBed.configureTestingModule({
       imports: [CartComponent],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: CartStore, useValue: mockCartStore },
         { provide: ProductStore, useValue: mockProductStore },

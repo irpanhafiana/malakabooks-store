@@ -205,7 +205,7 @@
         @for (entry of entries; track entry.key) {
         <div class="flex flex-col gap-0.5">
           <span class="text-[10px] font-semibold text-slate-400 capitalize">{{ entry.key }}</span>
-          <span class="font-semibold text-slate-700 break-words">{{ entry.val }}</span>
+          <span class="font-semibold text-slate-700 wrap-break-words">{{ entry.val }}</span>
         </div>
         }
       </div>
@@ -223,7 +223,7 @@
         @for (log of history; track $index; let first = $first) {
         <div class="relative flex flex-col gap-1">
           <div [ngClass]="first ? 'bg-primary-500 border-4 border-primary-100' : 'bg-slate-300 border-2 border-white'"
-            class="absolute -left-[30px] top-0.5 h-4 w-4 rounded-full">
+            class="absolute -left-7.5 top-0.5 h-4 w-4 rounded-full">
           </div>
           <span class="text-[10px] font-semibold text-slate-400">{{ drLogDate(log) | date: 'medium' }}</span>
           <strong [ngClass]="first ? 'text-primary-700' : 'text-slate-800'" class="font-extrabold leading-snug">{{
