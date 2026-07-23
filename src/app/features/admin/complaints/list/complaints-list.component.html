@@ -1,11 +1,11 @@
 <div class=" flex flex-col gap-6">
 
   <!-- Top Action bar & Search -->
-  <div class="flex items-center justify-between">
-    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Complaints Manager</h2>
+  <div class="flex items-center justify-end">
 
     <div class="flex flex-row gap-2 justify-center items-center">
       <!-- Search Input -->
+
       <div class="relative w-full hidden sm:block">
         <app-icon name="search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></app-icon>
         <input type="text" placeholder="Cari komplain..." [value]="searchQuery()" (input)="onSearch($event)"
@@ -17,9 +17,6 @@
       </app-admin-button>
 
 
-      <span
-        class="text-xs text-slate-400 font-semibold bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 shrink-0">Total:
-        {{ complaintStore.complaints().length }}</span>
     </div>
   </div>
 

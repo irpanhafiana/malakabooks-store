@@ -10,7 +10,7 @@
       (click)="toggleDropdown()"
       [class]="selectClass() + ' flex justify-between items-center text-left disabled:opacity-60 disabled:cursor-not-allowed'"
       style="text-align: left;">
-      <span [class]="controlValue() === null || controlValue() === undefined || controlValue() === '' ? 'text-slate-400' : 'text-slate-800'">
+      <span [class]="(controlValue() === null || controlValue() === undefined || controlValue() === '' ? 'text-slate-400' : 'text-slate-800') + ' truncate block min-w-0'">
         {{ selectedLabel() || placeholder() || 'Pilih Opsi' }}
       </span>
     </button>

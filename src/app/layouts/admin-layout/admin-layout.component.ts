@@ -22,6 +22,8 @@ export class AdminLayoutComponent {
 
   isSidebarOpen = signal<boolean>(false);
   activeRouteName = signal<string>('Dashboard');
+  pageDescription = signal<string>('Ringkasan statistik toko dan laporan utama');
+  currentUrl = signal<string>('');
   isMasterDataOpen = signal<boolean>(false);
   isMardikaKopiOpen = signal<boolean>(false);
 
@@ -56,35 +58,55 @@ export class AdminLayoutComponent {
 
         if (url.includes('/categories')) {
           this.activeRouteName.set('Kelola Kategori');
+          this.pageDescription.set('Manajemen kategori buku dan produk');
         } else if (url.includes('/uoms')) {
           this.activeRouteName.set('Kelola Satuan Ukuran (UoM)');
+          this.pageDescription.set('Manajemen satuan ukur produk');
         } else if (url.includes('/warehouses')) {
           this.activeRouteName.set('Kelola Gudang');
+          this.pageDescription.set('Manajemen lokasi gudang penyimpanan');
         } else if (url.includes('/items')) {
           this.activeRouteName.set('Kelola Produk');
+          this.pageDescription.set('Manajemen katalog produk dan buku');
         } else if (url.includes('/stocks')) {
           this.activeRouteName.set('Kelola Stok Gudang');
+          this.pageDescription.set('Manajemen ketersediaan stok di gudang');
         } else if (url.includes('/pricings')) {
-          this.activeRouteName.set('Kelola Pricing Master');
+          this.activeRouteName.set('Kelola Harga');
+          this.pageDescription.set('Manajemen harga dasar dan jual produk');
         } else if (url.includes('/inventory-movements')) {
           this.activeRouteName.set('Riwayat Mutasi Stok');
+          this.pageDescription.set('Laporan pergerakan stok barang');
         } else if (url.includes('/payment-methods')) {
           this.activeRouteName.set('Kelola Metode Pembayaran');
+          this.pageDescription.set('Manajemen opsi pembayaran pelanggan');
         } else if (url.includes('/authors')) {
           this.activeRouteName.set('Kelola Penulis');
+          this.pageDescription.set('Manajemen data penulis buku');
         } else if (url.includes('/orders')) {
           this.activeRouteName.set('Kelola Pesanan');
+          this.pageDescription.set('Manajemen transaksi dan pesanan pelanggan');
         } else if (url.includes('/users')) {
           this.activeRouteName.set('Kelola Pengguna');
+          this.pageDescription.set('Manajemen data akun pelanggan');
         } else if (url.includes('/reports')) {
-          this.activeRouteName.set('Analytics Reports');
+          this.activeRouteName.set('Laporan Analitik');
+          this.pageDescription.set('Buat dan unduh laporan CSV terstruktur dari log database e-commerce Anda');
         } else if (url.includes('/home-addresses')) {
-          this.activeRouteName.set('Home Addresses Manager');
+          this.activeRouteName.set('Kelola Alamat Pengiriman');
+          this.pageDescription.set('Manajemen alamat pengiriman pelanggan');
         } else if (url.includes('/promotion-banners')) {
-          this.activeRouteName.set('Promotion Banners Manager');
+          this.activeRouteName.set('Kelola Banner Promosi');
+          this.pageDescription.set('Manajemen banner promosi dan diskon');
+        } else if (url.includes('/complaints')) {
+          this.activeRouteName.set('Kelola Komplain');
+          this.pageDescription.set('Manajemen komplain dan keluhan pelanggan');
         } else {
-          this.activeRouteName.set('Dashboard Overview');
+          this.activeRouteName.set('Ringkasan Dashboard');
+          this.pageDescription.set('Ringkasan statistik toko dan laporan utama');
         }
+        
+        this.currentUrl.set(window.location.origin + url);
       });
 
     this.orderStore.loadAllOrders();

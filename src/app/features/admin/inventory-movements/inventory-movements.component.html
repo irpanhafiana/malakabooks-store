@@ -1,15 +1,11 @@
 <div class=" flex flex-col gap-6">
 
   <!-- Top Action bar & Search -->
-  <div class="flex items-center justify-between">
-    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Riwayat Mutasi Stok</h2>
+  <div class="flex items-center justify-end">
 
     <div class="flex flex-row gap-2 justify-center items-center">
       <!-- Item Filter Dropdown -->
-      <app-admin-select
-        [control]="filterControl"
-        [options]="itemOptions()"
-        class="w-64">
+      <app-admin-select [control]="filterControl" [options]="itemOptions()" class="w-64">
       </app-admin-select>
 
       <app-admin-button (click)="onRefresh()" variant="outline" size="md" class="shrink-0">

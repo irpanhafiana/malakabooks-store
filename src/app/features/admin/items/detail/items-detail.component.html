@@ -1,7 +1,5 @@
 <div class="flex flex-col gap-6 pb-20">
-  <div class="flex items-center justify-between">
-    <h2 class="font-display font-bold text-slate-800 text-xl whitespace-nowrap">Detail{{ item()?.name ? ' ' +
-      item()?.name : '' }}</h2>
+  <div class="flex items-center justify-end">
 
     <app-admin-button routerLink="/admin/items" variant="outline" size="md" class="shrink-0">
       <app-icon name="chevron-left" size="14"></app-icon>
@@ -126,11 +124,12 @@
               <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Penulis</span>
               <span class="block text-sm font-medium text-slate-800">
                 @if (data.metadata?.book?.authors?.length) {
-                  @for (author of data.metadata.book.authors; track author.id) {
-                    <span class="inline-block bg-slate-100 px-2.5 py-1 rounded-md text-xs font-medium mr-2 mb-1">{{ author.name }}</span>
-                  }
+                @for (author of data.metadata.book.authors; track author.id) {
+                <span class="inline-block bg-slate-100 px-2.5 py-1 rounded-md text-xs font-medium mr-2 mb-1">{{
+                  author.name }}</span>
+                }
                 } @else {
-                  -
+                -
                 }
               </span>
             </div>
@@ -140,7 +139,8 @@
             </div>
             <div>
               <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tahun Terbit</span>
-              <span class="block text-sm font-medium text-slate-800">{{ data.metadata?.book?.publishedYear || '-' }}</span>
+              <span class="block text-sm font-medium text-slate-800">{{ data.metadata?.book?.publishedYear || '-'
+                }}</span>
             </div>
             <div>
               <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Halaman</span>
