@@ -37,7 +37,9 @@
             "SimasrimDetailResiMethod": "POST"
         },
         "PricingSetting": {
-            "DefaultPublicCustomerGroupCode": "106"
+            "DefaultPublicCustomerGroupCode": "106",
+            "SecondaryPublicCustomerGroupCode": "103",
+            "SecondaryCustomerGroupCode": "106"
         }
     },
     "Logging": {

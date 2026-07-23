@@ -49,6 +49,10 @@ public class PricedItemResponse : ItemResponse
     public decimal? Price { get; set; }
     public DateTime? PriceStartDate { get; set; }
     public DateTime? PriceEndDate { get; set; }
+    // Secondary / compare-at price for promotion display (e.g. strike-through price)
+    public decimal? CompareAtPrice { get; set; }
+    public DateTime? CompareAtPriceStartDate { get; set; }
+    public DateTime? CompareAtPriceEndDate { get; set; }
 }
 
 public class CreateItemRequest
@@ -159,6 +163,14 @@ public class PricingDetailResponse
     public string CustomerGroupCode { get; set; } = string.Empty;
     public string UomCode { get; set; } = string.Empty;
     public decimal Price { get; set; }
+}
+
+public class CreatePricingResponse
+{
+    public bool IsSuccess { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public Dictionary<string, string> Errors { get; set; } = [];
+    public string PricingId { get; set; } = string.Empty;
 }
 
 public class PublicPriceLookupRequest

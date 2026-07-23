@@ -1,10 +1,10 @@
+using MalakaBooks.ConfigSetting;
 using MalakaBooks.IRepository;
 using MalakaBooks.Mediator.Common;
 using MalakaBooks.ViewModel;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using MalakaBooks.ConfigSetting;
 
 namespace MalakaBooks.Mediator.CatalogHandlers;
 
@@ -161,6 +161,7 @@ public class GetPublicPricedItemsHandler(
     IOptions<AppSetting> appOptions) : IRequestHandler<GetPublicPricedItemsQuery, IReadOnlyCollection<PricedItemResponse>>
 {
     private readonly string _defaultCustomerGroupCode = appOptions.Value.PricingSetting?.DefaultPublicCustomerGroupCode?.Trim() ?? string.Empty;
+    private readonly string _secondaryCustomerGroupCode = appOptions.Value.PricingSetting?.SecondaryPublicCustomerGroupCode?.Trim() ?? string.Empty;
 
     public async Task<IReadOnlyCollection<PricedItemResponse>> Handle(GetPublicPricedItemsQuery request, CancellationToken cancellationToken)
     {
@@ -172,6 +173,7 @@ public class GetPublicPricedItemsHandler(
             pricingRepository,
             request.ItemType,
             _defaultCustomerGroupCode,
+            _secondaryCustomerGroupCode,
             cancellationToken);
     }
 }
@@ -182,9 +184,11 @@ public class GetCustomerPricedItemsHandler(
     IBookRepository bookRepository,
     IAuthorRepository authorRepository,
     IPricingRepository pricingRepository,
-    IHttpContextAccessor httpContextAccessor) : IRequestHandler<GetCustomerPricedItemsQuery, IReadOnlyCollection<PricedItemResponse>>
+    IHttpContextAccessor httpContextAccessor,
+    IOptions<AppSetting> appOptions) : IRequestHandler<GetCustomerPricedItemsQuery, IReadOnlyCollection<PricedItemResponse>>
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly string _secondaryCustomerGroupCode = appOptions.Value.PricingSetting?.SecondaryCustomerGroupCode?.Trim() ?? string.Empty;
 
     public async Task<IReadOnlyCollection<PricedItemResponse>> Handle(GetCustomerPricedItemsQuery request, CancellationToken cancellationToken)
     {
@@ -196,6 +200,7 @@ public class GetCustomerPricedItemsHandler(
             pricingRepository,
             request.ItemType,
             ResolveCustomerGroupCode(),
+            _secondaryCustomerGroupCode,
             cancellationToken);
     }
 
@@ -223,6 +228,7 @@ internal static class PricedItemResolver
         IPricingRepository pricingRepository,
         string? itemType,
         string customerGroupCode,
+        string secondaryCustomerGroupCode,
         CancellationToken cancellationToken)
     {
         var items = string.IsNullOrWhiteSpace(itemType)
@@ -262,6 +268,7 @@ internal static class PricedItemResolver
                 uomGroupsById.GetValueOrDefault(item.UomGroupId ?? string.Empty),
                 pricingByItemId,
                 customerGroupCode,
+                secondaryCustomerGroupCode,
                 ItemMetadataResolver.Resolve(item, booksByItemId, authorsById)))
             .ToArray();
     }
@@ -271,6 +278,7 @@ internal static class PricedItemResolver
         Entity.UomGroupEntity? uomGroup,
         IReadOnlyDictionary<string, Entity.PricingEntity[]> pricingByItemId,
         string customerGroupCode,
+        string secondaryCustomerGroupCode,
         ItemMetadataResponse? metadata)
     {
         var baseResponse = item.ToResponse(uomGroup, metadata);
@@ -335,7 +343,45 @@ internal static class PricedItemResolver
         response.PriceStartDate = selected.Pricing.StartDate;
         response.PriceEndDate = selected.Pricing.EndDate;
 
+        // Resolve secondary / compare-at price using secondary pricing group if provided
+        if (!string.IsNullOrWhiteSpace(secondaryCustomerGroupCode))
+        {
+            var compareDetail = pricingByItemId.TryGetValue(item.Id, out var itemP) ?
+                itemP.SelectMany(pr => pr.Details.Select(d => new { Pricing = pr, Detail = d }))
+                    .FirstOrDefault(entry => string.Equals(entry.Detail.CustomerGroupCode, secondaryCustomerGroupCode, StringComparison.OrdinalIgnoreCase)
+                        && string.Equals(entry.Detail.UomCode, response.SalesUomCode, StringComparison.OrdinalIgnoreCase))
+                : null;
+
+            if (compareDetail is not null)
+            {
+                response.CompareAtPrice = compareDetail.Detail.Price;
+                response.CompareAtPriceStartDate = compareDetail.Pricing.StartDate;
+                response.CompareAtPriceEndDate = compareDetail.Pricing.EndDate;
+            }
+            else
+            {
+                response.CompareAtPrice = response.Price;
+                response.CompareAtPriceStartDate = response.PriceStartDate;
+                response.CompareAtPriceEndDate = response.PriceEndDate;
+            }
+        }
+        else
+        {
+            response.CompareAtPrice = response.Price;
+            response.CompareAtPriceStartDate = response.PriceStartDate;
+            response.CompareAtPriceEndDate = response.PriceEndDate;
+        }
+
         return response;
+    }
+
+    private static string GetSecondaryPricingGroupCode()
+    {
+        // read from config once per invocation via static access to AppSetting is not available here;
+        // default behavior: read appsetting from configuration via environment variable/provider is not available in this static helper.
+        // Instead, read from the AppSetting through Options is the preferred approach but would require refactoring the resolver to accept IOptions<AppSetting>.
+        // For now, return empty so controllers/handlers that pass customerGroupCode can optionally call a different overload.
+        return string.Empty;
     }
 }
 

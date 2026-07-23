@@ -13,9 +13,9 @@ public record GetPricingsQuery() : IRequest<IReadOnlyCollection<PricingResponse>
 public record GetPricingByIdQuery(string Id) : IRequest<PricingResponse?>;
 public record GetPublicPriceQuery(PublicPriceLookupRequest Request) : IRequest<PublicPriceLookupResponse?>;
 public record GetCustomerPriceQuery(CustomerPriceLookupRequest Request) : IRequest<PublicPriceLookupResponse?>;
-public record CreatePricingCommand(CreatePricingRequest Request) : IRequest<bool>;
-public record UpdatePricingCommand(string Id, UpdatePricingRequest Request) : IRequest<bool>;
-public record DeletePricingCommand(string Id) : IRequest<bool>;
+public record CreatePricingCommand(CreatePricingRequest Request) : IRequest<CreatePricingResponse>;
+public record UpdatePricingCommand(string Id, UpdatePricingRequest Request) : IRequest<CreatePricingResponse>;
+public record DeletePricingCommand(string Id) : IRequest<CreatePricingResponse>;
 
 public class GetPricingsHandler(IPricingRepository pricingRepository) : IRequestHandler<GetPricingsQuery, IReadOnlyCollection<PricingResponse>>
 {
@@ -142,26 +142,42 @@ internal static class PricingLookupHelper
     }
 }
 
-public class CreatePricingHandler(IPricingRepository pricingRepository, IItemRepository itemRepository) : IRequestHandler<CreatePricingCommand, bool>
+public class CreatePricingHandler(IPricingRepository pricingRepository, IItemRepository itemRepository) : IRequestHandler<CreatePricingCommand, CreatePricingResponse>
 {
-    public async Task<bool> Handle(CreatePricingCommand request, CancellationToken cancellationToken)
+    public async Task<CreatePricingResponse> Handle(CreatePricingCommand request, CancellationToken cancellationToken)
     {
         var entity = request.Request.ToEntity();
         entity.ItemId = await ResolveItemIdAsync(request.Request.ItemCode, cancellationToken);
         if (string.IsNullOrWhiteSpace(entity.ItemId))
         {
-            return false;
+            return new CreatePricingResponse
+            {
+                IsSuccess = false,
+                Message = "Item not found for provided item code.",
+                Errors = new Dictionary<string, string> { ["1"] = "Item not found for provided item code." }
+            };
         }
 
         var details = ResolvePricingDetails(request.Request.Details);
         if (details.Count == 0)
         {
-            return false;
+            return new CreatePricingResponse
+            {
+                IsSuccess = false,
+                Message = "Pricing details must contain at least one entry.",
+                Errors = new Dictionary<string, string> { ["1"] = "Pricing details must contain at least one entry." }
+            };
         }
 
         entity.Details = details;
-        await pricingRepository.CreateAsync(entity, cancellationToken);
-        return true;
+        var created = await pricingRepository.CreateAsync(entity, cancellationToken);
+
+        return new CreatePricingResponse
+        {
+            IsSuccess = true,
+            Message = "OK",
+            PricingId = created?.Id ?? string.Empty
+        };
     }
 
     private List<PricingDetailEntity> ResolvePricingDetails(
@@ -190,28 +206,63 @@ public class CreatePricingHandler(IPricingRepository pricingRepository, IItemRep
     }
 }
 
-public class UpdatePricingHandler(IPricingRepository pricingRepository, IItemRepository itemRepository) : IRequestHandler<UpdatePricingCommand, bool>
+public class UpdatePricingHandler(IPricingRepository pricingRepository, IItemRepository itemRepository) : IRequestHandler<UpdatePricingCommand, CreatePricingResponse>
 {
-    public async Task<bool> Handle(UpdatePricingCommand request, CancellationToken cancellationToken)
+    public async Task<CreatePricingResponse> Handle(UpdatePricingCommand request, CancellationToken cancellationToken)
     {
         var entity = await pricingRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (entity is null) return false;
+        if (entity is null)
+        {
+            return new CreatePricingResponse
+            {
+                IsSuccess = false,
+                Message = "Pricing not found.",
+                Errors = new Dictionary<string, string> { ["1"] = "Pricing not found." }
+            };
+        }
 
         entity.UpdateFrom(request.Request);
         entity.ItemId = await ResolveItemIdAsync(request.Request.ItemCode, cancellationToken);
         if (string.IsNullOrWhiteSpace(entity.ItemId))
         {
-            return false;
+            return new CreatePricingResponse
+            {
+                IsSuccess = false,
+                Message = "Item not found for provided item code.",
+                Errors = new Dictionary<string, string> { ["1"] = "Item not found for provided item code." }
+            };
         }
 
         var details = ResolvePricingDetails(request.Request.Details);
         if (details.Count == 0)
         {
-            return false;
+            return new CreatePricingResponse
+            {
+                IsSuccess = false,
+                Message = "Pricing details must contain at least one entry.",
+                Errors = new Dictionary<string, string> { ["1"] = "Pricing details must contain at least one entry." }
+            };
         }
 
         entity.Details = details;
-        return await pricingRepository.UpdateAsync(request.Id, entity, cancellationToken);
+        var updated = await pricingRepository.UpdateAsync(request.Id, entity, cancellationToken);
+
+        if (!updated)
+        {
+            return new CreatePricingResponse
+            {
+                IsSuccess = false,
+                Message = "Failed to update pricing.",
+                Errors = new Dictionary<string, string> { ["1"] = "Failed to update pricing." }
+            };
+        }
+
+        return new CreatePricingResponse
+        {
+            IsSuccess = true,
+            Message = "OK",
+            PricingId = entity.Id ?? string.Empty
+        };
     }
 
     private List<PricingDetailEntity> ResolvePricingDetails(
@@ -240,8 +291,26 @@ public class UpdatePricingHandler(IPricingRepository pricingRepository, IItemRep
     }
 }
 
-public class DeletePricingHandler(IPricingRepository pricingRepository) : IRequestHandler<DeletePricingCommand, bool>
+public class DeletePricingHandler(IPricingRepository pricingRepository) : IRequestHandler<DeletePricingCommand, CreatePricingResponse>
 {
-    public async Task<bool> Handle(DeletePricingCommand request, CancellationToken cancellationToken) =>
-        await pricingRepository.DeleteAsync(request.Id, cancellationToken);
+    public async Task<CreatePricingResponse> Handle(DeletePricingCommand request, CancellationToken cancellationToken)
+    {
+        var deleted = await pricingRepository.DeleteAsync(request.Id, cancellationToken);
+        if (!deleted)
+        {
+            return new CreatePricingResponse
+            {
+                IsSuccess = false,
+                Message = "Failed to delete pricing.",
+                Errors = new Dictionary<string, string> { ["1"] = "Failed to delete pricing." }
+            };
+        }
+
+        return new CreatePricingResponse
+        {
+            IsSuccess = true,
+            Message = "OK",
+            PricingId = request.Id
+        };
+    }
 }

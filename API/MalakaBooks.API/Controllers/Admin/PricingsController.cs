@@ -39,6 +39,8 @@ public class PricingsController(IMediator mediator) : ApiControllerBase
     public async Task<IActionResult> Create([FromBody] CreatePricingRequest request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CreatePricingCommand(request), cancellationToken);
+        if (result is null) return Fail("Failed to create pricing");
+        if (!result.IsSuccess) return Fail(string.IsNullOrWhiteSpace(result.Message) ? "Validation failed" : result.Message, result.Errors, "ValidationError", StatusCodes.Status400BadRequest);
         return Success(result);
     }
 
@@ -49,6 +51,8 @@ public class PricingsController(IMediator mediator) : ApiControllerBase
     public async Task<IActionResult> Update(string id, [FromBody] UpdatePricingRequest request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new UpdatePricingCommand(id, request), cancellationToken);
+        if (result is null) return Fail("Failed to update pricing");
+        if (!result.IsSuccess) return Fail(string.IsNullOrWhiteSpace(result.Message) ? "Validation failed" : result.Message, result.Errors, "ValidationError", StatusCodes.Status400BadRequest);
         return Success(result);
     }
 
@@ -56,6 +60,11 @@ public class PricingsController(IMediator mediator) : ApiControllerBase
     /// Deletes a pricing master.
     /// </summary>
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken) =>
-        Success(await mediator.Send(new DeletePricingCommand(id), cancellationToken));
+    public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeletePricingCommand(id), cancellationToken);
+        if (result is null) return Fail("Failed to delete pricing");
+        if (!result.IsSuccess) return Fail(string.IsNullOrWhiteSpace(result.Message) ? "Validation failed" : result.Message, result.Errors, "ValidationError", StatusCodes.Status400BadRequest);
+        return Success(result);
+    }
 }

@@ -2,6 +2,7 @@ using MalakaBooks.API.Controllers.Base;
 using MalakaBooks.Mediator.CatalogHandlers;
 using MalakaBooks.ViewModel;
 using MediatR;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,11 @@ namespace MalakaBooks.API.Controllers.Admin;
 /// Provides administrative endpoints for managing unit-of-measure groups.
 /// </summary>
 /// <param name="mediator">The mediator used to dispatch UoM group commands and queries.</param>
+/// <param name="createValidator">Validator for create requests.</param>
+/// <param name="updateValidator">Validator for update requests.</param>
 [Route("api/v{version:apiVersion}/admin/[controller]")]
 [Authorize(Policy = "MalakaAdminPolicy")]
-public class UomGroupsController(IMediator mediator) : ApiControllerBase
+public class UomGroupsController(IMediator mediator, IValidator<CreateUomGroupRequest> createValidator, IValidator<UpdateUomGroupRequest> updateValidator) : ApiControllerBase
 {
     /// <summary>
     /// Retrieves all UoM groups.
@@ -38,6 +41,9 @@ public class UomGroupsController(IMediator mediator) : ApiControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateUomGroupRequest request, CancellationToken cancellationToken)
     {
+        var validation = await createValidator.ValidateAsync(request, cancellationToken);
+        if (!validation.IsValid) return ProcessResult(validation);
+
         var result = await mediator.Send(new CreateUomGroupCommand(request), cancellationToken);
         return Success(result);
     }
@@ -48,6 +54,9 @@ public class UomGroupsController(IMediator mediator) : ApiControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, [FromBody] UpdateUomGroupRequest request, CancellationToken cancellationToken)
     {
+        var validation = await updateValidator.ValidateAsync(request, cancellationToken);
+        if (!validation.IsValid) return ProcessResult(validation);
+
         var result = await mediator.Send(new UpdateUomGroupCommand(id, request), cancellationToken);
         return Success(result);
     }
