@@ -133,7 +133,9 @@ export class OrderHistoryComponent implements OnInit {
       this.toastService.success('Ulasan Anda telah dikirim');
     } catch (err: any) {
       let msg = 'Terjadi kesalahan saat mengirim ulasan.';
-      if (err?.error?.message) {
+      if (err?.error?.statusMessage) {
+        msg = err.error.statusMessage;
+      } else if (err?.error?.message) {
         msg = err.error.message;
       } else if (err?.message) {
         msg = err.message;

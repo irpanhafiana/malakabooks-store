@@ -34,7 +34,10 @@ export const routes: Routes = [
       { path: 'items/new', loadComponent: () => import('./features/admin/items/form-page/items-form-page.component').then(c => c.ItemsFormPageComponent) },
       { path: 'items/edit/:id', loadComponent: () => import('./features/admin/items/form-page/items-form-page.component').then(c => c.ItemsFormPageComponent) },
       { path: 'items/detail/:id', loadComponent: () => import('./features/admin/items/detail/items-detail.component').then(c => c.ItemsDetailComponent) },
-      { path: 'stocks', loadComponent: () => import('./features/admin/stocks/list/stocks-list.component').then(c => c.StocksListComponent) },
+      // TODO(warehouse-stocks): dinonaktifkan sementara — backend belum menyediakan
+      // WarehouseStocksController (endpoint /admin|public/WarehouseStocks => 404). Aktifkan
+      // kembali route ini + link nav di admin-layout.component.html setelah API tersedia.
+      // { path: 'stocks', loadComponent: () => import('./features/admin/stocks/list/stocks-list.component').then(c => c.StocksListComponent) },
       { path: 'pricings', loadComponent: () => import('./features/admin/pricings/list/pricings-list.component').then(c => c.PricingsListComponent) },
       { path: 'pricings/new', loadComponent: () => import('./features/admin/pricings/form-page/pricings-form-page.component').then(c => c.PricingsFormPageComponent) },
       { path: 'pricings/edit/:id', loadComponent: () => import('./features/admin/pricings/form-page/pricings-form-page.component').then(c => c.PricingsFormPageComponent) },

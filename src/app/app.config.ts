@@ -6,6 +6,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { SelectivePreloadingStrategy } from './core/strategies/selective-preloading-strategy';
 
 import { GlobalErrorHandler } from './core/errors/global-error-handler';
@@ -20,7 +21,9 @@ export const appConfig: ApplicationConfig = {
     // Admin chunks (dashboard, products, orders, ...) are excluded — they are
     // loaded on-demand only when the user navigates to /admin/*.
     provideRouter(routes, withPreloading(SelectivePreloadingStrategy)),
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor, loadingInterceptor])),
+    // errorInterceptor terluar: catchError-nya berjalan setelah authInterceptor
+    // menangani 401, sehingga hanya menampilkan toast untuk error yang tersisa.
+    provideHttpClient(withFetch(), withInterceptors([errorInterceptor, authInterceptor, loadingInterceptor])),
     provideAnimationsAsync()
   ]
 };

@@ -11,6 +11,7 @@ export * from './complaint.model';
 export * from './dashboard-metrics.model';
 export * from './home-address.model';
 export * from './api-response.model';
+export * from './backend-dtos.model';
 export * from './author.model';
 export * from './payment.model';
 export * from './promotion-banner.model';

@@ -208,34 +208,8 @@ export class ProductStore {
     this.state.update(s => ({ ...s, reopenDetailOnQtyClose: reopen }));
   }
 
-  async saveProduct(product: Product) {
-    this.state.update(s => ({ ...s, loading: true }));
-    try {
-      const saved = await this.productApi.saveProduct(product);
-      await this.loadProducts(); // Re-seed client list
-      this.toastService.success(`Product "${saved.title}" saved successfully!`);
-    } catch (e) {
-      this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to save product.');
-    }
-  }
-
-  async deleteProduct(id: string) {
-    this.state.update(s => ({ ...s, loading: true }));
-    try {
-      const success = await this.productApi.deleteProduct(id);
-      if (success) {
-        await this.loadProducts();
-        this.toastService.success('Product deleted successfully.');
-      } else {
-        this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Product not found.');
-      }
-    } catch (e) {
-      this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to delete product.');
-    }
-  }
+  // Penulisan produk/buku admin ditangani oleh ItemStore/ItemApiService (jalur Item+Book yang
+  // sesuai kontrak backend). saveProduct/deleteProduct lama dihapus — lihat catatan di ProductApiService.
 
   async saveCategory(category: Category) {
     this.state.update(s => ({ ...s, loading: true }));

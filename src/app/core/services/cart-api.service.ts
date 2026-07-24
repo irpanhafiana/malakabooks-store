@@ -4,16 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
 
-import { ApiResponse } from '../models/api-response.model';
-
-interface CartItemResponse {
-  itemId: string;
-  uomCode?: string;
-  quantity: number;
-}
-interface CartData {
-  items: CartItemResponse[];
-}
+import { ApiResponse, CartItemResponseDto, CartDataResponseDto } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +16,8 @@ export class CartApiService {
 
   async getCart(userId: string): Promise<{ itemId: string; uomCode: string; quantity: number }[]> {
     try {
-      const res = await firstValueFrom(this.http.get<ApiResponse<CartData>>(`${this.BASE_URL}/customer/Cart/${userId}`));
-      return (res?.data?.items || []).map((item: CartItemResponse) => ({
+      const res = await firstValueFrom(this.http.get<ApiResponse<CartDataResponseDto>>(`${this.BASE_URL}/customer/Cart/${userId}`));
+      return (res?.data?.items || []).map((item: CartItemResponseDto) => ({
         itemId: item.itemId,
         uomCode: item.uomCode || '',
         quantity: item.quantity

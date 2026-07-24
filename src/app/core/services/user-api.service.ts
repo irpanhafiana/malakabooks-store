@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { User, Address, RegisterPayload } from '../models';
+import { User, Address, RegisterPayload, ApiResponse, AddressResponseDto, UserResponseDto } from '../models';
 import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { getStoredSessionUser } from '../auth/session.util';
@@ -17,15 +17,15 @@ export class UserApiService {
   private readonly BASE_URL = environment.apiBaseUrl;
 
   /** Fetch external profile ID from the payment/external system */
-  getExternalProfile(phone: string): Observable<any> {
-    return this.http.get<any>(`${this.BASE_URL}/customer/Users/${phone}/profile`);
+  getExternalProfile(phone: string): Observable<ApiResponse<UserResponseDto>> {
+    return this.http.get<ApiResponse<UserResponseDto>>(`${this.BASE_URL}/customer/Users/${phone}/profile`);
   }
 
   async getAddressesByUserId(userId: string): Promise<Address[]> {
     try {
-      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Addresses/user/${userId}`));
+      const envelope = await firstValueFrom(this.http.get<ApiResponse<AddressResponseDto[]>>(`${this.BASE_URL}/customer/Addresses/user/${userId}`));
       const list = envelope?.data || [];
-      return list.map((addr: any) => ({
+      return list.map((addr): Address => ({
         id: addr.id,
         name: addr.label,
         phone: addr.phone,
@@ -46,9 +46,9 @@ export class UserApiService {
     }
   }
 
-  async register(payload: RegisterPayload): Promise<any> {
+  async register(payload: RegisterPayload): Promise<ApiResponse<unknown>> {
     return firstValueFrom(
-      this.http.post<any>(`${this.BASE_URL}/customer/Users`, payload)
+      this.http.post<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Users`, payload)
     );
   }
 
@@ -58,16 +58,16 @@ export class UserApiService {
 
     if (currentUser.role === 'admin') {
       try {
-        const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/admin/Users`));
+        const envelope = await firstValueFrom(this.http.get<ApiResponse<UserResponseDto[]>>(`${this.BASE_URL}/admin/Users`));
         const list = envelope?.data || [];
-        return list.map((u: any) => ({
+        return list.map((u): User => ({
           id: u.id,
           name: `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'User',
           email: u.email || '',
           role: this.authApi.normalizeRole(u.role),
           phone: u.phone || '',
           avatar: u.avatar || '',
-          joinedAt: u.createdAt,
+          joinedAt: u.createdAt ?? '',
           addresses: []
         }));
       } catch (e) {
@@ -84,7 +84,7 @@ export class UserApiService {
     try {
       const currentUser = getStoredSessionUser();
       const profileKey = currentUser?.name ? currentUser.name : id;
-      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Users/${encodeURIComponent(profileKey)}/profile`));
+      const envelope = await firstValueFrom(this.http.get<ApiResponse<UserResponseDto>>(`${this.BASE_URL}/customer/Users/${encodeURIComponent(profileKey)}/profile`));
       const userRes = envelope?.data;
       if (!userRes) return undefined;
       const addresses = await this.getAddressesByUserId(userRes.id);
@@ -95,7 +95,7 @@ export class UserApiService {
         role: this.authApi.normalizeRole(userRes.role),
         phone: userRes.phone || '',
         avatar: userRes.avatar || '',
-        joinedAt: userRes.createdAt,
+        joinedAt: userRes.createdAt ?? '',
         addresses: addresses
       };
     } catch (e) {
@@ -120,7 +120,7 @@ export class UserApiService {
       const externalProfileId = localStorage.getItem('externalProfileId');
       const targetProfileId = externalProfileId || user.id;
 
-      await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Users/${targetProfileId}/profile`, profileBody));
+      await firstValueFrom(this.http.put<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Users/${targetProfileId}/profile`, profileBody));
 
       const backendAddresses = await this.getAddressesByUserId(user.id);
       const backendAddrMap = new Map(backendAddresses.map(a => [a.id, a]));
@@ -145,9 +145,9 @@ export class UserApiService {
         };
 
         if (isNew) {
-          await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Addresses`, addressBody));
+          await firstValueFrom(this.http.post<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Addresses`, addressBody));
         } else {
-          await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Addresses/${addr.id}`, addressBody));
+          await firstValueFrom(this.http.put<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Addresses/${addr.id}`, addressBody));
           backendAddrMap.delete(addr.id);
         }
       }
@@ -190,7 +190,7 @@ export class UserApiService {
       isDefault: addr.isDefault
     };
     try {
-      await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Addresses`, addressBody));
+      await firstValueFrom(this.http.post<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Addresses`, addressBody));
       return true;
     } catch (e) {
       this.logger.error('UserApiService.addAddress', e);
@@ -216,7 +216,7 @@ export class UserApiService {
       isDefault: addr.isDefault
     };
     try {
-      await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/customer/Addresses/${addr.id}`, addressBody));
+      await firstValueFrom(this.http.put<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Addresses/${addr.id}`, addressBody));
       return true;
     } catch (e) {
       this.logger.error('UserApiService.updateAddress', e);

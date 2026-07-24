@@ -109,10 +109,10 @@ export class OrdersListComponent implements OnInit {
         );
         this.orderStore.loadAllOrders(); // Refresh status order
       } else {
-        this.alertService.error('Gagal!', res?.message || 'Gagal memproses pengiriman.');
+        this.alertService.error('Gagal!', res?.statusMessage || res?.message || 'Gagal memproses pengiriman.');
       }
     } catch (e: any) {
-      const errorMsg = e?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman.';
+      const errorMsg = e?.error?.statusMessage || e?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman.';
       this.alertService.error('Error!', errorMsg);
     }
   }
@@ -153,7 +153,7 @@ export class OrdersListComponent implements OnInit {
       this.selectedOrderIds.set([]); // Clear selection
       this.orderStore.loadAllOrders(); // Refresh order status
     } catch (e: any) {
-      const errorMsg = e?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman massal.';
+      const errorMsg = e?.error?.statusMessage || e?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman massal.';
       this.alertService.error('Error!', errorMsg);
     }
   }
@@ -171,7 +171,7 @@ export class OrdersListComponent implements OnInit {
         this.alertService.success('Berhasil!', 'Resi pengiriman berhasil dibatalkan.');
         this.orderStore.loadAllOrders();
       } else {
-        this.alertService.error('Gagal!', res?.message || 'Gagal membatalkan resi.');
+        this.alertService.error('Gagal!', res?.statusMessage || res?.message || 'Gagal membatalkan resi.');
       }
     } catch (e: any) {
       const errorMsg = e?.error?.statusMessage || e?.error?.message || 'Terjadi kesalahan sistem saat membatalkan resi.';
@@ -199,7 +199,7 @@ export class OrdersListComponent implements OnInit {
       const res = await this.orderStore.getDetailResi(courier, awb);
       this.detailResiData.set(res);
     } catch (e: any) {
-      this.detailResiError.set(e?.error?.message || e?.message || 'Gagal memuat detail resi pengiriman.');
+      this.detailResiError.set(e?.error?.statusMessage || e?.error?.message || e?.message || 'Gagal memuat detail resi pengiriman.');
     } finally {
       this.detailResiLoading.set(false);
     }

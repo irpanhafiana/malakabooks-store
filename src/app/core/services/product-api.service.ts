@@ -108,51 +108,8 @@ export class ProductApiService {
     }
   }
 
-  async saveProduct(product: Product): Promise<Product> {
-    const isNew = !product.id || product.id.startsWith('prod-');
-
-    const body = {
-      title: product.title,
-      authorIds: product.authorIds || [],
-      isbn: product.isbn || '',
-      categoryId: product.categoryId,
-      price: product.price,
-      description: product.description,
-      coverImage: product.coverImage || '',
-      additionalImages: product.additionalImages.map((img, index) => ({
-        no: img.no || index + 1,
-        image: img.image
-      })),
-      publisher: product.publisher,
-      publishedYear: product.publishedYear,
-      pages: product.pages,
-      weight: product.weight,
-      stock: product.stock,
-      sapCode: product.sapCode,
-      itemId: product.itemId
-    };
-
-    try {
-      if (isNew) {
-        const envelope = await firstValueFrom(this.http.post<ApiResponse<BookDto>>(`${this.BASE_URL}/admin/Books`, body));
-        return this.mapToProduct(envelope?.data as any, 0, envelope?.data);
-      } else {
-        const envelope = await firstValueFrom(this.http.put<ApiResponse<BookDto>>(`${this.BASE_URL}/admin/Books/${product.id}`, body));
-        return this.mapToProduct(envelope?.data as any, 0, envelope?.data);
-      }
-    } catch (e) {
-      this.logger.error('ProductApiService.saveProduct', 'Gagal menyimpan produk:', e);
-      throw e;
-    }
-  }
-
-  async deleteProduct(id: string): Promise<boolean> {
-    try {
-      await firstValueFrom(this.http.delete(`${this.BASE_URL}/admin/Books/${id}`));
-      return true;
-    } catch (e) {
-      this.logger.error('ProductApiService.deleteProduct', `Gagal menghapus produk ${id}:`, e);
-      return false;
-    }
-  }
+  // Catatan: penulisan buku/produk admin (create/update/delete) dilakukan lewat ItemApiService
+  // yang sesuai kontrak backend (Item + Book terpisah). Jalur lama saveProduct/deleteProduct
+  // yang mengirim body penuh ke /admin/Books telah dihapus karena tidak sesuai CreateBookRequest
+  // (backend hanya mengikat ItemId/AuthorIds/Isbn/Publisher/PublishedYear/Pages).
 }

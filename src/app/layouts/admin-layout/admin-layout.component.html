@@ -152,6 +152,10 @@
             </a>
 
             <!-- Kelola Stok -->
+            <!-- TODO(warehouse-stocks): dinonaktifkan sementara — backend belum menyediakan
+                 WarehouseStocksController (endpoint /admin|public/WarehouseStocks => 404).
+                 Aktifkan kembali link ini + route 'stocks' di app.routes.ts setelah API tersedia. -->
+            <!--
             <a routerLink="/admin/stocks"
               routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
               (click)="closeSidebar()"
@@ -160,6 +164,7 @@
                 class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
               <span>Kelola Stok</span>
             </a>
+            -->
 
             <!-- Kelola Harga -->
             <a routerLink="/admin/pricings"

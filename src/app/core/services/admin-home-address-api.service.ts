@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { HomeAddress } from '../models';
+import { HomeAddress, ApiResponse } from '../models';
 import { LoggerService } from './logger.service';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class AdminHomeAddressApiService {
 
   async getHomeAddresses(): Promise<HomeAddress[]> {
     try {
-      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/admin/HomeAddresses`));
+      const envelope = await firstValueFrom(this.http.get<ApiResponse<HomeAddress[]>>(`${this.BASE_URL}/admin/HomeAddresses`));
       return envelope?.data || [];
     } catch (e) {
       this.logger.error('AdminHomeAddressApiService.getHomeAddresses', 'Failed to load home addresses:', e);
@@ -42,10 +42,10 @@ export class AdminHomeAddressApiService {
 
     try {
       if (isNew) {
-        const envelope = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/HomeAddresses`, body));
+        const envelope = await firstValueFrom(this.http.post<ApiResponse<HomeAddress>>(`${this.BASE_URL}/admin/HomeAddresses`, body));
         return envelope?.data;
       } else {
-        const envelope = await firstValueFrom(this.http.put<any>(`${this.BASE_URL}/admin/HomeAddresses/${address.id}`, body));
+        const envelope = await firstValueFrom(this.http.put<ApiResponse<HomeAddress>>(`${this.BASE_URL}/admin/HomeAddresses/${address.id}`, body));
         return envelope?.data;
       }
     } catch (e) {

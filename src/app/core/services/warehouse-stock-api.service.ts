@@ -6,6 +6,12 @@ import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
 import { isAdminSession } from '../auth/session.util';
 
+/**
+ * TODO(warehouse-stocks): NON-FUNGSIONAL — backend belum menyediakan WarehouseStocksController.
+ * Endpoint /admin/WarehouseStocks & /public/WarehouseStocks mengembalikan 404 (koleksi Mongo
+ * `warehousestocks` ada, tetapi tidak diekspos sebagai REST endpoint). Route 'stocks' dan link
+ * nav sudah dinonaktifkan. Jangan gunakan service ini sampai endpoint backend tersedia.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +27,7 @@ export class WarehouseStockApiService {
       return envelope?.data || [];
     } catch (e) {
       this.logger.error('WarehouseStockApiService.getWarehouseStocks', 'Gagal mengambil warehouse stocks:', e);
-      return [];
+      throw e;
     }
   }
 

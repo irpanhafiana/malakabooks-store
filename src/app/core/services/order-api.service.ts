@@ -1,6 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Order } from '../models';
+import {
+  Order,
+  CartItem,
+  ApiResponse,
+  OrderResponseDto,
+  OrderItemResponseDto,
+  PagedResultDto
+} from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
@@ -15,6 +22,40 @@ export class OrderApiService {
   private readonly userApi = inject(UserApiService);
   private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
+
+  /**
+   * Bangun daftar item order untuk tampilan. Objek `product` di sini adalah SHIM tampilan,
+   * BUKAN Product penuh — order item backend hanya membawa {itemId,title,price,coverImage,quantity}.
+   * TODO(order-model): rapikan konsistensi model Order/CartItem/Product sebagai refactor terpisah;
+   * cast di bawah adalah utang teknis yang disengaja agar perilaku tampilan tidak berubah.
+   */
+  private mapOrderItems(items: OrderItemResponseDto[]): CartItem[] {
+    return (items || []).map((item): CartItem => ({
+      product: {
+        id: item.itemId || item.bookId || item.id || '',
+        title: item.title || item.itemName || '',
+        sapCode: '',
+        authorIds: [],
+        authors: [],
+        authorNames: '',
+        isbn: '',
+        categoryId: '',
+        price: item.price || 0,
+        description: '',
+        coverImage: item.coverImage || '',
+        publisher: '',
+        publishedYear: 0,
+        pages: 0,
+        weight: 0,
+        stock: 0,
+        averageRating: 5,
+        totalReviews: 0,
+        createdAt: '',
+        additionalImages: []
+      },
+      quantity: item.quantity
+    }));
+  }
 
   async updateOrderStatus(id: string, status: string): Promise<boolean> {
     try {
@@ -33,38 +74,20 @@ export class OrderApiService {
     if (currentUser.role === 'admin') {
       try {
         const [ordersEnvelope, users] = await Promise.all([
-          firstValueFrom(this.http.post<any>(`${this.BASE_URL}/admin/Orders`, { pageNumber: 1, pageSize: 1000 })) || Promise.resolve({ data: { results: [] } }),
+          firstValueFrom(this.http.post<ApiResponse<PagedResultDto<OrderResponseDto>>>(`${this.BASE_URL}/admin/Orders`, { pageNumber: 1, pageSize: 1000 })),
           this.userApi.getUsers()
         ]);
         const ordersRes = ordersEnvelope?.data?.results || [];
         const userMap = new Map(users.map(u => [u.id, u]));
 
-        return ordersRes.map((res: any) => {
+        return ordersRes.map((res): Order => {
           const u = userMap.get(res.userId);
           return {
             id: res.id,
             userId: res.userId,
             userName: u ? u.name : (res.user ? `${res.user.firstName || ''} ${res.user.lastName || ''}`.trim() : 'Unknown User') || 'Unknown User',
             userEmail: u ? (u.email || u.phone || 'No Contact') : (res.user?.phone || 'No Contact'),
-            items: res.items.map((item: any) => ({
-              product: {
-                id: item.itemId || item.bookId || item.id,
-                name: item.title,
-                description: '',
-                price: item.price,
-                images: item.coverImage ? [item.coverImage] : [],
-                categoryId: '',
-                categoryName: '',
-                stock: 0,
-                rating: 5,
-                reviewsCount: 0,
-                featured: false,
-                brand: '',
-                specifications: {},
-                createdAt: ''
-              },
-              quantity: item.quantity
-            })),
+            items: this.mapOrderItems(res.items),
             shippingAddress: {
               id: res.addressId || 'addr-default',
               name: u ? u.name : 'Customer Address',
@@ -75,12 +98,12 @@ export class OrderApiService {
               postalCode: '',
               isDefault: false
             },
-            paymentMethod: 'bank_transfer',
+            paymentMethod: res.paymentMethod || res.paymentId || 'bank_transfer',
             status: res.status as any,
-            subtotal: res.totalPrice,
-            shippingCost: 0,
+            subtotal: res.itemsSubtotal ?? res.totalPrice ?? 0,
+            shippingCost: res.shippingFee ?? 0,
             tax: 0,
-            total: res.totalPrice,
+            total: res.grandTotal ?? res.totalPrice ?? 0,
             orderDate: res.createdAt,
             trackingNumber: res.awbNo || res.aWBNo || res.AWBNo || res.trackingNumber,
             shippingCourier: res.shippingCourier || res.ShippingCourier || ''
@@ -97,13 +120,13 @@ export class OrderApiService {
 
   async getOrdersByUserId(userId: string): Promise<Order[]> {
     try {
-      const ordersResRaw = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Orders/user/${userId}`));
+      const ordersResRaw = await firstValueFrom(this.http.get<ApiResponse<OrderResponseDto[]>>(`${this.BASE_URL}/customer/Orders/user/${userId}`));
       const ordersRes = ordersResRaw?.data || [];
       const addresses = await this.userApi.getAddressesByUserId(userId);
 
       const addrMap = new Map(addresses.map(a => [a.id, a]));
 
-      return (ordersRes || []).map((res: any) => {
+      return ordersRes.map((res): Order => {
         const shippingAddress = addrMap.get(res.addressId) || {
           id: res.addressId,
           name: 'Address',
@@ -120,32 +143,14 @@ export class OrderApiService {
           userId: res.userId,
           userName: res.user ? `${res.user.firstName || ''} ${res.user.lastName || ''}`.trim() : 'Unknown User',
           userEmail: res.user?.phone || 'No Contact',
-          items: res.items.map((item: any) => ({
-            product: {
-              id: item.itemId || item.bookId || item.id,
-              name: item.title,
-              description: '',
-              price: item.price,
-              images: item.coverImage ? [item.coverImage] : [],
-              categoryId: '',
-              categoryName: '',
-              stock: 0,
-              rating: 5,
-              reviewsCount: 0,
-              featured: false,
-              brand: '',
-              specifications: {},
-              createdAt: ''
-            },
-            quantity: item.quantity
-          })),
+          items: this.mapOrderItems(res.items),
           shippingAddress,
-          paymentMethod: 'bank_transfer',
-          status: res.status as any,
-          subtotal: res.totalPrice,
-          shippingCost: 0,
+          paymentMethod: res.paymentMethod || res.paymentId || 'bank_transfer',
+          status: res.status as Order['status'],
+          subtotal: res.itemsSubtotal ?? res.totalPrice ?? 0,
+          shippingCost: res.shippingFee ?? 0,
           tax: 0,
-          total: res.totalPrice,
+          total: res.grandTotal ?? res.totalPrice ?? 0,
           orderDate: res.createdAt,
           trackingNumber: res.awbNo || res.aWBNo || res.AWBNo || res.trackingNumber
         };
@@ -159,7 +164,7 @@ export class OrderApiService {
   async getOrderById(id: string): Promise<Order | null> {
     try {
       const envelope = await firstValueFrom(
-        this.http.get<any>(`${this.BASE_URL}/customer/Orders/${id}`)
+        this.http.get<ApiResponse<OrderResponseDto>>(`${this.BASE_URL}/customer/Orders/${id}`)
       );
       const res = envelope?.data || null;
       if (!res) return null;
@@ -188,34 +193,16 @@ export class OrderApiService {
         userId: res.userId,
         userName: currentUser ? currentUser.name : '',
         userEmail: currentUser ? currentUser.email : '',
-        items: res.items.map((item: any) => ({
-          product: {
-            id: item.itemId || item.bookId || item.id,
-            name: item.title,
-            description: '',
-            price: item.price,
-            images: item.coverImage ? [item.coverImage] : [],
-            categoryId: '',
-            categoryName: '',
-            stock: 0,
-            rating: 5,
-            reviewsCount: 0,
-            featured: false,
-            brand: '',
-            specifications: {},
-            createdAt: ''
-          },
-          quantity: item.quantity
-        })),
+        items: this.mapOrderItems(res.items),
         shippingAddress,
-        paymentMethod: 'bank_transfer',
+        paymentMethod: res.paymentMethod || res.paymentId || 'bank_transfer',
         status: res.status as any,
-        subtotal: res.totalPrice,
-        shippingCost: 0,
+        subtotal: res.itemsSubtotal ?? res.totalPrice ?? 0,
+        shippingCost: res.shippingFee ?? 0,
         tax: 0,
-        total: res.totalPrice,
+        total: res.grandTotal ?? res.totalPrice ?? 0,
         orderDate: res.createdAt,
-        trackingNumber: res.awbNo || res.awbNo || res.trackingNumber
+        trackingNumber: res.awbNo || res.aWBNo || res.AWBNo || res.trackingNumber
       };
     } catch (e) {
       this.logger.error('OrderApiService.getOrderById', `Gagal mengambil order detail untuk id ${id}:`, e);
