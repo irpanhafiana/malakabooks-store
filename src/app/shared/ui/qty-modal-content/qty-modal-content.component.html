@@ -1,0 +1,42 @@
+<div class="px-5 py-6 flex flex-col bg-white min-h-[320px]">
+  <p class="text-xs text-slate-500 mb-6 text-center">Berapa banyak produk yang ingin Anda beli?</p>
+
+  @if (productStore.activeProduct()?.uomGroup?.details?.length; as uomCount) {
+    @if (uomCount > 1) {
+    <div class="mb-4">
+      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">Pilih Kemasan (UOM)</span>
+      <div class="flex flex-wrap gap-2">
+        @for (uom of productStore.activeProduct()?.uomGroup?.details; track uom.code) {
+          <button type="button"
+            (click)="selectUom(uom.code)"
+            [class]="productStore.qtyUomCode() === uom.code ? 'bg-primary-600 text-white border-primary-700' : 'bg-white text-slate-600 border-slate-200 hover:border-primary-400 hover:text-primary-600'"
+            class="px-3 py-1.5 rounded-full border text-xs font-semibold transition-colors">
+            {{ uom.name || uom.code }}
+          </button>
+        }
+      </div>
+    </div>
+    }
+  }
+
+  <div class="flex items-center justify-center py-6 bg-slate-50/50 rounded-2xl mb-8 border border-slate-100/60">
+    <app-quantity-selector [quantity]="productStore.qtyQuantity()" (quantityChange)="onQtyChange($event)"
+      [stock]="productStore.activeProduct()?.stock || 0" variant="md"></app-quantity-selector>
+  </div>
+
+  <div class="flex items-center justify-between gap-4 mt-auto">
+    <div class="flex flex-col">
+      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+        Total Harga
+        @if (productStore.isQtyLookupLoading()) {
+          <i class="bx bx-loader-alt animate-spin text-primary-500"></i>
+        }
+      </span>
+      <app-price [value]="(productStore.qtyLookedUpPrice() || 0) * productStore.qtyQuantity()" size="lg"
+        class="text-slate-800"></app-price>
+    </div>
+    <app-button (click)="confirmAddToCart()" variant="primary" size="lg" class="grow max-w-[160px]" [disabled]="productStore.isQtyLookupLoading()">
+      {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+    </app-button>
+  </div>
+</div>

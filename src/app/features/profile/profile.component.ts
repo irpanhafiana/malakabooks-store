@@ -9,6 +9,8 @@ import { ToastService } from '../../core/services/toast.service';
 import { LoggerService } from '../../core/services/logger.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
+import { ScreenService } from '../../core/services/screen.service';
 import { OrderStore } from '../../store/order.store';
 
 interface MenuItem {
@@ -32,7 +34,8 @@ interface MenuSection {
     RouterLink,
     InputComponent,
     ButtonComponent,
-    BottomSheetComponent
+    BottomSheetComponent,
+    ModalComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
@@ -40,6 +43,7 @@ interface MenuSection {
 export class ProfileComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
   protected readonly orderStore = inject(OrderStore);
+  protected readonly screen = inject(ScreenService);
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
   private readonly logger = inject(LoggerService);

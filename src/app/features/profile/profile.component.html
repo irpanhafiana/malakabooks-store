@@ -32,7 +32,7 @@
       <h1 class="pl-2">Main Menu</h1>
       <!-- Menu Sections (Generated Dynamically) -->
       @for (section of menuSections; track $index) {
-      <div class="grid grid-cols-2 gap-1.5 mt-2">
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-1.5 mt-2 lg:gap-4">
         @for (item of section.items; track item.label) {
         @if (item.route) {
         <a [routerLink]="item.route"
@@ -70,14 +70,9 @@
 
 <!-- ================= BOTTOM SHEETS & MODALS ================= -->
 
-<!-- Edit Profile Bottom Sheet -->
-<app-bottom-sheet [isOpen]="showEditProfile()" title="Edit Profil" (closed)="showEditProfile.set(false)">
-  <form [formGroup]="profileForm" (submit)="onSubmitProfile()" class="flex flex-col">
-
-    <!-- Scrollable content -->
-    <div class="flex flex-col gap-4 p-5 overflow-y-auto" style="max-height: 55vh">
-
-      <!-- Avatar Picker -->
+@if (screen.isDesktop()) {
+  <app-modal [isOpen]="showEditProfile()" (isOpenChange)="showEditProfile.set(false)" title="Edit Profil" maxWidth="max-w-md">
+    <form [formGroup]="profileForm" (submit)="onSubmitProfile()" class="flex flex-col gap-4">
       <div class="flex flex-col items-center gap-3">
         <div class="relative">
           @if (avatarPreview()) {
@@ -87,11 +82,11 @@
           <img src="/customer_avatar.png" alt="Avatar"
             class="w-20 h-20 rounded-full object-cover border-4 border-white ring-2 ring-slate-200" />
           }
-          <label for="avatarInput"
+          <label for="avatarInputDesktop"
             class="absolute bottom-0 right-0 w-7 h-7 bg-primary-500 text-white rounded-full flex items-center justify-center border-2 border-white cursor-pointer hover:bg-primary-600 transition-colors">
             <i class="bx bx-camera text-sm"></i>
           </label>
-          <input id="avatarInput" type="file" accept="image/*" class="hidden" (change)="onAvatarChange($event)" />
+          <input id="avatarInputDesktop" type="file" accept="image/*" class="hidden" (change)="onAvatarChange($event)" />
         </div>
         <p class="text-xs text-slate-400">Klik ikon kamera untuk mengganti foto. Maks. 2MB.</p>
       </div>
@@ -100,34 +95,84 @@
       <app-input label="Alamat Email" placeholder="e.g. customer@example.com" type="email" [control]="emailControl"
         class="bg-slate-50 opacity-70 pointer-events-none"></app-input>
       <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="phoneControl"></app-input>
-    </div>
 
-    <!-- Sticky Bottom Action Bar -->
-    <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3">
-      <app-button type="button" (click)="showEditProfile.set(false)" variant="outline" size="lg" [fullWidth]="true"
-        class="flex-1">Batal</app-button>
-      <app-button type="submit" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary"
-        size="lg" [fullWidth]="true" class="flex-1">Simpan Profil</app-button>
-    </div>
-  </form>
-</app-bottom-sheet>
+      <div class="pt-4 flex items-center gap-3 border-t border-slate-100">
+        <app-button type="button" (click)="showEditProfile.set(false)" variant="outline" size="md" class="flex-1">Batal</app-button>
+        <app-button type="submit" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary" size="md" class="flex-1">Simpan Profil</app-button>
+      </div>
+    </form>
+  </app-modal>
 
+  <app-modal [isOpen]="showMockModal() !== null" (isOpenChange)="showMockModal.set(null)" [title]="showMockModal() || 'Pengaturan'" maxWidth="max-w-md">
+    <div class="p-6 text-center flex flex-col items-center gap-4">
+      <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center text-primary-500">
+        <i class="bx bx-cog text-3xl animate-spin-slow"></i>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <h3 class="text-sm font-bold text-slate-800">{{ showMockModal() }} Pengaturan</h3>
+        <p class="text-xs text-slate-400 max-w-xs leading-relaxed">
+          Fitur ini sedang dalam pengembangan dan akan segera diaktifkan pada pembaruan aplikasi berikutnya.
+        </p>
+      </div>
+      <app-button type="button" (click)="showMockModal.set(null)" variant="primary" size="md" class="w-full mt-2">
+        Tutup
+      </app-button>
+    </div>
+  </app-modal>
+} @else {
+  <!-- Edit Profile Bottom Sheet -->
+  <app-bottom-sheet [isOpen]="showEditProfile()" title="Edit Profil" (closed)="showEditProfile.set(false)">
+    <form [formGroup]="profileForm" (submit)="onSubmitProfile()" class="flex flex-col">
+      <div class="flex flex-col gap-4 p-5 overflow-y-auto" style="max-height: 55vh">
+        <div class="flex flex-col items-center gap-3">
+          <div class="relative">
+            @if (avatarPreview()) {
+            <img [src]="avatarPreview()" alt="Avatar Preview"
+              class="w-20 h-20 rounded-full object-cover border-4 border-white ring-2 ring-primary-200" />
+            } @else {
+            <img src="/customer_avatar.png" alt="Avatar"
+              class="w-20 h-20 rounded-full object-cover border-4 border-white ring-2 ring-slate-200" />
+            }
+            <label for="avatarInput"
+              class="absolute bottom-0 right-0 w-7 h-7 bg-primary-500 text-white rounded-full flex items-center justify-center border-2 border-white cursor-pointer hover:bg-primary-600 transition-colors">
+              <i class="bx bx-camera text-sm"></i>
+            </label>
+            <input id="avatarInput" type="file" accept="image/*" class="hidden" (change)="onAvatarChange($event)" />
+          </div>
+          <p class="text-xs text-slate-400">Klik ikon kamera untuk mengganti foto. Maks. 2MB.</p>
+        </div>
 
-<!-- Mock Settings Settings Dialog -->
-<app-bottom-sheet [isOpen]="showMockModal() !== null" [title]="showMockModal() || 'Pengaturan'"
-  (closed)="showMockModal.set(null)">
-  <div class="p-6 text-center flex flex-col items-center gap-4">
-    <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center text-primary-500">
-      <i class="bx bx-cog text-3xl animate-spin-slow"></i>
+        <app-input label="Nama Lengkap" placeholder="e.g. Hadi Jafri" [control]="nameControl"></app-input>
+        <app-input label="Alamat Email" placeholder="e.g. customer@example.com" type="email" [control]="emailControl"
+          class="bg-slate-50 opacity-70 pointer-events-none"></app-input>
+        <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="phoneControl"></app-input>
+      </div>
+
+      <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3">
+        <app-button type="button" (click)="showEditProfile.set(false)" variant="outline" size="lg" [fullWidth]="true"
+          class="flex-1">Batal</app-button>
+        <app-button type="submit" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary"
+          size="lg" [fullWidth]="true" class="flex-1">Simpan Profil</app-button>
+      </div>
+    </form>
+  </app-bottom-sheet>
+
+  <!-- Mock Settings Settings Dialog -->
+  <app-bottom-sheet [isOpen]="showMockModal() !== null" [title]="showMockModal() || 'Pengaturan'"
+    (closed)="showMockModal.set(null)">
+    <div class="p-6 text-center flex flex-col items-center gap-4">
+      <div class="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center text-primary-500">
+        <i class="bx bx-cog text-3xl animate-spin-slow"></i>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <h3 class="text-sm font-bold text-slate-800">{{ showMockModal() }} Pengaturan</h3>
+        <p class="text-xs text-slate-400 max-w-xs leading-relaxed">
+          Fitur ini sedang dalam pengembangan dan akan segera diaktifkan pada pembaruan aplikasi berikutnya.
+        </p>
+      </div>
+      <app-button type="button" (click)="showMockModal.set(null)" variant="primary" size="md" class="w-full mt-2">
+        Tutup
+      </app-button>
     </div>
-    <div class="flex flex-col gap-1.5">
-      <h3 class="text-sm font-bold text-slate-800">{{ showMockModal() }} Pengaturan</h3>
-      <p class="text-xs text-slate-400 max-w-xs leading-relaxed">
-        Fitur ini sedang dalam pengembangan dan akan segera diaktifkan pada pembaruan aplikasi berikutnya.
-      </p>
-    </div>
-    <app-button type="button" (click)="showMockModal.set(null)" variant="primary" size="md" class="w-full mt-2">
-      Tutup
-    </app-button>
-  </div>
-</app-bottom-sheet>
+  </app-bottom-sheet>
+}

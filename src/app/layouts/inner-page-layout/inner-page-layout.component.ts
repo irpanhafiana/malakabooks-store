@@ -6,17 +6,20 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ToastContainerComponent } from '../../shared/ui/toast-container/toast-container.component';
-
+import { ScreenService } from '../../core/services/screen.service';
+import { DesktopHeaderComponent } from '../desktop/desktop-header/desktop-header.component';
+import { DesktopFooterComponent } from '../desktop/desktop-footer/desktop-footer.component';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-inner-page-layout',
   standalone: true,
-  imports: [RouterOutlet, ToastContainerComponent],
+  imports: [RouterOutlet, ToastContainerComponent, DesktopHeaderComponent, DesktopFooterComponent],
   templateUrl: './inner-page-layout.component.html',
   styleUrl: './inner-page-layout.component.css'
 })
 export class InnerPageLayoutComponent {
   protected readonly toastService = inject(ToastService);
+  protected readonly screen = inject(ScreenService);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -51,15 +54,5 @@ export class InnerPageLayoutComponent {
     } else {
       this.router.navigate(['/']);
     }
-  }
-
-  toastClass(type: string): string {
-    const borderType = {
-      success: 'border-l-4 border-l-emerald-500',
-      error: 'border-l-4 border-l-rose-500',
-      info: 'border-l-4 border-l-blue-500',
-      warning: 'border-l-4 border-l-amber-500'
-    };
-    return borderType[type as keyof typeof borderType] || 'border-l-4 border-l-blue-500';
   }
 }

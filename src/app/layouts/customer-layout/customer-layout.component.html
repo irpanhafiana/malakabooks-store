@@ -1,3 +1,24 @@
+<div class="customer-root min-h-screen bg-slate-50 flex flex-col">
+  @if (screen.isDesktop()) {
+    <app-desktop-header></app-desktop-header>
+    
+    <main class="grow max-w-7xl w-full mx-auto px-6 py-6 min-h-[60vh] relative">
+      <router-outlet></router-outlet>
+    </main>
+
+    <app-desktop-footer></app-desktop-footer>
+    <app-toast-container></app-toast-container>
+    
+    <app-modal [isOpen]="isDetailOpen()" (isOpenChange)="closeProductDetails()" title="Detail Produk" maxWidth="max-w-4xl">
+      <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
+    </app-modal>
+    
+    <app-modal [isOpen]="productStore.isQtyModalOpen()" (isOpenChange)="closeQty()" title="Pilihan Pembelian" maxWidth="max-w-md">
+      <app-qty-modal-content (confirmed)="closeQty(true)"></app-qty-modal-content>
+    </app-modal>
+    
+  } @else {
+  <!-- MOBILE SHELL -->
 <div class="h-dvh w-full bg-gray-50/50 flex justify-center overflow-hidden customer-root"
   style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
 
@@ -118,49 +139,10 @@
     </app-bottom-sheet>
 
     <app-bottom-sheet [isOpen]="productStore.isQtyModalOpen()" (closed)="closeQty()">
-      <div class="px-5 py-6 flex flex-col bg-white min-h-[320px]">
-        <p class="text-xs text-slate-500 mb-6 text-center">Berapa banyak produk yang ingin Anda beli?</p>
-
-        @if (productStore.activeProduct()?.uomGroup?.details?.length; as uomCount) {
-          @if (uomCount > 1) {
-          <div class="mb-4">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">Pilih Kemasan (UOM)</span>
-            <div class="flex flex-wrap gap-2">
-              @for (uom of productStore.activeProduct()?.uomGroup?.details; track uom.code) {
-                <button type="button"
-                  (click)="selectUom(uom.code)"
-                  [class]="productStore.qtyUomCode() === uom.code ? 'bg-primary-600 text-white border-primary-700' : 'bg-white text-slate-600 border-slate-200 hover:border-primary-400 hover:text-primary-600'"
-                  class="px-3 py-1.5 rounded-full border text-xs font-semibold transition-colors">
-                  {{ uom.name || uom.code }}
-                </button>
-              }
-            </div>
-          </div>
-          }
-        }
-
-        <div class="flex items-center justify-center py-6 bg-slate-50/50 rounded-2xl mb-8 border border-slate-100/60">
-          <app-quantity-selector [quantity]="productStore.qtyQuantity()" (quantityChange)="onQtyChange($event)"
-            [stock]="productStore.activeProduct()?.stock || 0" variant="md"></app-quantity-selector>
-        </div>
-
-        <div class="flex items-center justify-between gap-4 mt-auto">
-          <div class="flex flex-col">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 flex items-center gap-1">
-              Total Harga
-              @if (productStore.isQtyLookupLoading()) {
-                <i class="bx bx-loader-alt animate-spin text-primary-500"></i>
-              }
-            </span>
-            <app-price [value]="(productStore.qtyLookedUpPrice() || 0) * productStore.qtyQuantity()" size="lg"
-              class="text-slate-800"></app-price>
-          </div>
-          <app-button (click)="confirmAddToCart()" variant="primary" size="lg" class="grow max-w-[160px]" [disabled]="productStore.isQtyLookupLoading()">
-            {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
-          </app-button>
-        </div>
-      </div>
+      <app-qty-modal-content (confirmed)="closeQty(true)"></app-qty-modal-content>
     </app-bottom-sheet>
 
   </div>
+</div>
+  }
 </div>

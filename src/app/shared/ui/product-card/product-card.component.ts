@@ -20,6 +20,7 @@ export class ProductCardComponent {
 
   readonly product = input.required<Product>();
   readonly customClick = input<boolean>(false);
+  readonly size = input<'sm' | 'md'>('sm');
 
   readonly addToCart = output<Product>();
   readonly productClick = output<Product>();

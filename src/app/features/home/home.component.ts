@@ -12,13 +12,15 @@ import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
+import { ScreenService } from '../../core/services/screen.service';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent],
+  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent, ModalComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -27,6 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly userStore = inject(UserStore);
   protected readonly authorStore = inject(AuthorStore);
   protected readonly bannerStore = inject(PromotionBannerStore);
+  protected readonly screen = inject(ScreenService);
 
   slides = [
     {
@@ -198,6 +201,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   scrollNext() {
     this.embla?.scrollNext();
   }
+
+  bestSellerPrev() { this.bestSellerEmbla?.scrollPrev(); }
+  bestSellerNext() { this.bestSellerEmbla?.scrollNext(); }
+  merchandisePrev() { this.merchandiseEmbla?.scrollPrev(); }
+  merchandiseNext() { this.merchandiseEmbla?.scrollNext(); }
+  authorPrev() { this.authorEmbla?.scrollPrev(); }
+  authorNext() { this.authorEmbla?.scrollNext(); }
 
   filterByCategory(catId: string | null) {
     this.productStore.setCategoryFilter(catId);

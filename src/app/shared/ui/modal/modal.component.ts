@@ -13,6 +13,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   readonly isOpen = model<boolean>(false);
   readonly title = input<string>('');
   readonly hasFooter = input<boolean>(true);
+  readonly maxWidth = input<string>('max-w-lg');
 
   private readonly el = inject(ElementRef);
 

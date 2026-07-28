@@ -8,19 +8,20 @@ import { ToastService } from '../../core/services/toast.service';
 import { SearchBarComponent } from '../../shared/ui/search-bar/search-bar.component';
 import { ProductDetailComponent } from '../../features/product/product-detail/product-detail.component';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
-import { QuantitySelectorComponent } from '../../shared/ui/quantity-selector/quantity-selector.component';
-import { ButtonComponent } from '../../shared/ui/button/button.component';
-import { PriceComponent } from '../../shared/ui/price/price.component';
 
 import { PricingApiService } from '../../core/services/pricing-api.service';
 
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
+import { QtyModalContentComponent } from '../../shared/ui/qty-modal-content/qty-modal-content.component';
 import { ToastContainerComponent } from '../../shared/ui/toast-container/toast-container.component';
-
+import { ScreenService } from '../../core/services/screen.service';
+import { DesktopHeaderComponent } from '../desktop/desktop-header/desktop-header.component';
+import { DesktopFooterComponent } from '../desktop/desktop-footer/desktop-footer.component';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-customer-layout',
     standalone: true,
-    imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, QuantitySelectorComponent, ButtonComponent, PriceComponent, ToastContainerComponent],
+    imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, ModalComponent, QtyModalContentComponent, ToastContainerComponent, DesktopHeaderComponent, DesktopFooterComponent],
     templateUrl: './customer-layout.component.html',
     styleUrl: './customer-layout.component.css'
 })
@@ -31,6 +32,7 @@ export class CustomerLayoutComponent {
     protected readonly productStore = inject(ProductStore);
     protected readonly pricingApi = inject(PricingApiService);
     protected readonly toastService = inject(ToastService);
+    protected readonly screen = inject(ScreenService);
     private readonly router = inject(Router);
 
     isDetailOpen = signal<boolean>(false);
@@ -144,15 +146,5 @@ export class CustomerLayoutComponent {
             }
         }
         this.closeQty(true);
-    }
-
-    toastClass(type: string): string {
-        const borderType = {
-            success: 'border-l-4 border-l-emerald-500',
-            error: 'border-l-4 border-l-rose-500',
-            info: 'border-l-4 border-l-blue-500',
-            warning: 'border-l-4 border-l-amber-500'
-        };
-        return borderType[type as keyof typeof borderType] || 'border-l-4 border-l-blue-500';
     }
 }
