@@ -1,46 +1,46 @@
-<div class="flex flex-col gap-4  pb-28">
+<div class="flex flex-col gap-6 pb-28">
 
   <!-- Hero Banner Carousel (Swipeable, looping, with dot indicators) -->
   <section class="relative group">
     @if (bannerStore.loading()) {
-    <div class="flex -ml-3 items-center h-45 overflow-hidden">
+    <div class="flex -ml-3 items-center h-45 lg:h-[380px] overflow-hidden">
       <div class="flex-[0_0_100%] min-w-0 pl-3">
-        <div class="h-42 w-full bg-slate-200/60 rounded-2xl animate-pulse"></div>
+        <div class="h-42 lg:h-[360px] w-full bg-slate-200/60 rounded-2xl animate-pulse"></div>
       </div>
     </div>
     } @else if (bannerStore.banners().length === 0) {
-    <div class="h-45 w-full bg-slate-100 rounded-2xl flex justify-center items-center text-slate-400">
+    <div class="h-45 lg:h-[380px] w-full bg-slate-100 rounded-2xl flex justify-center items-center text-slate-400">
       <p>Tidak ada banner aktif</p>
     </div>
     }
 
     <!-- Embla viewport -->
-    <div #carouselViewport class="overflow-hidden h-45"
+    <div #carouselViewport class="overflow-hidden h-45 lg:h-[380px]"
       [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
       <!-- Embla container -->
       <div class="flex -ml-3 items-center h-full">
         @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
         <div class="flex-[0_0_100%] min-w-0 pl-3">
           <div
-            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 px-4 py-4.5 flex flex-col justify-between transition-all duration-500 ease-in-out h-42">
+            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 px-6 py-6 lg:px-12 lg:py-10 flex flex-col justify-between transition-all duration-500 ease-in-out h-42 lg:h-[360px]">
             <!-- Background Image -->
             <div class="absolute inset-0 bg-cover bg-center pointer-events-none"
               [style.backgroundImage]="'url(' + banner.imageBase64 + ')'"></div>
 
-            <div class="relative z-10 flex flex-col items-start gap-1 max-w-xl">
+            <div class="relative z-10 flex flex-col items-start gap-2 max-w-xl">
 
               <h1
-                class="text-base font-display font-extrabold tracking-tight leading-tight line-clamp-1 drop-shadow-md">
+                class="text-base lg:text-3xl font-display font-extrabold tracking-tight leading-tight line-clamp-2 drop-shadow-md">
                 {{ banner.title }}
               </h1>
-              <p class="text-[10px] text-white max-w-sm leading-relaxed line-clamp-1 drop-shadow-md font-medium">
+              <p class="text-[10px] lg:text-sm text-white max-w-sm lg:max-w-md leading-relaxed line-clamp-2 drop-shadow-md font-medium">
                 {{ banner.subtitle }}
               </p>
             </div>
 
             <div class="relative z-10 flex items-center justify-between gap-3 mt-2 w-full">
               <a [routerLink]="banner.targetUrl"
-                class="px-3.5 py-1.5 rounded-lg bg-white text-primary-700 font-bold text-[9px] hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
+                class="px-4 py-2 rounded-xl bg-white text-primary-700 font-bold text-[10px] lg:text-sm hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
                 {{ banner.buttonText }}
               </a>
             </div>
@@ -66,8 +66,8 @@
   <section class="flex flex-col gap-4 mt-2">
     <div class="flex items-start justify-between">
       <div>
-        <h2 class="font-display font-extrabold text-slate-800 text-base">Produk Terlaris</h2>
-        <p class="text-[12px] text-slate-400 mt-0.5">Lorem Ipsum Dolor Sit Amet Anum</p>
+        <h2 class="font-display font-extrabold text-slate-800 text-base lg:text-2xl">Produk Terlaris</h2>
+        <p class="text-[12px] lg:text-sm text-slate-400 mt-0.5">Nikmati varian kopi terfavorit racikan khas Mardika Kopi</p>
       </div>
     </div>
 
@@ -75,24 +75,24 @@
     <div #bestSellerCarouselViewport class="overflow-hidden pl-2">
       <div class="flex -ml-3 cursor-grab active:cursor-grabbing">
         @if (kopiLoading()) {
-        @for (i of [1, 2, 3]; track i) {
-        <div class="flex-[0_0_170px] min-w-0 pl-2">
+        @for (i of [1, 2, 3, 4]; track i) {
+        <div class="flex-[0_0_170px] lg:flex-[0_0_220px] min-w-0 pl-2">
           <app-skeleton type="card" [count]="1"></app-skeleton>
         </div>
         }
         } @else {
         @for (prod of kopiItems(); track prod.id) {
-        <div class="flex-[0_0_170px] min-w-0 pl-2">
+        <div class="flex-[0_0_170px] lg:flex-[0_0_220px] min-w-0 pl-2">
           <app-product-card [product]="prod" [customClick]="true" (productClick)="openItemSheet($event)" (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
         }
         @for (prod of kopiItems(); track prod.id + '-clone1') {
-        <div class="flex-[0_0_170px] min-w-0 pl-2" aria-hidden="true">
+        <div class="flex-[0_0_170px] lg:flex-[0_0_220px] min-w-0 pl-2" aria-hidden="true">
           <app-product-card [product]="prod" [customClick]="true" (productClick)="openItemSheet($event)" (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
         }
         @for (prod of kopiItems(); track prod.id + '-clone2') {
-        <div class="flex-[0_0_170px] min-w-0 pl-2" aria-hidden="true">
+        <div class="flex-[0_0_170px] lg:flex-[0_0_220px] min-w-0 pl-2" aria-hidden="true">
           <app-product-card [product]="prod" [customClick]="true" (productClick)="openItemSheet($event)" (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
         }
@@ -101,41 +101,52 @@
     </div>
   </section>
 
-
-
   <!-- Recommended/Featured Products grid -->
-  <section class="flex flex-col gap-4">
+  <section class="flex flex-col gap-4 mt-4">
     <div class="flex flex-col gap-6">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="font-display font-extrabold text-slate-800 text-base">Semua Produk</h2>
-          <p class="text-[12px] text-slate-400 mt-0.5">Pilihan kopi terbaik dari Mardika Kopi</p>
+          <h2 class="font-display font-extrabold text-slate-800 text-base lg:text-2xl">Semua Produk</h2>
+          <p class="text-[12px] lg:text-sm text-slate-400 mt-0.5">Pilihan kopi terbaik dari Mardika Kopi</p>
         </div>
       </div>
     </div>
 
     @if (kopiLoading()) {
-    <div class="grid grid-cols-2 gap-2 mt-4">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4 mt-4">
       <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
       <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
       <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
       <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
     </div>
     } @else {
-    <app-masonry-grid [items]="kopiItems()">
-      <ng-template let-prod>
-        <app-product-card [product]="prod" [customClick]="true" (productClick)="openItemSheet($event)" (addToCart)="openQtyModal($event)"></app-product-card>
-      </ng-template>
-    </app-masonry-grid>
+    <div class="hidden lg:grid grid-cols-4 xl:grid-cols-5 gap-6 gap-y-8">
+      @for (prod of kopiItems(); track prod.id) {
+        <app-product-card [product]="prod" [customClick]="true" size="md" (productClick)="openItemSheet($event)" (addToCart)="openQtyModal($event)"></app-product-card>
+      }
+    </div>
+    <div class="lg:hidden">
+      <app-masonry-grid [items]="kopiItems()">
+        <ng-template let-prod>
+          <app-product-card [product]="prod" [customClick]="true" (productClick)="openItemSheet($event)" (addToCart)="openQtyModal($event)"></app-product-card>
+        </ng-template>
+      </app-masonry-grid>
+    </div>
     }
   </section>
 
 </div>
 
-<!-- Bottom Sheet for Item Details -->
+<!-- Item Details (Modal on Desktop, Bottom Sheet on Mobile) -->
+@if (screen.isDesktop()) {
+<app-modal [isOpen]="isItemSheetOpen()" (isOpenChange)="isItemSheetOpen.set($event)" title="Detail Produk Kopi" maxWidth="max-w-4xl">
+  <app-mardika-kopi-detail [productId]="selectedKopiId()" (closed)="closeItemSheet()"></app-mardika-kopi-detail>
+</app-modal>
+} @else {
 <app-bottom-sheet [isOpen]="isItemSheetOpen()" (closed)="closeItemSheet()" [fullHeight]="true">
   <app-mardika-kopi-detail [productId]="selectedKopiId()" (closed)="closeItemSheet()"></app-mardika-kopi-detail>
 </app-bottom-sheet>
+}
 
 
 

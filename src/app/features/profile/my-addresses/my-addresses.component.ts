@@ -14,17 +14,23 @@ import { BottomSheetComponent } from '../../../shared/ui/bottom-sheet/bottom-she
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { MapPickerComponent } from '../../../shared/ui/map-picker/map-picker.component';
 
+import { NgTemplateOutlet } from '@angular/common';
+import { ScreenService } from '../../../core/services/screen.service';
+import { ModalComponent } from '../../../shared/ui/modal/modal.component';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-my-addresses',
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    NgTemplateOutlet,
     InputComponent,
     SelectComponent,
     ButtonComponent,
     IconComponent,
     BottomSheetComponent,
+    ModalComponent,
     SkeletonComponent,
     MapPickerComponent
   ],
@@ -32,6 +38,7 @@ import { MapPickerComponent } from '../../../shared/ui/map-picker/map-picker.com
   styleUrl: './my-addresses.component.css'
 })
 export class MyAddressesComponent implements OnInit {
+  protected readonly screen = inject(ScreenService);
   protected readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);

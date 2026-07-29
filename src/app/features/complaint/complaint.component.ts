@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { OrderStore } from '../../store/order.store';
@@ -15,6 +15,8 @@ import { StatusBadgeComponent } from '../../shared/ui/status-badge/status-badge.
 import { OrderApiService } from '../../core/services/order-api.service';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 
+import { ScreenService } from '../../core/services/screen.service';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-complaint',
@@ -22,6 +24,7 @@ import { ModalComponent } from '../../shared/ui/modal/modal.component';
   imports: [
     ReactiveFormsModule,
     DatePipe,
+    NgTemplateOutlet,
     RouterLink,
     StatusBadgeComponent,
     EmptyStateComponent,
@@ -36,6 +39,7 @@ import { ModalComponent } from '../../shared/ui/modal/modal.component';
   styleUrl: './complaint.component.css'
 })
 export class ComplaintComponent implements OnInit {
+  protected readonly screen = inject(ScreenService);
   private readonly fb = inject(FormBuilder);
   protected readonly authStore = inject(AuthStore);
   protected readonly orderStore = inject(OrderStore);

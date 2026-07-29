@@ -1,9 +1,11 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthStore } from '../../../store/auth.store';
 import { OrderStore } from '../../../store/order.store';
+import { ScreenService } from '../../../core/services/screen.service';
+import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
@@ -21,10 +23,11 @@ import { Product } from '../../../core/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-order-history',
   standalone: true,
-  imports: [RouterLink, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, StatusBadgeComponent, DatePipe, DecimalPipe, ButtonComponent, BottomSheetComponent, FormsModule],
+  imports: [RouterLink, PriceComponent, IconComponent, EmptyStateComponent, SkeletonComponent, StatusBadgeComponent, DatePipe, DecimalPipe, ButtonComponent, BottomSheetComponent, ModalComponent, FormsModule, NgTemplateOutlet],
   templateUrl: './order-history.component.html'
 })
 export class OrderHistoryComponent implements OnInit {
+  protected readonly screen = inject(ScreenService);
   protected readonly authStore = inject(AuthStore);
   protected readonly orderStore = inject(OrderStore);
   private readonly router = inject(Router);

@@ -1,9 +1,11 @@
 import { Component, inject, signal, effect, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, NgTemplateOutlet } from '@angular/common';
 import { ProductStore } from '../../../store/product.store';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
 import { Product } from '../../../core/models';
+import { ScreenService } from '../../../core/services/screen.service';
+import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { BottomSheetComponent } from '../../../shared/ui/bottom-sheet/bottom-sheet.component';
@@ -16,11 +18,12 @@ import { MasonryGridComponent } from '../../../shared/ui/masonry-grid/masonry-gr
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-list',
   standalone: true,
-  imports: [SkeletonComponent, IconComponent, BottomSheetComponent, EmptyStateComponent, SearchBarComponent, ProductCardComponent, MasonryGridComponent],
+  imports: [SkeletonComponent, IconComponent, BottomSheetComponent, ModalComponent, EmptyStateComponent, SearchBarComponent, ProductCardComponent, MasonryGridComponent, NgTemplateOutlet],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit {
+  protected readonly screen = inject(ScreenService);
   protected readonly productStore = inject(ProductStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);

@@ -1,11 +1,11 @@
 <div class="h-full relative bg-slate-50/30">
-  <div class="px-4 pb-20 pt-0 h-full flex flex-col overflow-y-auto no-scrollbar">
-    <div class="flex flex-col gap-2 w-full mx-auto py-2">
+  <div class="px-0 lg:px-4 pb-20 pt-0 h-full flex flex-col overflow-y-auto no-scrollbar">
+    <div class="flex flex-col gap-3 w-full mx-auto py-2">
 
       @if (isAddressesLoading()) {
       <!-- Skeleton Screen Loader -->
       <div class="flex flex-col gap-3 w-full">
-        <div class="border border-slate-100 rounded-2xl p-4 w-full bg-slate-50/10 flex flex-col gap-2.5">
+        <div class="border border-slate-200/80 rounded-2xl p-5 w-full bg-white flex flex-col gap-2.5">
           <app-skeleton height="14px" width="25%"></app-skeleton>
           <app-skeleton height="12px" width="33%"></app-skeleton>
           <app-skeleton height="12px" width="75%"></app-skeleton>
@@ -14,37 +14,37 @@
       } @else {
       @for (addr of addresses(); track addr.id) {
       <div
-        class="flex items-start justify-between p-4 bg-white border border-slate-100 rounded-lg text-xs leading-relaxed">
-        <div class="flex flex-col">
-          <strong class="font-bold text-slate-800">
+        class="flex items-start justify-between p-5 bg-white border border-slate-200/80 shadow-xs hover:shadow-md rounded-2xl text-xs leading-relaxed transition-all">
+        <div class="flex flex-col gap-1">
+          <strong class="font-bold text-slate-800 text-sm flex items-center gap-2">
             {{ addr.name }}
             @if (addr.isDefault) {
-            <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold ml-1">Default</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">Utama</span>
             }
           </strong>
-          <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
-          <span class="text-slate-600 font-semibold">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }},
+          <span class="text-slate-500 font-medium">{{ addr.phone }}</span>
+          <span class="text-slate-600 font-semibold text-xs mt-0.5">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }},
             {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
         </div>
-        <div class="flex items-center gap-1 ml-2">
+        <div class="flex items-center gap-1.5 ml-4 shrink-0">
           @if (!addr.isDefault) {
           <button type="button" (click)="setDefaultAddress(addr)" title="Jadikan Utama"
-            class="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg cursor-pointer">
-            <app-icon name="check-circle" size="14"></app-icon>
+            class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl cursor-pointer transition-colors">
+            <app-icon name="check-circle" size="16"></app-icon>
           </button>
           }
           <button type="button" (click)="editAddress(addr)" title="Edit Alamat"
-            class="p-1.5 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg cursor-pointer">
-            <app-icon name="edit" size="14"></app-icon>
+            class="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl cursor-pointer transition-colors">
+            <app-icon name="edit" size="16"></app-icon>
           </button>
           <button type="button" (click)="deleteAddress(addr.id)" title="Hapus Alamat"
-            class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg cursor-pointer">
-            <app-icon name="trash" size="14"></app-icon>
+            class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl cursor-pointer transition-colors">
+            <app-icon name="trash" size="16"></app-icon>
           </button>
         </div>
       </div>
       } @empty {
-      <p class="text-xs text-slate-400 text-center py-4">Belum ada alamat pengiriman tersimpan.</p>
+      <p class="text-xs text-slate-400 text-center py-6">Belum ada alamat pengiriman tersimpan.</p>
       }
       }
     </div>
@@ -52,16 +52,26 @@
 
   <!-- Floating Action Button -->
   <button type="button" (click)="addNewAddress()"
-    class="absolute bottom-6 right-6 w-14 h-14 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 hover:scale-105 active:scale-95 transition-all z-10">
+    class="absolute bottom-6 right-6 w-14 h-14 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 hover:scale-105 active:scale-95 transition-all z-10 cursor-pointer shadow-lg shadow-primary-600/30">
     <i class="bx bx-plus text-2xl"></i>
   </button>
 </div>
 
-<!-- Add/Edit Address Form Bottom Sheet (nested/overlay) -->
+<!-- Add/Edit Address Dialog (Modal on Desktop, Bottom Sheet on Mobile) -->
+@if (screen.isDesktop()) {
+<app-modal [isOpen]="showAddressForm()" (isOpenChange)="showAddressForm.set($event)" [title]="editingAddressId() ? 'Perbaharui Alamat' : 'Tambah Alamat Baru'" maxWidth="max-w-xl">
+  <ng-container *ngTemplateOutlet="addressFormContent"></ng-container>
+</app-modal>
+} @else {
 <app-bottom-sheet [isOpen]="showAddressForm()" [title]="editingAddressId() ? 'Perbaharui Alamat' : 'Tambah Alamat Baru'"
   (closed)="cancelAddressForm()">
+  <ng-container *ngTemplateOutlet="addressFormContent"></ng-container>
+</app-bottom-sheet>
+}
+
+<ng-template #addressFormContent>
   <form [formGroup]="addressForm" class="flex flex-col">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 overflow-y-auto" style="max-height: 50vh">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2 overflow-y-auto" style="max-height: 60vh">
       <app-input label="Nama Penerima" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
       <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="addrPhoneControl"></app-input>
       <div class="sm:col-span-2">
@@ -76,7 +86,7 @@
       <app-input label="Kode Pos" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
 
       <div class="sm:col-span-2 mt-2">
-        <label class="block text-sm font-medium text-slate-700 mb-2">Pin Lokasi Peta</label>
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Pin Lokasi Peta</label>
         <app-map-picker [initialLat]="selectedLat()" [initialLng]="selectedLng()"
           (locationSelected)="onMapLocationSelected($event)">
         </app-map-picker>
@@ -85,12 +95,12 @@
     </div>
 
     <!-- Sticky Bottom Action Bar -->
-    <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3">
-      <app-button type="button" (click)="cancelAddressForm()" variant="outline" size="lg" [fullWidth]="true"
+    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-3">
+      <app-button type="button" (click)="cancelAddressForm()" variant="outline" size="md" [fullWidth]="true"
         class="flex-1">Batal</app-button>
       <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()"
-        [disabled]="addressForm.invalid" variant="primary" size="lg" [fullWidth]="true" class="flex-1">Simpan
+        [disabled]="addressForm.invalid" variant="primary" size="md" [fullWidth]="true" class="flex-1">Simpan
         Alamat</app-button>
     </div>
   </form>
-</app-bottom-sheet>
+</ng-template>

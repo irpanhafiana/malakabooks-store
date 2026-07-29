@@ -1,15 +1,15 @@
 <div class="h-full relative bg-slate-50/30">
-  <div class="px-4 pb-20 pt-0 h-full flex flex-col overflow-y-auto no-scrollbar">
-    <div class="flex flex-col gap-3 w-full mx-auto py-2">
+  <div class="px-0 lg:px-4 pb-20 pt-0 h-full flex flex-col overflow-y-auto no-scrollbar">
+    <div class="flex flex-col gap-4 w-full mx-auto py-2">
 
       @if (complaintStore.loading()) {
       <div class="flex flex-col gap-3">
-        <div class="border border-slate-100 rounded-lg p-4 w-full bg-white flex flex-col gap-2.5">
+        <div class="border border-slate-200/80 rounded-2xl p-5 w-full bg-white flex flex-col gap-2.5">
           <app-skeleton height="14px" width="40%"></app-skeleton>
           <app-skeleton height="12px" width="25%"></app-skeleton>
           <app-skeleton height="12px" width="80%"></app-skeleton>
         </div>
-        <div class="border border-slate-100 rounded-lg p-4 w-full bg-white flex flex-col gap-2.5">
+        <div class="border border-slate-200/80 rounded-2xl p-5 w-full bg-white flex flex-col gap-2.5">
           <app-skeleton height="14px" width="40%"></app-skeleton>
           <app-skeleton height="12px" width="25%"></app-skeleton>
           <app-skeleton height="12px" width="80%"></app-skeleton>
@@ -25,10 +25,10 @@
       </app-empty-state>
       } @else {
       @for (c of complaintStore.complaints(); track c.id) {
-      <div (click)="openChat(c)" class="bg-white border border-slate-100 rounded-lg p-4 flex flex-col gap-2.5 text-xs leading-relaxed cursor-pointer hover:border-primary-200 hover:shadow-sm transition-all">
+      <div (click)="openChat(c)" class="bg-white border border-slate-200/80 rounded-2xl p-5 flex flex-col gap-3 text-xs leading-relaxed cursor-pointer hover:border-primary-300 hover:shadow-md transition-all shadow-xs">
         <div class="flex items-start justify-between gap-3">
           <div class="flex flex-col">
-            <p class="font-bold text-slate-800 text-sm">{{ c.subject }}</p>
+            <p class="font-bold text-slate-800 text-base">{{ c.subject }}</p>
             <p class="text-slate-400 mt-0.5">
               Order #{{ c.orderId }} &middot; {{ c.createdAt | date:'mediumDate' }}
             </p>
@@ -36,10 +36,10 @@
           <app-status-badge [status]="c.status" type="complaint"></app-status-badge>
         </div>
 
-        <p class="text-slate-600 line-clamp-2">{{ c.description }}</p>
+        <p class="text-slate-600 line-clamp-2 text-sm">{{ c.description }}</p>
         
         @if (c.messages && c.messages.length > 0) {
-        <p class="text-primary-600 font-medium text-xs mt-1"><i class="bx bx-message-rounded-dots mr-1"></i> {{ c.messages.length }} pesan</p>
+        <p class="text-primary-600 font-bold text-xs mt-1 flex items-center gap-1"><i class="bx bx-message-rounded-dots text-base"></i> {{ c.messages.length }} pesan</p>
         }
       </div>
       }
@@ -49,28 +49,38 @@
 
   <!-- Floating Action Button -->
   <button type="button" (click)="openForm()"
-    class="absolute bottom-6 right-6 w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg shadow-primary-600/30 flex items-center justify-center hover:bg-primary-700 hover:scale-105 active:scale-95 transition-all z-10">
+    class="absolute bottom-6 right-6 w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg shadow-primary-600/30 flex items-center justify-center hover:bg-primary-700 hover:scale-105 active:scale-95 transition-all z-10 cursor-pointer">
     <i class="bx bx-plus text-2xl"></i>
   </button>
 </div>
 
-<!-- Chat Bottom Sheet -->
+<!-- Chat Dialog (Modal on Desktop, Bottom Sheet on Mobile) -->
+@if (screen.isDesktop()) {
+<app-modal [isOpen]="isChatOpen()" (isOpenChange)="isChatOpen.set($event)" title="Detail Komplain" maxWidth="max-w-2xl">
+  <ng-container *ngTemplateOutlet="chatContent"></ng-container>
+</app-modal>
+} @else {
 <app-bottom-sheet [isOpen]="isChatOpen()" title="Detail Komplain" (closed)="closeChat()">
+  <ng-container *ngTemplateOutlet="chatContent"></ng-container>
+</app-bottom-sheet>
+}
+
+<ng-template #chatContent>
   @if (selectedComplaint()) {
-  <div class="flex flex-col h-[70vh]">
-    <div class="px-5 py-4 border-b border-slate-100 shrink-0">
-      <div class="flex justify-between items-start mb-2">
-        <h3 class="font-bold text-slate-800 text-sm">{{ selectedComplaint().subject }}</h3>
+  <div class="flex flex-col h-[65vh]">
+    <div class="pb-3 border-b border-slate-100 shrink-0">
+      <div class="flex justify-between items-start mb-1">
+        <h3 class="font-bold text-slate-800 text-sm lg:text-base">{{ selectedComplaint().subject }}</h3>
         <app-status-badge [status]="selectedComplaint().status" type="complaint"></app-status-badge>
       </div>
       <p class="text-slate-500 text-xs">Order #{{ selectedComplaint().orderId }}</p>
     </div>
 
     <!-- Chat Messages -->
-    <div class="flex-1 overflow-y-auto p-5 flex flex-col gap-4 bg-slate-50">
+    <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-slate-50/60 rounded-xl my-3">
       <!-- Original Description -->
       <div class="flex justify-end">
-        <div class="bg-primary-500 text-white p-3 rounded-2xl rounded-tr-none max-w-[85%] text-sm shadow-sm">
+        <div class="bg-primary-600 text-white p-3.5 rounded-2xl rounded-tr-none max-w-[85%] text-sm shadow-xs">
           <p>{{ selectedComplaint().description }}</p>
 
           @if (selectedComplaint().additionalImages?.length > 0) {
@@ -88,8 +98,8 @@
       <!-- Replies -->
       @for (msg of selectedComplaint().messages; track msg.createdAt) {
       <div class="flex" [class.justify-end]="msg.senderType === 'customer'">
-        <div class="p-3 rounded-2xl max-w-[85%] text-sm shadow-sm"
-          [class.bg-primary-500]="msg.senderType === 'customer'"
+        <div class="p-3.5 rounded-2xl max-w-[85%] text-sm shadow-xs"
+          [class.bg-primary-600]="msg.senderType === 'customer'"
           [class.text-white]="msg.senderType === 'customer'"
           [class.rounded-tr-none]="msg.senderType === 'customer'"
           [class.bg-white]="msg.senderType === 'admin'"
@@ -124,15 +134,14 @@
     </div>
 
     <!-- Chat Input Box -->
-    <div class="shrink-0 border-t border-slate-200 bg-white p-3 px-4 pb-safe">
-      <!-- Reply Image Previews -->
+    <div class="shrink-0 border-t border-slate-100 pt-3">
       @if (replyImages().length > 0) {
-        <div class="mt-4 flex flex-wrap gap-2 px-2">
+        <div class="mb-2 flex flex-wrap gap-2">
           @for (img of replyImages(); track img.no; let i = $index) {
-            <div class="relative w-16 h-16 group">
-              <img [src]="img.image" class="w-16 h-16 object-cover rounded-lg border border-slate-200">
+            <div class="relative w-14 h-14 group">
+              <img [src]="img.image" class="w-14 h-14 object-cover rounded-lg border border-slate-200">
               <button type="button" (click)="removeReplyImage(i)"
-                      class="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-red-600">
+                      class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs shadow-xs hover:bg-rose-600">
                 ×
               </button>
             </div>
@@ -141,8 +150,8 @@
       }
 
       <!-- Chat Input -->
-      <div class="mt-2 flex gap-2 items-center">
-        <label class="cursor-pointer text-slate-400 hover:text-primary-500 transition-colors shrink-0">
+      <div class="flex gap-2 items-center">
+        <label class="cursor-pointer text-slate-400 hover:text-primary-600 transition-colors shrink-0">
           <i class="bx bx-image-add text-2xl"></i>
           <input type="file" accept="image/*" class="hidden" (change)="onReplyImageSelected($event)">
         </label>
@@ -151,12 +160,12 @@
           [formControl]="replyControl"
           (keyup.enter)="submitReply()"
           placeholder="Ketik balasan..." 
-          class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-full focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400"
+          class="flex-1 px-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 font-sans" 
         >
         <button 
           (click)="submitReply()"
           [disabled]="replyControl.invalid || replying()"
-          class="bg-primary-500 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0"
+          class="bg-primary-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 cursor-pointer"
         >
           @if (replying()) { <i class="bx bx-loader-alt bx-spin"></i> } @else { <i class="bx bxs-send"></i> }
         </button>
@@ -172,25 +181,32 @@
       </div>
     }
   </app-modal>
-
   }
-</app-bottom-sheet>
+</ng-template>
 
-<!-- Ajukan Komplain Bottom Sheet -->
+<!-- Ajukan Komplain Dialog (Modal on Desktop, Bottom Sheet on Mobile) -->
+@if (screen.isDesktop()) {
+<app-modal [isOpen]="isFormOpen()" (isOpenChange)="isFormOpen.set($event)" title="Ajukan Komplain" maxWidth="max-w-lg">
+  <ng-container *ngTemplateOutlet="formContent"></ng-container>
+</app-modal>
+} @else {
 <app-bottom-sheet [isOpen]="isFormOpen()" title="Ajukan Komplain" (closed)="isFormOpen.set(false)">
+  <ng-container *ngTemplateOutlet="formContent"></ng-container>
+</app-bottom-sheet>
+}
+
+<ng-template #formContent>
   <form [formGroup]="form" (ngSubmit)="submitComplaint()" class="flex flex-col">
-
-    <!-- Scrollable form content -->
-    <div class="flex flex-col gap-4 p-5 overflow-y-auto" style="max-height: 55vh">
-
+    <!-- Form content -->
+    <div class="flex flex-col gap-4 py-2 overflow-y-auto" style="max-height: 60vh">
       <!-- Order Select -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-xs font-semibold text-slate-600">Pesanan Terkait</label>
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Pesanan Terkait</label>
         <select formControlName="orderId" (change)="onOrderChange($event)"
-          class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 bg-white focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200 transition-colors">
+          class="w-full text-sm border border-slate-200 rounded-xl px-3.5 py-2.5 bg-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-200 transition-colors font-sans">
           <option value="" disabled>Pilih pesanan...</option>
           @for (order of orderStore.orders(); track order.id) {
-          <option [value]="order.id">#{{ order.id }} — {{ order.orderDate | date:'shortDate' }}</option>
+          <option [value]="order.id">#{{ order.id }} &mdash; {{ order.orderDate | date:'shortDate' }}</option>
           }
         </select>
       </div>
@@ -198,9 +214,9 @@
       <!-- Item Select -->
       @if (selectedOrderItems().length > 0) {
       <div class="flex flex-col gap-1.5">
-        <label class="text-xs font-semibold text-slate-600">Item Bermasalah</label>
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Item Bermasalah</label>
         <select formControlName="itemId"
-          class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2.5 bg-white focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200 transition-colors">
+          class="w-full text-sm border border-slate-200 rounded-xl px-3.5 py-2.5 bg-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-200 transition-colors font-sans">
           <option value="" disabled>Pilih item...</option>
           @for (item of selectedOrderItems(); track item.product.id) {
           <option [value]="item.product.id">{{ item.product.title || item.product.name }}</option>
@@ -224,19 +240,19 @@
 
       <!-- Image Selector -->
       <div class="flex flex-col gap-2">
-        <label class="text-xs font-semibold text-slate-600">Foto (Opsional)</label>
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Foto (Opsional)</label>
         <div class="flex flex-wrap gap-3">
           @for (img of complaintImages(); track img.no) {
-            <div class="relative w-20 h-20 border border-slate-200 rounded-lg overflow-hidden group">
+            <div class="relative w-20 h-20 border border-slate-200 rounded-xl overflow-hidden group shadow-xs">
               <img [src]="img.image" class="w-full h-full object-cover">
-              <button type="button" (click)="removeImage($index)" class="absolute top-1 right-1 bg-white text-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow">
+              <button type="button" (click)="removeImage($index)" class="absolute top-1 right-1 bg-white text-rose-500 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-xs cursor-pointer">
                 <i class="bx bx-x"></i>
               </button>
             </div>
           }
-          <label class="w-20 h-20 border-2 border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors">
+          <label class="w-20 h-20 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors">
             <i class="bx bx-plus text-2xl"></i>
-            <span class="text-xs mt-1">Tambah</span>
+            <span class="text-xs mt-1 font-semibold">Tambah</span>
             <input type="file" accept="image/*" class="hidden" (change)="onImageSelected($event)">
           </label>
         </div>
@@ -244,11 +260,11 @@
     </div>
 
     <!-- Sticky Bottom Action Bar -->
-    <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3">
-      <app-button type="button" (click)="isFormOpen.set(false)" variant="outline" size="lg" [fullWidth]="true"
+    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-3">
+      <app-button type="button" (click)="isFormOpen.set(false)" variant="outline" size="md" [fullWidth]="true"
         class="flex-1">Batal</app-button>
-      <app-button type="submit" [disabled]="form.invalid" [loading]="submitting()" variant="primary" size="lg"
+      <app-button type="submit" [disabled]="form.invalid" [loading]="submitting()" variant="primary" size="md"
         [fullWidth]="true" class="flex-1">Kirim Komplain</app-button>
     </div>
   </form>
-</app-bottom-sheet>
+</ng-template>

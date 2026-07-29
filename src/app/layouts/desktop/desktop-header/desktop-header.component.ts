@@ -10,7 +10,10 @@ import { SearchBarComponent } from '../../../shared/ui/search-bar/search-bar.com
   standalone: true,
   imports: [RouterLink, RouterLinkActive, SearchBarComponent],
   templateUrl: './desktop-header.component.html',
-  styleUrl: './desktop-header.component.css'
+  styleUrl: './desktop-header.component.css',
+  host: {
+    'class': 'block h-20 w-full z-50'
+  }
 })
 export class DesktopHeaderComponent {
   protected readonly authStore = inject(AuthStore);

@@ -1,4 +1,4 @@
-import { Component, input, model, ChangeDetectionStrategy, ElementRef, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, input, model, ChangeDetectionStrategy, ElementRef, OnInit, OnDestroy, inject, effect } from '@angular/core';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
@@ -17,6 +17,16 @@ export class ModalComponent implements OnInit, OnDestroy {
 
   private readonly el = inject(ElementRef);
 
+  constructor() {
+    effect(() => {
+      if (this.isOpen()) {
+        document.body.classList.add('overflow-hidden');
+      } else {
+        document.body.classList.remove('overflow-hidden');
+      }
+    });
+  }
+
   ngOnInit() {
     // Cari parent root class sebelum memindahkan elemen
     const parentRoot = this.el.nativeElement.closest('.admin-root, .customer-root, .inner-root');
@@ -33,6 +43,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // Bersihkan DOM saat komponen dihancurkan
     this.el.nativeElement.remove();
+    document.body.classList.remove('overflow-hidden');
   }
 
   close() {

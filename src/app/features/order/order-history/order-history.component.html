@@ -1,11 +1,11 @@
-<div class="px-4 pb-4 pt-0 h-full flex flex-col overflow-y-auto no-scrollbar bg-slate-50/30">
-  <div class="flex flex-col gap-3 w-full mx-auto py-2">
+<div class="px-0 lg:px-4 pb-4 pt-0 h-full flex flex-col overflow-y-auto no-scrollbar bg-slate-50/30">
+  <div class="flex flex-col gap-4 w-full mx-auto py-2">
 
     @if (orderStore.loading()) {
     <!-- Skeleton -->
     <div class="flex flex-col gap-3">
       @for (_ of [1,2,3]; track $index) {
-      <div class="bg-white border border-slate-100 rounded-lg p-4 flex flex-col gap-3">
+      <div class="bg-white border border-slate-200/80 rounded-2xl p-5 flex flex-col gap-3">
         <div class="flex justify-between pb-3 border-b border-slate-100">
           <div class="flex flex-col gap-1.5">
             <app-skeleton height="10px" width="60px"></app-skeleton>
@@ -42,35 +42,35 @@
     <div
       [routerLink]="(order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled') ? ['/detail-shipment', order.id] : null"
       [class.cursor-pointer]="order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled'"
-      [class.hover:border-primary-200]="order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled'"
-      class="bg-white border border-slate-100 rounded-lg p-4 flex flex-col gap-3 transition-all">
+      [class.hover:border-primary-300]="order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled'"
+      class="bg-white border border-slate-200/80 shadow-xs hover:shadow-md rounded-2xl p-5 flex flex-col gap-4 transition-all">
 
       <!-- Order Header -->
-      <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
-        <div class="flex items-center gap-3">
+      <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
+        <div class="flex items-center gap-4">
           <div class="flex flex-col text-xs leading-tight">
-            <span class="text-slate-400 font-semibold">Order ID</span>
-            <strong class="font-bold text-slate-800">#{{ order.id }}</strong>
+            <span class="text-slate-400 font-semibold uppercase text-[10px]">Order ID</span>
+            <strong class="font-bold text-slate-800 text-sm">#{{ order.id }}</strong>
           </div>
-          <div class="h-5 w-px bg-slate-200"></div>
+          <div class="h-6 w-px bg-slate-200"></div>
           <div class="flex flex-col text-xs leading-tight">
-            <span class="text-slate-400 font-semibold">Tanggal</span>
-            <span class="text-slate-700 font-bold">{{ order.orderDate | date:'mediumDate' }}</span>
+            <span class="text-slate-400 font-semibold uppercase text-[10px]">Tanggal</span>
+            <span class="text-slate-700 font-bold text-sm">{{ order.orderDate | date:'mediumDate' }}</span>
           </div>
         </div>
         <app-status-badge [status]="order.status"></app-status-badge>
       </div>
 
       <!-- Order Items -->
-      <div class="flex flex-col gap-2.5">
+      <div class="flex flex-col gap-3">
         @for (item of order.items; track item.product.id) {
-        <div class="flex items-center gap-3 text-xs">
-          <div class="h-12 w-10 bg-slate-50 border border-slate-100 rounded overflow-hidden shrink-0">
+        <div class="flex items-center gap-4 text-xs">
+          <div class="h-16 w-14 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden shrink-0">
             <img [src]="item.product.coverImage" [alt]="item.product.title" class="object-cover w-full h-full" />
           </div>
           <div class="grow min-w-0">
-            <h4 class="font-bold text-slate-800 truncate">{{ item.product.title }}</h4>
-            <span class="text-slate-400">{{ item.quantity }} × Rp {{ item.product.price | number }}</span>
+            <h4 class="font-bold text-slate-800 text-sm truncate mb-0.5">{{ item.product.title }}</h4>
+            <span class="text-slate-500 font-medium">{{ item.quantity }} × Rp {{ item.product.price | number }}</span>
           </div>
           <div class="shrink-0">
             <app-button variant="outline" size="sm" (click)="openReviewSheet($event, order.id, item.product)">
@@ -82,28 +82,28 @@
       </div>
 
       <!-- Order Footer -->
-      <div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-100 text-xs">
+      <div class="flex items-center justify-between gap-3 pt-3.5 border-t border-slate-100 text-xs">
         @if (order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled') {
         <div class="flex items-center gap-1.5 text-slate-500 font-semibold min-w-0">
-          <app-icon name="truck" size="14" class="text-slate-400 shrink-0"></app-icon>
-          <span class="truncate">Resi: <strong class="text-slate-700 select-all">{{ order.trackingNumber }}</strong></span>
+          <app-icon name="truck" size="16" class="text-slate-400 shrink-0"></app-icon>
+          <span class="truncate text-sm">Resi: <strong class="text-slate-800 select-all font-bold">{{ order.trackingNumber }}</strong></span>
         </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <div class="flex items-center gap-1 font-bold text-slate-800">
-            <span class="text-slate-500">Total:</span>
-            <app-price [value]="order.total" size="md" class="text-primary-600"></app-price>
+        <div class="flex items-center gap-3 shrink-0">
+          <div class="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
+            <span class="text-slate-400 font-normal">Total:</span>
+            <app-price [value]="order.total" size="md" class="text-primary-600 font-extrabold"></app-price>
           </div>
-          <span class="text-primary-600 font-bold flex items-center gap-0.5">
-            Lacak <i class="bx bx-chevron-right text-base leading-none"></i>
+          <span class="text-primary-600 font-bold flex items-center gap-0.5 hover:underline">
+            Lacak <i class="bx bx-chevron-right text-lg leading-none"></i>
           </span>
         </div>
         } @else {
         <app-button variant="outline" size="sm" (click)="checkPaymentStatus(order.id)">
           Cek Status Pembayaran
         </app-button>
-        <div class="flex items-center gap-1 font-bold text-slate-800">
-          <span class="text-slate-500">Total:</span>
-          <app-price [value]="order.total" size="md" class="text-primary-600"></app-price>
+        <div class="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
+          <span class="text-slate-400 font-normal">Total:</span>
+          <app-price [value]="order.total" size="md" class="text-primary-600 font-extrabold"></app-price>
         </div>
         }
       </div>
@@ -113,65 +113,72 @@
   </div>
 </div>
 
-<app-bottom-sheet
-  [isOpen]="isReviewSheetOpen()"
-  title="Tulis Ulasan"
-  (closed)="closeReviewSheet()">
-  
+<!-- Review Dialog (Modal on Desktop, Bottom Sheet on Mobile) -->
+@if (screen.isDesktop()) {
+<app-modal [isOpen]="isReviewSheetOpen()" (isOpenChange)="isReviewSheetOpen.set($event)" title="Tulis Ulasan" maxWidth="max-w-lg">
+  <ng-container *ngTemplateOutlet="reviewFormContent"></ng-container>
+</app-modal>
+} @else {
+<app-bottom-sheet [isOpen]="isReviewSheetOpen()" title="Tulis Ulasan" (closed)="closeReviewSheet()">
+  <ng-container *ngTemplateOutlet="reviewFormContent"></ng-container>
+</app-bottom-sheet>
+}
+
+<ng-template #reviewFormContent>
   @if (selectedProduct()) {
-    <div class="flex flex-col gap-4 text-left p-4">
-      <div class="flex items-center gap-3">
-        <img [src]="selectedProduct()?.coverImage" class="w-12 h-16 object-cover rounded border border-slate-200">
-        <span class="font-bold text-slate-800 line-clamp-2">{{ selectedProduct()?.title }}</span>
+    <div class="flex flex-col gap-4 text-left p-1">
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+        <img [src]="selectedProduct()?.coverImage" class="w-12 h-16 object-cover rounded-lg border border-slate-200">
+        <span class="font-bold text-slate-800 line-clamp-2 text-sm">{{ selectedProduct()?.title }}</span>
       </div>
       
       <div class="flex flex-col gap-2">
-        <label class="text-sm font-semibold text-slate-700">Penilaian Anda</label>
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Penilaian Anda</label>
         <div class="flex items-center gap-2 text-3xl">
           @for (star of [1,2,3,4,5]; track star) {
-            <i class="bx bxs-star cursor-pointer transition-colors"
-               [class.text-yellow-400]="reviewRating() >= star"
-               [class.text-slate-300]="reviewRating() < star"
+            <i class="bx bxs-star cursor-pointer transition-transform active:scale-90"
+               [class.text-amber-400]="reviewRating() >= star"
+               [class.text-slate-200]="reviewRating() < star"
                (click)="reviewRating.set(star)"></i>
           }
         </div>
       </div>
       
       <div class="flex flex-col gap-2">
-        <label class="text-sm font-semibold text-slate-700">Komentar</label>
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Komentar</label>
         <textarea 
           [ngModel]="reviewComment()"
           (input)="updateComment($event)"
-          class="w-full p-3 border border-slate-200 rounded-lg focus:ring-primary-500 focus:border-primary-500 text-sm" 
-          rows="3" 
+          class="w-full p-3 border border-slate-200 rounded-xl focus:ring-primary-500 focus:border-primary-500 text-sm font-sans" 
+          rows="4" 
           placeholder="Bagaimana pendapat Anda tentang buku ini?"></textarea>
       </div>
 
       <div class="flex flex-col gap-2">
-        <label class="text-sm font-semibold text-slate-700">Foto (Opsional)</label>
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Foto (Opsional)</label>
         <div class="flex flex-wrap gap-3">
           @for (img of reviewImages(); track img.no) {
-            <div class="relative w-20 h-20 border border-slate-200 rounded-lg overflow-hidden group">
+            <div class="relative w-20 h-20 border border-slate-200 rounded-xl overflow-hidden group shadow-xs">
               <img [src]="img.image" class="w-full h-full object-cover">
-              <button (click)="removeImage($index)" class="absolute top-1 right-1 bg-white text-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow">
+              <button (click)="removeImage($index)" class="absolute top-1 right-1 bg-white/90 text-rose-500 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-xs cursor-pointer">
                 <i class="bx bx-x"></i>
               </button>
             </div>
           }
-          <label class="w-20 h-20 border-2 border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors">
+          <label class="w-20 h-20 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors">
             <i class="bx bx-plus text-2xl"></i>
-            <span class="text-xs mt-1">Tambah</span>
+            <span class="text-xs mt-1 font-semibold">Tambah</span>
             <input type="file" accept="image/*" class="hidden" (change)="onImageSelected($event)">
           </label>
         </div>
       </div>
     </div>
     
-    <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
-      <app-button variant="outline" size="lg" [fullWidth]="true" class="flex-1" (click)="closeReviewSheet()">Batal</app-button>
-      <app-button variant="primary" size="lg" [fullWidth]="true" class="flex-1" [disabled]="reviewRating() === 0 || !reviewComment().trim() || isSubmittingReview()" (click)="submitReview()">
+    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-3">
+      <app-button variant="outline" size="md" [fullWidth]="true" class="flex-1" (click)="closeReviewSheet()">Batal</app-button>
+      <app-button variant="primary" size="md" [fullWidth]="true" class="flex-1" [disabled]="reviewRating() === 0 || !reviewComment().trim() || isSubmittingReview()" (click)="submitReview()">
         {{ isSubmittingReview() ? 'Mengirim...' : 'Kirim Ulasan' }}
       </app-button>
     </div>
   }
-</app-bottom-sheet>
+</ng-template>

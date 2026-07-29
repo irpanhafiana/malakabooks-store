@@ -7,6 +7,8 @@ import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
 import { UserStore } from '../../store/user.store';
 import { Product } from '../../core/models';
+import { ScreenService } from '../../core/services/screen.service';
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
@@ -20,10 +22,11 @@ import { ItemApiService } from '../../core/services/item-api.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-mardika-kopi',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, SkeletonComponent, MasonryGridComponent, BottomSheetComponent, MardikaKopiDetailComponent],
+  imports: [RouterLink, ProductCardComponent, SkeletonComponent, MasonryGridComponent, BottomSheetComponent, ModalComponent, MardikaKopiDetailComponent],
   templateUrl: './mardika-kopi.component.html'
 })
 export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
+  protected readonly screen = inject(ScreenService);
   protected readonly productStore = inject(ProductStore);
   protected readonly authStore = inject(AuthStore);
   protected readonly cartStore = inject(CartStore);
