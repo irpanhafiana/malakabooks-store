@@ -1,148 +1,149 @@
 <div class="customer-root min-h-screen bg-slate-50 flex flex-col">
   @if (screen.isDesktop()) {
-    <app-desktop-header></app-desktop-header>
-    
-    <main class="grow max-w-7xl w-full mx-auto px-6 py-6 min-h-[60vh] relative">
-      <router-outlet></router-outlet>
-    </main>
+  <app-desktop-header></app-desktop-header>
 
-    <app-desktop-footer></app-desktop-footer>
-    <app-toast-container></app-toast-container>
-    
-    <app-modal [isOpen]="isDetailOpen()" (isOpenChange)="closeProductDetails()" title="Detail Produk" maxWidth="max-w-4xl">
-      <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
-    </app-modal>
-    
-    <app-modal [isOpen]="productStore.isQtyModalOpen()" (isOpenChange)="closeQty()" title="Pilihan Pembelian" maxWidth="max-w-md">
-      <app-qty-modal-content (confirmed)="closeQty(true)"></app-qty-modal-content>
-    </app-modal>
-    
+  <main class="grow max-w-6xl w-full mx-auto px-6 py-6 min-h-[60vh] relative">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-desktop-footer></app-desktop-footer>
+  <app-toast-container></app-toast-container>
+
+  <app-modal [isOpen]="isDetailOpen()" (isOpenChange)="closeProductDetails()" title="Detail Produk"
+    maxWidth="max-w-4xl">
+    <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
+  </app-modal>
+
+  <app-modal [isOpen]="productStore.isQtyModalOpen()" (isOpenChange)="closeQty()" title="Pilihan Pembelian"
+    maxWidth="max-w-md">
+    <app-qty-modal-content (confirmed)="closeQty(true)"></app-qty-modal-content>
+  </app-modal>
+
   } @else {
   <!-- MOBILE SHELL -->
-<div class="h-dvh w-full bg-gray-50/50 flex justify-center overflow-hidden customer-root"
-  style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
+  <div class="h-dvh w-full bg-gray-50/50 flex justify-center overflow-hidden customer-root"
+    style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
 
-  <!-- Mobile App Frame Container (Constrained width, clamp scaling, with simulator borders) -->
-  <div
-    class="w-full max-w-[480px] bg-gray-50 relative flex flex-col md:border-x md:border-gray-200/60 md:shadow-2xl md:shadow-[0_0_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden"
-    style="height: calc(100% / clamp(0.5, 100vw / 480, 1)); transform: scale(clamp(0.5, 100vw / 480, 1)); transform-origin: center top;">
+    <!-- Mobile App Frame Container (Constrained width, clamp scaling, with simulator borders) -->
+    <div
+      class="w-full max-w-[480px] bg-gray-50 relative flex flex-col md:border-x md:border-gray-200/60 md:shadow-2xl md:shadow-[0_0_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden"
+      style="height: calc(100% / clamp(0.5, 100vw / 480, 1)); transform: scale(clamp(0.5, 100vw / 480, 1)); transform-origin: center top;">
 
-    <!-- Mobile-style Header -->
-    <header class="sticky top-0 z-40 bg-gray-50 px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
-      @if (isSearchActive()) {
-      <!-- Active Search Header -->
-      <div class="flex items-center gap-2 w-full ">
-        <button type="button" (click)="isSearchActive.set(false)"
-          class="p-1 rounded-lg text-slate-500 hover:text-slate-700 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent">
-          <i class="bx bx-left-arrow-alt text-xl"></i>
-        </button>
-        <div class="grow">
-          <app-search-bar [placeholder]="'Search books...'" [value]="productStore.searchQuery()" [autofocus]="true"
-            (search)="onSearch($event)"></app-search-bar>
+      <!-- Mobile-style Header -->
+      <header class="sticky top-0 z-40 bg-gray-50 px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
+        @if (isSearchActive()) {
+        <!-- Active Search Header -->
+        <div class="flex items-center gap-2 w-full ">
+          <button type="button" (click)="isSearchActive.set(false)"
+            class="p-1 rounded-lg text-slate-500 hover:text-slate-700 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent">
+            <i class="bx bx-left-arrow-alt text-xl"></i>
+          </button>
+          <div class="grow">
+            <app-search-bar [placeholder]="'Search books...'" [value]="productStore.searchQuery()" [autofocus]="true"
+              (search)="onSearch($event)"></app-search-bar>
+          </div>
         </div>
-      </div>
-      } @else {
-      <!-- Left: Brand Logo -->
-      <a routerLink="/" (click)="resetFilters()"
-        class="flex items-center gap-2.5 text-slate-800 font-display select-none">
-        <div
-          class="px-1.5 py-1 rounded-lg bg-primary-600 flex items-center justify-center h-9 w-9 border border-primary-700 shadow-sm shadow-primary-600/10 shrink-0">
-          <img src="/malaka-books.svg" alt="Malaka Books Logo" class="h-6 w-6">
-        </div>
-        <div class="flex flex-col justify-center min-w-0">
-          <span class="text-base font-extrabold tracking-tight text-slate-800 leading-tight">Malaka Books</span>
-          <span class="font-sans text-[8px] text-slate-400 tracking-wider uppercase leading-none mt-0.5">Jendela
-            Literasi Bangsa</span>
-        </div>
-      </a>
-
-      <!-- Right: Search and Cart -->
-      <div class="flex items-center gap-1">
-        <a routerLink="/product" aria-label="Cari produk"
-          class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent transition-colors">
-          <i class="bx bx-search text-xl"></i>
+        } @else {
+        <!-- Left: Brand Logo -->
+        <a routerLink="/" (click)="resetFilters()"
+          class="flex items-center gap-2.5 text-slate-800 font-display select-none">
+          <div
+            class="px-1.5 py-1 rounded-lg bg-primary-600 flex items-center justify-center h-9 w-9 border border-primary-700 shadow-sm shadow-primary-600/10 shrink-0">
+            <img src="/malaka-books.svg" alt="Malaka Books Logo" class="h-6 w-6">
+          </div>
+          <div class="flex flex-col justify-center min-w-0">
+            <span class="text-base font-extrabold tracking-tight text-slate-800 leading-tight">Malaka Books</span>
+            <span class="font-sans text-[8px] text-slate-400 tracking-wider uppercase leading-none mt-0.5">Jendela
+              Literasi Bangsa</span>
+          </div>
         </a>
 
-        @if (authStore.isLoggedIn()) {
-        <a routerLink="/cart" aria-label="Keranjang"
-          class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent transition-colors relative">
-          <i class="bx bx-shopping-bag text-xl"></i>
-          @if (cartStore.itemsCount() > 0) {
-          <span
-            class="absolute top-1 right-1 flex items-center justify-center min-w-[14px] h-[14px] px-1 text-[8px] font-bold leading-none text-white bg-rose-500 rounded-full border border-white">
-            {{ cartStore.itemsCount() }}
-          </span>
+        <!-- Right: Search and Cart -->
+        <div class="flex items-center gap-1">
+          <a routerLink="/product" aria-label="Cari produk"
+            class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent transition-colors">
+            <i class="bx bx-search text-xl"></i>
+          </a>
+
+          @if (authStore.isLoggedIn()) {
+          <a routerLink="/cart" aria-label="Keranjang"
+            class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent transition-colors relative">
+            <i class="bx bx-shopping-bag text-xl"></i>
+            @if (cartStore.itemsCount() > 0) {
+            <span
+              class="absolute top-1 right-1 flex items-center justify-center min-w-[14px] h-[14px] px-1 text-[8px] font-bold leading-none text-white bg-rose-500 rounded-full border border-white">
+              {{ cartStore.itemsCount() }}
+            </span>
+            }
+          </a>
           }
+        </div>
+        }
+      </header>
+
+      <!-- Scrollable Contents Area -->
+      <main class="grow overflow-y-auto overflow-x-hidden px-4 pt-0 pb-24 no-scrollbar bg-gray-50">
+        <div #routeContainer class="w-full h-full relative">
+          <router-outlet></router-outlet>
+        </div>
+      </main>
+
+      <!-- Pinned Bottom Navigation Menu (Floating, rounded, matching bottom-navbar.md) -->
+      <nav
+        class="absolute bottom-6 left-1/2 -translate-x-1/2 w-fit z-[45] bg-white/95 backdrop-blur-md flex items-center justify-center gap-2.5 p-1.5 rounded-full overflow-hidden border border-gray-200/80 whitespace-nowrap">
+
+        <!-- Home Item -->
+        <a routerLink="/" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}" aria-label="Beranda"
+          (click)="resetFilters()"
+          class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
+          <i
+            class="bx bx-home-alt-2 text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
+          <span
+            class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Beranda</span>
+        </a>
+
+        <!-- Mardika Kopi Item -->
+        <a routerLink="/mardika-kopi" routerLinkActive="active-item" aria-label="Mardika Kopi"
+          class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
+          <i
+            class="bx bx-coffee text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
+          <span
+            class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Kopi</span>
+        </a>
+
+        <!-- Profile/Login Item -->
+        @if (authStore.isLoggedIn()) {
+        <a routerLink="/profile" routerLinkActive="active-item" aria-label="Profil"
+          class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
+          <i
+            class="bx bx-user text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
+          <span
+            class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Akun</span>
+        </a>
+        } @else {
+        <a routerLink="/auth/login" routerLinkActive="active-item" aria-label="Masuk"
+          class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
+          <i
+            class="bx bx-log-in text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
+          <span
+            class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Masuk</span>
         </a>
         }
-      </div>
-      }
-    </header>
+      </nav>
 
-    <!-- Scrollable Contents Area -->
-    <main class="grow overflow-y-auto overflow-x-hidden px-4 pt-0 pb-24 no-scrollbar bg-gray-50">
-      <div #routeContainer class="w-full h-full relative">
-        <router-outlet></router-outlet>
-      </div>
-    </main>
+      <!-- Global Toasts Alert Overlay -->
+      <app-toast-container></app-toast-container>
 
-    <!-- Pinned Bottom Navigation Menu (Floating, rounded, matching bottom-navbar.md) -->
-    <nav
-      class="absolute bottom-6 left-1/2 -translate-x-1/2 w-fit z-[45] bg-white/95 backdrop-blur-md flex items-center justify-center gap-2.5 p-1.5 rounded-full overflow-hidden border border-gray-200/80 whitespace-nowrap">
+      <!-- Product Detail Bottom Sheet (Height ~85%, constrained inside the mobile container) -->
+      <app-bottom-sheet [isOpen]="isDetailOpen()" (closed)="closeProductDetails()" [fullHeight]="true">
+        <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
+      </app-bottom-sheet>
 
-      <!-- Home Item -->
-      <a routerLink="/" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}" aria-label="Beranda"
-        (click)="resetFilters()"
-        class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
-        <i
-          class="bx bx-home-alt-2 text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
-        <span
-          class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Beranda</span>
-      </a>
+      <app-bottom-sheet [isOpen]="productStore.isQtyModalOpen()" (closed)="closeQty()">
+        <app-qty-modal-content (confirmed)="closeQty(true)"></app-qty-modal-content>
+      </app-bottom-sheet>
 
-      <!-- Mardika Kopi Item -->
-      <a routerLink="/mardika-kopi" routerLinkActive="active-item" aria-label="Mardika Kopi"
-        class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
-        <i
-          class="bx bx-coffee text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
-        <span
-          class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Kopi</span>
-      </a>
-
-      <!-- Profile/Login Item -->
-      @if (authStore.isLoggedIn()) {
-      <a routerLink="/profile" routerLinkActive="active-item" aria-label="Profil"
-        class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
-        <i
-          class="bx bx-user text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
-        <span
-          class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Akun</span>
-      </a>
-      } @else {
-      <a routerLink="/auth/login" routerLinkActive="active-item" aria-label="Masuk"
-        class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
-        <i
-          class="bx bx-log-in text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
-        <span
-          class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Masuk</span>
-      </a>
-      }
-    </nav>
-
-    <!-- Global Toasts Alert Overlay -->
-    <app-toast-container></app-toast-container>
-
-    <!-- Product Detail Bottom Sheet (Height ~85%, constrained inside the mobile container) -->
-    <app-bottom-sheet [isOpen]="isDetailOpen()"
-      (closed)="closeProductDetails()" [fullHeight]="true">
-      <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
-    </app-bottom-sheet>
-
-    <app-bottom-sheet [isOpen]="productStore.isQtyModalOpen()" (closed)="closeQty()">
-      <app-qty-modal-content (confirmed)="closeQty(true)"></app-qty-modal-content>
-    </app-bottom-sheet>
-
+    </div>
   </div>
-</div>
   }
 </div>
