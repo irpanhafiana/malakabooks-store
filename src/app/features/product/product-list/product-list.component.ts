@@ -1,5 +1,6 @@
 import { Component, inject, signal, effect, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location, NgTemplateOutlet } from '@angular/common';
+import { Router } from '@angular/router';
 import { ProductStore } from '../../../store/product.store';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
@@ -28,8 +29,13 @@ export class ProductListComponent implements OnInit {
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   private readonly location = inject(Location);
+  private readonly router = inject(Router);
 
   ngOnInit() {
+    if (this.screen.isDesktop()) {
+      this.router.navigate(['/']);
+      return;
+    }
     this.productStore.loadAll();
   }
 
@@ -37,6 +43,12 @@ export class ProductListComponent implements OnInit {
   activeCategoryName = signal<string | null>(null);
 
   constructor() {
+    effect(() => {
+      if (this.screen.isDesktop()) {
+        this.router.navigate(['/']);
+      }
+    });
+
     // React to category updates reactively using Angular signal effect
     effect(() => {
       this.updateActiveCategoryName();

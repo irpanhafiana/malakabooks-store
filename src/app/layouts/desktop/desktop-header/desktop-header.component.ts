@@ -23,7 +23,9 @@ export class DesktopHeaderComponent {
 
   onSearch(query: string) {
     this.productStore.setSearchQuery(query);
-    this.router.navigate(['/product']);
+    if (this.router.url !== '/') {
+      this.router.navigate(['/']);
+    }
   }
 
   resetFilters() {
