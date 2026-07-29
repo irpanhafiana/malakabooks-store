@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { User } from '../../core/models';
 import { InputComponent } from '../../shared/ui/input/input.component';
@@ -12,6 +12,11 @@ import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { ScreenService } from '../../core/services/screen.service';
 import { OrderStore } from '../../store/order.store';
+import { MyAddressesComponent } from './my-addresses/my-addresses.component';
+import { OrderHistoryComponent } from '../order/order-history/order-history.component';
+import { ComplaintComponent } from '../complaint/complaint.component';
+
+export type ProfileTab = 'info' | 'addresses' | 'orders' | 'complaints' | 'password';
 
 interface MenuItem {
   icon: string;
@@ -35,7 +40,10 @@ interface MenuSection {
     InputComponent,
     ButtonComponent,
     BottomSheetComponent,
-    ModalComponent
+    ModalComponent,
+    MyAddressesComponent,
+    OrderHistoryComponent,
+    ComplaintComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
@@ -46,6 +54,7 @@ export class ProfileComponent implements OnInit {
   protected readonly screen = inject(ScreenService);
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly logger = inject(LoggerService);
   private readonly userApi = inject(UserApiService);
 
@@ -54,6 +63,8 @@ export class ProfileComponent implements OnInit {
 
   showEditProfile = signal<boolean>(false);
   showMockModal = signal<string | null>(null);
+
+  activeTab = signal<ProfileTab>('info');
 
   // Menu configuration for clean looping in template
   menuSections: MenuSection[] = [
@@ -98,6 +109,11 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
+    const tabParam = this.route.snapshot.queryParams['tab'];
+    if (tabParam && ['info', 'addresses', 'orders', 'complaints', 'password'].includes(tabParam)) {
+      this.activeTab.set(tabParam as ProfileTab);
+    }
+
     this.nameControl.setValue(user.name);
     this.emailControl.setValue(user.email);
     this.phoneControl.setValue(user.phone || '');
@@ -118,6 +134,19 @@ export class ProfileComponent implements OnInit {
 
     // Load user orders
     this.orderStore.loadUserOrders(user.id);
+  }
+
+  selectTab(tab: ProfileTab) {
+    if (tab === 'password') {
+      this.showMockModal.set('Change Password');
+      return;
+    }
+    this.activeTab.set(tab);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab },
+      queryParamsHandling: 'merge'
+    });
   }
 
   onAvatarChange(event: Event) {

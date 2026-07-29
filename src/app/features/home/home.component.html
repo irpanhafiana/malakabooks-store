@@ -189,31 +189,32 @@
     <div #authorCarouselViewport class="overflow-hidden pl-2 pb-2">
       <div class="flex -ml-3 items-center h-full">
         @if (authorStore.loading()) {
-        @for (i of [1, 2, 3]; track i) {
-        <div class="flex-[0_0_170px] lg:flex-[0_0_240px] pl-2 lg:pl-4 h-full flex items-center justify-center">
-          <div class="w-full h-45 bg-slate-200/60 animate-pulse rounded-none"></div>
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+        <div class="flex-[0_0_170px] lg:flex-[0_0_20%] pl-2 lg:pl-4 h-full flex items-center justify-center">
+          <div class="w-full h-64 lg:h-84 bg-slate-200/60 animate-pulse rounded-xl"></div>
         </div>
         }
         } @else {
         @for (author of authorStore.authors(); track author.id) {
-        <div class="flex-[0_0_170px] lg:flex-[0_0_240px] pl-2 lg:pl-4 h-full flex items-center justify-center">
+        <div class="flex-[0_0_170px] lg:flex-[0_0_20%] pl-2 lg:pl-4 h-full flex items-center justify-center">
           <div
-            class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
+            class="relative w-full h-64 lg:h-84 p-3.5 lg:p-4 rounded-xl cursor-pointer overflow-hidden group active:scale-[0.98] bg-slate-950"
             (click)="openAuthorSheet(author)">
 
             <!-- Image fading to bottom -->
             <img [src]="author.photoUrl"
-              class="absolute top-0 left-0 w-full h-[80%] object-cover object-top transition-all duration-700 group-hover:scale-105"
-              style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
+              class="absolute top-0 left-0 w-full h-[85%] object-cover object-top transition-all duration-700 group-hover:scale-105"
+              style="mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);">
 
             <!-- Content (relative z-10) -->
             <div class="relative z-10 flex flex-col h-full">
               <!-- Bottom Text -->
-              <div class="mt-auto flex flex-col gap-1.5">
-                <h3 class="text-lg font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
-                  {{
-                  author.name }}</h3>
-                <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
+              <div class="mt-auto flex flex-col gap-1">
+                <h3
+                  class="text-base lg:text-lg font-display font-extrabold text-white leading-tight tracking-tight drop-shadow-md">
+                  {{ author.name }}
+                </h3>
+                <p class="text-white/90 text-xs leading-relaxed line-clamp-2 font-medium drop-shadow-md">
                   {{ author.role }}
                 </p>
               </div>
@@ -223,24 +224,25 @@
         }
         @if (!screen.isDesktop()) {
         @for (author of authorStore.authors(); track author.id + '-clone1') {
-        <div class="flex-[0_0_170px] lg:flex-[0_0_240px] pl-2 lg:pl-4 h-full flex items-center justify-center">
+        <div class="flex-[0_0_170px] lg:flex-[0_0_20%] pl-2 lg:pl-4 h-full flex items-center justify-center">
           <div
-            class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
+            class="relative w-full h-64 lg:h-84 p-3.5 lg:p-4 rounded-xl cursor-pointer overflow-hidden group active:scale-[0.98] bg-slate-950"
             (click)="openAuthorSheet(author)">
 
             <!-- Image fading to bottom -->
             <img [src]="author.photoUrl"
-              class="absolute top-0 left-0 w-full h-[80%] object-cover object-top transition-all duration-700 group-hover:scale-105"
-              style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
+              class="absolute top-0 left-0 w-full h-[85%] object-cover object-top transition-all duration-700 group-hover:scale-105"
+              style="mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);">
 
             <!-- Content (relative z-10) -->
             <div class="relative z-10 flex flex-col h-full">
               <!-- Bottom Text -->
-              <div class="mt-auto flex flex-col gap-1.5">
-                <h3 class="text-lg font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
-                  {{
-                  author.name }}</h3>
-                <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
+              <div class="mt-auto flex flex-col gap-1">
+                <h3
+                  class="text-base lg:text-lg font-display font-extrabold text-white leading-tight tracking-tight drop-shadow-md">
+                  {{ author.name }}
+                </h3>
+                <p class="text-white/90 text-xs leading-relaxed line-clamp-2 font-medium drop-shadow-md">
                   {{ author.role }}
                 </p>
               </div>
@@ -249,25 +251,26 @@
         </div>
         }
         @for (author of authorStore.authors(); track author.id + '-clone2') {
-        <div class="flex-[0_0_170px] lg:flex-[0_0_240px] pl-2 lg:pl-4 h-full flex items-center justify-center">
+        <div class="flex-[0_0_170px] lg:flex-[0_0_20%] pl-2 lg:pl-4 h-full flex items-center justify-center">
           <div
-            class="relative w-full h-45 p-3 cursor-pointer overflow-hidden group shadow-md transition-all duration-500 ease-in-out active:scale-[0.98] bg-slate-950"
+            class="relative w-full h-64 lg:h-84 p-3.5 lg:p-4 rounded-xl cursor-pointer overflow-hidden group active:scale-[0.98] bg-slate-950"
             (click)="openAuthorSheet(author)">
 
             <!-- Image fading to bottom -->
             <img [src]="author.photoUrl"
-              class="absolute top-0 left-0 w-full h-[80%] object-cover object-top transition-all duration-700 group-hover:scale-105"
-              style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
+              class="absolute top-0 left-0 w-full h-[85%] object-cover object-top transition-all duration-700 group-hover:scale-105"
+              style="mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);">
 
             <!-- Content (relative z-10) -->
             <div class="relative z-10 flex flex-col h-full">
               <!-- Bottom Text -->
-              <div class="mt-auto flex flex-col gap-1.5">
-                <h3 class="text-lg font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
-                  {{
-                  author.name }}</h3>
-                <p class="text-white/95 text-[10px] leading-relaxed line-clamp-2 font-medium drop-shadow-md">
-                  Content Creator
+              <div class="mt-auto flex flex-col gap-1">
+                <h3
+                  class="text-base lg:text-lg font-display font-extrabold text-white leading-tight tracking-tight drop-shadow-md">
+                  {{ author.name }}
+                </h3>
+                <p class="text-white/90 text-xs leading-relaxed line-clamp-2 font-medium drop-shadow-md">
+                  {{ author.role }}
                 </p>
               </div>
             </div>

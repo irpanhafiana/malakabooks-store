@@ -25,8 +25,7 @@
   </div>
   } @else {
   <!-- Scrollable Details area -->
-  <div #scrollContainer
-    class="grow overflow-y-auto px-4 pb-5 pt-0 no-scrollbar bg-linear-to-b from-slate-50/50 to-white">
+  <div #scrollContainer class="grow overflow-y-auto pb-4 no-scrollbar bg-linear-to-b from-slate-50/50 to-white">
     <!-- Breadcrumbs -->
     @if (!productIdInput()) {
     <nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-6">
@@ -38,7 +37,7 @@
     </nav>
     }
 
-    <div class="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-12 lg:mt-8">
+    <div class="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-12">
 
       <!-- Image Gallery -->
       <div class="flex flex-col gap-2">
@@ -78,193 +77,197 @@
             <div class="flex flex-col items-start">
               @let prod = product();
               @if (prod) {
-                @if (authStore.isLoggedIn()) {
-                  @if (prod.compareAtPrice && prod.compareAtPrice! > prod.price) {
-                  <div class="flex flex-col items-start gap-1">
-                    <span class="text-xs text-slate-400 line-through font-medium leading-none">
-                      Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }}
-                    </span>
-                    <div class="flex items-center gap-2">
-                      <app-price [value]="prod.price" size="xl" class="text-red-500 font-black leading-none"></app-price>
-                      <span class="text-xs font-extrabold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-md">
-                        -{{ Math.round(((prod.compareAtPrice! - prod.price) / prod.compareAtPrice!) * 100) }}%
-                      </span>
-                    </div>
-                  </div>
-                  } @else {
-                  <app-price [value]="prod.price" size="xl" class="text-red-500 font-black"></app-price>
-                  }
-                } @else {
-                  <!-- Tamu / Belum Login: Tampilkan harga mahal, beri info diskon member jika ada -->
-                  <div class="flex flex-col items-start gap-1">
-                    <app-price [value]="prod.price" size="xl" class="text-red-500 font-black"></app-price>
-                    @if (prod.compareAtPrice && prod.compareAtPrice! < prod.price) {
-                    <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-0.5 rounded-md mt-1.5">
-                      <i class="bx bxs-key text-sm"></i>
-                      <span>Dapatkan harga Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }} dengan login atau membuat akun</span>
-                    </div>
-                    }
-                  </div>
-                }
-              }
-            </div>
-            <span class="text-[13px] text-slate-500 font-medium">{{ product()!.totalReviews * 12 + (product()!.stock %
-              7) + 5 }} Terjual</span>
-          </div>
-          <h1 class="text-xl lg:text-3xl font-display font-black text-slate-800 tracking-tight leading-[1.15]">{{ product()!.title
-            }}
-          </h1>
-          <p class="text-[13px] text-slate-500">{{ product()!.authorNames }}</p>
-        </div>
-        
-        <!-- Move Action Bar here for desktop, hidden on mobile -->
-        <div class="hidden lg:flex flex-col gap-4 mt-4">
-          @if (authStore.isLoggedIn()) {
-          <div class="flex items-center gap-3">
-            <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
-              [fullWidth]="true" class="flex-1">
-              + Keranjang
-            </app-button>
-
-            <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg"
-              [fullWidth]="true" class="flex-1">
-              Beli Sekarang
-            </app-button>
-          </div>
-          } @else {
-          <app-button routerLink="/auth/login" (click)="goToLogin()" variant="primary" size="lg" [fullWidth]="true">
-            Login untuk Membeli
-          </app-button>
-          }
-        </div>
-      </div>
-    </div>
-
-    <!-- Detail Information Tabs -->
-    <div class="mt-8 pb-4">
-      <!-- Segmented Control Tab Headers -->
-      <div class="flex bg-slate-50/80 p-1.5 rounded-lg gap-1 mb-6 border border-slate-100/50">
-        <button (click)="setActiveTab('details')" [class.bg-white]="activeTab() === 'details'"
-          [class.text-slate-800]="activeTab() === 'details'" [class.text-slate-500]="activeTab() !== 'details'"
-          [class.hover:bg-slate-100/50]="activeTab() !== 'details'"
-          class="flex-1 py-2.5 text-xs font-bold rounded-xl  cursor-pointer">
-          Deskripsi
-        </button>
-        <button (click)="setActiveTab('reviews')" [class.bg-white]="activeTab() === 'reviews'"
-          [class.text-slate-800]="activeTab() === 'reviews'" [class.text-slate-500]="activeTab() !== 'reviews'"
-          [class.hover:bg-slate-100/50]="activeTab() !== 'reviews'"
-          class="flex-1 py-2.5 text-xs font-bold rounded-xl  cursor-pointer">
-          {{ reviews().length }} Reviews ({{ product()!.averageRating }})
-        </button>
-      </div>
-
-      <!-- Tab Content Views -->
-      <div>
-        @if (activeTab() === 'details') {
-        <div class="flex flex-col gap-4 ">
-          <div>
-            <h3 class="font-display font-bold text-slate-800 text-sm mb-2">Tentang</h3>
-            <p class="text-sm text-slate-500 leading-relaxed font-sans" [innerHTML]="product()!.description"></p>
-          </div>
-
-          @if (hasSpecs()) {
-          <div>
-            <h3 class="font-display font-bold text-slate-800 text-sm mb-3">Spesifikasi</h3>
-            <div class="grid grid-cols-1 gap-x-8 gap-y-2 border border-slate-100 rounded-2xl overflow-hidden">
-              @if (product()!.isbn) {
-              <div class="flex justify-between p-3 text-xs border-b border-slate-100">
-                <span class="text-slate-400 font-semibold uppercase tracking-wider">ISBN</span>
-                <span class="text-slate-700 font-bold text-right">{{ product()!.isbn }}</span>
-              </div>
-              }
-              @if (product()!.publisher) {
-              <div class="flex justify-between p-3 text-xs border-b border-slate-100">
-                <span class="text-slate-400 font-semibold uppercase tracking-wider">Penerbit</span>
-                <span class="text-slate-700 font-bold text-right">{{ product()!.publisher }}</span>
-              </div>
-              }
-              @if (product()!.publishedYear) {
-              <div class="flex justify-between p-3 text-xs border-b border-slate-100">
-                <span class="text-slate-400 font-semibold uppercase tracking-wider">Tahun Diterbitkan</span>
-                <span class="text-slate-700 font-bold text-right">{{ product()!.publishedYear }}</span>
-              </div>
-              }
-              @if (product()!.pages) {
-              <div class="flex justify-between p-3 text-xs border-b border-slate-100">
-                <span class="text-slate-400 font-semibold uppercase tracking-wider">Jumlah Halaman</span>
-                <span class="text-slate-700 font-bold text-right">{{ product()!.pages }}</span>
-              </div>
-              }
-              @if (product()!.weight) {
-              <div class="flex justify-between p-3 text-xs border-b border-slate-100">
-                <span class="text-slate-400 font-semibold uppercase tracking-wider">Berat (Kg)</span>
-                <span class="text-slate-700 font-bold text-right">{{ product()!.weight }}</span>
-              </div>
-              }
-            </div>
-          </div>
-          }
-        </div>
-        }
-
-        @if (activeTab() === 'reviews') {
-        <div class="flex flex-col gap-4">
-          <!-- Review List -->
-          <div class="flex flex-col gap-4">
-            @if (reviews().length === 0) {
-            <p class="text-sm text-slate-400 text-center py-6">Belum ada ulasan. Jadilah yang pertama memberikan ulasan!</p>
-            } @else {
-            @for (rev of reviews(); track rev.id) {
-            <div class="flex flex-col gap-2 p-4 border border-slate-50 rounded-2xl bg-slate-50/20">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-slate-800">User {{ rev.userId.substring(0, 5) }}***</span>
-                <span class="text-[10px] text-slate-400">{{ rev.createdAt | date: 'mediumDate' }}</span>
-              </div>
-              <div class="flex items-center text-amber-400 gap-0.5">
-                @for (star of [1,2,3,4,5]; track star) {
-                <app-icon name="star" size="10"
-                  [class]="star <= rev.rating ? 'fill-amber-400' : 'text-slate-200'"></app-icon>
-                }
-              </div>
-              <p class="text-xs text-slate-600 leading-relaxed">{{ rev.comment }}</p>
-              @if (rev.additionalImages && rev.additionalImages.length > 0) {
-              <div class="flex gap-2 mt-2 overflow-x-auto no-scrollbar">
-                @for (img of rev.additionalImages; track img.image) {
-                <div class="h-16 w-16 shrink-0 rounded-lg overflow-hidden border border-slate-200">
-                  <img [src]="img.image" class="w-full h-full object-cover" alt="Review image" />
+              @if (authStore.isLoggedIn()) {
+              @if (prod.compareAtPrice && prod.compareAtPrice! > prod.price) {
+              <div class="flex flex-col items-start gap-1">
+                <span class="text-xs text-slate-400 line-through font-medium leading-none">
+                  Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }}
+                </span>
+                <div class="flex items-center gap-2">
+                  <app-price [value]="prod.price" size="xl" class="text-red-500 font-black leading-none"></app-price>
+                  <span
+                    class="text-xs font-extrabold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-md">
+                    -{{ Math.round(((prod.compareAtPrice! - prod.price) / prod.compareAtPrice!) * 100) }}%
+                  </span>
                 </div>
-                }
+              </div>
+              } @else {
+              <app-price [value]="prod.price" size="xl" class="text-red-500 font-black"></app-price>
+              }
+              } @else {
+              <!-- Tamu / Belum Login: Tampilkan harga mahal, beri info diskon member jika ada -->
+              <div class="flex flex-col items-start gap-1">
+                <app-price [value]="prod.price" size="xl" class="text-red-500 font-black"></app-price>
+                @if (prod.compareAtPrice && prod.compareAtPrice! < prod.price) { <div
+                  class="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-0.5 rounded-md mt-1.5">
+                  <i class="bx bxs-key text-sm"></i>
+                  <span>Dapatkan harga Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }} dengan login
+                    atau membuat akun</span>
               </div>
               }
             </div>
             }
             }
           </div>
+          <span class="text-[13px] text-slate-500 font-medium">{{ product()!.totalReviews * 12 + (product()!.stock %
+            7) + 5 }} Terjual</span>
         </div>
+        <h1 class="text-xl lg:text-3xl font-display font-black text-slate-800 tracking-tight leading-[1.15]">{{
+          product()!.title
+          }}
+        </h1>
+        <p class="text-[13px] text-slate-500">{{ product()!.authorNames }}</p>
+      </div>
+
+      <!-- Move Action Bar here for desktop, hidden on mobile -->
+      <div class="hidden lg:flex flex-col gap-4 mt-4">
+        @if (authStore.isLoggedIn()) {
+        <div class="flex items-center gap-3">
+          <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
+            [fullWidth]="true" class="flex-1">
+            + Keranjang
+          </app-button>
+
+          <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg"
+            [fullWidth]="true" class="flex-1">
+            Beli Sekarang
+          </app-button>
+        </div>
+        } @else {
+        <app-button routerLink="/auth/login" (click)="goToLogin()" variant="primary" size="lg" [fullWidth]="true">
+          Login untuk Membeli
+        </app-button>
         }
       </div>
     </div>
   </div>
 
-  <!-- Sticky Bottom Action Bar (Mobile Only) -->
-  <div
-    class="lg:hidden shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
-    @if (authStore.isLoggedIn()) {
-    <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
-      [fullWidth]="true" class="flex-1">
-      + Keranjang
-    </app-button>
+  <!-- Detail Information Tabs -->
+  <div class="mt-8 pb-4">
+    <!-- Segmented Control Tab Headers -->
+    <div class="flex bg-slate-50/80 p-1.5 rounded-lg gap-1 mb-6 border border-slate-100/50">
+      <button (click)="setActiveTab('details')" [class.bg-white]="activeTab() === 'details'"
+        [class.text-slate-800]="activeTab() === 'details'" [class.text-slate-500]="activeTab() !== 'details'"
+        [class.hover:bg-slate-100/50]="activeTab() !== 'details'"
+        class="flex-1 py-2.5 text-xs font-bold rounded-xl  cursor-pointer">
+        Deskripsi
+      </button>
+      <button (click)="setActiveTab('reviews')" [class.bg-white]="activeTab() === 'reviews'"
+        [class.text-slate-800]="activeTab() === 'reviews'" [class.text-slate-500]="activeTab() !== 'reviews'"
+        [class.hover:bg-slate-100/50]="activeTab() !== 'reviews'"
+        class="flex-1 py-2.5 text-xs font-bold rounded-xl  cursor-pointer">
+        {{ reviews().length }} Reviews ({{ product()!.averageRating }})
+      </button>
+    </div>
 
-    <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg"
-      [fullWidth]="true" class="flex-1">
-      Beli Sekarang
-    </app-button>
-    } @else {
-    <app-button routerLink="/auth/login" (click)="goToLogin()" variant="primary" size="lg" [fullWidth]="true"
-      class="flex-1">
-      Login untuk Membeli
-    </app-button>
-    }
+    <!-- Tab Content Views -->
+    <div>
+      @if (activeTab() === 'details') {
+      <div class="flex flex-col gap-4 ">
+        <div>
+          <h3 class="font-display font-bold text-slate-800 text-sm mb-2">Tentang</h3>
+          <p class="text-sm text-slate-500 leading-relaxed font-sans" [innerHTML]="product()!.description"></p>
+        </div>
+
+        @if (hasSpecs()) {
+        <div>
+          <h3 class="font-display font-bold text-slate-800 text-sm mb-3">Spesifikasi</h3>
+          <div class="grid grid-cols-1 gap-x-8 gap-y-2 border border-slate-100 rounded-2xl overflow-hidden">
+            @if (product()!.isbn) {
+            <div class="flex justify-between p-3 text-xs border-b border-slate-100">
+              <span class="text-slate-400 font-semibold uppercase tracking-wider">ISBN</span>
+              <span class="text-slate-700 font-bold text-right">{{ product()!.isbn }}</span>
+            </div>
+            }
+            @if (product()!.publisher) {
+            <div class="flex justify-between p-3 text-xs border-b border-slate-100">
+              <span class="text-slate-400 font-semibold uppercase tracking-wider">Penerbit</span>
+              <span class="text-slate-700 font-bold text-right">{{ product()!.publisher }}</span>
+            </div>
+            }
+            @if (product()!.publishedYear) {
+            <div class="flex justify-between p-3 text-xs border-b border-slate-100">
+              <span class="text-slate-400 font-semibold uppercase tracking-wider">Tahun Diterbitkan</span>
+              <span class="text-slate-700 font-bold text-right">{{ product()!.publishedYear }}</span>
+            </div>
+            }
+            @if (product()!.pages) {
+            <div class="flex justify-between p-3 text-xs border-b border-slate-100">
+              <span class="text-slate-400 font-semibold uppercase tracking-wider">Jumlah Halaman</span>
+              <span class="text-slate-700 font-bold text-right">{{ product()!.pages }}</span>
+            </div>
+            }
+            @if (product()!.weight) {
+            <div class="flex justify-between p-3 text-xs border-b border-slate-100">
+              <span class="text-slate-400 font-semibold uppercase tracking-wider">Berat (Kg)</span>
+              <span class="text-slate-700 font-bold text-right">{{ product()!.weight }}</span>
+            </div>
+            }
+          </div>
+        </div>
+        }
+      </div>
+      }
+
+      @if (activeTab() === 'reviews') {
+      <div class="flex flex-col gap-4">
+        <!-- Review List -->
+        <div class="flex flex-col gap-4">
+          @if (reviews().length === 0) {
+          <p class="text-sm text-slate-400 text-center py-6">Belum ada ulasan. Jadilah yang pertama memberikan ulasan!
+          </p>
+          } @else {
+          @for (rev of reviews(); track rev.id) {
+          <div class="flex flex-col gap-2 p-4 border border-slate-50 rounded-2xl bg-slate-50/20">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-800">User {{ rev.userId.substring(0, 5) }}***</span>
+              <span class="text-[10px] text-slate-400">{{ rev.createdAt | date: 'mediumDate' }}</span>
+            </div>
+            <div class="flex items-center text-amber-400 gap-0.5">
+              @for (star of [1,2,3,4,5]; track star) {
+              <app-icon name="star" size="10"
+                [class]="star <= rev.rating ? 'fill-amber-400' : 'text-slate-200'"></app-icon>
+              }
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">{{ rev.comment }}</p>
+            @if (rev.additionalImages && rev.additionalImages.length > 0) {
+            <div class="flex gap-2 mt-2 overflow-x-auto no-scrollbar">
+              @for (img of rev.additionalImages; track img.image) {
+              <div class="h-16 w-16 shrink-0 rounded-lg overflow-hidden border border-slate-200">
+                <img [src]="img.image" class="w-full h-full object-cover" alt="Review image" />
+              </div>
+              }
+            </div>
+            }
+          </div>
+          }
+          }
+        </div>
+      </div>
+      }
+    </div>
   </div>
+</div>
+
+<!-- Sticky Bottom Action Bar (Mobile Only) -->
+<div
+  class="lg:hidden shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
+  @if (authStore.isLoggedIn()) {
+  <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
+    [fullWidth]="true" class="flex-1">
+    + Keranjang
+  </app-button>
+
+  <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg" [fullWidth]="true"
+    class="flex-1">
+    Beli Sekarang
+  </app-button>
+  } @else {
+  <app-button routerLink="/auth/login" (click)="goToLogin()" variant="primary" size="lg" [fullWidth]="true"
+    class="flex-1">
+    Login untuk Membeli
+  </app-button>
   }
+</div>
+}
 </div>
