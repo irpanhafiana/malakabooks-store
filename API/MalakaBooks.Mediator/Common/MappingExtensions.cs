@@ -65,6 +65,24 @@ public static class MappingExtensions
         UpdatedAt = DateTime.UtcNow
     };
 
+    public static ItemEntity ToEntity(this CreateItemWithFilesRequest request, string coverImageUrl, List<string> additionalImageUrls) => new()
+    {
+        Name = request.Name.Trim(),
+        SAPCode = request.SAPCode.Trim(),
+        ItemType = request.ItemType.Trim(),
+        CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim(),
+        CoverImage = coverImageUrl,
+        AdditionalImages = additionalImageUrls.Select((url, index) => new AdditionalImage { No = index + 1, Image = url }).ToList(),
+        UomGroupId = string.IsNullOrWhiteSpace(request.UomGroupId) ? null : request.UomGroupId.Trim(),
+        BaseUomCode = request.BaseUomCode.Trim(),
+        Description = request.Description.Trim(),
+        Weight = request.Weight,
+        Stock = request.Stock,
+        IsActive = request.IsActive,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
+    };
+
     public static void UpdateFrom(this ItemEntity entity, UpdateItemRequest request)
     {
         entity.Name = request.Name.Trim();
@@ -82,7 +100,36 @@ public static class MappingExtensions
         entity.UpdatedAt = DateTime.UtcNow;
     }
 
+    public static void UpdateFrom(this ItemEntity entity, UpdateItemWithFilesRequest request, string? coverImageUrl, List<string>? additionalImageUrls)
+    {
+        entity.Name = request.Name.Trim();
+        entity.SAPCode = request.SAPCode.Trim();
+        entity.ItemType = request.ItemType.Trim();
+        entity.CategoryId = string.IsNullOrWhiteSpace(request.CategoryId) ? null : request.CategoryId.Trim();
+        
+        if (!string.IsNullOrEmpty(coverImageUrl))
+        {
+            entity.CoverImage = coverImageUrl;
+        }
+
+        if (additionalImageUrls != null && additionalImageUrls.Count > 0)
+        {
+            entity.AdditionalImages = additionalImageUrls.Select((url, index) => new AdditionalImage { No = index + 1, Image = url }).ToList();
+        }
+
+        entity.UomGroupId = string.IsNullOrWhiteSpace(request.UomGroupId) ? null : request.UomGroupId.Trim();
+        entity.BaseUomCode = request.BaseUomCode.Trim();
+        entity.Description = request.Description.Trim();
+        entity.Weight = request.Weight;
+        entity.Stock = request.Stock;
+        entity.IsActive = request.IsActive;
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
     public static bool HasEmbeddedUomGroup(this CreateItemRequest request) =>
+        request.UomGroup is not null;
+
+    public static bool HasEmbeddedUomGroup(this CreateItemWithFilesRequest request) =>
         request.UomGroup is not null;
 
     public static CreateItemRequest ToCreateItemRequest(this SyncItemRequest request) => new()
@@ -475,11 +522,47 @@ public static class MappingExtensions
         UpdatedAt = DateTime.UtcNow
     };
 
+    public static PromotionBannerEntity ToEntity(this CreatePromotionBannerWithFilesRequest request, string imageUrl) => new()
+    {
+        Title = request.Title.Trim(),
+        Subtitle = request.Subtitle.Trim(),
+        ImageBase64 = imageUrl,
+        TargetUrl = request.TargetUrl.Trim(),
+        ButtonText = request.ButtonText.Trim(),
+        TargetType = string.IsNullOrWhiteSpace(request.TargetType) ? null : request.TargetType.Trim(),
+        IsActive = request.IsActive,
+        DisplayOrder = request.DisplayOrder,
+        StartAt = request.StartAt,
+        EndAt = request.EndAt,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
+    };
+
     public static void UpdateFrom(this PromotionBannerEntity entity, UpdatePromotionBannerRequest request)
     {
         entity.Title = request.Title.Trim();
         entity.Subtitle = request.Subtitle.Trim();
         entity.ImageBase64 = request.ImageBase64.Trim();
+        entity.TargetUrl = request.TargetUrl.Trim();
+        entity.ButtonText = request.ButtonText.Trim();
+        entity.TargetType = string.IsNullOrWhiteSpace(request.TargetType) ? null : request.TargetType.Trim();
+        entity.IsActive = request.IsActive;
+        entity.DisplayOrder = request.DisplayOrder;
+        entity.StartAt = request.StartAt;
+        entity.EndAt = request.EndAt;
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
+    public static void UpdateFrom(this PromotionBannerEntity entity, UpdatePromotionBannerWithFilesRequest request, string? imageUrl)
+    {
+        entity.Title = request.Title.Trim();
+        entity.Subtitle = request.Subtitle.Trim();
+        
+        if (!string.IsNullOrEmpty(imageUrl))
+        {
+            entity.ImageBase64 = imageUrl;
+        }
+
         entity.TargetUrl = request.TargetUrl.Trim();
         entity.ButtonText = request.ButtonText.Trim();
         entity.TargetType = string.IsNullOrWhiteSpace(request.TargetType) ? null : request.TargetType.Trim();
@@ -953,6 +1036,17 @@ public static class MappingExtensions
         CreatedAt = DateTime.UtcNow
     };
 
+    public static ReviewEntity ToEntity(this CreateReviewWithFilesRequest request, List<string> additionalImageUrls) => new()
+    {
+        UserId = request.UserId.Trim(),
+        ItemId = request.ItemId.Trim(),
+        OrderId = request.OrderId.Trim(),
+        Rating = request.Rating,
+        Comment = request.Comment.Trim(),
+        AdditionalImages = additionalImageUrls.Select((url, index) => new AdditionalImage { No = index + 1, Image = url }).ToList(),
+        CreatedAt = DateTime.UtcNow
+    };
+
     public static ComplaintMessageResponse ToResponse(this ComplaintMessageEntity entity) => new()
     {
         SenderType = entity.SenderType,
@@ -1001,6 +1095,30 @@ public static class MappingExtensions
         UpdatedAt = DateTime.UtcNow
     };
 
+    public static ComplaintEntity ToEntity(this CreateComplaintWithFilesRequest request, List<string> additionalImageUrls) => new()
+    {
+        UserId = (request.UserId ?? string.Empty).Trim(),
+        OrderId = (request.OrderId ?? string.Empty).Trim(),
+        ItemId = (request.ItemId ?? string.Empty).Trim(),
+        Subject = (request.Subject ?? string.Empty).Trim(),
+        Description = (request.Description ?? string.Empty).Trim(),
+        AdditionalImages = additionalImageUrls.Select((url, index) => new AdditionalImage { No = index + 1, Image = url }).ToList(),
+        Status = "open",
+        Messages =
+        [
+            new ComplaintMessageEntity
+            {
+                SenderType = "customer",
+                SenderId = (request.UserId ?? string.Empty).Trim(),
+                Message = (request.Description ?? string.Empty).Trim(),
+                AdditionalImages = additionalImageUrls.Select((url, index) => new AdditionalImage { No = index + 1, Image = url }).ToList(),
+                CreatedAt = DateTime.UtcNow
+            }
+        ],
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
+    };
+
     public static void UpdateFrom(this ComplaintEntity entity, RespondComplaintRequest request)
     {
         entity.Status = request.Status.Trim();
@@ -1010,6 +1128,20 @@ public static class MappingExtensions
             SenderId = request.SenderId.Trim(),
             Message = request.Message.Trim(),
             AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
+            CreatedAt = DateTime.UtcNow
+        });
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
+    public static void UpdateFrom(this ComplaintEntity entity, RespondComplaintWithFilesRequest request, List<string> additionalImageUrls)
+    {
+        entity.Status = request.Status.Trim();
+        entity.Messages.Add(new ComplaintMessageEntity
+        {
+            SenderType = request.SenderType.Trim(),
+            SenderId = request.SenderId.Trim(),
+            Message = request.Message.Trim(),
+            AdditionalImages = additionalImageUrls.Select((url, index) => new AdditionalImage { No = index + 1, Image = url }).ToList(),
             CreatedAt = DateTime.UtcNow
         });
         entity.UpdatedAt = DateTime.UtcNow;

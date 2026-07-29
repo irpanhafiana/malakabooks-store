@@ -43,12 +43,32 @@ public class ItemsController(IMediator mediator) : ApiControllerBase
     }
 
     /// <summary>
+    /// Creates a new item with image files.
+    /// </summary>
+    [HttpPost("with-files")]
+    public async Task<IActionResult> CreateWithFiles([FromForm] CreateItemWithFilesRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateItemWithFilesCommand(request), cancellationToken);
+        return Success(result);
+    }
+
+    /// <summary>
     /// Updates an existing item.
     /// </summary>
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, [FromBody] UpdateItemRequest request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new UpdateItemCommand(id, request), cancellationToken);
+        return Success(result);
+    }
+
+    /// <summary>
+    /// Updates an existing item with image files.
+    /// </summary>
+    [HttpPut("{id}/with-files")]
+    public async Task<IActionResult> UpdateWithFiles(string id, [FromForm] UpdateItemWithFilesRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdateItemWithFilesCommand(id, request), cancellationToken);
         return Success(result);
     }
 

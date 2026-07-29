@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace MalakaBooks.ViewModel;
 
 public class PromotionBannerResponse
@@ -33,5 +35,23 @@ public class CreatePromotionBannerRequest
 }
 
 public class UpdatePromotionBannerRequest : CreatePromotionBannerRequest
+{
+}
+
+public class CreatePromotionBannerWithFilesRequest
+{
+    public string Title { get; set; } = string.Empty;
+    public string Subtitle { get; set; } = string.Empty;
+    public IFormFile? Image { get; set; }
+    public string TargetUrl { get; set; } = string.Empty;
+    public string ButtonText { get; set; } = string.Empty;
+    public string? TargetType { get; set; }
+    public bool IsActive { get; set; } = true;
+    public int DisplayOrder { get; set; }
+    public DateTime? StartAt { get; set; }
+    public DateTime? EndAt { get; set; }
+}
+
+public class UpdatePromotionBannerWithFilesRequest : CreatePromotionBannerWithFilesRequest
 {
 }

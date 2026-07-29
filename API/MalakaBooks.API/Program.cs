@@ -245,6 +245,7 @@ builder.Services.RegisterAdditionalValidatorService();
 builder.Services.RegisterAdditionalDataValidatorService();
 builder.Services.AddHostedService<UnpaidOrderExpirationService>();
 builder.Services.AddHostedService<ShippedOrderAwbStatusService>();
+builder.Services.AddScoped<MalakaBooks.Mediator.Common.IFileStorageService, MalakaBooks.API.Services.FileStorageService>();
 #endregion
 
 #region Caching
@@ -317,6 +318,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 if (corsSetting.Enabled)
 {
     foreach (var cors in corsSetting.CORSPolicies!)

@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace MalakaBooks.ViewModel;
 
 public class ItemResponse
@@ -73,6 +75,27 @@ public class CreateItemRequest
 }
 
 public class UpdateItemRequest : CreateItemRequest
+{
+}
+
+public class CreateItemWithFilesRequest
+{
+    public string Name { get; set; } = string.Empty;
+    public string SAPCode { get; set; } = string.Empty;
+    public string ItemType { get; set; } = string.Empty;
+    public string? CategoryId { get; set; }
+    public IFormFile? CoverImage { get; set; }
+    public List<IFormFile>? AdditionalImages { get; set; } = [];
+    public string? UomGroupId { get; set; }
+    public CreateUomGroupRequest? UomGroup { get; set; }
+    public string BaseUomCode { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public decimal Weight { get; set; }
+    public int Stock { get; set; }
+    public bool IsActive { get; set; } = true;
+}
+
+public class UpdateItemWithFilesRequest : CreateItemWithFilesRequest
 {
 }
 

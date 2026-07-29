@@ -1,0 +1,10 @@
+{
+  "ApiVersionSetting": {
+    "DefaultMajorVersion": 1,
+    "DefaultMinorVersion": 0,
+    "AssumeDefaultVersionWhenUnspecified": true,
+    "ReportApiVersions": true,
+    "GroupNameFormat": "'v'VVV",
+    "SubstituteApiVersionInUrl": true
+  }
+}

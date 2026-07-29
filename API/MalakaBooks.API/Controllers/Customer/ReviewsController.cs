@@ -27,4 +27,12 @@ public class ReviewsController(IMediator mediator) : ApiControllerBase
         var result = await mediator.Send(new CreateReviewCommand(request), cancellationToken);
         return ProcessResult(result);
     }
+
+    /// <summary>Write a review with files</summary>
+    [HttpPost("with-files")]
+    public async Task<IActionResult> CreateWithFiles([FromForm] CreateReviewWithFilesRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateReviewWithFilesCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 }
