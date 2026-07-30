@@ -21,6 +21,9 @@ public class ReviewRepository : IReviewRepository
     public async Task<IReadOnlyCollection<ReviewEntity>> GetByItemIdAsync(string itemId, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.ItemId == itemId).ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<ReviewEntity>> GetByItemIdsAsync(IEnumerable<string> itemIds, CancellationToken cancellationToken = default) =>
+        await _collection.Find(Builders<ReviewEntity>.Filter.In(x => x.ItemId, itemIds)).ToListAsync(cancellationToken);
+
     public async Task<ReviewEntity?> GetByUserOrderAndItemAsync(string userId, string orderId, string itemId, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.UserId == userId && x.OrderId == orderId && x.ItemId == itemId).FirstOrDefaultAsync(cancellationToken);
 

@@ -19,6 +19,9 @@ public class UomGroupRepository : IUomGroupRepository
     public async Task<IReadOnlyCollection<UomGroupEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await _collection.Find(Builders<UomGroupEntity>.Filter.Empty).ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<UomGroupEntity>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken = default) =>
+        await _collection.Find(Builders<UomGroupEntity>.Filter.In(x => x.Id, ids)).ToListAsync(cancellationToken);
+
     public async Task<UomGroupEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 

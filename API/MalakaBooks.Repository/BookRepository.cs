@@ -24,6 +24,9 @@ public class BookRepository : IBookRepository
     public async Task<BookEntity?> GetByItemIdAsync(string itemId, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.ItemId == itemId).FirstOrDefaultAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<BookEntity>> GetByItemIdsAsync(IEnumerable<string> itemIds, CancellationToken cancellationToken = default) =>
+        await _collection.Find(Builders<BookEntity>.Filter.In(x => x.ItemId, itemIds)).ToListAsync(cancellationToken);
+
     public async Task<BookEntity> CreateAsync(BookEntity book, CancellationToken cancellationToken = default)
     {
         await _collection.InsertOneAsync(book, cancellationToken: cancellationToken);

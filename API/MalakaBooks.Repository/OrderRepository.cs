@@ -81,6 +81,15 @@ public class OrderRepository : BaseRepository<OrderEntity>, IOrderRepository
     public async Task<IReadOnlyCollection<OrderEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await _collection.Find(_ => true).ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<OrderEntity>> GetByItemIdsAsync(IEnumerable<string> itemIds, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<OrderEntity>.Filter.ElemMatch(
+            order => order.Items,
+            Builders<OrderItemEntity>.Filter.In(item => item.ItemId, itemIds)
+        );
+        return await _collection.Find(filter).ToListAsync(cancellationToken);
+    }
+
     public async Task<IReadOnlyCollection<OrderEntity>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.User.UserId == userId).ToListAsync(cancellationToken);
 

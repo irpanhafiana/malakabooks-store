@@ -18,6 +18,9 @@ public class ItemRepository : IItemRepository
     public async Task<IReadOnlyCollection<ItemEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await _collection.Find(Builders<ItemEntity>.Filter.Empty).ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<ItemEntity>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken = default) =>
+        await _collection.Find(Builders<ItemEntity>.Filter.In(x => x.Id, ids)).ToListAsync(cancellationToken);
+
     public async Task<IReadOnlyCollection<ItemEntity>> GetByItemTypeAsync(string itemType, CancellationToken cancellationToken = default)
     {
         var normalizedItemType = itemType.Trim();

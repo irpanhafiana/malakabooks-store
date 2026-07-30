@@ -5,6 +5,7 @@ namespace MalakaBooks.IRepository;
 public interface IUomGroupRepository
 {
     Task<IReadOnlyCollection<UomGroupEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<UomGroupEntity>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken = default);
     Task<UomGroupEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<UomGroupEntity?> GetByDefinitionAsync(UomGroupEntity uomGroup, CancellationToken cancellationToken = default);
     Task<UomGroupEntity> UpsertByDefinitionAsync(UomGroupEntity uomGroup, CancellationToken cancellationToken = default);

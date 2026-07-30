@@ -37,7 +37,7 @@ public class GetBookByIdHandler(
         }
 
         var response = book.ToResponse(item, authors);
-        var orders = await orderRepository.GetAllAsync(cancellationToken);
+        var orders = await orderRepository.GetByItemIdsAsync(new[] { book.ItemId }, cancellationToken);
         var reviews = await reviewRepository.GetByItemIdAsync(book.ItemId, cancellationToken);
 
         response.QuantitySold = orders

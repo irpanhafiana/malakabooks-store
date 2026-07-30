@@ -16,10 +16,16 @@ public class GetBooksHandler(
     public async Task<IReadOnlyCollection<BookResponse>> Handle(GetBooksQuery request, CancellationToken cancellationToken)
     {
         var books = await bookRepository.GetAllAsync(cancellationToken);
-        var items = await itemRepository.GetAllAsync(cancellationToken);
-        var authors = await authorRepository.GetAllAsync(cancellationToken);
-        var orders = await orderRepository.GetAllAsync(cancellationToken);
-        var reviews = await reviewRepository.GetAllAsync(cancellationToken);
+        
+        var itemIds = books.Select(x => x.ItemId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().Cast<string>().ToList();
+        var items = itemIds.Count > 0 ? await itemRepository.GetByIdsAsync(itemIds, cancellationToken) : [];
+        
+        var authorIds = books.SelectMany(x => x.AuthorIds ?? []).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().Cast<string>().ToList();
+        var authors = authorIds.Count > 0 ? await authorRepository.GetByIdsAsync(authorIds, cancellationToken) : [];
+        
+        var orders = itemIds.Count > 0 ? await orderRepository.GetByItemIdsAsync(itemIds, cancellationToken) : [];
+        var reviews = itemIds.Count > 0 ? await reviewRepository.GetByItemIdsAsync(itemIds, cancellationToken) : [];
+        
         var authorsById = authors.ToDictionary(author => author.Id ?? string.Empty, StringComparer.OrdinalIgnoreCase);
         var itemsById = items.Where(item => !string.IsNullOrWhiteSpace(item.Id)).ToDictionary(item => item.Id!, StringComparer.OrdinalIgnoreCase);
 
