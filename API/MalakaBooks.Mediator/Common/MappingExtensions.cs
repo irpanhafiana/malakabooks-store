@@ -423,6 +423,25 @@ public static class MappingExtensions
         entity.PhotoUrl = request.PhotoUrl.Trim();
     }
 
+    public static AuthorEntity ToEntity(this CreateAuthorWithFilesRequest request, string imageUrl) => new()
+    {
+        Name = request.Name.Trim(),
+        Role = request.Role.Trim(),
+        Biography = request.Biography.Trim(),
+        PhotoUrl = imageUrl
+    };
+
+    public static void UpdateFrom(this AuthorEntity entity, UpdateAuthorWithFilesRequest request, string? imageUrl)
+    {
+        entity.Name = request.Name.Trim();
+        entity.Role = request.Role.Trim();
+        entity.Biography = request.Biography.Trim();
+        if (imageUrl != null)
+        {
+            entity.PhotoUrl = imageUrl;
+        }
+    }
+
     public static PaymentResponse ToResponse(this PaymentEntity entity) => new()
     {
         Id = entity.Id ?? string.Empty,

@@ -41,6 +41,16 @@ public class AuthorsController(IMediator mediator) : ApiControllerBase
     public async Task<IActionResult> Update(string id, [FromBody] UpdateAuthorRequest request, CancellationToken cancellationToken) =>
         Success(await mediator.Send(new UpdateAuthorCommand(id, request), cancellationToken));
 
+    /// <summary>Create author with files</summary>
+    [HttpPost("with-files")]
+    public async Task<IActionResult> CreateWithFiles([FromForm] CreateAuthorWithFilesRequest request, CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new CreateAuthorWithFilesCommand(request), cancellationToken));
+
+    /// <summary>Update author with files</summary>
+    [HttpPut("{id}/with-files")]
+    public async Task<IActionResult> UpdateWithFiles(string id, [FromForm] UpdateAuthorWithFilesRequest request, CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new UpdateAuthorWithFilesCommand(id, request), cancellationToken));
+
     /// <summary>Delete author</summary>
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken) =>

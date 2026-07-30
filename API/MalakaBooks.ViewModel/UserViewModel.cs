@@ -21,6 +21,17 @@ public class CreateIS4UserRequest
     public string Password { get; set; } = string.Empty;
 }
 
+public class CreateIS4UserWithFilesRequest
+{
+    public string Id { get; set; } = string.Empty;  // IS4 sub claim
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string Phone { get; set; } = string.Empty;
+    public Microsoft.AspNetCore.Http.IFormFile? Avatar { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+}
+
 /// <summary>
 /// Called right after IS4 registration. Id = IS4 sub claim.
 /// Role/Email/Password are managed by IS4, not stored here.
@@ -42,6 +53,13 @@ public class UpdateUserRequest
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Avatar { get; set; } = string.Empty;
+}
+
+public class UpdateUserWithFilesRequest
+{
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public Microsoft.AspNetCore.Http.IFormFile? Avatar { get; set; }
 }
 
 public class ChangePasswordRequest
