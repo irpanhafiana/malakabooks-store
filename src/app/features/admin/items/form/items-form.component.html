@@ -38,7 +38,7 @@
           </div>
           <button appTooltip="Hapus Data" type="button"
             class="absolute top-2 right-2 bg-white rounded-full p-2 text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors z-10"
-            (click)="coverImageControl.setValue(''); $event.stopPropagation()">
+            (click)="removeCoverImage(); $event.stopPropagation()">
             <app-icon name="trash" size="18"></app-icon>
           </button>
           } @else {
@@ -50,7 +50,7 @@
           }
         </div>
         <input #coverInput type="file" accept="image/*" class="hidden"
-          (change)="onImageUpload($event, coverImageControl)">
+          (change)="onCoverUpload($event)">
       </div>
 
       <!-- Additional Images -->
@@ -89,7 +89,7 @@
             <span class="text-xs text-slate-500 font-medium">Upload</span>
             }
           </div>
-          <input #addInput type="file" accept="image/*" class="hidden" (change)="onImageUpload($event, ctrl)">
+          <input #addInput type="file" accept="image/*" class="hidden" (change)="onAdditionalImageUpload($event, ctrl)">
           }
 
           @if (additionalImagesControl.controls.length === 0) {

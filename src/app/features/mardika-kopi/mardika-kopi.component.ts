@@ -16,6 +16,8 @@ import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.
 import { MardikaKopiDetailComponent } from './mardika-kopi-detail/mardika-kopi-detail.component';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
 import { ItemApiService } from '../../core/services/item-api.service';
+import { resolveImageUrl } from '../../shared/util/image.util';
+import { isAdminSession } from '../../core/auth/session.util';
 
 
 @Component({
@@ -122,7 +124,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
     this.kopiLoading.set(true);
     try {
       const allItems = await this.itemApi.getItems();
-      const items = allItems.filter(i => i.itemType === 'mardika');
+      const items = allItems.filter(i => (isAdminSession() || i.isActive !== false) && i.itemType === 'mardika');
       const products: Product[] = [];
 
       for (const item of items) {
@@ -138,7 +140,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
           categoryName: item.itemType,
           price: item.price || 0,
           description: item.description,
-          coverImage: (item as any).coverImage || '',
+          coverImage: resolveImageUrl((item as any).coverImage || ''),
           publisher: '',
           publishedYear: new Date().getFullYear(),
           pages: 0,

@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
 import { isAdminSession, isCustomerSession } from '../auth/session.util';
+import { resolveImageUrl } from '../../shared/util/image.util';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,16 @@ export class ItemApiService {
         endpoint = `${this.BASE_URL}/customer/Items/priced`;
       }
       const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
-      return envelope?.data || [];
+      const items = envelope?.data || [];
+
+      return items.map(item => ({
+        ...item,
+        coverImage: resolveImageUrl(item.coverImage),
+        additionalImages: item.additionalImages?.map(img => ({
+          ...img,
+          image: resolveImageUrl(img.image)
+        })) || []
+      }));
     } catch (e) {
       this.logger.error('ItemApiService.getItems', 'Gagal mengambil items:', e);
       return [];
@@ -35,16 +45,26 @@ export class ItemApiService {
       const endpoint = isAdminSession() ? `${this.BASE_URL}/admin/Items/${id}` : `${this.BASE_URL}/public/Items/${id}`;
       const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem>>(endpoint));
       const item = envelope?.data;
+      if (!item) return null;
 
-      if (item && item.itemType === 'malaka' && isAdminSession()) {
+      const resolvedItem: CatalogItem = {
+        ...item,
+        coverImage: resolveImageUrl(item.coverImage),
+        additionalImages: item.additionalImages?.map(img => ({
+          ...img,
+          image: resolveImageUrl(img.image)
+        })) || []
+      };
+
+      if (resolvedItem.itemType === 'malaka' && isAdminSession()) {
         try {
           const booksEnv = await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.BASE_URL}/admin/Books`));
-          const book = booksEnv?.data?.find(b => b.itemId === item.id);
+          const book = booksEnv?.data?.find(b => b.itemId === resolvedItem.id);
           if (book) {
             return {
-              ...item,
+              ...resolvedItem,
               bookId: book.id,
-              name: book.title || item.name,
+              name: book.title || resolvedItem.name,
               isbn: book.isbn,
               authorIds: book.authorIds,
               categoryId: book.categoryId,
@@ -60,7 +80,7 @@ export class ItemApiService {
         }
       }
 
-      return item || null;
+      return resolvedItem;
     } catch (e) {
       this.logger.error('ItemApiService.getItemById', `Gagal mengambil item ${id}:`, e);
       return null;
@@ -70,31 +90,55 @@ export class ItemApiService {
   async saveItem(item: Partial<CatalogItem> & any): Promise<CatalogItem> {
     const isNew = !item.id;
 
-    const itemBody: any = {
-      ...item,
-      name: item.name || item.title,
-      sapCode: item.sapCode || '',
-      itemType: item.itemType || 'mardika',
-      categoryId: item.categoryId || undefined,
-      uomGroupId: item.uomGroupId || undefined,
-      uomGroup: item.uomGroup || undefined,
-      baseUomCode: item.baseUomCode || '',
-      description: item.description || '',
-      coverImage: item.coverImage || '',
-      additionalImages: item.additionalImages || [],
-      weight: item.weight || 0,
-      stock: item.stock || 0,
-      isActive: item.isActive ?? false
-    };
+    const formData = new FormData();
+    formData.append('Name', item.name || item.title || '');
+    formData.append('SAPCode', item.sapCode || '');
+    formData.append('ItemType', item.itemType || 'mardika');
+    if (item.categoryId) formData.append('CategoryId', item.categoryId);
+    if (item.uomGroupId) formData.append('UomGroupId', item.uomGroupId);
+    formData.append('BaseUomCode', item.baseUomCode || '');
+    formData.append('Description', item.description || '');
+    formData.append('Weight', (item.weight || 0).toString());
+    formData.append('Stock', (item.stock || 0).toString());
+    formData.append('IsActive', (item.isActive ?? false).toString());
+
+    if (item.coverImageFile instanceof File) {
+      formData.append('CoverImage', item.coverImageFile);
+    }
+
+    if (Array.isArray(item.additionalImageFiles)) {
+      item.additionalImageFiles.forEach((file: any) => {
+        if (file instanceof File) {
+          formData.append('AdditionalImages', file);
+        }
+      });
+    }
+
+    if (item.uomGroup) {
+      if (item.uomGroup.name) formData.append('UomGroup.Name', item.uomGroup.name);
+      if (item.uomGroup.baseUomCode) formData.append('UomGroup.BaseUomCode', item.uomGroup.baseUomCode);
+      formData.append('UomGroup.IsActive', (item.uomGroup.isActive ?? true).toString());
+      if (Array.isArray(item.uomGroup.details)) {
+        item.uomGroup.details.forEach((det: any, idx: number) => {
+          if (det.code) formData.append(`UomGroup.Details[${idx}].Code`, det.code);
+          if (det.name) formData.append(`UomGroup.Details[${idx}].Name`, det.name);
+          if (det.conversionFactor !== undefined) formData.append(`UomGroup.Details[${idx}].ConversionFactor`, det.conversionFactor.toString());
+          formData.append(`UomGroup.Details[${idx}].IsBaseUom`, (det.isBaseUom ?? false).toString());
+          formData.append(`UomGroup.Details[${idx}].IsDefaultForSales`, (det.isDefaultForSales ?? false).toString());
+          formData.append(`UomGroup.Details[${idx}].SortOrder`, (det.sortOrder || 0).toString());
+          formData.append(`UomGroup.Details[${idx}].IsActive`, (det.isActive ?? true).toString());
+        });
+      }
+    }
 
     let savedItem: any;
 
     try {
       if (isNew) {
-        const envelope = await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.BASE_URL}/admin/Items`, itemBody));
+        const envelope = await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.BASE_URL}/admin/Items/with-files`, formData));
         savedItem = envelope?.data;
       } else {
-        const envelope = await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.BASE_URL}/admin/Items/${item.id}`, itemBody));
+        const envelope = await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.BASE_URL}/admin/Items/${item.id}/with-files`, formData));
         savedItem = envelope?.data;
       }
     } catch (e) {
@@ -103,7 +147,19 @@ export class ItemApiService {
     }
 
     // Determine the itemId correctly whether the API returns an object or a string ID
-    const extractedItemId = savedItem?.id || (typeof savedItem === 'string' ? savedItem : item.id);
+    let extractedItemId = savedItem?.id || (typeof savedItem === 'string' ? savedItem : item.id);
+
+    if (!extractedItemId && item.sapCode) {
+      try {
+        const items = await this.getItems();
+        const foundItem = items.find(i => i.sapCode === item.sapCode);
+        if (foundItem) {
+          extractedItemId = foundItem.id;
+        }
+      } catch (err) {
+        this.logger.error('ItemApiService.saveItem', 'Gagal mencari ID item baru berdasarkan sapCode:', err);
+      }
+    }
 
     const isMerchandise = item.categoryName && item.categoryName.toLowerCase() === 'merchandise';
 

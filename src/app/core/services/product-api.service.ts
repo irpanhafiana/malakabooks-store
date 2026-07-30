@@ -7,6 +7,7 @@ import { LoggerService } from './logger.service';
 import { isAdminSession, isCustomerSession } from '../auth/session.util';
 import { CategoryApiService } from './category-api.service';
 import { ItemApiService } from './item-api.service';
+import { resolveImageUrl } from '../../shared/util/image.util';
 
 
 @Injectable({
@@ -25,8 +26,20 @@ export class ProductApiService {
       name: a.name,
       role: a.role || '',
       biography: a.biography || '',
-      photoUrl: a.photoUrl || ''
+      photoUrl: resolveImageUrl(a.photoUrl || '')
     })) || [];
+
+    const rawCover = book?.coverImage || (item as any).coverImage || '';
+    const rawAddImages = book?.additionalImages
+      ? [...book.additionalImages].sort((a, b) => a.no - b.no)
+      : ((item as any).additionalImages || []);
+
+    const resolvedAddImages = rawAddImages.map((imgObj: any) => {
+      const url = typeof imgObj === 'string' ? imgObj : (imgObj.image || imgObj.url || '');
+      return typeof imgObj === 'string'
+        ? resolveImageUrl(url)
+        : { ...imgObj, image: resolveImageUrl(url) };
+    });
 
     return {
       id: item.id,
@@ -41,7 +54,7 @@ export class ProductApiService {
       categoryName: item.itemType,
       price: price || item.price || 0,
       description: book?.description || item.description || '',
-      coverImage: book?.coverImage || (item as any).coverImage || '',
+      coverImage: resolveImageUrl(rawCover),
       publisher: book?.publisher || item.publisher || '',
       publishedYear: book?.publishedYear || item.publishedYear || 0,
       pages: book?.pages || item.pages || 0,
@@ -59,9 +72,7 @@ export class ProductApiService {
       createdAt: item.createdAt || new Date().toISOString(),
       uomGroup: item.uomGroup,
       baseUomCode: item.baseUomCode,
-      additionalImages: book?.additionalImages
-        ? [...book.additionalImages].sort((a, b) => a.no - b.no)
-        : ((item as any).additionalImages || [])
+      additionalImages: resolvedAddImages
     };
   }
 
@@ -75,7 +86,7 @@ export class ProductApiService {
       }
       const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
       const allItems = envelope?.data || [];
-      const itemsToProcess = allItems.filter(i => i.itemType === 'malaka');
+      const itemsToProcess = allItems.filter(i => (isAdminSession() || i.isActive !== false) && i.itemType === 'malaka');
 
       const categories = await this.categoryApi.getCategories();
       const catMap = new Map(categories.map(c => [c.id, c.name]));

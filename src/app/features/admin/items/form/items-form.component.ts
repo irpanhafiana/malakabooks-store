@@ -114,6 +114,9 @@ export class ItemsFormComponent {
     { value: 'malaka', label: 'Buku (Malaka)' }
   ];
 
+  protected readonly coverImageFile = signal<File | null>(null);
+  protected readonly additionalImageFiles = new Map<FormControl, File>();
+
   constructor() {
     this.uomGroupStore.loadUomGroups();
     this.authorStore.loadAuthors();
@@ -121,6 +124,9 @@ export class ItemsFormComponent {
 
     effect(() => {
       const it = this.item();
+      this.coverImageFile.set(null);
+      this.additionalImageFiles.clear();
+
       if (it) {
         this.nameControl.setValue(it.name || it.title || '');
         this.sapCodeControl.setValue(it.sapCode || '');
@@ -156,7 +162,7 @@ export class ItemsFormComponent {
         this.additionalImagesControl.clear();
         this.selectedAuthorIds.set([]);
         this.formGroup.reset({
-          name: '', sapCode: '', itemType: 'mardika', uomGroupId: '', baseUomCode: '', description: '', isActive: false,
+          name: '', sapCode: crypto.randomUUID(), itemType: 'mardika', uomGroupId: '', baseUomCode: '', description: '', isActive: false,
           coverImage: '',
           isbn: '', categoryId: '', publisher: '', publishedYear: new Date().getFullYear(), pages: 0, weight: 0
         });
@@ -211,7 +217,16 @@ export class ItemsFormComponent {
     this.additionalImagesControl.push(new FormControl(''));
   }
 
+  removeCoverImage() {
+    this.coverImageControl.setValue('');
+    this.coverImageFile.set(null);
+  }
+
   removeAdditionalImage(index: number) {
+    const control = this.additionalImagesControl.at(index);
+    if (control) {
+      this.additionalImageFiles.delete(control);
+    }
     this.additionalImagesControl.removeAt(index);
   }
 
@@ -220,13 +235,17 @@ export class ItemsFormComponent {
       .map((ctrl, i) => ({ no: i + 1, image: ctrl.value }))
       .filter(img => !!img.image);
 
+    const additionalFiles = this.additionalImagesControl.controls
+      .map(ctrl => this.additionalImageFiles.get(ctrl))
+      .filter((file): file is File => file instanceof File);
+
     const selectedCat = this.categories().find(c => c.id === this.categoryIdControl.value);
     const categoryName = selectedCat ? selectedCat.name : '';
 
     const payload: any = {
       id: this.item()?.id,
       name: this.nameControl.value || '',
-      sapCode: this.sapCodeControl.value || '',
+      sapCode: this.sapCodeControl.value || (this.item()?.id ? '' : crypto.randomUUID()),
       itemType: this.itemTypeControl.value || 'mardika',
       categoryId: this.categoryIdControl.value || undefined,
       uomGroupId: this.uomGroupIdControl.value || undefined,
@@ -234,7 +253,9 @@ export class ItemsFormComponent {
       description: this.descriptionControl.value || '',
       isActive: this.isActiveControl.value ?? false,
       coverImage: this.coverImageControl.value || '',
+      coverImageFile: this.coverImageFile(),
       additionalImages: additionalImgs,
+      additionalImageFiles: additionalFiles,
       weight: this.weightControl.value || 0,
       stock: 0,
       categoryName: categoryName
@@ -276,22 +297,43 @@ export class ItemsFormComponent {
     this.onSave.emit();
   }
 
-  onImageUpload(event: Event, control: FormControl) {
+  onCoverUpload(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
 
     const file = input.files[0];
+    this.coverImageFile.set(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.coverImageControl.setValue(reader.result as string);
+      this.cdr.markForCheck();
+    };
+    reader.onerror = () => {
+      console.error('Failed to read cover image file');
+    };
+    reader.readAsDataURL(file);
+
+    input.value = '';
+  }
+
+  onAdditionalImageUpload(event: Event, control: FormControl) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    this.additionalImageFiles.set(control, file);
+
     const reader = new FileReader();
     reader.onload = () => {
       control.setValue(reader.result as string);
       this.cdr.markForCheck();
     };
     reader.onerror = () => {
-      console.error('Failed to read image file');
+      console.error('Failed to read additional image file');
     };
     reader.readAsDataURL(file);
 
-    // Reset so same file can be selected again
     input.value = '';
   }
 }
