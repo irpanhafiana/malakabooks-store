@@ -37,6 +37,17 @@ public class UsersController(IMediator mediator) : ApiControllerBase
         return ProcessResult(result);
     }
 
+    /// <summary>
+    /// Creates a new IdentityServer4 user profile using the specified request data with files.
+    /// </summary>
+    [HttpPost("with-files")]
+    [AllowAnonymous]
+    public async Task<IActionResult> CreateIS4ProfileWithFiles([FromForm] CreateIS4UserWithFilesRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RegisterUserWithFilesCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
+
     ///// <summary>
     ///// Create user profile in MongoDB after IS4 registration.
     ///// No auth required — called immediately after IS4 returns the sub claim.
@@ -67,6 +78,15 @@ public class UsersController(IMediator mediator) : ApiControllerBase
     public async Task<IActionResult> UpdateProfile(string id, [FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new UpdateUserProfileCommand(id, request), cancellationToken);
+        return Success(result);
+    }
+
+    /// <summary>Update own profile with files (name, phone, avatar only)</summary>
+    [HttpPut("{id}/profile/with-files")]
+    //[Authorize(Policy = "CustomerPolicy")]
+    public async Task<IActionResult> UpdateProfileWithFiles(string id, [FromForm] UpdateUserWithFilesRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdateUserProfileWithFilesCommand(id, request), cancellationToken);
         return Success(result);
     }
 

@@ -18,6 +18,9 @@ public class AuthorRepository : IAuthorRepository
     public async Task<IReadOnlyCollection<AuthorEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await _collection.Find(Builders<AuthorEntity>.Filter.Empty).ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<AuthorEntity>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken = default) =>
+        await _collection.Find(Builders<AuthorEntity>.Filter.In(x => x.Id, ids)).ToListAsync(cancellationToken);
+
     public async Task<AuthorEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default) =>
         await _collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 

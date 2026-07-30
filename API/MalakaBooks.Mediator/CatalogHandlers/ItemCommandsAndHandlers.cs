@@ -69,9 +69,15 @@ public class GetItemsHandler(
     public async Task<IReadOnlyCollection<ItemResponse>> Handle(GetItemsQuery request, CancellationToken cancellationToken)
     {
         var items = await itemRepository.GetAllAsync(cancellationToken);
-        var uomGroups = await uomGroupRepository.GetAllAsync(cancellationToken);
-        var books = await bookRepository.GetAllAsync(cancellationToken);
-        var authors = await authorRepository.GetAllAsync(cancellationToken);
+        
+        var uomGroupIds = items.Select(x => x.UomGroupId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().Cast<string>().ToList();
+        var uomGroups = uomGroupIds.Count > 0 ? await uomGroupRepository.GetByIdsAsync(uomGroupIds, cancellationToken) : [];
+
+        var itemIds = items.Select(x => x.Id).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().Cast<string>().ToList();
+        var books = itemIds.Count > 0 ? await bookRepository.GetByItemIdsAsync(itemIds, cancellationToken) : [];
+
+        var authorIds = books.SelectMany(x => x.AuthorIds ?? []).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().Cast<string>().ToList();
+        var authors = authorIds.Count > 0 ? await authorRepository.GetByIdsAsync(authorIds, cancellationToken) : [];
         var uomGroupsById = uomGroups
             .Where(group => !string.IsNullOrWhiteSpace(group.Id))
             .ToDictionary(group => group.Id!, group => group);
@@ -99,9 +105,15 @@ public class GetItemsByTypeHandler(
     public async Task<IReadOnlyCollection<ItemResponse>> Handle(GetItemsByTypeQuery request, CancellationToken cancellationToken)
     {
         var items = await itemRepository.GetByItemTypeAsync(request.ItemType, cancellationToken);
-        var uomGroups = await uomGroupRepository.GetAllAsync(cancellationToken);
-        var books = await bookRepository.GetAllAsync(cancellationToken);
-        var authors = await authorRepository.GetAllAsync(cancellationToken);
+        
+        var uomGroupIds = items.Select(x => x.UomGroupId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().Cast<string>().ToList();
+        var uomGroups = uomGroupIds.Count > 0 ? await uomGroupRepository.GetByIdsAsync(uomGroupIds, cancellationToken) : [];
+
+        var itemIds = items.Select(x => x.Id).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().Cast<string>().ToList();
+        var books = itemIds.Count > 0 ? await bookRepository.GetByItemIdsAsync(itemIds, cancellationToken) : [];
+
+        var authorIds = books.SelectMany(x => x.AuthorIds ?? []).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().Cast<string>().ToList();
+        var authors = authorIds.Count > 0 ? await authorRepository.GetByIdsAsync(authorIds, cancellationToken) : [];
         var uomGroupsById = uomGroups
             .Where(group => !string.IsNullOrWhiteSpace(group.Id))
             .ToDictionary(group => group.Id!, group => group);
@@ -236,9 +248,19 @@ internal static class PricedItemResolver
             : await itemRepository.GetByItemTypeAsync(itemType, cancellationToken);
 
         var itemList = items.ToArray();
-        var uomGroups = await uomGroupRepository.GetAllAsync(cancellationToken);
-        var books = await bookRepository.GetAllAsync(cancellationToken);
-        var authors = await authorRepository.GetAllAsync(cancellationToken);
+        
+        var uomGroupIds = itemList.Select(x => x.UomGroupId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().Cast<string>().ToList();
+        var uomGroups = uomGroupIds.Count > 0 ? await uomGroupRepository.GetByIdsAsync(uomGroupIds, cancellationToken) : [];
+
+        var itemIds = itemList
+            .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+            .Select(item => item.Id!)
+            .ToArray();
+
+        var books = itemIds.Length > 0 ? await bookRepository.GetByItemIdsAsync(itemIds, cancellationToken) : [];
+
+        var authorIds = books.SelectMany(x => x.AuthorIds ?? []).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().Cast<string>().ToList();
+        var authors = authorIds.Count > 0 ? await authorRepository.GetByIdsAsync(authorIds, cancellationToken) : [];
         var uomGroupsById = uomGroups
             .Where(group => !string.IsNullOrWhiteSpace(group.Id))
             .ToDictionary(group => group.Id!, group => group);
@@ -248,11 +270,6 @@ internal static class PricedItemResolver
         var authorsById = authors
             .Where(author => !string.IsNullOrWhiteSpace(author.Id))
             .ToDictionary(author => author.Id!, author => author, StringComparer.Ordinal);
-
-        var itemIds = itemList
-            .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-            .Select(item => item.Id!)
-            .ToArray();
 
         var pricings = string.IsNullOrWhiteSpace(customerGroupCode)
             ? []

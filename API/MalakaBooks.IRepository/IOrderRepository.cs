@@ -8,6 +8,7 @@ public interface IOrderRepository
     Task<OrderEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<OrderEntity?> GetByShipmentReferenceAsync(string referenceNo, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<OrderEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<OrderEntity>> GetByItemIdsAsync(IEnumerable<string> itemIds, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<OrderEntity>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<OrderEntity>> GetShippedOrdersWithAwbAsync(CancellationToken cancellationToken = default);
     Task<OrderEntity> CreateAsync(OrderEntity order, CancellationToken cancellationToken = default);
