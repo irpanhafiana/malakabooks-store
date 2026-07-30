@@ -104,23 +104,32 @@ export class UserApiService {
     }
   }
 
-  async saveUser(user: User): Promise<User> {
+  async saveUser(user: User, avatarFile?: File): Promise<User> {
     const nameParts = (user.name || '').trim().split(/\s+/);
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
-
-    const profileBody = {
-      firstName: firstName,
-      lastName: lastName,
-      avatar: user.avatar || ''
-    };
 
     try {
       // Ambil ID dari customer service yang disimpan oleh profile.component.ts
       const externalProfileId = localStorage.getItem('externalProfileId');
       const targetProfileId = externalProfileId || user.id;
 
-      await firstValueFrom(this.http.put<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Users/${targetProfileId}/profile`, profileBody));
+      if (avatarFile) {
+        const formData = new FormData();
+        formData.append('FirstName', firstName);
+        formData.append('LastName', lastName);
+        formData.append('Avatar', avatarFile);
+
+        await firstValueFrom(this.http.put<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Users/${targetProfileId}/profile/with-files`, formData));
+      } else {
+        const profileBody = {
+          firstName: firstName,
+          lastName: lastName,
+          avatar: user.avatar || ''
+        };
+
+        await firstValueFrom(this.http.put<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Users/${targetProfileId}/profile`, profileBody));
+      }
 
       const backendAddresses = await this.getAddressesByUserId(user.id);
       const backendAddrMap = new Map(backendAddresses.map(a => [a.id, a]));

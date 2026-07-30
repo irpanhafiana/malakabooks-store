@@ -212,9 +212,9 @@ export class AuthStore {
     }
   }
 
-  async updateProfile(updatedUser: User): Promise<boolean> {
+  async updateProfile(updatedUser: User, avatarFile?: File): Promise<boolean> {
     try {
-      const savedUser = await this.userApi.saveUser(updatedUser);
+      const savedUser = await this.userApi.saveUser(updatedUser, avatarFile);
       this.syncUser(savedUser);
       this.toastService.success('Profil berhasil diperbarui!');
       return true;

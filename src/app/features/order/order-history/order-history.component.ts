@@ -67,6 +67,7 @@ export class OrderHistoryComponent implements OnInit {
   reviewRating = signal<number>(0);
   reviewComment = signal<string>('');
   reviewImages = signal<{no: number, image: string}[]>([]);
+  reviewImageFiles = signal<File[]>([]);
   isSubmittingReview = signal<boolean>(false);
 
   openReviewSheet(event: Event, orderId: string, product: Product) {
@@ -78,6 +79,7 @@ export class OrderHistoryComponent implements OnInit {
     this.reviewRating.set(0);
     this.reviewComment.set('');
     this.reviewImages.set([]);
+    this.reviewImageFiles.set([]);
     this.isReviewSheetOpen.set(true);
   }
 
@@ -93,6 +95,7 @@ export class OrderHistoryComponent implements OnInit {
   onImageSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
+      this.reviewImageFiles.set([...this.reviewImageFiles(), file]);
       const reader = new FileReader();
       reader.onload = (e) => {
         const base64 = e.target?.result as string;
@@ -108,6 +111,7 @@ export class OrderHistoryComponent implements OnInit {
   removeImage(index: number) {
     const current = this.reviewImages();
     this.reviewImages.set(current.filter((_, i) => i !== index));
+    this.reviewImageFiles.set(this.reviewImageFiles().filter((_, i) => i !== index));
   }
 
   async submitReview() {
@@ -130,7 +134,7 @@ export class OrderHistoryComponent implements OnInit {
         comment: comment,
         additionalImages: this.reviewImages(),
         createdAt: new Date().toISOString()
-      }, orderId);
+      }, orderId, this.reviewImageFiles());
 
       this.closeReviewSheet();
       this.toastService.success('Ulasan Anda telah dikirim');

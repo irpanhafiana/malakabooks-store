@@ -42,7 +42,7 @@ export class ReviewApiService {
     }
   }
 
-  async addReview(review: Review, explicitOrderId?: string): Promise<Review> {
+  async addReview(review: Review, explicitOrderId?: string, files?: File[]): Promise<Review> {
     const currentUser = getStoredSessionUser();
     if (!currentUser) throw new Error('User not authenticated');
 
@@ -62,19 +62,36 @@ export class ReviewApiService {
       }
     }
 
-    const body = {
-      userId: currentUser.id,
-      itemId: review.itemId,
-      orderId,
-      rating: review.rating,
-      comment: review.comment,
-      additionalImages: review.additionalImages || []
-    };
+    let data: ReviewDto | undefined;
 
-    const res = await firstValueFrom(
-      this.http.post<ApiResponse<ReviewDto>>(`${this.BASE_URL}/customer/Reviews`, body)
-    );
-    const data = res?.data;
+    if (files && files.length > 0) {
+      const formData = new FormData();
+      formData.append('UserId', currentUser.id);
+      formData.append('ItemId', review.itemId);
+      formData.append('OrderId', orderId);
+      formData.append('Rating', review.rating.toString());
+      formData.append('Comment', review.comment || '');
+      files.forEach(f => formData.append('AdditionalImages', f));
+
+      const res = await firstValueFrom(
+        this.http.post<ApiResponse<ReviewDto>>(`${this.BASE_URL}/customer/Reviews/with-files`, formData)
+      );
+      data = res?.data;
+    } else {
+      const body = {
+        userId: currentUser.id,
+        itemId: review.itemId,
+        orderId,
+        rating: review.rating,
+        comment: review.comment,
+        additionalImages: review.additionalImages || []
+      };
+
+      const res = await firstValueFrom(
+        this.http.post<ApiResponse<ReviewDto>>(`${this.BASE_URL}/customer/Reviews`, body)
+      );
+      data = res?.data;
+    }
     
     if (!data) {
       throw new Error('Gagal menyimpan ulasan, respons kosong dari server.');

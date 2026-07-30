@@ -157,6 +157,8 @@ export class PromotionBannersFormComponent {
     });
   }
 
+  selectedImageFile: File | null = null;
+
   async onSubmitForm() {
     if (this.bannerForm.invalid) {
       this.bannerForm.markAllAsTouched();
@@ -182,9 +184,9 @@ export class PromotionBannersFormComponent {
     };
 
     if (this.banner() && this.banner()!.id) {
-      await this.bannerStore.saveBanner(data as UpdatePromotionBannerRequest, this.banner()!.id);
+      await this.bannerStore.saveBanner(data as UpdatePromotionBannerRequest, this.banner()!.id, this.selectedImageFile || undefined);
     } else {
-      await this.bannerStore.saveBanner(data);
+      await this.bannerStore.saveBanner(data, undefined, this.selectedImageFile || undefined);
     }
     this.alertService.success('Berhasil!', 'Data banner berhasil disimpan.');
     this.onSave.emit();
@@ -194,6 +196,7 @@ export class PromotionBannersFormComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
+      this.selectedImageFile = file;
       const reader = new FileReader();
       reader.onload = () => {
         this.imageBase64Control.setValue(reader.result as string);

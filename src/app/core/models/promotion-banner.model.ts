@@ -2,6 +2,7 @@ export interface PromotionBanner {
   id: string;
   title: string;
   subtitle: string;
+  imageUrl?: string;
   imageBase64: string;
   targetUrl: string;
   buttonText: string;

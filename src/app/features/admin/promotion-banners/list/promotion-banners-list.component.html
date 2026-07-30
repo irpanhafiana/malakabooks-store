@@ -49,7 +49,7 @@
       @for (banner of pagination.paged(); track banner.id) {
       <tr class="hover:bg-slate-50/50 transition-colors">
         <td class="px-5 py-4">
-          <img [src]="banner.imageBase64" alt="{{ banner.title }}"
+          <img [src]="banner.imageUrl || banner.imageBase64" alt="{{ banner.title }}"
             class="w-24 h-12 object-cover rounded-md border border-slate-200">
         </td>
         <td class="px-5 py-4">

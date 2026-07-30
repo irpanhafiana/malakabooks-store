@@ -149,6 +149,8 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  selectedAvatarFile = signal<File | null>(null);
+
   onAvatarChange(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -163,6 +165,7 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
+    this.selectedAvatarFile.set(file);
     const reader = new FileReader();
     reader.onload = () => {
       this.avatarPreview.set(reader.result as string);
@@ -185,7 +188,7 @@ export class ProfileComponent implements OnInit {
       avatar: this.avatarPreview() || user.avatar || ''
     };
 
-    const success = await this.authStore.updateProfile(updatedUser);
+    const success = await this.authStore.updateProfile(updatedUser, this.selectedAvatarFile() || undefined);
     this.isProfileSaving.set(false);
     if (success) {
       this.showEditProfile.set(false);

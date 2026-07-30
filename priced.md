@@ -3,46 +3,20 @@
     "statusMessage": "OK",
     "data": [
         {
-            "salesUomCode": "",
-            "customerGroupCode": "106",
-            "id": "6a6af5335b4a2a6edd9fb731",
-            "name": "g2gyaa",
-            "sapCode": "a6cf354d-70c9-46bf-ad6e-dae4b4025ba2",
-            "itemType": "mardika",
-            "categoryId": "6a6974c74913417719d186a1",
-            "coverImage": "/images/items/a6c5e62b-206e-4948-bd0b-df454258f7c1.png",
-            "additionalImages": [
-                {
-                    "no": 1,
-                    "image": "/images/items/ed31cb8c-0b50-4170-b9d4-c456b73b487a.png"
-                }
-            ],
-            "uomGroupId": "6a575f09500f03996c1e3702",
-            "uomGroup": {
-                "id": "6a575f09500f03996c1e3702",
-                "name": "PCS",
-                "baseUomCode": "JASA",
-                "details": [
-                    {
-                        "code": "JASA",
-                        "name": "JASA",
-                        "conversionFactor": 1.0,
-                        "isBaseUom": true,
-                        "isDefaultForSales": false,
-                        "sortOrder": 1,
-                        "isActive": true
-                    }
-                ],
-                "isActive": true,
-                "alias": "46152a71-9035-4a2b-a173-347089a4874c"
-            },
-            "baseUomCode": "JASA",
-            "description": "<p>mmzzz</p>",
-            "weight": 1000.0,
-            "stock": 0,
+            "id": "6a6b0cda5c6604b59d0c6043",
+            "title": "tess",
+            "subtitle": "asdd",
+            "imageUrl": "/images/promotion-banners/b7fdc720-e624-47f0-b824-9137685a713b.png",
+            "targetUrl": "aasdasd",
+            "buttonText": "dddd",
+            "targetType": "",
             "isActive": true,
-            "createdAt": "2026-07-30T13:54:43.781+07:00",
-            "updatedAt": "2026-07-30T14:06:25.082+07:00"
+            "displayOrder": 1,
+            "startAt": "2026-07-01T15:34:00+07:00",
+            "endAt": "2027-04-28T15:34:00+07:00",
+            "createdAt": "2026-07-30T15:35:38.008+07:00",
+            "updatedAt": "2026-07-30T15:35:38.008+07:00",
+            "alias": "0be309d0-6c73-4786-a3cd-1e544e27ba82"
         }
     ],
     "isSuccess": true

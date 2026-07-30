@@ -37,10 +37,10 @@ export class AuthorStore {
     }
   }
 
-  async saveAuthor(author: Partial<Author>) {
+  async saveAuthor(author: Partial<Author>, photoFile?: File) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
-      const saved = await this.authorApi.saveAuthor(author);
+      const saved = await this.authorApi.saveAuthor(author, photoFile);
       await this.loadAuthors();
       this.toastService.success(`Penulis "${saved.name}" berhasil disimpan!`);
     } catch (e) {

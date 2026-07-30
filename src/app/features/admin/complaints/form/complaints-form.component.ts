@@ -22,8 +22,9 @@ import { TooltipDirective } from '../../../../shared/directives/tooltip.directiv
     AdminSelectComponent, 
     TextareaComponent, 
     AdminButtonComponent,
-    ModalComponent
-  , TooltipDirective],
+    ModalComponent,
+    TooltipDirective
+  ],
   templateUrl: './complaints-form.component.html'
 })
 export class ComplaintsFormComponent {
@@ -39,6 +40,7 @@ export class ComplaintsFormComponent {
   submitting = signal(false);
   previewImage = signal<string | null>(null);
   replyImages = signal<{no: number, image: string}[]>([]);
+  replyImageFiles = signal<File[]>([]);
 
   statusOptions = [
     { value: 'open', label: 'Terbuka' },
@@ -59,7 +61,6 @@ export class ComplaintsFormComponent {
         this.respondForm.patchValue({
           status: c.status
         });
-        // We do not prepopulate the message input with existing messages since it's a chat input.
         this.respondForm.get('message')?.reset();
       }
     });
@@ -88,11 +89,12 @@ export class ComplaintsFormComponent {
       senderId: adminUser.id,
       senderType: 'admin',
       additionalImages: this.replyImages()
-    });
+    }, this.replyImageFiles());
     this.submitting.set(false);
     if (ok) {
       this.alertService.success('Berhasil!', 'Respons komplain berhasil dikirim.');
       this.replyImages.set([]);
+      this.replyImageFiles.set([]);
       this.onSave.emit();
     }
   }
@@ -100,6 +102,7 @@ export class ComplaintsFormComponent {
   onReplyImageSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
+      this.replyImageFiles.set([...this.replyImageFiles(), file]);
       const reader = new FileReader();
       reader.onload = (e) => {
         const base64 = e.target?.result as string;
@@ -114,6 +117,7 @@ export class ComplaintsFormComponent {
   removeReplyImage(index: number) {
     const current = this.replyImages();
     this.replyImages.set(current.filter((_, i) => i !== index));
+    this.replyImageFiles.set(this.replyImageFiles().filter((_, i) => i !== index));
   }
 
   protected openImagePreview(url: string) {

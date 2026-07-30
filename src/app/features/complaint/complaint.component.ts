@@ -119,9 +119,13 @@ export class ComplaintComponent implements OnInit {
     this.selectedComplaint.set(null);
   }
 
+  protected complaintFiles = signal<File[]>([]);
+  protected replyFiles = signal<File[]>([]);
+
   onImageSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
+      this.complaintFiles.set([...this.complaintFiles(), file]);
       const reader = new FileReader();
       reader.onload = (e) => {
         const base64 = e.target?.result as string;
@@ -136,11 +140,13 @@ export class ComplaintComponent implements OnInit {
   removeImage(index: number) {
     const current = this.complaintImages();
     this.complaintImages.set(current.filter((_, i) => i !== index));
+    this.complaintFiles.set(this.complaintFiles().filter((_, i) => i !== index));
   }
 
   onReplyImageSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
+      this.replyFiles.set([...this.replyFiles(), file]);
       const reader = new FileReader();
       reader.onload = (e) => {
         const base64 = e.target?.result as string;
@@ -155,6 +161,7 @@ export class ComplaintComponent implements OnInit {
   removeReplyImage(index: number) {
     const current = this.replyImages();
     this.replyImages.set(current.filter((_, i) => i !== index));
+    this.replyFiles.set(this.replyFiles().filter((_, i) => i !== index));
   }
 
   protected async submitReply() {
@@ -170,11 +177,12 @@ export class ComplaintComponent implements OnInit {
       senderId: user.id,
       senderType: 'customer',
       additionalImages: this.replyImages()
-    });
+    }, this.replyFiles());
     this.replying.set(false);
     if (ok) {
       this.replyControl.reset();
       this.replyImages.set([]);
+      this.replyFiles.set([]);
       const updated = this.complaintStore.complaints().find(c => c.id === complaint.id);
       if (updated) this.selectedComplaint.set(updated);
     }
@@ -194,11 +202,12 @@ export class ComplaintComponent implements OnInit {
       subject: subject!.trim(),
       description: description!.trim(),
       additionalImages: this.complaintImages()
-    });
+    }, this.complaintFiles());
     this.submitting.set(false);
     if (ok) {
       this.isFormOpen.set(false);
       this.complaintImages.set([]);
+      this.complaintFiles.set([]);
       this.selectedOrderItems.set([]);
     }
   }

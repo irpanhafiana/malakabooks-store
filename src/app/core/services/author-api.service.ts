@@ -6,6 +6,8 @@ import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
 import { isAdminSession } from '../auth/session.util';
 
+import { resolveImageUrl } from '../../shared/util/image.util';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -33,7 +35,7 @@ export class AuthorApiService {
         name: a.name,
         role: a.role || '',
         biography: a.biography || '',
-        photoUrl: a.photoUrl || ''
+        photoUrl: resolveImageUrl(a.photoUrl || '')
       }));
       if (!isAdmin) {
         this.authorCache = { data, ts: now };
@@ -49,24 +51,40 @@ export class AuthorApiService {
     this.authorCache = null;
   }
 
-  async saveAuthor(author: Partial<Author>): Promise<Author> {
+  async saveAuthor(author: Partial<Author>, photoFile?: File): Promise<Author> {
     const isNew = !author.id;
-    const body: Partial<Author> = {
-      name: author.name,
-      role: author.role || '',
-      biography: author.biography || '',
-      photoUrl: author.photoUrl || ''
-    };
 
     try {
       let result: Author;
-      if (isNew) {
-        const envelope = await firstValueFrom(this.http.post<ApiResponse<Author>>(`${this.BASE_URL}/admin/Authors`, body));
-        result = envelope?.data;
+      if (photoFile) {
+        const formData = new FormData();
+        formData.append('Name', author.name || '');
+        formData.append('Role', author.role || '');
+        formData.append('Biography', author.biography || '');
+        formData.append('Photo', photoFile);
+
+        if (isNew) {
+          const envelope = await firstValueFrom(this.http.post<ApiResponse<Author>>(`${this.BASE_URL}/admin/Authors/with-files`, formData));
+          result = envelope?.data;
+        } else {
+          const envelope = await firstValueFrom(this.http.put<ApiResponse<Author>>(`${this.BASE_URL}/admin/Authors/${author.id}/with-files`, formData));
+          result = envelope?.data;
+        }
       } else {
-        body.id = author.id;
-        const envelope = await firstValueFrom(this.http.put<ApiResponse<Author>>(`${this.BASE_URL}/admin/Authors/${author.id}`, body));
-        result = envelope?.data;
+        const body: Partial<Author> = {
+          name: author.name,
+          role: author.role || '',
+          biography: author.biography || '',
+          photoUrl: author.photoUrl || ''
+        };
+        if (isNew) {
+          const envelope = await firstValueFrom(this.http.post<ApiResponse<Author>>(`${this.BASE_URL}/admin/Authors`, body));
+          result = envelope?.data;
+        } else {
+          body.id = author.id;
+          const envelope = await firstValueFrom(this.http.put<ApiResponse<Author>>(`${this.BASE_URL}/admin/Authors/${author.id}`, body));
+          result = envelope?.data;
+        }
       }
       this.invalidateAuthorCache();
       return result;

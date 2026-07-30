@@ -47,12 +47,12 @@ export class PromotionBannerStore {
     }
   }
 
-  async saveBanner(request: CreatePromotionBannerRequest | UpdatePromotionBannerRequest, id?: string) {
+  async saveBanner(request: CreatePromotionBannerRequest | UpdatePromotionBannerRequest, id?: string, imageFile?: File) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const saved = id 
-        ? await this.bannerApi.updateBanner(id, request as UpdatePromotionBannerRequest)
-        : await this.bannerApi.createBanner(request as CreatePromotionBannerRequest);
+        ? await this.bannerApi.updateBanner(id, request as UpdatePromotionBannerRequest, imageFile)
+        : await this.bannerApi.createBanner(request as CreatePromotionBannerRequest, imageFile);
       
       if (saved) {
         await this.loadAdminBanners();

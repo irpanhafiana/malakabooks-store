@@ -101,6 +101,8 @@ export class AuthorsFormComponent {
     });
   }
 
+  selectedPhotoFile: File | null = null;
+
   async onSubmitForm() {
     if (this.authorForm.invalid) {
       this.authorForm.markAllAsTouched();
@@ -121,7 +123,7 @@ export class AuthorsFormComponent {
       photoUrl: this.photoUrlControl.value || ''
     };
 
-    await this.authorStore.saveAuthor(aData);
+    await this.authorStore.saveAuthor(aData, this.selectedPhotoFile || undefined);
     this.alertService.success('Berhasil!', 'Data penulis berhasil disimpan.');
     this.onSave.emit();
   }
@@ -130,6 +132,7 @@ export class AuthorsFormComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
+      this.selectedPhotoFile = file;
       const reader = new FileReader();
       reader.onload = () => {
         this.photoUrlControl.setValue(reader.result as string);

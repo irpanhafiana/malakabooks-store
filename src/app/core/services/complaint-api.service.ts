@@ -41,7 +41,20 @@ export class ComplaintApiService {
     }
   }
 
-  async createComplaint(payload: CreateComplaintPayload): Promise<Complaint> {
+  async createComplaint(payload: CreateComplaintPayload, files?: File[]): Promise<Complaint> {
+    if (files && files.length > 0) {
+      const formData = new FormData();
+      formData.append('UserId', payload.userId || '');
+      formData.append('OrderId', payload.orderId || '');
+      formData.append('ItemId', payload.itemId || '');
+      formData.append('Subject', payload.subject || '');
+      formData.append('Description', payload.description || '');
+      files.forEach(f => formData.append('AdditionalImages', f));
+
+      const res = await firstValueFrom(this.http.post<ApiResponse<ComplaintResponseDto>>(`${this.BASE_URL}/customer/Complaints/with-files`, formData));
+      return this.mapComplaint(res.data);
+    }
+
     const res = await firstValueFrom(this.http.post<ApiResponse<ComplaintResponseDto>>(`${this.BASE_URL}/customer/Complaints`, payload));
     return this.mapComplaint(res.data);
   }
@@ -57,12 +70,30 @@ export class ComplaintApiService {
     }
   }
 
-  async respondComplaint(id: string, payload: RespondComplaintPayload): Promise<Complaint> {
+  async respondComplaint(id: string, payload: RespondComplaintPayload, files?: File[]): Promise<Complaint> {
+    if (files && files.length > 0) {
+      const formData = new FormData();
+      formData.append('Message', payload.message || '');
+      files.forEach(f => formData.append('AdditionalImages', f));
+
+      const res = await firstValueFrom(this.http.put<ApiResponse<ComplaintResponseDto>>(`${this.BASE_URL}/admin/Complaints/${id}/respond/with-files`, formData));
+      return this.mapComplaint(res.data);
+    }
+
     const res = await firstValueFrom(this.http.put<ApiResponse<ComplaintResponseDto>>(`${this.BASE_URL}/admin/Complaints/${id}/respond`, payload));
     return this.mapComplaint(res.data);
   }
 
-  async replyComplaint(id: string, payload: ReplyComplaintPayload): Promise<Complaint> {
+  async replyComplaint(id: string, payload: ReplyComplaintPayload, files?: File[]): Promise<Complaint> {
+    if (files && files.length > 0) {
+      const formData = new FormData();
+      formData.append('Message', payload.message || '');
+      files.forEach(f => formData.append('AdditionalImages', f));
+
+      const res = await firstValueFrom(this.http.put<ApiResponse<ComplaintResponseDto>>(`${this.BASE_URL}/customer/Complaints/${id}/reply/with-files`, formData));
+      return this.mapComplaint(res.data);
+    }
+
     const res = await firstValueFrom(this.http.put<ApiResponse<ComplaintResponseDto>>(`${this.BASE_URL}/customer/Complaints/${id}/reply`, payload));
     return this.mapComplaint(res.data);
   }

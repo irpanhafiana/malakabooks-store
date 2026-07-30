@@ -48,9 +48,9 @@ export class ComplaintStore {
     }
   }
 
-  async create(payload: CreateComplaintPayload): Promise<boolean> {
+  async create(payload: CreateComplaintPayload, files?: File[]): Promise<boolean> {
     try {
-      const created = await this.complaintApi.createComplaint(payload);
+      const created = await this.complaintApi.createComplaint(payload, files);
       this.state.update(s => ({ ...s, complaints: [created, ...s.complaints] }));
       this.toastService.success('Komplain berhasil dikirim.');
       return true;
@@ -60,9 +60,9 @@ export class ComplaintStore {
     }
   }
 
-  async respond(id: string, payload: RespondComplaintPayload): Promise<boolean> {
+  async respond(id: string, payload: RespondComplaintPayload, files?: File[]): Promise<boolean> {
     try {
-      const updated = await this.complaintApi.respondComplaint(id, payload);
+      const updated = await this.complaintApi.respondComplaint(id, payload, files);
       this.state.update(s => ({
         ...s,
         complaints: s.complaints.map(c => c.id === id ? updated : c)
@@ -75,9 +75,9 @@ export class ComplaintStore {
     }
   }
 
-  async reply(id: string, payload: ReplyComplaintPayload): Promise<boolean> {
+  async reply(id: string, payload: ReplyComplaintPayload, files?: File[]): Promise<boolean> {
     try {
-      const updated = await this.complaintApi.replyComplaint(id, payload);
+      const updated = await this.complaintApi.replyComplaint(id, payload, files);
       this.state.update(s => ({
         ...s,
         complaints: s.complaints.map(c => c.id === id ? updated : c)
