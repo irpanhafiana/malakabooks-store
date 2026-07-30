@@ -38,10 +38,20 @@ public class CreateItemWithFilesHandler(
         if (request.Request.HasEmbeddedUomGroup())
         {
             var uomGroupEntity = request.Request.UomGroup!.ToEntity();
-            entity.UomGroupId = uomGroupEntity.Id = Guid.NewGuid().ToString();
-            entity.BaseUomCode = uomGroupEntity.BaseUomCode;
+            var existingGroup = await uomGroupRepository.GetByDefinitionAsync(uomGroupEntity, cancellationToken);
             
-            await uomGroupRepository.CreateAsync(uomGroupEntity, cancellationToken);
+            if (existingGroup != null)
+            {
+                entity.UomGroupId = existingGroup.Id;
+                entity.BaseUomCode = existingGroup.BaseUomCode;
+            }
+            else
+            {
+                entity.UomGroupId = uomGroupEntity.Id = Guid.NewGuid().ToString();
+                entity.BaseUomCode = uomGroupEntity.BaseUomCode;
+                
+                await uomGroupRepository.CreateAsync(uomGroupEntity, cancellationToken);
+            }
         }
 
         var createdItem = await itemRepository.CreateAsync(entity, cancellationToken);
