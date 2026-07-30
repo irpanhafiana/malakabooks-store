@@ -8,7 +8,7 @@ public class CreatePromotionBannerRequestValidator : AbstractValidator<CreatePro
     public CreatePromotionBannerRequestValidator()
     {
         RuleFor(x => x.Title).NotEmpty();
-        RuleFor(x => x.ImageBase64).NotEmpty();
+        RuleFor(x => x.ImageUrl).NotEmpty();
         RuleFor(x => x.TargetUrl)
             .NotEmpty()
             .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))

@@ -493,7 +493,7 @@ public static class MappingExtensions
         Id = entity.Id ?? string.Empty,
         Title = entity.Title,
         Subtitle = entity.Subtitle,
-        ImageBase64 = entity.ImageBase64,
+        ImageUrl = entity.ImageUrl,
         TargetUrl = entity.TargetUrl,
         ButtonText = entity.ButtonText,
         TargetType = entity.TargetType ?? string.Empty,
@@ -510,7 +510,7 @@ public static class MappingExtensions
     {
         Title = request.Title.Trim(),
         Subtitle = request.Subtitle.Trim(),
-        ImageBase64 = request.ImageBase64.Trim(),
+        ImageUrl = request.ImageUrl.Trim(),
         TargetUrl = request.TargetUrl.Trim(),
         ButtonText = request.ButtonText.Trim(),
         TargetType = string.IsNullOrWhiteSpace(request.TargetType) ? null : request.TargetType.Trim(),
@@ -526,7 +526,7 @@ public static class MappingExtensions
     {
         Title = request.Title.Trim(),
         Subtitle = request.Subtitle.Trim(),
-        ImageBase64 = imageUrl,
+        ImageUrl = imageUrl,
         TargetUrl = request.TargetUrl.Trim(),
         ButtonText = request.ButtonText.Trim(),
         TargetType = string.IsNullOrWhiteSpace(request.TargetType) ? null : request.TargetType.Trim(),
@@ -542,7 +542,7 @@ public static class MappingExtensions
     {
         entity.Title = request.Title.Trim();
         entity.Subtitle = request.Subtitle.Trim();
-        entity.ImageBase64 = request.ImageBase64.Trim();
+        entity.ImageUrl = request.ImageUrl.Trim();
         entity.TargetUrl = request.TargetUrl.Trim();
         entity.ButtonText = request.ButtonText.Trim();
         entity.TargetType = string.IsNullOrWhiteSpace(request.TargetType) ? null : request.TargetType.Trim();
@@ -560,7 +560,7 @@ public static class MappingExtensions
         
         if (!string.IsNullOrEmpty(imageUrl))
         {
-            entity.ImageBase64 = imageUrl;
+            entity.ImageUrl = imageUrl;
         }
 
         entity.TargetUrl = request.TargetUrl.Trim();

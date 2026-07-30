@@ -7,7 +7,7 @@ public class PromotionBannerResponse
     public string Id { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string Subtitle { get; set; } = string.Empty;
-    public string ImageBase64 { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
     public string TargetUrl { get; set; } = string.Empty;
     public string ButtonText { get; set; } = string.Empty;
     public string TargetType { get; set; } = string.Empty;
@@ -24,7 +24,7 @@ public class CreatePromotionBannerRequest
 {
     public string Title { get; set; } = string.Empty;
     public string Subtitle { get; set; } = string.Empty;
-    public string ImageBase64 { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
     public string TargetUrl { get; set; } = string.Empty;
     public string ButtonText { get; set; } = string.Empty;
     public string? TargetType { get; set; }
