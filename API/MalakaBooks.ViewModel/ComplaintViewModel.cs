@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace MalakaBooks.ViewModel;
 
 public class ComplaintResponse
@@ -41,4 +43,23 @@ public class RespondComplaintRequest
     public string SenderId { get; set; } = string.Empty;
     public string SenderType { get; set; } = string.Empty;
     public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
+}
+
+public class CreateComplaintWithFilesRequest
+{
+    public string UserId { get; set; } = string.Empty;
+    public string OrderId { get; set; } = string.Empty;
+    public string ItemId { get; set; } = string.Empty;
+    public string Subject { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public List<IFormFile>? AdditionalImages { get; set; } = [];
+}
+
+public class RespondComplaintWithFilesRequest
+{
+    public string Status { get; set; } = string.Empty;
+    public string Message { get; set; } = string.Empty;
+    public string SenderId { get; set; } = string.Empty;
+    public string SenderType { get; set; } = string.Empty;
+    public List<IFormFile>? AdditionalImages { get; set; } = [];
 }

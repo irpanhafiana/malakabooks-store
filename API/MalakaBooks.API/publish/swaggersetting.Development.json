@@ -1,0 +1,10 @@
+{
+  "SwaggerSetting": {
+    "OidcClientId": "MalakaBooks-swagger",
+    "OidcApiName": "MalakaBooks_Scope",
+    "IdentityServerBaseUrl": "http://192.168.1.15:44310",
+    "Title": "MalakaBooks Service",
+    "Description": "MalakaBooks bookstore backend API",
+    "BaseResourceImageUrl": "http://192.168.1.15:10100/MalakaService"
+  }
+}

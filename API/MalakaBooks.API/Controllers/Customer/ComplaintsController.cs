@@ -32,11 +32,28 @@ public class ComplaintsController(IMediator mediator) : ApiControllerBase
         return complaint is null ? NotFound() : Success(complaint);
     }
 
+    /// <summary>Reply to own complaint thread with files</summary>
+    [HttpPut("{id}/reply/with-files")]
+    public async Task<IActionResult> ReplyWithFiles(string id, [FromForm] RespondComplaintWithFilesRequest request, CancellationToken cancellationToken)
+    {
+        request.SenderType = "customer";
+        var complaint = await mediator.Send(new RespondComplaintWithFilesCommand(id, request), cancellationToken);
+        return complaint is null ? NotFound() : Success(complaint);
+    }
+
     /// <summary>Submit a complaint</summary>
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateComplaintRequest request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CreateComplaintCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
+
+    /// <summary>Submit a complaint with files</summary>
+    [HttpPost("with-files")]
+    public async Task<IActionResult> CreateWithFiles([FromForm] CreateComplaintWithFilesRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateComplaintWithFilesCommand(request), cancellationToken);
         return ProcessResult(result);
     }
 }

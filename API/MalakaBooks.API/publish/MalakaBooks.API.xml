@@ -1,0 +1,1504 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MalakaBooks.API</name>
+    </assembly>
+    <members>
+        <member name="T:MalakaBooks.API.Controllers.Admin.AuthorsController">
+            <summary>
+            Represents an API controller that manages author resources for administrative operations.
+            </summary>
+            <remarks>This controller provides endpoints for creating, retrieving, updating, and deleting authors.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to author operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.AuthorsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller that manages author resources for administrative operations.
+            </summary>
+            <remarks>This controller provides endpoints for creating, retrieving, updating, and deleting authors.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to author operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.AuthorsController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all authors</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.AuthorsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>Get author by id</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.AuthorsController.Create(MalakaBooks.ViewModel.CreateAuthorRequest,System.Threading.CancellationToken)">
+            <summary>Create author</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.AuthorsController.Update(System.String,MalakaBooks.ViewModel.UpdateAuthorRequest,System.Threading.CancellationToken)">
+            <summary>Update author</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.AuthorsController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>Delete author</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.BooksController">
+            <summary>
+            Provides API endpoints for managing books, including operations to retrieve, create, update, and delete book
+            records.
+            </summary>
+            <remarks>All endpoints require administrative access. The controller is versioned as part of the API route and
+            is intended for use by administrative clients managing the book catalog.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to book operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.BooksController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides API endpoints for managing books, including operations to retrieve, create, update, and delete book
+            records.
+            </summary>
+            <remarks>All endpoints require administrative access. The controller is versioned as part of the API route and
+            is intended for use by administrative clients managing the book catalog.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to book operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.BooksController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Gets all books.
+            </summary>
+            <remarks>Sends a GetBooksQuery through the mediator and returns the result wrapped in a successful
+            response.</remarks>
+            <param name="cancellationToken">Cancellation token to cancel the request.</param>
+            <returns>An IActionResult containing the retrieved books on success.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.BooksController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a book by its identifier.
+            </summary>
+            <param name="id">The identifier of the book to retrieve.</param>
+            <param name="cancellationToken">A cancellation token to observe while the request is processed.</param>
+            <returns>An IActionResult containing the book if found (200 OK), or NotFound (404) if not.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.BooksController.Create(MalakaBooks.ViewModel.CreateBookRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates a book by sending a CreateBookCommand to the mediator and returns an HTTP result representing the operation
+            outcome.
+            </summary>
+            <param name="request">The request containing the details for the book to create.</param>
+            <param name="cancellationToken">Cancellation token to cancel the operation.</param>
+            <returns>An IActionResult representing the HTTP response for the create operation, reflecting success or failure statuses.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.BooksController.Update(System.String,MalakaBooks.ViewModel.UpdateBookRequest,System.Threading.CancellationToken)">
+            <summary>
+            Updates an existing book identified by the specified id using the provided request payload.
+            </summary>
+            <param name="id">Identifier of the book to update.</param>
+            <param name="request">UpdateBookRequest containing the new values for the book.</param>
+            <param name="cancellationToken">CancellationToken to cancel the operation.</param>
+            <returns>An IActionResult containing the result of the update operation, typically a success response with the updated
+            resource or an error status code.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.BooksController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Deletes the book with the specified identifier.
+            </summary>
+            <param name="id">The identifier of the book to delete.</param>
+            <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+            <returns>An IActionResult representing the outcome of the delete operation.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.CategoriesController">
+            <summary>
+            Represents an API controller that manages category resources for administrative operations.
+            </summary>
+            <remarks>This controller provides endpoints for creating, retrieving, updating, and deleting categories. All
+            actions are intended for administrative use and are versioned via the API route. Authorization policies may be
+            applied to restrict access to administrative users.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to category operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.CategoriesController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller that manages category resources for administrative operations.
+            </summary>
+            <remarks>This controller provides endpoints for creating, retrieving, updating, and deleting categories. All
+            actions are intended for administrative use and are versioned via the API route. Authorization policies may be
+            applied to restrict access to administrative users.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to category operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.CategoriesController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all categories</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.CategoriesController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>Get category by id</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.CategoriesController.Create(MalakaBooks.ViewModel.CreateCategoryRequest,System.Threading.CancellationToken)">
+            <summary>Create category</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.CategoriesController.Update(System.String,MalakaBooks.ViewModel.UpdateCategoryRequest,System.Threading.CancellationToken)">
+            <summary>Update category</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.CategoriesController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>Delete category</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.ComplaintsController">
+            <summary>
+            Provides API endpoints for administrators to view and respond to user complaints.
+            </summary>
+            <remarks>This controller is intended for administrative use and is versioned as part of the API route. Access
+            may be restricted by policy in production environments.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to complaints.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ComplaintsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides API endpoints for administrators to view and respond to user complaints.
+            </summary>
+            <remarks>This controller is intended for administrative use and is versioned as part of the API route. Access
+            may be restricted by policy in production environments.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to complaints.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ComplaintsController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all complaints</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ComplaintsController.Respond(System.String,MalakaBooks.ViewModel.RespondComplaintRequest,System.Threading.CancellationToken)">
+            <summary>Respond to a complaint</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ComplaintsController.RespondWithFiles(System.String,MalakaBooks.ViewModel.RespondComplaintWithFilesRequest,System.Threading.CancellationToken)">
+            <summary>Respond to a complaint with files</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.HomeAddressesController">
+            <summary>
+            Exposes endpoints to create, retrieve, update, and delete home addresses.
+            </summary>
+            <remarks>Routes requests to api/v{version:apiVersion}/admin/homeaddresses and requires the
+            MalakaAdminPolicy authorization. Uses MediatR to dispatch commands and queries and returns IActionResult
+            responses.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.HomeAddressesController.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the HomeAddressesController class.
+            </summary>
+            <param name="mediator">The mediator used to send requests and publish notifications.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.HomeAddressesController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Gets all home addresses.
+            </summary>
+            <param name="cancellationToken">Cancellation token to cancel the operation.</param>
+            <returns>A task that produces an IActionResult containing the collection of home addresses.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.HomeAddressesController.Create(MalakaBooks.ViewModel.CreateHomeAddressRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates a home address by sending a CreateHomeAddressCommand via the mediator and returns an IActionResult
+            representing the outcome.
+            </summary>
+            <remarks>Handles HTTP POST requests and delegates creation to the mediator.</remarks>
+            <param name="request">The request that contains the home address details.</param>
+            <param name="cancellationToken">A cancellation token to observe while performing the operation.</param>
+            <returns>An IActionResult that represents the result of the create operation.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.HomeAddressesController.Update(System.String,MalakaBooks.ViewModel.UpdateHomeAddressRequest,System.Threading.CancellationToken)">
+            <summary>
+            Updates the home address for the resource identified by the specified id.
+            </summary>
+            <remarks>Sends an UpdateHomeAddressCommand via the mediator and returns the command result
+            wrapped in a successful action result.</remarks>
+            <param name="id">The identifier of the resource to update.</param>
+            <param name="request">The request containing the updated home address information.</param>
+            <param name="cancellationToken">A cancellation token to observe while waiting for the operation to complete.</param>
+            <returns>An IActionResult containing the result of the update operation.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.HomeAddressesController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Deletes the home address with the specified identifier.
+            </summary>
+            <param name="id">Identifier of the home address to delete.</param>
+            <param name="cancellationToken">Cancellation token to observe while performing the operation.</param>
+            <returns>An IActionResult that represents the result of the delete operation.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.InventoryMovementsController">
+            <summary>
+            Provides API endpoints for administrators to inspect inventory movement history for audit purposes.
+            </summary>
+            <remarks>This controller exposes read-only inventory movement data and supports optional filtering by book identifier.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.InventoryMovementsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MalakaBooks.API.Controllers.Admin.InventoryMovementsController"/> class.
+            </summary>
+            <param name="mediator">The mediator used to send inventory movement queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.InventoryMovementsController.GetAll(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Gets inventory movements, optionally filtered by item identifier.
+            </summary>
+            <param name="itemId">The optional item identifier used to filter movement history.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the inventory movement records.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.InventoryMovementsController.ReceiveGoods(MalakaBooks.ViewModel.GoodsReceiveRequest,System.Threading.CancellationToken)">
+            <summary>
+            Receives goods into item stock and records the inventory movement.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.ItemsController">
+            <summary>
+            Provides administrative endpoints for managing generic catalog items.
+            </summary>
+            <param name="mediator">The mediator used to dispatch item commands and queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ItemsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides administrative endpoints for managing generic catalog items.
+            </summary>
+            <param name="mediator">The mediator used to dispatch item commands and queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ItemsController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all items.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ItemsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves an item by identifier.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ItemsController.Create(MalakaBooks.ViewModel.CreateItemRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new item.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ItemsController.CreateWithFiles(MalakaBooks.ViewModel.CreateItemWithFilesRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new item with image files.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ItemsController.Update(System.String,MalakaBooks.ViewModel.UpdateItemRequest,System.Threading.CancellationToken)">
+            <summary>
+            Updates an existing item.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ItemsController.UpdateWithFiles(System.String,MalakaBooks.ViewModel.UpdateItemWithFilesRequest,System.Threading.CancellationToken)">
+            <summary>
+            Updates an existing item with image files.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.ItemsController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Deletes an item.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.OrdersController">
+            <summary>
+            Provides API endpoints for managing and administering orders in the system.
+            </summary>
+            <remarks>This controller is intended for administrative use and exposes endpoints for retrieving and updating
+            orders. Access to these endpoints may be restricted by authorization policies in production environments.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to order operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.OrdersController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides API endpoints for managing and administering orders in the system.
+            </summary>
+            <remarks>This controller is intended for administrative use and exposes endpoints for retrieving and updating
+            orders. Access to these endpoints may be restricted by authorization policies in production environments.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to order operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.OrdersController.GetAll(MalakaBooks.General.PagingParam,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a paginated list of orders based on the specified paging parameters.
+            </summary>
+            <param name="data">The paging parameters that specify the page number and page size for the results. Cannot be null.</param>
+            <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the paginated list of orders.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.OrdersController.UpdateStatus(System.String,MalakaBooks.ViewModel.UpdateOrderStatusRequest,System.Threading.CancellationToken)">
+            <summary>
+            Updates the status of the specified order.
+            </summary>
+            <param name="id">The unique identifier of the order to update.</param>
+            <param name="request">An object containing the new status and any additional information required to update the order status. Cannot be
+            null.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> that represents the result of the update operation. Returns a success response with
+            the updated order status if the operation completes successfully.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.OrdersController.CreateShipment(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Creates or re-triggers the Simasrim shipment AWB for a paid order.
+            </summary>
+            <param name="id">The unique identifier of the order.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the shipment processing outcome.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.OrdersController.CreateShipments(MalakaBooks.ViewModel.BatchOrderShipmentRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates or re-triggers the Simasrim shipment AWB for multiple paid orders.
+            </summary>
+            <param name="request">The batch request containing order identifiers.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the per-order shipment processing outcome.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.OrdersController.RecheckShipment(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Rechecks and reconciles the local shipment state for the specified order.
+            </summary>
+            <param name="id">The unique identifier of the order.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the shipment recheck outcome.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.OrdersController.CancelShipment(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Cancels an already-created Simasrim shipment AWB for the specified order.
+            </summary>
+            <param name="id">The unique identifier of the order.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the shipment cancellation outcome.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.OrdersController.RecheckShipments(MalakaBooks.ViewModel.BatchOrderShipmentRequest,System.Threading.CancellationToken)">
+            <summary>
+            Rechecks and reconciles the local shipment state for multiple orders.
+            </summary>
+            <param name="request">The batch request containing order identifiers.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the per-order shipment recheck outcome.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.OrdersController.GetShipmentDetailResi(Mardika.Simasrim.Service.Model.DetailResiModel,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves Simasrim shipment detail information for the provided courier and AWB number.
+            </summary>
+            <param name="request">The payload containing the courier code and AWB number.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the Simasrim detail-resi response.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.PaymentsController">
+            <summary>
+            Represents an API controller that manages payment resources for administrative operations.
+            </summary>
+            <remarks>This controller provides endpoints for creating, retrieving, updating, and deleting payments.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to payment operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PaymentsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller that manages payment resources for administrative operations.
+            </summary>
+            <remarks>This controller provides endpoints for creating, retrieving, updating, and deleting payments.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to payment operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PaymentsController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all payments</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PaymentsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>Get payment by id</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PaymentsController.Create(MalakaBooks.ViewModel.CreatePaymentRequest,System.Threading.CancellationToken)">
+            <summary>Create payment</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PaymentsController.Update(System.String,MalakaBooks.ViewModel.UpdatePaymentRequest,System.Threading.CancellationToken)">
+            <summary>Update payment</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PaymentsController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>Delete payment</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.PricingsController">
+            <summary>
+            Provides administrative endpoints for managing pricing masters.
+            </summary>
+            <param name="mediator">The mediator used to dispatch pricing commands and queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PricingsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides administrative endpoints for managing pricing masters.
+            </summary>
+            <param name="mediator">The mediator used to dispatch pricing commands and queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PricingsController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all pricing masters.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PricingsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a pricing master by identifier.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PricingsController.Create(MalakaBooks.ViewModel.CreatePricingRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new pricing master.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PricingsController.Update(System.String,MalakaBooks.ViewModel.UpdatePricingRequest,System.Threading.CancellationToken)">
+            <summary>
+            Updates an existing pricing master.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PricingsController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Deletes a pricing master.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.PromotionBannersController">
+            <summary>
+            Represents an API controller for managing promotion banners in administrative scenarios.
+            </summary>
+            <param name="mediator">The mediator used to dispatch promotion banner commands.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PromotionBannersController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller for managing promotion banners in administrative scenarios.
+            </summary>
+            <param name="mediator">The mediator used to dispatch promotion banner commands.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PromotionBannersController.Create(MalakaBooks.ViewModel.CreatePromotionBannerRequest,System.Threading.CancellationToken)">
+            <summary>Create promotion banner</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PromotionBannersController.CreateWithFiles(MalakaBooks.ViewModel.CreatePromotionBannerWithFilesRequest,System.Threading.CancellationToken)">
+            <summary>Create promotion banner with image file</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PromotionBannersController.Update(System.String,MalakaBooks.ViewModel.UpdatePromotionBannerRequest,System.Threading.CancellationToken)">
+            <summary>Update promotion banner</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PromotionBannersController.UpdateWithFiles(System.String,MalakaBooks.ViewModel.UpdatePromotionBannerWithFilesRequest,System.Threading.CancellationToken)">
+            <summary>Update promotion banner with image file</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.PromotionBannersController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>Delete promotion banner</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.UomGroupsController">
+            <summary>
+            Provides administrative endpoints for managing unit-of-measure groups.
+            </summary>
+            <param name="mediator">The mediator used to dispatch UoM group commands and queries.</param>
+            <param name="createValidator">Validator for create requests.</param>
+            <param name="updateValidator">Validator for update requests.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.UomGroupsController.#ctor(MediatR.IMediator,FluentValidation.IValidator{MalakaBooks.ViewModel.CreateUomGroupRequest},FluentValidation.IValidator{MalakaBooks.ViewModel.UpdateUomGroupRequest})">
+            <summary>
+            Provides administrative endpoints for managing unit-of-measure groups.
+            </summary>
+            <param name="mediator">The mediator used to dispatch UoM group commands and queries.</param>
+            <param name="createValidator">Validator for create requests.</param>
+            <param name="updateValidator">Validator for update requests.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.UomGroupsController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all UoM groups.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.UomGroupsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a UoM group by identifier.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.UomGroupsController.Create(MalakaBooks.ViewModel.CreateUomGroupRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new UoM group.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.UomGroupsController.Update(System.String,MalakaBooks.ViewModel.UpdateUomGroupRequest,System.Threading.CancellationToken)">
+            <summary>
+            Updates an existing UoM group.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.UomGroupsController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Deletes a UoM group.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.UsersController">
+            <summary>
+            Represents an API controller that provides administrative endpoints for managing users.
+            </summary>
+            <param name="mediator">The mediator used to send requests and commands within the application.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.UsersController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller that provides administrative endpoints for managing users.
+            </summary>
+            <param name="mediator">The mediator used to send requests and commands within the application.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.UsersController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all users</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Admin.WarehousesController">
+            <summary>
+            Provides administrative endpoints for managing warehouses.
+            </summary>
+            <param name="mediator">The mediator used to dispatch warehouse commands and queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.WarehousesController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides administrative endpoints for managing warehouses.
+            </summary>
+            <param name="mediator">The mediator used to dispatch warehouse commands and queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.WarehousesController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all warehouses.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.WarehousesController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a warehouse by identifier.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.WarehousesController.Create(MalakaBooks.ViewModel.CreateWarehouseRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new warehouse.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.WarehousesController.Update(System.String,MalakaBooks.ViewModel.UpdateWarehouseRequest,System.Threading.CancellationToken)">
+            <summary>
+            Updates an existing warehouse.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Admin.WarehousesController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Deletes a warehouse.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Base.ApiControllerBase">
+            <summary>
+            Provides a base class for API controllers that includes standardized methods for generating consistent success and
+            failure responses in HTTP APIs.
+            </summary>
+            <remarks>This abstract class is intended to be inherited by API controllers to simplify the creation of
+            uniform API responses. It offers protected helper methods for returning success and error results, as well as for
+            processing validation results. These methods are not exposed as API endpoints and are designed to promote
+            consistency and reduce boilerplate in derived controllers.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Base.ApiControllerBase.Success``1(``0,System.String,System.Int32)">
+            <summary>
+            Creates an HTTP response indicating a successful operation with the specified data, message, and status code.
+            </summary>
+            <remarks>This method is intended for use in derived controller classes to standardize successful API
+            responses. The response body includes the provided data and message, and sets the IsSuccess property to <see
+            langword="true"/>.</remarks>
+            <typeparam name="T">The type of the data to include in the response body.</typeparam>
+            <param name="data">The data to include in the response body. Can be null if no data is required.</param>
+            <param name="message">An optional status message to include in the response. The default is "OK".</param>
+            <param name="statusCode">The HTTP status code to set for the response. The default is 200 (OK).</param>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing an
+            <see cref="T:MalakaBooks.API.Controllers.Base.ApiControllerBase.ApiResponse`1"/> with the specified data,
+            message, and status code, indicating success.
+            </returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Base.ApiControllerBase.Success(System.String,System.Int32)">
+            <summary>
+            Creates an HTTP response indicating a successful operation with a customizable message and status code.
+            </summary>
+            <remarks>This method is intended for use in derived controllers to return a consistent success response
+            format. The response body includes a status code, a status message, and indicates success. The data payload is set
+            to null.</remarks>
+            <param name="message">The message to include in the response. The default is "Data Successfully Processed!".</param>
+            <param name="statusCode">The HTTP status code to set for the response. The default is 200 (OK).</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing a standardized success response with the specified message and status
+            code.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Base.ApiControllerBase.Fail(System.String,System.Object,System.String,System.Int32)">
+            <summary>
+            Creates an error response with the specified message, optional error details, and HTTP status code.
+            </summary>
+            <remarks>This method is intended for use in derived controllers to standardize error responses. The
+            response body includes a consistent structure for error handling in client applications.</remarks>
+            <param name="message">The error message to include in the response. This value is required and should describe the reason for the
+            failure.</param>
+            <param name="errors">An optional object containing additional error details. Can be null if no further information is available.</param>
+            <param name="errorType">An optional string specifying the type or category of the error. Can be null if not applicable.</param>
+            <param name="statusCode">The HTTP status code to return with the response. Defaults to 400 (Bad Request).</param>
+            <returns>An IActionResult containing a structured error response with the provided message, error details, error type, and
+            status code.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Base.ApiControllerBase.ProcessResult(System.ComponentModel.DataAnnotations.ValidationResult)">
+            <summary>
+            Processes the specified validation result and returns an appropriate HTTP response indicating success or
+            validation failure.
+            </summary>
+            <param name="result">The validation result to process. If null, the operation is considered successful; otherwise, any validation
+            errors are included in the response.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> representing a successful response if <paramref name="result"/> is null, or a 400
+            Bad Request response containing validation errors if validation failed.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Base.ApiControllerBase.ProcessResult(FluentValidation.Results.ValidationResult)">
+            <summary>
+            Processes a FluentValidation validation result and returns an appropriate HTTP response based on the validation
+            outcome.
+            </summary>
+            <remarks>This method is intended for internal use and is not exposed as part of the public API. It
+            standardizes the handling of validation results by returning a consistent error format for failed
+            validations.</remarks>
+            <param name="result">The validation result to process. If null, the operation is considered successful.</param>
+            <returns>An IActionResult representing a successful response if validation passed, or a 400 Bad Request response containing
+            validation errors if validation failed.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Base.ApiControllerBase.ApiResponse`1">
+            <summary>
+            Represents a standard response returned by an API, including status information, data, and error details.
+            </summary>
+            <remarks>Use this class to encapsulate the result of an API operation, including both successful and error
+            responses. The generic parameter allows the response to carry strongly typed data relevant to the API call.
+            Properties such as StatusCode, StatusMessage, and IsSuccess provide information about the outcome of the request,
+            while Errors and ErrorType can be used to convey error details when the operation fails.</remarks>
+            <typeparam name="T">The type of the data payload returned by the API.</typeparam>
+        </member>
+        <member name="P:MalakaBooks.API.Controllers.Base.ApiControllerBase.ApiResponse`1.StatusCode">
+            <summary>
+            Gets or sets the HTTP status code associated with the response.
+            </summary>
+        </member>
+        <member name="P:MalakaBooks.API.Controllers.Base.ApiControllerBase.ApiResponse`1.StatusMessage">
+            <summary>
+            Gets or sets the current status message associated with the operation or process.
+            </summary>
+        </member>
+        <member name="P:MalakaBooks.API.Controllers.Base.ApiControllerBase.ApiResponse`1.Data">
+            <summary>
+            Gets or sets the data value associated with the current instance.
+            </summary>
+        </member>
+        <member name="P:MalakaBooks.API.Controllers.Base.ApiControllerBase.ApiResponse`1.Errors">
+            <summary>
+            Gets or sets the error information associated with the current operation.
+            </summary>
+        </member>
+        <member name="P:MalakaBooks.API.Controllers.Base.ApiControllerBase.ApiResponse`1.ErrorType">
+            <summary>
+            Gets or sets the type or category of the error that occurred.
+            </summary>
+        </member>
+        <member name="P:MalakaBooks.API.Controllers.Base.ApiControllerBase.ApiResponse`1.IsSuccess">
+            <summary>
+            Gets or sets a value indicating whether the operation completed successfully.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.AddressesController">
+            <summary>
+            API controller that manages address resources for customers, providing endpoints to create, retrieve, update, and
+            delete addresses associated with a user.
+            </summary>
+            <remarks>All endpoints require the user to be authenticated and are versioned via the API route. The
+            controller is intended for use by customer-facing clients to manage their own address data.</remarks>
+            <remarks>
+            Initializes a new instance of the AddressesController class with the specified mediator, Simasrim API client, and
+            Simasrim settings.
+            </remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.AddressesController.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the AddressesController class with the specified mediator, Simasrim API client, and
+            Simasrim settings.
+            </summary>
+            <param name="mediator">The mediator used to send commands and queries within the application.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.AddressesController.GetByUser(System.String,System.Threading.CancellationToken)">
+            <summary>Get own addresses</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.AddressesController.Create(MalakaBooks.ViewModel.CreateAddressRequest,System.Threading.CancellationToken)">
+            <summary>Create address</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.AddressesController.Update(System.String,MalakaBooks.ViewModel.UpdateAddressRequest,System.Threading.CancellationToken)">
+            <summary>Update address</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.AddressesController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>Delete address</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.CartController">
+            <summary>
+            Represents an API controller that manages the authenticated customer's shopping cart, including retrieving the cart,
+            adding items, and removing items.
+            </summary>
+            <remarks>All endpoints require the caller to be authorized under the 'CustomerPolicy'. The controller is
+            versioned and accessible under the 'api/v{version}/customer/cart' route. Validation is performed on incoming
+            requests before processing cart modifications.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to cart operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.CartController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller that manages the authenticated customer's shopping cart, including retrieving the cart,
+            adding items, and removing items.
+            </summary>
+            <remarks>All endpoints require the caller to be authorized under the 'CustomerPolicy'. The controller is
+            versioned and accessible under the 'api/v{version}/customer/cart' route. Validation is performed on incoming
+            requests before processing cart modifications.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to cart operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.CartController.GetCart(System.String,System.Threading.CancellationToken)">
+            <summary>Get own cart</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.CartController.AddItem(MalakaBooks.ViewModel.AddCartItemRequest,System.Threading.CancellationToken)">
+            <summary>Add item to cart</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.CartController.RemoveItem(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Remove item from cart</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.CategoriesController">
+            <summary>
+            Provides authenticated customer endpoints for retrieving category information.
+            </summary>
+            <param name="mediator">The mediator used to dispatch category queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.CategoriesController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides authenticated customer endpoints for retrieving category information.
+            </summary>
+            <param name="mediator">The mediator used to dispatch category queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.CategoriesController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all categories.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.CategoriesController.GetByItemType(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves categories filtered by item type.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.CategoriesController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a category by identifier.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.ComplaintsController">
+            <summary>
+            Handles customer complaint-related API requests, including retrieving and submitting complaints for the
+            authenticated user.
+            </summary>
+            <remarks>This controller is versioned and routes requests under the 'api/v{version}/customer/complaints' path.
+            Access may be restricted by customer authorization policies, depending on configuration.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to complaint operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ComplaintsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Handles customer complaint-related API requests, including retrieving and submitting complaints for the
+            authenticated user.
+            </summary>
+            <remarks>This controller is versioned and routes requests under the 'api/v{version}/customer/complaints' path.
+            Access may be restricted by customer authorization policies, depending on configuration.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to complaint operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ComplaintsController.GetByUser(System.String,System.Threading.CancellationToken)">
+            <summary>Get own complaints</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ComplaintsController.Reply(System.String,MalakaBooks.ViewModel.RespondComplaintRequest,System.Threading.CancellationToken)">
+            <summary>Reply to own complaint thread</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ComplaintsController.ReplyWithFiles(System.String,MalakaBooks.ViewModel.RespondComplaintWithFilesRequest,System.Threading.CancellationToken)">
+            <summary>Reply to own complaint thread with files</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ComplaintsController.Create(MalakaBooks.ViewModel.CreateComplaintRequest,System.Threading.CancellationToken)">
+            <summary>Submit a complaint</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ComplaintsController.CreateWithFiles(MalakaBooks.ViewModel.CreateComplaintWithFilesRequest,System.Threading.CancellationToken)">
+            <summary>Submit a complaint with files</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.IncomingPaymentsController">
+            <summary>
+            Exposes customer-facing incoming payment operations related to DOKU reconciliation.
+            </summary>
+            <remarks>This controller allows authenticated customers to manually trigger a DOKU payment status recheck using their order reference.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.IncomingPaymentsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Exposes customer-facing incoming payment operations related to DOKU reconciliation.
+            </summary>
+            <remarks>This controller allows authenticated customers to manually trigger a DOKU payment status recheck using their order reference.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.IncomingPaymentsController.CheckDokuStatus(MalakaBooks.ViewModel.CheckDokuPaymentStatusRequest,System.Threading.CancellationToken)">
+            <summary>
+            Checks the current DOKU payment status for the specified order and reuses the standard notification processing flow.
+            </summary>
+            <param name="request">The order reference to query against DOKU.</param>
+            <param name="cancellationToken">A token that can be used to cancel the recheck request.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> describing whether the payment state was successfully rechecked and applied.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.ItemsController">
+            <summary>
+            Provides authenticated customer read-only endpoints for catalog items.
+            </summary>
+            <param name="mediator">The mediator used to dispatch item queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ItemsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides authenticated customer read-only endpoints for catalog items.
+            </summary>
+            <param name="mediator">The mediator used to dispatch item queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ItemsController.GetPriced(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all items together with their default resolved customer price.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ItemsController.GetPricedByType(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves items by type together with their default resolved customer price.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.OrdersController">
+            <summary>
+            Represents an API controller for managing customer orders, including creating new orders and retrieving order
+            details for the authenticated user.
+            </summary>
+            <remarks>This controller is versioned and routes are prefixed with the API version and customer context.
+            Endpoints require the user to be authenticated as a customer. All actions operate on behalf of the authenticated
+            user and are intended for use in customer-facing scenarios.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to order operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.OrdersController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller for managing customer orders, including creating new orders and retrieving order
+            details for the authenticated user.
+            </summary>
+            <remarks>This controller is versioned and routes are prefixed with the API version and customer context.
+            Endpoints require the user to be authenticated as a customer. All actions operate on behalf of the authenticated
+            user and are intended for use in customer-facing scenarios.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to order operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.OrdersController.Create(MalakaBooks.ViewModel.CreateOrderRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new order by sending a CreateOrderCommand to the mediator and returns an IActionResult representing
+            success or validation failure.
+            </summary>
+            <remarks>If the mediator result is not successful, the action returns a validation error (defaults to
+            "Validation failed" when no message is provided) using an error code of "ValidationError" and status 400;
+            otherwise it returns a success result containing the mediator response.</remarks>
+            <param name="request">Order creation request containing the details required to create the order.</param>
+            <param name="cancellationToken">Cancellation token used to cancel the create operation.</param>
+            <returns>An IActionResult that contains a success response when the order is created, or a failure response with
+            validation errors and a 400 Bad Request status when creation fails.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.OrdersController.GetByUser(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves the orders for the specified user.
+            </summary>
+            <remarks>Route: GET /user/{userId}. Delegates to the mediator to execute the GetOrdersByUserQuery
+            asynchronously.</remarks>
+            <param name="userId">The identifier of the user whose orders are retrieved.</param>
+            <param name="cancellationToken">Token to observe for request cancellation.</param>
+            <returns>An IActionResult containing the query result; on success returns 200 OK with the user's orders.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.OrdersController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Gets an order by identifier.
+            </summary>
+            <remarks>Dispatches a GetOrderByIdQuery through the mediator.</remarks>
+            <param name="id">The order identifier.</param>
+            <param name="cancellationToken">Token to observe while awaiting the operation.</param>  
+            <returns>An IActionResult containing the order when found (200 OK) or an appropriate error result.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.PricingsController">
+            <summary>
+            Provides authenticated customer price-lookup endpoints.
+            </summary>
+            <param name="mediator">The mediator used to dispatch pricing queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.PricingsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides authenticated customer price-lookup endpoints.
+            </summary>
+            <param name="mediator">The mediator used to dispatch pricing queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.PricingsController.Lookup(MalakaBooks.ViewModel.CustomerPriceLookupRequest,System.Threading.CancellationToken)">
+            <summary>
+            Resolves the active price for an item and UoM using the authenticated customer's IS4 customer-group claim.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.ReviewsController">
+            <summary>
+            Handles review-related API requests for customers, including retrieving reviews for a specific item and creating new
+            reviews.
+            </summary>
+            <param name="mediator">The mediator used to send commands and queries related to reviews.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ReviewsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Handles review-related API requests for customers, including retrieving reviews for a specific item and creating new
+            reviews.
+            </summary>
+            <param name="mediator">The mediator used to send commands and queries related to reviews.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ReviewsController.GetByItem(System.String,System.Threading.CancellationToken)">
+            <summary>Get reviews by item</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ReviewsController.Create(MalakaBooks.ViewModel.CreateReviewRequest,System.Threading.CancellationToken)">
+            <summary>Write a review</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.ReviewsController.CreateWithFiles(MalakaBooks.ViewModel.CreateReviewWithFilesRequest,System.Threading.CancellationToken)">
+            <summary>Write a review with files</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.SimasrimController">
+            <summary>
+            API controller that manages address resources for customers, providing endpoints to create, retrieve, update, and
+            delete addresses associated with a user.
+            </summary>
+            <remarks>All endpoints require the user to be authenticated and are versioned via the API route. The
+            controller is intended for use by customer-facing clients to manage their own address data.</remarks>
+            <remarks>
+            Initializes a new instance of the AddressesController class with the specified mediator, Simasrim API client, and
+            Simasrim settings.
+            </remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.SimasrimController.#ctor(MediatR.IMediator,Microsoft.Extensions.Options.IOptions{MalakaBooks.ConfigSetting.SimasrimSetting})">
+            <summary>
+            Initializes a new instance of the AddressesController class with the specified mediator, Simasrim API client, and
+            Simasrim settings.
+            </summary>
+            <param name="mediator">The mediator used to send commands and queries within the application.</param>
+            <param name="simasrimOptions">The configuration options containing Simasrim settings. Cannot be null.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.SimasrimController.GetSimasrimProvince(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves the list of provinces available in Simasrim shipping service.
+            </summary>
+            <remarks>
+            This endpoint fetches all provinces supported by Simasrim for shipping operations.
+            The province data is used to populate location selection dropdowns and validate shipping addresses.
+            </remarks>
+            <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing a <see cref="T:Mardika.Simasrim.Service.Model.BaseResponse"/> with the list of provinces.
+            The response includes status code, status message, and province data.
+            </returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.SimasrimController.GetSimasrimCity(Mardika.Simasrim.Service.Model.CityModel,System.Threading.CancellationToken)">
+            <summary>
+            Handles a POST request to retrieve city information from the Simasrim API based on the specified criteria.
+            </summary>
+            <param name="model">The city search criteria to use when querying the Simasrim API. Cannot be null.</param>
+            <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing a <see cref="T:Mardika.Simasrim.Service.Model.BaseResponse"/> with the list of cities.
+            matches the specified criteria.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.SimasrimController.GetSimasrimCity(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves the list of available courier codes for Simasrim shipping services.
+            </summary>
+            <remarks>The returned list includes all supported courier codes for Simasrim. This endpoint is
+            intended for use when clients need to display or validate available couriers for Simasrim
+            shipments.</remarks>
+            <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing a response with the list of courier codes. The response includes a
+            status code, status message, and an array of courier code strings.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.SimasrimController.GetSimasrimDistrict(Mardika.Simasrim.Service.Model.DistrictModel,System.Threading.CancellationToken)">
+            <summary>
+            Handles a POST request to retrieve district information from the Simasrim API based on the specified
+            criteria.
+            </summary>
+            <param name="model">The district search criteria to use when querying the Simasrim API. Cannot be null.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the district information returned by the Simasrim API.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.SimasrimController.GetSimasrimTarif(Mardika.Simasrim.Service.Model.TariffModel,System.Threading.CancellationToken)">
+            <summary>
+            Handles a request to retrieve shipping tariff information from the Simasrim service based on the specified
+            tariff criteria.
+            </summary>
+            <param name="model">The tariff criteria to use when querying for shipping rates. Must not be null.</param>
+            <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the shipping tariff information returned by the Simasrim service.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.SimasrimController.GetSimasrimInsurance(MalakaBooks.ViewModel.SimasrimInsuranceRequest,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves shipping insurance information from the Simasrim service based on the declared item value.
+            </summary>
+            <param name="model">The insurance request payload containing the declared item value.</param>
+            <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the Simasrim insurance response.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.SimasrimController.TrackAwb(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Tracks shipment status for a customer order using the stored AWB number and courier.
+            </summary>
+            <param name="orderId">The unique identifier of the order to track.</param>
+            <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the Simasrim AWB tracking response.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Customer.UsersController">
+            <summary>
+            Handles user profile operations for customers, including creation, retrieval, and update of user profiles after
+            identity registration.
+            </summary>
+            <remarks>This controller is intended to be used by customer-facing clients immediately after identity
+            registration. Profile creation does not require authentication and is designed to be called after receiving the
+            subject claim from the identity provider. Only profile data (such as name, phone, and avatar) is managed here;
+            authentication and sensitive information like email and password are handled by the identity server.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to user profile operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.UsersController.#ctor(MediatR.IMediator)">
+            <summary>
+            Handles user profile operations for customers, including creation, retrieval, and update of user profiles after
+            identity registration.
+            </summary>
+            <remarks>This controller is intended to be used by customer-facing clients immediately after identity
+            registration. Profile creation does not require authentication and is designed to be called after receiving the
+            subject claim from the identity provider. Only profile data (such as name, phone, and avatar) is managed here;
+            authentication and sensitive information like email and password are handled by the identity server.</remarks>
+            <param name="mediator">The mediator used to send commands and queries related to user profile operations.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.UsersController.CreateIS4Profile(MalakaBooks.ViewModel.CreateIS4UserRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new IdentityServer4 user profile using the specified request data.
+            </summary>
+            <param name="request">The details of the user profile to create. Cannot be null.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating the result of the profile creation operation. Returns a success response
+            if the profile is created; otherwise, returns an error response describing the failure.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.UsersController.GetProfile(System.String,System.Threading.CancellationToken)">
+            <summary>Get own profile</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.UsersController.UpdateProfile(System.String,MalakaBooks.ViewModel.UpdateUserRequest,System.Threading.CancellationToken)">
+            <summary>Update own profile (name, phone, avatar only)</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Customer.UsersController.ChangePassword(MalakaBooks.ViewModel.ChangePasswordRequest,System.Threading.CancellationToken)">
+            <summary>Change own IS4 password</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.AuthorsController">
+            <summary>
+            Represents an API controller that provides public endpoints for retrieving author information.
+            </summary>
+            <remarks>This controller exposes read-only endpoints for author master data.</remarks>
+            <param name="mediator">The mediator used to send queries for retrieving author data.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.AuthorsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller that provides public endpoints for retrieving author information.
+            </summary>
+            <remarks>This controller exposes read-only endpoints for author master data.</remarks>
+            <param name="mediator">The mediator used to send queries for retrieving author data.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.AuthorsController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all authors (public)</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.AuthorsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>Get author by id (public)</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.BooksController">
+            <summary>
+            Represents an API controller that provides public endpoints for retrieving book information from the catalog.
+            </summary>
+            <remarks>This controller exposes read-only endpoints for accessing the public book catalog. All routes are
+            versioned and accessible without authentication. Use this controller to retrieve lists of books or details for a
+            specific book by its identifier.</remarks>
+            <param name="mediator">The mediator used to send queries for retrieving book data.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.BooksController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller that provides public endpoints for retrieving book information from the catalog.
+            </summary>
+            <remarks>This controller exposes read-only endpoints for accessing the public book catalog. All routes are
+            versioned and accessible without authentication. Use this controller to retrieve lists of books or details for a
+            specific book by its identifier.</remarks>
+            <param name="mediator">The mediator used to send queries for retrieving book data.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.BooksController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all books (public catalog)</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.BooksController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>Get book by id (public)</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.CategoriesController">
+            <summary>
+            Represents an API controller that provides public endpoints for retrieving category information.
+            </summary>
+            <remarks>This controller exposes public endpoints for accessing category data. All routes are versioned and
+            accessible under the 'public' API segment. The controller is intended for read-only access to category information
+            and does not provide endpoints for creating, updating, or deleting categories.</remarks>
+            <param name="mediator">The mediator used to send queries for retrieving category data.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.CategoriesController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller that provides public endpoints for retrieving category information.
+            </summary>
+            <remarks>This controller exposes public endpoints for accessing category data. All routes are versioned and
+            accessible under the 'public' API segment. The controller is intended for read-only access to category information
+            and does not provide endpoints for creating, updating, or deleting categories.</remarks>
+            <param name="mediator">The mediator used to send queries for retrieving category data.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.CategoriesController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all categories (public)</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.CategoriesController.GetByItemType(System.String,System.Threading.CancellationToken)">
+            <summary>Get categories filtered by item type (public)</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.CategoriesController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>Get category by id (public)</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.ExternalMessageController">
+            <summary>
+            Receives external gateway callbacks and forwards them into the internal payment-posting flow.
+            </summary>
+            <remarks>This controller is intentionally anonymous so payment gateways such as DOKU can post notifications without customer or admin authentication.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ExternalMessageController.#ctor(MediatR.IMediator)">
+            <summary>
+            Receives external gateway callbacks and forwards them into the internal payment-posting flow.
+            </summary>
+            <remarks>This controller is intentionally anonymous so payment gateways such as DOKU can post notifications without customer or admin authentication.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ExternalMessageController.DokuNotify(MalakaBooks.ViewModel.DokuPaymentNotificationRequest,System.Threading.CancellationToken)">
+            <summary>
+            Processes a DOKU payment notification for a customer order.
+            </summary>
+            <param name="request">The normalized notification payload containing the order reference and payment status details.</param>
+            <param name="cancellationToken">A token that can be used to cancel the notification processing request.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the payment processing result.</returns>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ExternalMessageController.SimasrimNotify(Mardika.Simasrim.Service.Model.CreateResiResponse,System.Threading.CancellationToken)">
+            <summary>
+            Processes a Simasrim shipment webhook notification for batched cetak-resi submissions.
+            </summary>
+            <param name="request">The Simasrim shipment response payload containing shipment status, AWB, and transaction reference information.</param>
+            <param name="cancellationToken">A token that can be used to cancel the webhook processing request.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing a minimal acknowledgment of webhook receipt.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.HomeAddressesController">
+            <summary>
+            Exposes public API endpoints to retrieve home addresses.
+            </summary>
+            <remarks>Routes requests under api/v{version}/public/homeaddresses, allows anonymous access, and
+            delegates request handling to an IMediator (MediatR).</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.HomeAddressesController.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the HomeAddressesController class.
+            </summary>
+            <param name="mediator">The mediator used to send requests and publish notifications.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.HomeAddressesController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Gets all home addresses.
+            </summary>
+            <param name="cancellationToken">Cancellation token to cancel the operation.</param>
+            <returns>A task that produces an IActionResult containing the collection of home addresses.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.ItemsController">
+            <summary>
+            Provides public read-only endpoints for generic catalog items.
+            </summary>
+            <param name="mediator">The mediator used to dispatch item queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ItemsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides public read-only endpoints for generic catalog items.
+            </summary>
+            <param name="mediator">The mediator used to dispatch item queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ItemsController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all items.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ItemsController.GetByType(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves items filtered by item type.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ItemsController.GetPriced(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all items together with their default resolved public price.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ItemsController.GetPricedByType(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves items by type together with their default resolved public price.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ItemsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves an item by identifier.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.ItemSyncController">
+            <summary>
+            Provides anonymous third-party item synchronization endpoints backed by internal item and UoM group upsert logic.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ItemSyncController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides anonymous third-party item synchronization endpoints backed by internal item and UoM group upsert logic.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.ItemSyncController.Sync(MalakaBooks.ViewModel.SyncItemRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates or updates an item by external SAP code using a payload that embeds its UoM group definition.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.PaymentsController">
+            <summary>
+            Represents an API controller that provides public endpoints for retrieving payment information.
+            </summary>
+            <remarks>This controller exposes read-only endpoints for payment master data.</remarks>
+            <param name="mediator">The mediator used to send queries for retrieving payment data.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.PaymentsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller that provides public endpoints for retrieving payment information.
+            </summary>
+            <remarks>This controller exposes read-only endpoints for payment master data.</remarks>
+            <param name="mediator">The mediator used to send queries for retrieving payment data.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.PaymentsController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all payments (public)</summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.PaymentsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>Get payment by id (public)</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.PricingsController">
+            <summary>
+            Provides public price-lookup endpoints for product pricing resolution.
+            </summary>
+            <param name="mediator">The mediator used to dispatch pricing queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.PricingsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides public price-lookup endpoints for product pricing resolution.
+            </summary>
+            <param name="mediator">The mediator used to dispatch pricing queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.PricingsController.Lookup(MalakaBooks.ViewModel.PublicPriceLookupRequest,System.Threading.CancellationToken)">
+            <summary>
+            Resolves the active price for an item and UoM using the configured public default customer group.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.PromotionBannersController">
+            <summary>
+            Represents an API controller that provides public endpoints for active promotion banners.
+            </summary>
+            <param name="mediator">The mediator used to send queries for retrieving promotion banner data.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.PromotionBannersController.#ctor(MediatR.IMediator)">
+            <summary>
+            Represents an API controller that provides public endpoints for active promotion banners.
+            </summary>
+            <param name="mediator">The mediator used to send queries for retrieving promotion banner data.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.PromotionBannersController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get active promotion banners (public)</summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.UomGroupsController">
+            <summary>
+            Provides public read-only endpoints for unit-of-measure groups.
+            </summary>
+            <param name="mediator">The mediator used to dispatch UoM group queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.UomGroupsController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides public read-only endpoints for unit-of-measure groups.
+            </summary>
+            <param name="mediator">The mediator used to dispatch UoM group queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.UomGroupsController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all UoM groups.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.UomGroupsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a UoM group by identifier.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Controllers.Public.WarehousesController">
+            <summary>
+            Provides public read-only endpoints for warehouses.
+            </summary>
+            <param name="mediator">The mediator used to dispatch warehouse queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.WarehousesController.#ctor(MediatR.IMediator)">
+            <summary>
+            Provides public read-only endpoints for warehouses.
+            </summary>
+            <param name="mediator">The mediator used to dispatch warehouse queries.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.WarehousesController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all warehouses.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.Controllers.Public.WarehousesController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a warehouse by identifier.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.Helper.AuthorizeFilterByPolicy">
+            <summary>
+            Applies authorization policies to a controller by adding predefined authorization filters for roles, scopes, and
+            claims.
+            </summary>
+            <remarks>This convention is intended to be used with ASP.NET Core MVC to ensure that controllers are
+            protected by the specified authorization policies. The filters added require that incoming requests satisfy the
+            'RolesPolicy', 'ScopesPolicy', and 'ClaimsPolicy' policies. Use this convention to enforce consistent
+            authorization requirements across multiple controllers.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Helper.AuthorizeFilterByPolicy.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel)">
+            <summary>
+            Adds authorization filters for roles, scopes, and claims policies to the specified controller model.
+            </summary>
+            <remarks>This method is typically used to enforce multiple authorization policies on all actions
+            within a controller. The filters are added in the order: roles, scopes, then claims.</remarks>
+            <param name="controller">The controller model to which the authorization filters will be applied. Cannot be null.</param>
+        </member>
+        <member name="T:MalakaBooks.API.Helper.GlobalExceptionHandler">
+            <summary>
+            Provides a global exception handler that logs unhandled exceptions and returns a standardized error response to the
+            client.
+            </summary>
+            <remarks>This handler is intended to be used as a centralized mechanism for handling unhandled exceptions in
+            ASP.NET Core applications. It logs exception details and returns a ProblemDetails response with HTTP status code
+            500. The response includes a trace identifier to assist with troubleshooting. This handler is thread-safe and can be
+            registered as a singleton.</remarks>
+            <param name="logger">The logger used to record exception details and error information.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Helper.GlobalExceptionHandler.#ctor(Microsoft.Extensions.Logging.ILogger{MalakaBooks.API.Helper.GlobalExceptionHandler})">
+            <summary>
+            Provides a global exception handler that logs unhandled exceptions and returns a standardized error response to the
+            client.
+            </summary>
+            <remarks>This handler is intended to be used as a centralized mechanism for handling unhandled exceptions in
+            ASP.NET Core applications. It logs exception details and returns a ProblemDetails response with HTTP status code
+            500. The response includes a trace identifier to assist with troubleshooting. This handler is thread-safe and can be
+            registered as a singleton.</remarks>
+            <param name="logger">The logger used to record exception details and error information.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Helper.GlobalExceptionHandler.TryHandleAsync(Microsoft.AspNetCore.Http.HttpContext,System.Exception,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to handle an unhandled exception by generating a standardized error response for the HTTP request.
+            </summary>
+            <remarks>The response is written in the Problem Details format with a 500 Internal Server Error status
+            code. The response includes a trace identifier for correlation. This method always returns <see
+            langword="true"/>.</remarks>
+            <param name="httpContext">The HTTP context for the current request. Must not be null.</param>
+            <param name="exception">The exception that occurred during request processing. Must not be null.</param>
+            <param name="cancellationToken">A cancellation token that can be used to cancel the asynchronous operation.</param>
+            <returns>A value task that represents the asynchronous operation. The result is <see langword="true"/> if the exception was
+            handled and a response was written; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Helper.GlobalHttpMethodAuthorizationFilter">
+            <summary>
+            Implements a global authorization filter that enforces HTTP method-based access control using user claims.
+            </summary>
+            <remarks>This filter checks the current user's claims for permissions corresponding to the HTTP method of the
+            incoming request. If the user lacks the required claim ("Create" for POST, "Read" for GET, "Update" for PUT, or
+            "Delete" for DELETE), the request is forbidden. Actions decorated with the AllowAnonymousAttribute are excluded from
+            this authorization check. This filter is intended for use in ASP.NET Core applications to provide a centralized,
+            claim-based authorization mechanism for controller actions.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Helper.GlobalHttpMethodAuthorizationFilter.OnAuthorization(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <summary>
+            Performs authorization by validating user claims for the current HTTP request method.
+            </summary>
+            <remarks>If the action allows anonymous access, authorization is skipped. For other requests, the
+            method checks for specific user claims corresponding to the HTTP method (e.g., 'Create' for POST, 'Read' for
+            GET). If the required claim is missing, the request is forbidden.</remarks>
+            <param name="context">The context for the authorization filter, containing information about the current HTTP request and action.</param>
+        </member>
+        <member name="T:MalakaBooks.API.Helper.IdempotentFilter">
+            <summary>
+            Provides an action filter that applies idempotency expiration settings to HTTP requests based on configurable
+            defaults.
+            </summary>
+            <remarks>This filter inspects incoming requests for the presence of an IdempotentAttribute and, if enabled,
+            sets an expiration duration for idempotency keys in the HTTP context. The expiration duration is determined by the
+            HTTP method and the provided default expiration settings. This filter is typically used to support idempotent
+            operations in web APIs, ensuring that repeated requests with the same key are handled consistently within the
+            specified expiration window.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Helper.IdempotentFilter.#ctor(System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <summary>
+            Initializes a new instance of the IdempotentFilter class with the specified default expiration settings for
+            keys.
+            </summary>
+            <param name="defaultExpireHours">A dictionary that maps key names to their default expiration durations, in hours. Keys represent the filter
+            keys, and values specify the number of hours before each key expires. Cannot be null; if not provided, an empty
+            dictionary is used.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Helper.IdempotentFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            Executes logic before the action method is called, applying idempotency settings to the current HTTP request if
+            applicable.
+            </summary>
+            <remarks>If the action is marked with an <see cref="T:IdempotentAPI.Filters.IdempotentAttribute"/> and the HTTP method is
+            idempotent, this method sets the expiration period for idempotency in the <see cref="P:Microsoft.AspNetCore.Http.HttpContext.Items"/>
+            collection. This allows downstream components to access the idempotency expiration setting for the
+            request.</remarks>
+            <param name="context">The context for the executing action, containing information about the HTTP request and action metadata.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Helper.IdempotentFilter.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <summary>
+            Called after an action method has executed.
+            </summary>
+            <param name="context">The context for the executed action, containing information about the action and its result. Cannot be null.</param>
+        </member>
+        <member name="T:MalakaBooks.API.Helper.ValidatePaymentSignatureFilter">
+            <summary>
+            Validates Doku payment notification signatures on incoming HTTP requests by computing a SHA-256 digest of the
+            request body and an HMACSHA256 signature using configured settings, and rejects requests with missing or
+            mismatched signature headers.
+            </summary>
+            <remarks>Verifies the presence of the Client-Id, Request-Id, Request-Timestamp and Signature headers.
+            Enables request buffering, computes a base64-encoded SHA-256 digest of the request body, and builds a canonical
+            string from Client-Id, Request-Id, Request-Timestamp, Request-Target and Digest. Computes HMACSHA256 using the
+            configured secret key and compares it to the Signature header. Sets BadRequestObjectResult for missing headers
+            or UnauthorizedObjectResult for invalid signatures; proceeds to the action when validation succeeds.</remarks>
+        </member>
+        <member name="M:MalakaBooks.API.Helper.ValidatePaymentSignatureFilter.#ctor(Microsoft.Extensions.Logging.ILogger{MalakaBooks.API.Helper.ValidatePaymentSignatureFilter},Microsoft.Extensions.Options.IOptions{MalakaBooks.ConfigSetting.DokuSetting})">
+            <summary>
+            Initializes a new instance of ValidatePaymentSignatureFilter with logging and DOKU configuration.
+            </summary>
+            <remarks>Assigns the provided logger and extracts DokuSetting from dokuOptions.Value for later use in
+            signature validation.</remarks>
+            <param name="logger">Logger for recording diagnostic and operational information.</param>
+            <param name="dokuOptions">DOKU configuration options; the DokuSetting value is extracted for signature validation.</param>
+        </member>
+        <member name="M:MalakaBooks.API.Helper.ValidatePaymentSignatureFilter.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)">
+            <summary>
+            Validate required DOKU request headers and the computed signature, short-circuiting with BadRequest or
+            Unauthorized when validation fails; otherwise invoke the next action in the pipeline.
+            </summary>
+            <remarks>Computes a request digest, derives a signature using the configured secret and
+            request metadata, compares it to the Signature header, and logs a warning on mismatch.</remarks>
+            <param name="context">The action executing context that provides access to the HTTP request and allows setting the action result.</param>
+            <param name="next">The delegate that executes the next action or middleware in the pipeline.</param>
+            <returns>A Task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:MalakaBooks.API.Services.FileStorageService">
+            <summary>
+            Service for handling file storage operations
+            </summary>
+            <param name="env">The web host environment</param>
+        </member>
+        <member name="M:MalakaBooks.API.Services.FileStorageService.#ctor(Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Service for handling file storage operations
+            </summary>
+            <param name="env">The web host environment</param>
+        </member>
+        <member name="M:MalakaBooks.API.Services.FileStorageService.SaveFileAsync(Microsoft.AspNetCore.Http.IFormFile,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Saves an uploaded file to a specific subfolder in wwwroot/images
+            </summary>
+            <param name="file">The file to save</param>
+            <param name="subFolder">The subfolder to save the file in</param>
+            <param name="cancellationToken">Cancellation token</param>
+            <returns>The relative URL of the saved file</returns>
+        </member>
+        <member name="T:MalakaBooks.API.ShippedOrderAwbStatusService">
+            <summary>
+            Periodically checks shipped orders with AWB numbers and marks them as delivered when the carrier confirms delivery.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.ShippedOrderAwbStatusService.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,Microsoft.Extensions.Options.IOptions{MalakaBooks.ConfigSetting.AppSetting},System.TimeProvider,Microsoft.Extensions.Logging.ILogger{MalakaBooks.API.ShippedOrderAwbStatusService})">
+            <summary>
+            Periodically checks shipped orders with AWB numbers and marks them as delivered when the carrier confirms delivery.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.ShippedOrderAwbStatusService.ExecuteAsync(System.Threading.CancellationToken)">
+            <summary>
+            Runs the periodic AWB status synchronization loop until the host is shutting down.
+            </summary>
+        </member>
+        <member name="T:MalakaBooks.API.UnpaidOrderExpirationService">
+            <summary>
+            Periodically expires unpaid orders whose payment windows have elapsed.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.UnpaidOrderExpirationService.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,Microsoft.Extensions.Options.IOptions{MalakaBooks.ConfigSetting.AppSetting},System.TimeProvider,Microsoft.Extensions.Logging.ILogger{MalakaBooks.API.UnpaidOrderExpirationService})">
+            <summary>
+            Periodically expires unpaid orders whose payment windows have elapsed.
+            </summary>
+        </member>
+        <member name="M:MalakaBooks.API.UnpaidOrderExpirationService.ExecuteAsync(System.Threading.CancellationToken)">
+            <summary>
+            Runs the periodic expiration loop until the host is shutting down.
+            </summary>
+        </member>
+    </members>
+</doc>

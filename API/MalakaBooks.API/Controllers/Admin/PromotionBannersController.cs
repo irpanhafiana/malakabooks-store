@@ -23,11 +23,27 @@ public class PromotionBannersController(IMediator mediator) : ApiControllerBase
         return ProcessResult(result);
     }
 
+    /// <summary>Create promotion banner with image file</summary>
+    [HttpPost("with-files")]
+    public async Task<IActionResult> CreateWithFiles([FromForm] CreatePromotionBannerWithFilesRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreatePromotionBannerWithFilesCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
+
     /// <summary>Update promotion banner</summary>
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, [FromBody] UpdatePromotionBannerRequest request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new UpdatePromotionBannerCommand(id, request), cancellationToken);
+        return Success(result);
+    }
+
+    /// <summary>Update promotion banner with image file</summary>
+    [HttpPut("{id}/with-files")]
+    public async Task<IActionResult> UpdateWithFiles(string id, [FromForm] UpdatePromotionBannerWithFilesRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdatePromotionBannerWithFilesCommand(id, request), cancellationToken);
         return Success(result);
     }
 

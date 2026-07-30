@@ -1,0 +1,17 @@
+{
+  "MongoDbSetting": {
+    "ConnectionString": "mongodb+srv://sjmartdevteam:R4BwxHqsKFpO0h7p@cluster0.qirhx1o.mongodb.net/?retryWrites=true&w=majority",
+    "DatabaseName": "MalakaBooksDb",
+    "BooksCollection": "books",
+    "AuthorsCollection": "authors",
+    "PaymentsCollection": "payments",
+    "CategoriesCollection": "categories",
+    "OrdersCollection": "orders",
+    "CartsCollection": "carts",
+    "AddressesCollection": "addresses",
+    "UsersCollection": "users",
+    "ReviewsCollection": "reviews",
+    "ComplaintsCollection": "complaints",
+    "PromotionBannersCollection": "promotionbanners"
+  }
+}

@@ -30,4 +30,13 @@ public class ComplaintsController(IMediator mediator) : ApiControllerBase
         var complaint = await mediator.Send(new RespondComplaintCommand(id, request), cancellationToken);
         return complaint is null ? NotFound() : Success(complaint);
     }
+
+    /// <summary>Respond to a complaint with files</summary>
+    [HttpPut("{id}/respond/with-files")]
+    public async Task<IActionResult> RespondWithFiles(string id, [FromForm] RespondComplaintWithFilesRequest request, CancellationToken cancellationToken)
+    {
+        request.SenderType = "admin";
+        var complaint = await mediator.Send(new RespondComplaintWithFilesCommand(id, request), cancellationToken);
+        return complaint is null ? NotFound() : Success(complaint);
+    }
 }

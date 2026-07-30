@@ -1,0 +1,7 @@
+{
+  "SwaggerSetting": {
+    "Title": "MalakaBooks API",
+    "Description": "Swagger documentation for the MalakaBooks bookstore API.",
+    "OAuthAppName": "MalakaBooks Swagger UI"
+  }
+}

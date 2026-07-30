@@ -1,0 +1,18 @@
+{
+  "TokenSetting": {
+    "Audience": "malakabooks.api",
+    "Scope": "malakabooks.api",
+    "ClientCredentials": {
+      "ClientId": "malakabooks-client",
+      "ClientSecret": "change-me-client-secret",
+      "TokenEndpoint": "https://localhost:5001/connect/token"
+    },
+    "Password": {
+      "ClientId": "malakabooks-password-client",
+      "ClientSecret": "change-me-password-secret",
+      "Username": "customer@malakabooks.local",
+      "Password": "ChangeMe123!",
+      "TokenEndpoint": "https://localhost:5001/connect/token"
+    }
+  }
+}
