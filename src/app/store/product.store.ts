@@ -75,7 +75,7 @@ export class ProductStore {
     const matchingProducts = this.products().filter(p =>
       p.title.toLowerCase().includes(query) ||
       p.description.toLowerCase().includes(query) ||
-      p.publisher.toLowerCase().includes(query)
+      (p.categoryName || '').toLowerCase().includes(query)
     );
 
     const categoryIds = new Set(matchingProducts.map(p => p.categoryId));
@@ -83,7 +83,6 @@ export class ProductStore {
   });
 
   readonly featuredProducts = computed(() => {
-    // API buku tidak punya flag "featured"; tampilkan seluruh katalog
     return this.products();
   });
 
@@ -104,8 +103,7 @@ export class ProductStore {
       list = list.filter(p =>
         p.title.toLowerCase().includes(query) ||
         p.description.toLowerCase().includes(query) ||
-        p.publisher.toLowerCase().includes(query) ||
-        p.authorNames.toLowerCase().includes(query)
+        (p.categoryName || '').toLowerCase().includes(query)
       );
     }
 

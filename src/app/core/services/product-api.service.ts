@@ -48,7 +48,7 @@ export class ProductApiService {
       sapCode: item.sapCode || '',
       authorIds: book?.authorIds || item.authorIds || [],
       authors,
-      authorNames: authors.length > 0 ? authors.map(a => a.name).join(', ') : (item.itemType === 'mardika' ? 'Mardika Kopi' : ''),
+      authorNames: authors.length > 0 ? authors.map(a => a.name).join(', ') : '',
       isbn: book?.isbn || item.isbn || '',
       categoryId: book?.categoryId || item.categoryId || '',
       categoryName: item.itemType,
@@ -86,7 +86,7 @@ export class ProductApiService {
       }
       const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
       const allItems = envelope?.data || [];
-      const itemsToProcess = allItems.filter(i => (isAdminSession() || i.isActive !== false) && i.itemType === 'malaka');
+      const itemsToProcess = allItems.filter(i => (isAdminSession() || i.isActive !== false));
 
       const categories = await this.categoryApi.getCategories();
       const catMap = new Map(categories.map(c => [c.id, c.name]));

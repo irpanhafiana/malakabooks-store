@@ -4,15 +4,11 @@ import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import { ProductStore } from '../../store/product.store';
 import { CartStore } from '../../store/cart.store';
-import { AuthorStore } from '../../store/author.store';
 import { UserStore } from '../../store/user.store';
-import { Author, Product } from '../../core/models';
 import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
-import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
-import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { ScreenService } from '../../core/services/screen.service';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
 
@@ -20,66 +16,58 @@ import { PromotionBannerStore } from '../../store/promotion-banner.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent, ModalComponent],
+  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly productStore = inject(ProductStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
-  protected readonly authorStore = inject(AuthorStore);
   protected readonly bannerStore = inject(PromotionBannerStore);
   protected readonly screen = inject(ScreenService);
 
   slides = [
     {
-      badge: 'Bookstore Reimagined',
-      title: 'Find Books & Items That Ignite Your Mind',
-      description: 'Discover a premium collection of literary classics, coding books, journals, pens, and custom digital audiobooks.',
-      buttonText: 'Browse Books',
+      badge: 'Pusat Belanja',
+      title: 'Temukan Berbagai Produk Pilihan Terlengkap',
+      description: 'Jelajahi koleksi barang harian, peralatan, aksesoris, dan gaya hidup berkualitas di SS Online Shop.',
+      buttonText: 'Mulai Belanja',
       buttonLink: '/product',
-      promoCode: 'PROMO10',
-      bgGradient: 'from-primary-700 via-primary-600 to-rose-500',
-      imageUrl: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1200&q=80'
+      promoCode: 'SHOP10',
+      bgGradient: 'from-indigo-800 via-indigo-700 to-blue-900',
+      imageUrl: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1200&q=80'
     },
     {
-      badge: 'Special Promotion',
-      title: 'Pena & Jurnal Premium Eksklusif',
-      description: 'Tingkatkan kualitas catatan harian Anda dengan aksesoris buatan pengrajin lokal berbahan jati dan kulit asli.',
-      buttonText: 'Lihat Aksesoris',
+      badge: 'Special Promo',
+      title: 'Kebutuhan Rumah & Peralatan Modern',
+      description: 'Lengkapi rumah dan aktivitas Anda dengan peralatan praktis dan berkualitas tinggi.',
+      buttonText: 'Lihat Promo',
       buttonLink: '/product',
-      promoCode: 'CRAFT20',
-      bgGradient: 'from-slate-950 via-purple-950 to-indigo-900',
-      imageUrl: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80'
+      promoCode: 'PROMO20',
+      bgGradient: 'from-slate-900 via-slate-800 to-indigo-950',
+      imageUrl: 'https://images.unsplash.com/photo-1526178613552-2b45c6c302f0?auto=format&fit=crop&w=1200&q=80'
     },
     {
-      badge: 'Digital Library',
-      title: 'Dengarkan Audiobooks Di Mana Saja',
-      description: 'Nikmati kisah sastra klasik yang dinarasikan oleh pengisi suara profesional dalam bentuk berkas audio berkualitas tinggi.',
-      buttonText: 'Cari Audiobooks',
+      badge: 'Lifestyle & Aksesoris',
+      title: 'Aksesoris & Perlengkapan Gaya Hidup',
+      description: 'Dapatkan aksesoris pilihan terbaik dengan penawaran menarik hanya di SS Online Shop.',
+      buttonText: 'Cari Produk',
       buttonLink: '/product',
-      promoCode: 'AUDIO5',
-      bgGradient: 'from-emerald-950 via-teal-900 to-amber-900',
-      imageUrl: 'https://images.unsplash.com/photo-1508962914676-134849a727f0?auto=format&fit=crop&w=1200&q=80'
+      promoCode: 'STYLE15',
+      bgGradient: 'from-emerald-950 via-teal-900 to-blue-950',
+      imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80'
     }
   ];
 
   currentSlide = signal<number>(0);
-  currentAuthorSlide = signal<number>(0);
 
   private embla?: EmblaCarouselType;
-  private authorEmbla?: EmblaCarouselType;
   private bestSellerEmbla?: EmblaCarouselType;
   private merchandiseEmbla?: EmblaCarouselType;
 
   @ViewChild('carouselViewport') carouselViewport!: ElementRef<HTMLElement>;
-  @ViewChild('authorCarouselViewport') authorCarouselViewport?: ElementRef<HTMLElement>;
-  @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport?: ElementRef<HTMLElement>;
-  @ViewChild('merchandiseCarouselViewport') merchandiseCarouselViewport?: ElementRef<HTMLElement>;
-
-  isAuthorSheetOpen = signal(false);
-  selectedAuthor = signal<Author | null>(null);
-  selectedAuthorProducts = signal<Product[]>([]);
+  @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport!: ElementRef<HTMLElement>;
+  @ViewChild('merchandiseCarouselViewport') merchandiseCarouselViewport!: ElementRef<HTMLElement>;
 
   constructor() {
     effect(() => {
@@ -106,21 +94,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     effect(() => {
-      if (this.authorStore.authors().length > 0) {
-        setTimeout(() => {
-          if (this.authorEmbla) {
-            this.authorEmbla.reInit();
-            const authAutoplay = this.authorEmbla.plugins()['autoplay'];
-            if (authAutoplay) {
-              authAutoplay.reset();
-              authAutoplay.play();
-            }
-          }
-        }, 100);
-      }
-    });
-
-    effect(() => {
       if (this.bannerStore.banners().length > 0) {
         setTimeout(() => {
           if (this.embla) {
@@ -138,7 +111,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.productStore.loadAll();
-    this.authorStore.loadAuthors();
     this.bannerStore.loadActiveBanners();
   }
 
@@ -153,17 +125,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const onSelect = () => this.currentSlide.set(this.embla!.selectedScrollSnap());
     this.embla.on('select', onSelect);
     onSelect();
-
-    if (this.authorCarouselViewport) {
-      this.authorEmbla = EmblaCarousel(
-        this.authorCarouselViewport.nativeElement,
-        { loop: true, align: 'start', duration: 40 },
-        [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
-      );
-      const onAuthorSelect = () => this.currentAuthorSlide.set(this.authorEmbla!.selectedScrollSnap());
-      this.authorEmbla.on('select', onAuthorSelect);
-      onAuthorSelect();
-    }
 
     if (this.merchandiseCarouselViewport) {
       this.merchandiseEmbla = EmblaCarousel(
@@ -184,7 +145,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.embla?.destroy();
-    this.authorEmbla?.destroy();
     this.bestSellerEmbla?.destroy();
     this.merchandiseEmbla?.destroy();
   }
@@ -206,8 +166,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   bestSellerNext() { this.bestSellerEmbla?.scrollNext(); }
   merchandisePrev() { this.merchandiseEmbla?.scrollPrev(); }
   merchandiseNext() { this.merchandiseEmbla?.scrollNext(); }
-  authorPrev() { this.authorEmbla?.scrollPrev(); }
-  authorNext() { this.authorEmbla?.scrollNext(); }
 
   filterByCategory(catId: string | null) {
     this.productStore.setCategoryFilter(catId);
@@ -218,15 +176,5 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.productStore.setQtyQuantity(1);
     this.productStore.setQtyAction('cart');
     this.productStore.setQtyModalOpen(true);
-  }
-
-  openAuthorSheet(author: Author) {
-    this.selectedAuthor.set(author);
-    this.selectedAuthorProducts.set(this.productStore.products().filter(p => p.authorIds.includes(author.id)));
-    this.isAuthorSheetOpen.set(true);
-  }
-
-  closeAuthorSheet() {
-    this.isAuthorSheetOpen.set(false);
   }
 }

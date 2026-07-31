@@ -5,10 +5,10 @@
     class="md:hidden bg-white border-b border-slate-200/60 flex items-center justify-between px-4 py-3.5 z-40 shrink-0">
     <a routerLink="/"
       class="flex items-center gap-2 font-display font-extrabold text-base tracking-tight text-slate-800">
-      <div class="px-1.5 py-1 rounded-lg bg-primary-600 flex items-center justify-center h-6 w-6">
-        <img src="/malaka-books.svg" alt="Malaka Books Logo" class="h-3.5 w-3.5">
+      <div class="px-1.5 py-1 rounded-lg bg-primary-600 flex items-center justify-center h-6 w-6 text-white">
+        <i class="bx bx-store-alt text-sm"></i>
       </div>
-      Malaka Books
+      SS Online Shop Admin
     </a>
     <button type="button" (click)="toggleSidebar()" aria-label="Toggle navigation menu"
       [attr.aria-expanded]="isSidebarOpen()"
@@ -26,13 +26,12 @@
       <!-- Brand Logo -->
       <div class="flex items-center gap-3 px-1">
         <div
-          class="w-10 h-10 rounded-xl bg-linear-to-br from-primary-500 to-primary-600 flex items-center justify-center hover:scale-105 transition-transform duration-200 shrink-0">
-          <img src="/malaka-books.svg" alt="Malaka Books" class="h-5 w-5">
+          class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center text-white hover:scale-105 transition-transform duration-200 shrink-0">
+          <i class="bx bx-store-alt text-xl"></i>
         </div>
         <div class="flex flex-col">
-          <span class="font-display font-extrabold text-base tracking-tight text-slate-800 leading-none">Malaka
-            Books</span>
-          <span class="text-[9px] font-bold text-slate-400 tracking-wider uppercase mt-1">Administrator</span>
+          <span class="font-display font-extrabold text-base tracking-tight text-slate-800 leading-none">SS Online Shop</span>
+          <span class="text-[9px] font-bold text-primary-600 tracking-wider uppercase mt-1">Administrator</span>
         </div>
       </div>
 
@@ -184,16 +183,6 @@
               <app-icon name="minus" size="18"
                 class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
               <span>Kelola Promosi</span>
-            </a>
-
-            <!-- Kelola Penulis -->
-            <a routerLink="/admin/authors"
-              routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
-              (click)="closeSidebar()"
-              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-              <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
-              <span>Kelola Penulis</span>
             </a>
 
             <!-- Kelola Mtd Pembayaran -->
