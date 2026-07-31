@@ -4,7 +4,7 @@ import { CatalogItem, ApiResponse } from '../models';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
-import { isAdminSession, isCustomerSession } from '../auth/session.util';
+import { isAdminSession, isCustomerSession, getStoredSessionUser } from '../auth/session.util';
 import { resolveImageUrl } from '../../shared/util/image.util';
 
 @Injectable({
@@ -36,6 +36,20 @@ export class ItemApiService {
       }));
     } catch (e) {
       this.logger.error('ItemApiService.getItems', 'Gagal mengambil items:', e);
+      return [];
+    }
+  }
+
+  async getAutofillItems(search: string): Promise<{ id: string; name: string }[]> {
+    try {
+      const isLoggedIn = !!getStoredSessionUser();
+      const endpoint = isLoggedIn
+        ? `${this.BASE_URL}/customer/Items/autofill?search=${encodeURIComponent(search)}`
+        : `${this.BASE_URL}/public/Items/autofill?search=${encodeURIComponent(search)}`;
+      const envelope = await firstValueFrom(this.http.get<ApiResponse<{ id: string; name: string }[]>>(endpoint));
+      return envelope?.data || [];
+    } catch (e) {
+      this.logger.error('ItemApiService.getAutofillItems', 'Gagal mengambil autofill items:', e);
       return [];
     }
   }

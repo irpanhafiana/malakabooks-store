@@ -26,7 +26,7 @@
 
     <!-- Mobile App Frame Container (Constrained width, clamp scaling, with simulator borders) -->
     <div
-      class="w-full max-w-[480px] bg-gray-50 relative flex flex-col md:border-x md:border-gray-200/60 md:shadow-2xl md:shadow-[0_0_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden"
+      class="w-full max-w-120 bg-gray-50 relative flex flex-col md:border-x md:border-gray-200/60 md:shadow-2xl md:shadow-[0_0_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden"
       style="height: calc(100% / clamp(0.5, 100vw / 480, 1)); transform: scale(clamp(0.5, 100vw / 480, 1)); transform-origin: center top;">
 
       <!-- No Header here as requested. Topmost element will be the router-outlet children (e.g. search bar in product-list) -->
@@ -40,7 +40,7 @@
 
       <!-- Pinned Bottom Navigation Menu (Floating, rounded, matching bottom-navbar.md) -->
       <nav
-        class="absolute bottom-6 left-1/2 -translate-x-1/2 w-fit z-[45] bg-white/95 backdrop-blur-md flex items-center justify-center gap-2.5 p-1.5 rounded-full overflow-hidden border border-gray-200/80 whitespace-nowrap">
+        class="absolute bottom-6 left-1/2 -translate-x-1/2 w-fit z-45 bg-white/95 backdrop-blur-md flex items-center justify-center gap-2.5 p-1.5 rounded-full overflow-hidden border border-gray-200/80 whitespace-nowrap">
 
         <!-- Home Item -->
         <a routerLink="/" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}" aria-label="Beranda"

@@ -1,5 +1,5 @@
 @if (alertService.isOpen()) {
-<div class="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+<div class="fixed inset-0 z-9999 flex items-center justify-center p-4">
   <!-- Backdrop with blur and transition animations -->
   <div @fadeInOut class="absolute inset-0 bg-slate-900/30 backdrop-blur-md cursor-pointer"
     (click)="alertService.type() !== 'confirm' ? alertService.close(false) : null"></div>
@@ -28,7 +28,7 @@
     </h3>
 
     <!-- Body text with Poppins font and balanced neutral color -->
-    <p class="alert-body text-sm text-slate-500 font-medium leading-relaxed max-w-[280px]">
+    <p class="alert-body text-sm text-slate-500 font-medium leading-relaxed max-w-70">
       {{ alertService.text() }}
     </p>
 

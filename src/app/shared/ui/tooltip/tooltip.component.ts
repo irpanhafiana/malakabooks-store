@@ -9,7 +9,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
   imports: [CommonModule],
   template: `
     <div *ngIf="text()" 
-         class="absolute z-[9999] px-2.5 py-1.5 text-xs font-medium text-white bg-slate-800 rounded shadow-lg pointer-events-none whitespace-nowrap"
+         class="absolute z-9999 px-2.5 py-1.5 text-xs font-medium text-white bg-slate-800 rounded shadow-lg pointer-events-none whitespace-nowrap"
          [ngStyle]="{ top: top() + 'px', left: left() + 'px' }"
          @tooltipAnimation>
       {{ text() }}
