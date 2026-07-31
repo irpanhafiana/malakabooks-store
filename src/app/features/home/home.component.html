@@ -153,12 +153,12 @@
     </div>
     } @else {
     <div class="hidden lg:grid grid-cols-4 xl:grid-cols-5 gap-6 gap-y-8">
-      @for (prod of productStore.filteredProducts(); track prod.id) {
+      @for (prod of catalogProducts(); track prod.id) {
       <app-product-card [product]="prod" size="md" (addToCart)="openQtyModal($event)"></app-product-card>
       }
     </div>
     <div class="lg:hidden">
-      <app-masonry-grid [items]="productStore.filteredProducts()">
+      <app-masonry-grid [items]="catalogProducts()">
         <ng-template let-prod>
           <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
         </ng-template>

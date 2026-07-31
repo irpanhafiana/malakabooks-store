@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, ChangeDetectionStrategy, effect } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, computed, ChangeDetectionStrategy, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
@@ -60,6 +60,28 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   currentSlide = signal<number>(0);
+
+  readonly catalogProducts = computed(() => {
+    let list = [...this.productStore.products()];
+    const catId = this.productStore.selectedCategoryId();
+    const sort = this.productStore.sortBy();
+
+    if (catId) {
+      list = list.filter(p => p.categoryId === catId);
+    }
+
+    if (sort === 'price-asc') {
+      list.sort((a, b) => a.price - b.price);
+    } else if (sort === 'price-desc') {
+      list.sort((a, b) => b.price - a.price);
+    } else if (sort === 'rating') {
+      list.sort((a, b) => b.averageRating - a.averageRating);
+    } else {
+      list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    }
+
+    return list;
+  });
 
   private embla?: EmblaCarouselType;
   private bestSellerEmbla?: EmblaCarouselType;

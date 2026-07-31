@@ -25,7 +25,7 @@
   </div>
   } @else {
   <!-- Scrollable Details area -->
-  <div #scrollContainer class="grow overflow-y-auto pb-4 no-scrollbar bg-linear-to-b from-slate-50/50 to-white">
+  <div #scrollContainer class="grow overflow-y-auto p-5 pb-6 no-scrollbar bg-linear-to-b from-slate-50/50 to-white">
     <!-- Breadcrumbs -->
     @if (!productIdInput()) {
     <nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-6">
@@ -119,26 +119,7 @@
         <p class="text-[13px] text-slate-500">{{ product()!.authorNames }}</p>
       </div>
 
-      <!-- Move Action Bar here for desktop, hidden on mobile -->
-      <div class="hidden lg:flex flex-col gap-4 mt-4">
-        @if (authStore.isLoggedIn()) {
-        <div class="flex items-center gap-3">
-          <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
-            [fullWidth]="true" class="flex-1">
-            + Keranjang
-          </app-button>
 
-          <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg"
-            [fullWidth]="true" class="flex-1">
-            Beli Sekarang
-          </app-button>
-        </div>
-        } @else {
-        <app-button routerLink="/auth/login" (click)="goToLogin()" variant="primary" size="lg" [fullWidth]="true">
-          Login untuk Membeli
-        </app-button>
-        }
-      </div>
     </div>
   </div>
 
@@ -249,9 +230,9 @@
   </div>
 </div>
 
-<!-- Sticky Bottom Action Bar (Mobile Only) -->
+<!-- Fixed Footer Action Bar -->
 <div
-  class="lg:hidden shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
+  class="shrink-0 border-t border-slate-200/60 bg-white/95 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
   @if (authStore.isLoggedIn()) {
   <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
     [fullWidth]="true" class="flex-1">

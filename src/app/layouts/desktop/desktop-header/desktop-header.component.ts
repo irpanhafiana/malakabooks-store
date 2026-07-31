@@ -72,8 +72,8 @@ export class DesktopHeaderComponent {
   onSearch(query: string) {
     this.isDropdownOpen.set(false);
     this.productStore.setSearchQuery(query);
-    if (this.router.url !== '/') {
-      this.router.navigate(['/']);
+    if (this.router.url !== '/product') {
+      this.router.navigate(['/product']);
     }
   }
 

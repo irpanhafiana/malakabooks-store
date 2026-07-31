@@ -31,7 +31,6 @@ export class SearchBarComponent implements OnInit, OnDestroy {
       distinctUntilChanged()
     ).subscribe((query) => {
       const trimmed = query.trim();
-      this.search.emit(trimmed);
       this.inputChange.emit(trimmed);
     });
   }
