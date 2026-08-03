@@ -30,6 +30,17 @@ export class ComplaintApiService {
     };
   }
 
+  private createFormDataWithFiles(fields: Record<string, string>, files?: File[]): FormData {
+    const formData = new FormData();
+    Object.entries(fields).forEach(([key, val]) => {
+      formData.append(key, val || '');
+    });
+    if (files && files.length > 0) {
+      files.forEach(f => formData.append('AdditionalImages', f));
+    }
+    return formData;
+  }
+
   async getComplaintsByUser(userId: string): Promise<Complaint[]> {
     try {
       const envelope = await firstValueFrom(this.http.get<ApiResponse<ComplaintResponseDto[]>>(`${this.BASE_URL}/customer/Complaints/user/${userId}`));
@@ -43,13 +54,13 @@ export class ComplaintApiService {
 
   async createComplaint(payload: CreateComplaintPayload, files?: File[]): Promise<Complaint> {
     if (files && files.length > 0) {
-      const formData = new FormData();
-      formData.append('UserId', payload.userId || '');
-      formData.append('OrderId', payload.orderId || '');
-      formData.append('ItemId', payload.itemId || '');
-      formData.append('Subject', payload.subject || '');
-      formData.append('Description', payload.description || '');
-      files.forEach(f => formData.append('AdditionalImages', f));
+      const formData = this.createFormDataWithFiles({
+        UserId: payload.userId || '',
+        OrderId: payload.orderId || '',
+        ItemId: payload.itemId || '',
+        Subject: payload.subject || '',
+        Description: payload.description || ''
+      }, files);
 
       const res = await firstValueFrom(this.http.post<ApiResponse<ComplaintResponseDto>>(`${this.BASE_URL}/customer/Complaints/with-files`, formData));
       return this.mapComplaint(res.data);
@@ -72,9 +83,7 @@ export class ComplaintApiService {
 
   async respondComplaint(id: string, payload: RespondComplaintPayload, files?: File[]): Promise<Complaint> {
     if (files && files.length > 0) {
-      const formData = new FormData();
-      formData.append('Message', payload.message || '');
-      files.forEach(f => formData.append('AdditionalImages', f));
+      const formData = this.createFormDataWithFiles({ Message: payload.message || '' }, files);
 
       const res = await firstValueFrom(this.http.put<ApiResponse<ComplaintResponseDto>>(`${this.BASE_URL}/admin/Complaints/${id}/respond/with-files`, formData));
       return this.mapComplaint(res.data);
@@ -86,9 +95,7 @@ export class ComplaintApiService {
 
   async replyComplaint(id: string, payload: ReplyComplaintPayload, files?: File[]): Promise<Complaint> {
     if (files && files.length > 0) {
-      const formData = new FormData();
-      formData.append('Message', payload.message || '');
-      files.forEach(f => formData.append('AdditionalImages', f));
+      const formData = this.createFormDataWithFiles({ Message: payload.message || '' }, files);
 
       const res = await firstValueFrom(this.http.put<ApiResponse<ComplaintResponseDto>>(`${this.BASE_URL}/customer/Complaints/${id}/reply/with-files`, formData));
       return this.mapComplaint(res.data);

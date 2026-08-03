@@ -1,68 +1,32 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, computed } from '@angular/core';
 import { Author } from '../core/models';
 import { AuthorApiService } from '../core/services/author-api.service';
-import { ToastService } from '../core/services/toast.service';
-
-interface AuthorState {
-  authors: Author[];
-  loading: boolean;
-  error: string | null;
-}
+import { BaseCrudStore, CrudApiService } from './utils/base-crud.store';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthorStore {
+export class AuthorStore extends BaseCrudStore<Author> {
   private readonly authorApi = inject(AuthorApiService);
-  private readonly toastService = inject(ToastService);
+  protected readonly entityName = 'Penulis';
 
-  private readonly state = signal<AuthorState>({
-    authors: [],
-    loading: false,
-    error: null
-  });
+  protected readonly api: CrudApiService<Author> = {
+    getAll: () => this.authorApi.getAuthors(),
+    save: (author, file) => this.authorApi.saveAuthor(author, file),
+    delete: (id) => this.authorApi.deleteAuthor(id)
+  };
 
-  readonly authors = computed(() => this.state().authors);
-  readonly loading = computed(() => this.state().loading);
-  readonly error = computed(() => this.state().error);
+  readonly authors = computed(() => this.items());
 
   async loadAuthors() {
-    this.state.update(s => ({ ...s, loading: true, error: null }));
-    try {
-      const authors = await this.authorApi.getAuthors();
-      this.state.update(s => ({ ...s, authors, loading: false, error: null }));
-    } catch (e) {
-      this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar author dari server.' }));
-      this.toastService.error('Gagal memuat daftar penulis.');
-    }
+    return this.load();
   }
 
   async saveAuthor(author: Partial<Author>, photoFile?: File) {
-    this.state.update(s => ({ ...s, loading: true }));
-    try {
-      const saved = await this.authorApi.saveAuthor(author, photoFile);
-      await this.loadAuthors();
-      this.toastService.success(`Penulis "${saved.name}" berhasil disimpan!`);
-    } catch (e) {
-      this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menyimpan penulis.');
-    }
+    return this.save(author, photoFile);
   }
 
   async deleteAuthor(id: string) {
-    this.state.update(s => ({ ...s, loading: true }));
-    try {
-      const success = await this.authorApi.deleteAuthor(id);
-      if (success) {
-        await this.loadAuthors();
-        this.toastService.success('Penulis berhasil dihapus.');
-      } else {
-        this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Penulis tidak ditemukan.');
-      }
-    } catch (e) {
-      this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menghapus penulis.');
-    }
+    return this.delete(id);
   }
 }

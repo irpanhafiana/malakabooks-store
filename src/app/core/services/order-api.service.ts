@@ -212,7 +212,7 @@ export class OrderApiService {
 
   async saveOrder(order: Order): Promise<Order> {
     const externalProfileId = localStorage.getItem('externalProfileId');
-    const body: any = {
+    const body: Record<string, unknown> = {
       userId: order.userId,
       items: order.items.map(item => ({
         itemId: item.product.id,
@@ -229,18 +229,20 @@ export class OrderApiService {
       shippingType: order.shippingType || '',
       shippingEst: order.shippingEst || '',
       shippingFee: order.shippingCost || 0,
-      insurance: (order as any).insurance ?? false,
-      shippingInsurance: (order as any).shippingInsurance || 0
+      insurance: order.insurance ?? false,
+      shippingInsurance: order.shippingInsurance || 0
     };
 
     if (externalProfileId) {
-      body.id = externalProfileId;
+      body['id'] = externalProfileId;
     }
 
     try {
-      const res = await firstValueFrom(this.http.post<any>(`${this.BASE_URL}/customer/Orders`, body));
+      const res = await firstValueFrom(
+        this.http.post<ApiResponse<{ orderId: string; paymentUrl?: string }>>(`${this.BASE_URL}/customer/Orders`, body)
+      );
 
-      const responseData = res?.data || {};
+      const responseData = res?.data || { orderId: '' };
       const placedOrderId = responseData.orderId;
 
       if (!placedOrderId) {
@@ -257,7 +259,7 @@ export class OrderApiService {
         paymentMethod: order.paymentMethod,
         paymentDetails: order.paymentDetails,
         paymentUrl: responseData.paymentUrl,
-        status: 'pending' as any,
+        status: 'pending',
         subtotal: order.subtotal,
         shippingCost: order.shippingCost,
         tax: order.tax,
@@ -270,60 +272,60 @@ export class OrderApiService {
     }
   }
 
-  async createShipment(id: string): Promise<any> {
+  async createShipment(id: string): Promise<Record<string, unknown> | null> {
     try {
       const res = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/admin/Orders/${id}/shipment`, {})
+        this.http.post<ApiResponse<Record<string, unknown>>>(`${this.BASE_URL}/admin/Orders/${id}/shipment`, {})
       );
-      return res?.data || res || null;
+      return res?.data || null;
     } catch (e) {
       this.logger.error('OrderApiService.createShipment', `Gagal membuat shipment untuk order ${id}:`, e);
       throw e;
     }
   }
 
-  async createBulkShipment(orderIds: string[]): Promise<any> {
+  async createBulkShipment(orderIds: string[]): Promise<Record<string, unknown> | null> {
     try {
       const res = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/admin/Orders/shipment`, { orderIds })
+        this.http.post<ApiResponse<Record<string, unknown>>>(`${this.BASE_URL}/admin/Orders/shipment`, { orderIds })
       );
-      return res?.data || res || null;
+      return res?.data || null;
     } catch (e) {
       this.logger.error('OrderApiService.createBulkShipment', 'Gagal membuat bulk shipment:', e);
       throw e;
     }
   }
 
-  async cancelShipment(id: string): Promise<any> {
+  async cancelShipment(id: string): Promise<Record<string, unknown> | null> {
     try {
       const res = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/admin/Orders/${id}/shipment/cancel`, {})
+        this.http.post<ApiResponse<Record<string, unknown>>>(`${this.BASE_URL}/admin/Orders/${id}/shipment/cancel`, {})
       );
-      return res?.data || res || null;
+      return res?.data || null;
     } catch (e) {
       this.logger.error('OrderApiService.cancelShipment', `Gagal membatalkan shipment untuk order ${id}:`, e);
       throw e;
     }
   }
 
-  async trackAwb(awb: string): Promise<any> {
+  async trackAwb(awb: string): Promise<Record<string, unknown> | null> {
     try {
       const res = await firstValueFrom(
-        this.http.get<any>(`${this.BASE_URL}/customer/Simasrim/TrackAwb/${awb}`)
+        this.http.get<ApiResponse<Record<string, unknown>>>(`${this.BASE_URL}/customer/Simasrim/TrackAwb/${awb}`)
       );
-      return res?.data || res || null;
+      return res?.data || null;
     } catch (e) {
       this.logger.error('OrderApiService.trackAwb', `Gagal tracking AWB ${awb}:`, e);
       throw e;
     }
   }
 
-  async detailResi(courier: string, awb: string): Promise<any> {
+  async detailResi(courier: string, awb: string): Promise<Record<string, unknown> | null> {
     try {
       const res = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/admin/Orders/shipment/detail-resi`, { ekspedisi: courier, awb: awb })
+        this.http.post<ApiResponse<Record<string, unknown>>>(`${this.BASE_URL}/admin/Orders/shipment/detail-resi`, { ekspedisi: courier, awb: awb })
       );
-      return res?.data || res || null;
+      return res?.data || null;
     } catch (e) {
       this.logger.error('OrderApiService.detailResi', `Gagal detail resi ${courier}/${awb}:`, e);
       throw e;

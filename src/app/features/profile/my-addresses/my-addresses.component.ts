@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
-import { Address } from '../../../core/models';
+import { Address, ProvinceLocation, CityLocation, DistrictLocation } from '../../../core/models';
 import { InputComponent } from '../../../shared/ui/input/input.component';
 import { SelectComponent } from '../../../shared/ui/select/select.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
@@ -55,13 +55,27 @@ export class MyAddressesComponent implements OnInit {
   selectedLat = signal<number | undefined>(undefined);
   selectedLng = signal<number | undefined>(undefined);
 
-  provinces = signal<any[]>([]);
-  cities = signal<any[]>([]);
-  districts = signal<any[]>([]);
+  provinces = signal<ProvinceLocation[]>([]);
+  cities = signal<CityLocation[]>([]);
+  districts = signal<DistrictLocation[]>([]);
 
-  provinceOptions = computed(() => this.provinces().map(p => ({ value: p, label: p })));
-  cityOptions = computed(() => this.cities().map(c => ({ value: c, label: c })));
-  districtOptions = computed(() => this.districts().map(d => ({ value: d.region_code, label: d.subdistrict_name ? `${d.district_name} - ${d.subdistrict_name}` : d.district_name })));
+  provinceOptions = computed(() => this.provinces().map(p => {
+    const val = p.prov_name || '';
+    return { value: val, label: val };
+  }));
+  cityOptions = computed(() => this.cities().map(c => {
+    const val = c.city_name || '';
+    return { value: val, label: val };
+  }));
+  districtOptions = computed(() => this.districts().map(d => {
+    const code = d.region_code || d.address_code || d.district_id || '';
+    const dName = d.district_name || '';
+    const subName = d.subdistrict_name || d.sub_district_name || '';
+    return {
+      value: code,
+      label: subName ? `${dName} - ${subName}` : dName
+    };
+  }));
 
   recipientControl = new FormControl('', [Validators.required]);
   addrPhoneControl = new FormControl('', [Validators.required, Validators.pattern(/^\+?[0-9]{8,15}$/)]);
@@ -101,7 +115,7 @@ export class MyAddressesComponent implements OnInit {
         this.cities.set(cts);
 
         const currentCityVal = this.cityControl.value;
-        const exists = cts.some(c => c === currentCityVal);
+        const exists = cts.some(c => (c.city_name || '') === currentCityVal);
         if (!exists) {
           this.cityControl.setValue('');
         }
@@ -117,7 +131,7 @@ export class MyAddressesComponent implements OnInit {
         this.districts.set(dsts);
 
         const currentDstVal = this.districtControl.value;
-        const exists = dsts.some(d => d.region_code === currentDstVal);
+        const exists = dsts.some(d => (d.region_code || d.address_code || d.district_id) === currentDstVal);
         if (!exists) {
           this.districtControl.setValue('');
         }
@@ -128,7 +142,7 @@ export class MyAddressesComponent implements OnInit {
     });
 
     this.districtControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(distCode => {
-      const dist = this.districts().find(d => d.region_code === distCode);
+      const dist = this.districts().find(d => (d.region_code || d.address_code || d.district_id) === distCode);
       if (dist && dist.latitude && dist.longitude) {
         this.selectedLat.set(Number(dist.latitude));
         this.selectedLng.set(Number(dist.longitude));
@@ -196,22 +210,24 @@ export class MyAddressesComponent implements OnInit {
     this.streetControl.setValue(addr.street);
     this.postalCodeControl.setValue(addr.postalCode);
 
-    const prov = this.provinces().find(p => p.toLowerCase() === addr.province.toLowerCase());
-    if (prov) {
-      this.provinceControl.setValue(prov);
+    const provObj = this.provinces().find(p => (p.prov_name || '').toLowerCase() === addr.province.toLowerCase());
+    const provName = provObj ? (provObj.prov_name || '') : '';
+    if (provName) {
+      this.provinceControl.setValue(provName);
 
       this.isDropdownLoading.set(true);
-      const cts = await this.addressApi.getCities(prov);
+      const cts = await this.addressApi.getCities(provName);
       this.cities.set(cts);
       this.isDropdownLoading.set(false);
 
-      const city = cts.find(c => c.toLowerCase() === addr.city.toLowerCase());
+      const cityObj = cts.find(c => (c.city_name || '').toLowerCase() === addr.city.toLowerCase());
+      const cityName = cityObj ? (cityObj.city_name || '') : '';
 
-      if (city) {
-        this.cityControl.setValue(city);
+      if (cityName) {
+        this.cityControl.setValue(cityName);
 
         this.isDropdownLoading.set(true);
-        const dsts = await this.addressApi.getDistricts(addr.province, city);
+        const dsts = await this.addressApi.getDistricts(addr.province, cityName);
         this.districts.set(dsts);
         this.isDropdownLoading.set(false);
 
@@ -220,14 +236,16 @@ export class MyAddressesComponent implements OnInit {
 
         let dist = undefined;
         if (targetDistrict) {
-          dist = dsts.find(d =>
-            d.district_name.toLowerCase() === targetDistrict &&
-            (targetSubDistrict ? d.subdistrict_name.toLowerCase() === targetSubDistrict : true)
-          );
+          dist = dsts.find(d => {
+            const dName = (d.district_name || '').toLowerCase();
+            const subName = (d.subdistrict_name || d.sub_district_name || '').toLowerCase();
+            return dName === targetDistrict && (targetSubDistrict ? subName === targetSubDistrict : true);
+          });
         }
 
         if (dist) {
-          this.districtControl.setValue(dist.region_code);
+          const code = dist.region_code || dist.address_code || dist.district_id || '';
+          this.districtControl.setValue(code);
         } else {
           this.districtControl.setValue('');
         }

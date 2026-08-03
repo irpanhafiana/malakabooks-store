@@ -3,6 +3,12 @@ import { AddressApiService } from './address-api.service';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
 import { CartStore } from '../../store/cart.store';
+import {
+  ProvinceLocation,
+  CityLocation,
+  DistrictLocation,
+  ShippingTariffItem
+} from '../models/address.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,27 +18,27 @@ export class ShippingService {
   private readonly cartStore = inject(CartStore);
   private readonly logger = inject(LoggerService);
 
-  readonly provinces = signal<any[]>([]);
-  readonly cities = signal<any[]>([]);
-  readonly districts = signal<any[]>([]);
-  readonly courierServices = signal<any[]>([]);
+  readonly provinces = signal<ProvinceLocation[]>([]);
+  readonly cities = signal<CityLocation[]>([]);
+  readonly districts = signal<DistrictLocation[]>([]);
+  readonly courierServices = signal<ShippingTariffItem[]>([]);
 
   readonly shippingCost = signal<number>(0);
   readonly shippingLoading = signal<boolean>(false);
 
-  async loadProvinces(): Promise<any[]> {
+  async loadProvinces(): Promise<ProvinceLocation[]> {
     const provs = await this.addressApi.getProvinces();
     this.provinces.set(provs);
     return provs;
   }
 
-  async loadCities(province: string): Promise<any[]> {
+  async loadCities(province: string): Promise<CityLocation[]> {
     const cts = await this.addressApi.getCities(province);
     this.cities.set(cts);
     return cts;
   }
 
-  async loadDistricts(province: string, city: string): Promise<any[]> {
+  async loadDistricts(province: string, city: string): Promise<DistrictLocation[]> {
     const dsts = await this.addressApi.getDistricts(province, city);
     this.districts.set(dsts);
     return dsts;
@@ -46,7 +52,7 @@ export class ShippingService {
     this.districts.set([]);
   }
 
-  async fetchCourierServices(districtCode: string | null, courier: string | null): Promise<any[]> {
+  async fetchCourierServices(districtCode: string | null, courier: string | null): Promise<ShippingTariffItem[]> {
     if (!districtCode || !courier) {
       this.courierServices.set([]);
       this.shippingCost.set(0);
@@ -93,18 +99,20 @@ export class ShippingService {
         ekspedisi: courier
       });
 
-      let services = [];
+      let services: ShippingTariffItem[] = [];
       if (tariffRes) {
-        if (tariffRes[courier] && Array.isArray(tariffRes[courier])) {
-          services = tariffRes[courier];
-        } else if (tariffRes.data && tariffRes.data[courier] && Array.isArray(tariffRes.data[courier])) {
-          services = tariffRes.data[courier];
+        const resAny = tariffRes as Record<string, unknown>;
+        if (resAny[courier] && Array.isArray(resAny[courier])) {
+          services = resAny[courier] as ShippingTariffItem[];
+        } else if (resAny['data'] && typeof resAny['data'] === 'object' && resAny['data'] !== null) {
+          const dataObj = resAny['data'] as Record<string, unknown>;
+          if (dataObj[courier] && Array.isArray(dataObj[courier])) {
+            services = dataObj[courier] as ShippingTariffItem[];
+          }
         } else if (Array.isArray(tariffRes)) {
-          services = tariffRes;
-        } else if (tariffRes.costs && Array.isArray(tariffRes.costs)) {
-          services = tariffRes.costs;
-        } else if (tariffRes.rajaongkir?.results?.[0]?.costs) {
-          services = tariffRes.rajaongkir.results[0].costs;
+          services = tariffRes as ShippingTariffItem[];
+        } else if (resAny['costs'] && Array.isArray(resAny['costs'])) {
+          services = resAny['costs'] as ShippingTariffItem[];
         }
       }
 
@@ -121,19 +129,26 @@ export class ShippingService {
     }
   }
 
-  setShippingCostFromService(service: any) {
+  setShippingCostFromService(service: ShippingTariffItem | null) {
     let cost = 0;
     if (service) {
-      if (typeof service.price === 'number') {
-        cost = service.price;
-      } else if (service.price && typeof service.price === 'object') {
-        cost = service.price.medium_price || service.price.small_price || service.price.large_price || 0;
-      } else if (typeof service.cost === 'number') {
-        cost = service.cost;
-      } else if (service.cost && Array.isArray(service.cost) && service.cost[0]) {
-        cost = service.cost[0].value || 0;
-      } else if (service.cost && typeof service.cost === 'object') {
-        cost = service.cost.value || 0;
+      if (typeof service['price'] === 'number') {
+        cost = service['price'];
+      } else if (service['price'] && typeof service['price'] === 'object') {
+        const priceObj = service['price'] as Record<string, number>;
+        cost = priceObj['medium_price'] || priceObj['small_price'] || priceObj['large_price'] || 0;
+      } else if (typeof service['cost'] === 'number') {
+        cost = service['cost'];
+      } else if (service['cost'] && Array.isArray(service['cost']) && service['cost'][0]) {
+        const costItem = service['cost'][0] as Record<string, number>;
+        cost = costItem['value'] || 0;
+      } else if (service['cost'] && typeof service['cost'] === 'object') {
+        const costObj = service['cost'] as Record<string, number>;
+        cost = costObj['value'] || 0;
+      } else if (typeof service.tariff === 'number') {
+        cost = service.tariff;
+      } else if (typeof service.tariff === 'string') {
+        cost = parseFloat(service.tariff) || 0;
       }
     }
 

@@ -9,14 +9,14 @@
   <app-desktop-footer></app-desktop-footer>
   <app-toast-container></app-toast-container>
 
-  <app-modal [isOpen]="isDetailOpen()" (isOpenChange)="closeProductDetails()" title="Detail Produk"
+  <app-modal [isOpen]="modalHandler.isDetailOpen()" (isOpenChange)="modalHandler.closeProductDetails()" title="Detail Produk"
     maxWidth="max-w-4xl">
-    <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
+    <app-product-detail [productId]="modalHandler.selectedDetailId()"></app-product-detail>
   </app-modal>
 
-  <app-modal [isOpen]="productStore.isQtyModalOpen()" (isOpenChange)="closeQty()" title="Pilihan Pembelian"
+  <app-modal [isOpen]="productStore.isQtyModalOpen()" (isOpenChange)="modalHandler.closeQty()" title="Pilihan Pembelian"
     maxWidth="max-w-md">
-    <app-qty-modal-content (confirmed)="closeQty(true)"></app-qty-modal-content>
+    <app-qty-modal-content (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
   </app-modal>
 
   } @else {
@@ -127,12 +127,12 @@
       <app-toast-container></app-toast-container>
 
       <!-- Product Detail Bottom Sheet (Height ~85%, constrained inside the mobile container) -->
-      <app-bottom-sheet [isOpen]="isDetailOpen()" (closed)="closeProductDetails()" [fullHeight]="true">
-        <app-product-detail [productId]="selectedDetailId()"></app-product-detail>
+      <app-bottom-sheet [isOpen]="modalHandler.isDetailOpen()" (closed)="modalHandler.closeProductDetails()" [fullHeight]="true">
+        <app-product-detail [productId]="modalHandler.selectedDetailId()"></app-product-detail>
       </app-bottom-sheet>
 
-      <app-bottom-sheet [isOpen]="productStore.isQtyModalOpen()" (closed)="closeQty()">
-        <app-qty-modal-content (confirmed)="closeQty(true)"></app-qty-modal-content>
+      <app-bottom-sheet [isOpen]="productStore.isQtyModalOpen()" (closed)="modalHandler.closeQty()">
+        <app-qty-modal-content (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
       </app-bottom-sheet>
 
     </div>

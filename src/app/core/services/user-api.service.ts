@@ -181,8 +181,8 @@ export class UserApiService {
     }
   }
 
-  async addAddress(userId: string, userName: string, addr: Address): Promise<boolean> {
-    const addressBody = {
+  private buildAddressPayload(userId: string, userName: string, addr: Address) {
+    return {
       userId: userId,
       label: addr.name,
       recipientName: userName,
@@ -198,6 +198,10 @@ export class UserApiService {
       longitude: addr.longitude || 0,
       isDefault: addr.isDefault
     };
+  }
+
+  async addAddress(userId: string, userName: string, addr: Address): Promise<boolean> {
+    const addressBody = this.buildAddressPayload(userId, userName, addr);
     try {
       await firstValueFrom(this.http.post<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Addresses`, addressBody));
       return true;
@@ -208,22 +212,7 @@ export class UserApiService {
   }
 
   async updateAddress(userId: string, userName: string, addr: Address): Promise<boolean> {
-    const addressBody = {
-      userId: userId,
-      label: addr.name,
-      recipientName: userName,
-      phone: addr.phone,
-      street: addr.street,
-      city: addr.city,
-      province: addr.province,
-      district: addr.district || '',
-      subDistrict: addr.subDistrict || '',
-      postalCode: addr.postalCode,
-      addressCode: addr.addressCode || '',
-      latitude: addr.latitude || 0,
-      longitude: addr.longitude || 0,
-      isDefault: addr.isDefault
-    };
+    const addressBody = this.buildAddressPayload(userId, userName, addr);
     try {
       await firstValueFrom(this.http.put<ApiResponse<unknown>>(`${this.BASE_URL}/customer/Addresses/${addr.id}`, addressBody));
       return true;

@@ -3,6 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
+import {
+  ProvinceLocation,
+  CityLocation,
+  DistrictLocation,
+  ShippingTariffPayload,
+  ShippingTariffItem
+} from '../models/address.model';
+import { HomeAddress } from '../models/home-address.model';
+import { ApiResponse } from '../models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +21,11 @@ export class AddressApiService {
   private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
-  async getProvinces(): Promise<any[]> {
+  async getProvinces(): Promise<ProvinceLocation[]> {
     try {
-      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/customer/Simasrim/Province`));
+      const envelope = await firstValueFrom(
+        this.http.get<ApiResponse<{ data: ProvinceLocation[] }>>(`${this.BASE_URL}/customer/Simasrim/Province`)
+      );
       return envelope?.data?.data || [];
     } catch (e) {
       this.logger.error('AddressApiService.getProvinces', 'Failed to load provinces from Simasrim:', e);
@@ -22,10 +33,10 @@ export class AddressApiService {
     }
   }
 
-  async getCities(province: string): Promise<any[]> {
+  async getCities(province: string): Promise<CityLocation[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/City`, { prov: province })
+        this.http.post<ApiResponse<{ data: CityLocation[] }>>(`${this.BASE_URL}/customer/Simasrim/City`, { prov: province })
       );
       return envelope?.data?.data || [];
     } catch (e) {
@@ -34,10 +45,10 @@ export class AddressApiService {
     }
   }
 
-  async getDistricts(province: string, city: string, district: string = ''): Promise<any[]> {
+  async getDistricts(province: string, city: string, district: string = ''): Promise<DistrictLocation[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/District`, { province, city, district })
+        this.http.post<ApiResponse<{ data: DistrictLocation[] }>>(`${this.BASE_URL}/customer/Simasrim/District`, { province, city, district })
       );
       return envelope?.data?.data || [];
     } catch (e) {
@@ -49,7 +60,7 @@ export class AddressApiService {
   async getCouriers(): Promise<string[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.get<any>(`${this.BASE_URL}/customer/Simasrim/Courier`)
+        this.http.get<ApiResponse<{ data: string[] }>>(`${this.BASE_URL}/customer/Simasrim/Courier`)
       );
       return envelope?.data?.data || [];
     } catch (e) {
@@ -58,21 +69,23 @@ export class AddressApiService {
     }
   }
 
-  async calculateTariff(payload: { origin_code: string; desti_code: string; berat_paket: string; volume: string; ekspedisi: string }): Promise<any> {
+  async calculateTariff(payload: ShippingTariffPayload): Promise<ShippingTariffItem[] | ShippingTariffItem | null> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/Tarif`, payload)
+        this.http.post<ApiResponse<ShippingTariffItem[] | ShippingTariffItem>>(`${this.BASE_URL}/customer/Simasrim/Tarif`, payload)
       );
-      return envelope?.data?.data || envelope?.data || null;
+      return envelope?.data || null;
     } catch (e) {
       this.logger.error('AddressApiService.calculateTariff', 'Failed to calculate tariff from Simasrim:', e);
       return null;
     }
   }
 
-  async getStoreHomeAddresses(): Promise<any[]> {
+  async getStoreHomeAddresses(): Promise<HomeAddress[]> {
     try {
-      const envelope = await firstValueFrom(this.http.get<any>(`${this.BASE_URL}/public/HomeAddresses`));
+      const envelope = await firstValueFrom(
+        this.http.get<ApiResponse<HomeAddress[]>>(`${this.BASE_URL}/public/HomeAddresses`)
+      );
       return envelope?.data || [];
     } catch (e) {
       this.logger.error('AddressApiService.getStoreHomeAddresses', 'Failed to load store home addresses:', e);

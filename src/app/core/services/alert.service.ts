@@ -46,6 +46,11 @@ export class AlertService {
       });
       return res.isConfirmed;
     } else {
+      if (this.resolveFn) {
+        this.resolveFn(false);
+        this.resolveFn = null;
+      }
+
       this.title.set(title);
       this.text.set(text);
       this.type.set('confirm');

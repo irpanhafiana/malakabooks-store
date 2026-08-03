@@ -7,7 +7,7 @@ import { LoggerService } from '../services/logger.service';
 export class GlobalErrorHandler implements ErrorHandler {
   private readonly logger = inject(LoggerService);
 
-  handleError(error: any): void {
+  handleError(error: unknown): void {
     // Di sini kita bisa mengintegrasikan Sentry:
     // Sentry.captureException(error);
     

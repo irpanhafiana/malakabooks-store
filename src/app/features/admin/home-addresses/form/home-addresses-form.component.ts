@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, computed, DestroyRef, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HomeAddress } from '../../../../core/models';
+import { HomeAddress, ProvinceLocation, CityLocation, DistrictLocation } from '../../../../core/models';
 import { AdminHomeAddressStore } from '../../../../store/admin-home-address.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
@@ -28,16 +28,30 @@ export class HomeAddressesFormComponent implements OnInit {
   isLoading = signal<boolean>(false);
   
   // Simasrim states
-  provinces = signal<any[]>([]);
-  cities = signal<any[]>([]);
-  districts = signal<any[]>([]);
+  provinces = signal<ProvinceLocation[]>([]);
+  cities = signal<CityLocation[]>([]);
+  districts = signal<DistrictLocation[]>([]);
 
   selectedLat = signal<number | undefined>(undefined);
   selectedLng = signal<number | undefined>(undefined);
 
-  provinceOptions = computed(() => this.provinces().map(p => ({ value: p, label: p })));
-  cityOptions = computed(() => this.cities().map(c => ({ value: c, label: c })));
-  districtOptions = computed(() => this.districts().map(d => ({ value: d.region_code, label: d.subdistrict_name ? `${d.district_name} - ${d.subdistrict_name}` : d.district_name })));
+  provinceOptions = computed(() => this.provinces().map(p => {
+    const val = p.prov_name || '';
+    return { value: val, label: val };
+  }));
+  cityOptions = computed(() => this.cities().map(c => {
+    const val = c.city_name || '';
+    return { value: val, label: val };
+  }));
+  districtOptions = computed(() => this.districts().map(d => {
+    const code = d.region_code || d.address_code || d.district_id || '';
+    const dName = d.district_name || '';
+    const subName = d.subdistrict_name || d.sub_district_name || '';
+    return {
+      value: code,
+      label: subName ? `${dName} - ${subName}` : dName
+    };
+  }));
 
   labelControl = new FormControl('', [Validators.required]);
   recipientControl = new FormControl('', [Validators.required]);
@@ -128,22 +142,24 @@ export class HomeAddressesFormComponent implements OnInit {
     this.postalCodeControl.setValue(addr.postalCode);
 
     // Map province string
-    const prov = this.provinces().find(p => p.toLowerCase() === addr.province.toLowerCase());
-    if (prov) {
-      this.provinceControl.setValue(prov);
+    const provObj = this.provinces().find(p => (p.prov_name || '').toLowerCase() === addr.province.toLowerCase());
+    const provName = provObj ? (provObj.prov_name || '') : '';
+    if (provName) {
+      this.provinceControl.setValue(provName);
 
       this.isLoading.set(true);
-      const cts = await this.addressApi.getCities(prov);
+      const cts = await this.addressApi.getCities(provName);
       this.cities.set(cts);
       this.isLoading.set(false);
 
-      const city = cts.find(c => c.toLowerCase() === addr.city.toLowerCase());
+      const cityObj = cts.find(c => (c.city_name || '').toLowerCase() === addr.city.toLowerCase());
+      const cityName = cityObj ? (cityObj.city_name || '') : '';
 
-      if (city) {
-        this.cityControl.setValue(city);
+      if (cityName) {
+        this.cityControl.setValue(cityName);
 
         this.isLoading.set(true);
-        const dsts = await this.addressApi.getDistricts(prov, city);
+        const dsts = await this.addressApi.getDistricts(provName, cityName);
         this.districts.set(dsts);
         this.isLoading.set(false);
 
@@ -152,14 +168,16 @@ export class HomeAddressesFormComponent implements OnInit {
         
         let dist = undefined;
         if (targetDistrict) {
-          dist = dsts.find(d => 
-            d.district_name.toLowerCase() === targetDistrict && 
-            (targetSubDistrict ? d.subdistrict_name?.toLowerCase() === targetSubDistrict : true)
-          );
+          dist = dsts.find(d => {
+            const dName = (d.district_name || '').toLowerCase();
+            const subName = (d.subdistrict_name || d.sub_district_name || '').toLowerCase();
+            return dName === targetDistrict && (targetSubDistrict ? subName === targetSubDistrict : true);
+          });
         }
 
         if (dist) {
-          this.districtControl.setValue(dist.region_code);
+          const code = dist.region_code || dist.address_code || dist.district_id || '';
+          this.districtControl.setValue(code);
         } else {
           this.districtControl.setValue('');
         }
@@ -189,8 +207,8 @@ export class HomeAddressesFormComponent implements OnInit {
     const distCode = this.districtControl.value;
     
     const distObj = this.districts().find(d => d.region_code === distCode);
-    const districtName = distObj ? distObj.district_name : '';
-    const subDistrictName = distObj ? distObj.subdistrict_name : '';
+    const districtName = distObj ? (distObj.district_name || '') : '';
+    const subDistrictName = distObj ? (distObj.subdistrict_name || distObj.sub_district_name || '') : '';
 
     const payload: HomeAddress = {
       id: this.address()?.id || '',
@@ -201,7 +219,7 @@ export class HomeAddressesFormComponent implements OnInit {
       province: provName,
       city: cityName,
       district: districtName,
-      subDistrict: subDistrictName || '',
+      subDistrict: subDistrictName,
       postalCode: this.postalCodeControl.value || '',
       addressCode: distObj?.origin_code || distCode || '',
       longitude: this.selectedLng() ?? (distObj?.longitude ? Number(distObj.longitude) : undefined) ?? this.address()?.longitude ?? 0,

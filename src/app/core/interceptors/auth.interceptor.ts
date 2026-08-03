@@ -13,6 +13,34 @@ function clearSession() {
   localStorage.removeItem(SESSION_CART_KEY);
 }
 
+function handleTokenRefresh(
+  authStore: InstanceType<typeof AuthStore>,
+  router: Router,
+  req: Parameters<HttpInterceptorFn>[0],
+  next: Parameters<HttpInterceptorFn>[1],
+  reason: 'session_expired' | 'unauthorized',
+  fallbackError: unknown
+) {
+  const isBrowser = typeof localStorage !== 'undefined';
+  return from(authStore.refreshToken()).pipe(
+    switchMap(refreshed => {
+      if (refreshed) {
+        const newToken = isBrowser ? localStorage.getItem(SESSION_TOKEN_KEY) : null;
+        const authReq = req.clone({
+          setHeaders: { Authorization: `Bearer ${newToken}` }
+        });
+        return next(authReq);
+      }
+      if (isBrowser) {
+        clearSession();
+      }
+      const loginUrl = router.url.startsWith('/admin') ? '/admin/login' : '/auth/login';
+      router.navigate([loginUrl], { queryParams: { reason } });
+      return throwError(() => fallbackError);
+    })
+  );
+}
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Skip auth intercept for refresh token calls (prevents infinite loop)
   if (req.headers.has(SKIP_AUTH_HEADER)) {
@@ -26,25 +54,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   // If token exists but is expired, try to refresh first
   if (token && isTokenExpired(token)) {
-    return from(authStore.refreshToken()).pipe(
-      switchMap(refreshed => {
-        if (refreshed) {
-          // Refresh succeeded — retry request with new token
-          const newToken = localStorage.getItem(SESSION_TOKEN_KEY);
-          const authReq = req.clone({
-            setHeaders: { Authorization: `Bearer ${newToken}` }
-          });
-          return next(authReq);
-        }
-        // Refresh failed — clear session and redirect
-        if (isBrowser) {
-          clearSession();
-        }
-        const loginUrl = router.url.startsWith('/admin') ? '/admin/login' : '/auth/login';
-        router.navigate([loginUrl], { queryParams: { reason: 'session_expired' } });
-        return throwError(() => new Error('Session expired'));
-      })
-    );
+    return handleTokenRefresh(authStore, router, req, next, 'session_expired', new Error('Session expired'));
   }
 
   // Attach auth header if token exists
@@ -55,26 +65,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        // Try to refresh on 401 response
-        return from(authStore.refreshToken()).pipe(
-          switchMap(refreshed => {
-            if (refreshed) {
-              // Refresh succeeded — retry original request with new token
-              const newToken = localStorage.getItem(SESSION_TOKEN_KEY);
-              const retryReq = req.clone({
-                setHeaders: { Authorization: `Bearer ${newToken}` }
-              });
-              return next(retryReq);
-            }
-            // Refresh failed — clear session and redirect
-            if (isBrowser) {
-              clearSession();
-            }
-            const loginUrl = router.url.startsWith('/admin') ? '/admin/login' : '/auth/login';
-            router.navigate([loginUrl], { queryParams: { reason: 'unauthorized' } });
-            return throwError(() => error);
-          })
-        );
+        return handleTokenRefresh(authStore, router, req, next, 'unauthorized', error);
       }
       return throwError(() => error);
     })

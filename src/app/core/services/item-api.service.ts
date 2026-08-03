@@ -101,7 +101,13 @@ export class ItemApiService {
     }
   }
 
-  async saveItem(item: Partial<CatalogItem> & any): Promise<CatalogItem> {
+  async saveItem(item: Partial<CatalogItem> & {
+    coverImageFile?: File;
+    additionalImageFiles?: File[];
+    title?: string;
+    categoryName?: string;
+    bookId?: string;
+  }): Promise<CatalogItem> {
     const isNew = !item.id;
 
     const formData = new FormData();
@@ -121,7 +127,7 @@ export class ItemApiService {
     }
 
     if (Array.isArray(item.additionalImageFiles)) {
-      item.additionalImageFiles.forEach((file: any) => {
+      item.additionalImageFiles.forEach((file: File) => {
         if (file instanceof File) {
           formData.append('AdditionalImages', file);
         }
@@ -133,7 +139,7 @@ export class ItemApiService {
       if (item.uomGroup.baseUomCode) formData.append('UomGroup.BaseUomCode', item.uomGroup.baseUomCode);
       formData.append('UomGroup.IsActive', (item.uomGroup.isActive ?? true).toString());
       if (Array.isArray(item.uomGroup.details)) {
-        item.uomGroup.details.forEach((det: any, idx: number) => {
+        item.uomGroup.details.forEach((det, idx: number) => {
           if (det.code) formData.append(`UomGroup.Details[${idx}].Code`, det.code);
           if (det.name) formData.append(`UomGroup.Details[${idx}].Name`, det.name);
           if (det.conversionFactor !== undefined) formData.append(`UomGroup.Details[${idx}].ConversionFactor`, det.conversionFactor.toString());
@@ -145,23 +151,22 @@ export class ItemApiService {
       }
     }
 
-    let savedItem: any;
+    let savedItem: CatalogItem | null = null;
 
     try {
       if (isNew) {
-        const envelope = await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.BASE_URL}/admin/Items/with-files`, formData));
-        savedItem = envelope?.data;
+        const envelope = await firstValueFrom(this.http.post<ApiResponse<CatalogItem>>(`${this.BASE_URL}/admin/Items/with-files`, formData));
+        savedItem = envelope?.data || null;
       } else {
-        const envelope = await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.BASE_URL}/admin/Items/${item.id}/with-files`, formData));
-        savedItem = envelope?.data;
+        const envelope = await firstValueFrom(this.http.put<ApiResponse<CatalogItem>>(`${this.BASE_URL}/admin/Items/${item.id}/with-files`, formData));
+        savedItem = envelope?.data || null;
       }
     } catch (e) {
       this.logger.error('ItemApiService.saveItem', 'Gagal menyimpan item:', e);
       throw e;
     }
 
-    // Determine the itemId correctly whether the API returns an object or a string ID
-    let extractedItemId = savedItem?.id || (typeof savedItem === 'string' ? savedItem : item.id);
+    let extractedItemId = savedItem?.id || item.id || '';
 
     if (!extractedItemId && item.sapCode) {
       try {
@@ -189,11 +194,11 @@ export class ItemApiService {
 
       try {
         if (isNew) {
-          await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.BASE_URL}/admin/Books`, bookPayload));
+          await firstValueFrom(this.http.post<ApiResponse<{ id: string }>>(`${this.BASE_URL}/admin/Books`, bookPayload));
         } else {
           let bookId = item.bookId;
           if (!bookId) {
-            const booksEnv = await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.BASE_URL}/admin/Books`));
+            const booksEnv = await firstValueFrom(this.http.get<ApiResponse<{ id: string; itemId: string }[]>>(`${this.BASE_URL}/admin/Books`));
             const book = booksEnv?.data?.find(b => b.itemId === extractedItemId);
             if (book) {
               bookId = book.id;
@@ -201,9 +206,9 @@ export class ItemApiService {
           }
 
           if (bookId) {
-            await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.BASE_URL}/admin/Books/${bookId}`, bookPayload));
+            await firstValueFrom(this.http.put<ApiResponse<unknown>>(`${this.BASE_URL}/admin/Books/${bookId}`, bookPayload));
           } else {
-            await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.BASE_URL}/admin/Books`, bookPayload));
+            await firstValueFrom(this.http.post<ApiResponse<unknown>>(`${this.BASE_URL}/admin/Books`, bookPayload));
           }
         }
       } catch (e) {
@@ -215,7 +220,7 @@ export class ItemApiService {
     // If it's a book but converted to merchandise, clean up the old book data
     if (item.itemType === 'malaka' && isMerchandise && !isNew) {
       try {
-        const booksEnv = await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.BASE_URL}/admin/Books`));
+        const booksEnv = await firstValueFrom(this.http.get<ApiResponse<{ id: string; itemId: string }[]>>(`${this.BASE_URL}/admin/Books`));
         const book = booksEnv?.data?.find(b => b.itemId === extractedItemId);
         if (book) {
           await firstValueFrom(this.http.delete(`${this.BASE_URL}/admin/Books/${book.id}`));
@@ -225,14 +230,14 @@ export class ItemApiService {
       }
     }
 
-    return savedItem;
+    return savedItem || (item as CatalogItem);
   }
 
   async deleteItem(id: string): Promise<boolean> {
     try {
       const itemEnv = await firstValueFrom(this.http.get<ApiResponse<CatalogItem>>(`${this.BASE_URL}/admin/Items/${id}`));
       if (itemEnv?.data?.itemType === 'malaka') {
-        const booksEnv = await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.BASE_URL}/admin/Books`));
+        const booksEnv = await firstValueFrom(this.http.get<ApiResponse<{ id: string; itemId: string }[]>>(`${this.BASE_URL}/admin/Books`));
         const book = booksEnv?.data?.find(b => b.itemId === id);
         if (book) {
           await firstValueFrom(this.http.delete(`${this.BASE_URL}/admin/Books/${book.id}`));

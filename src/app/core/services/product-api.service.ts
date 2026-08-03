@@ -29,16 +29,17 @@ export class ProductApiService {
       photoUrl: resolveImageUrl(a.photoUrl || '')
     })) || [];
 
-    const rawCover = book?.coverImage || (item as any).coverImage || '';
+    const rawCover = book?.coverImage || item.coverImage || '';
     const rawAddImages = book?.additionalImages
       ? [...book.additionalImages].sort((a, b) => a.no - b.no)
-      : ((item as any).additionalImages || []);
+      : (item.additionalImages || []);
 
-    const resolvedAddImages = rawAddImages.map((imgObj: any) => {
-      const url = typeof imgObj === 'string' ? imgObj : (imgObj.image || imgObj.url || '');
-      return typeof imgObj === 'string'
-        ? resolveImageUrl(url)
-        : { ...imgObj, image: resolveImageUrl(url) };
+    const resolvedAddImages = rawAddImages.map((imgObj, idx) => {
+      if (typeof imgObj === 'string') {
+        return { no: idx + 1, image: resolveImageUrl(imgObj) };
+      }
+      const rawUrl = imgObj.image || '';
+      return { no: imgObj.no || idx + 1, image: resolveImageUrl(rawUrl) };
     });
 
     return {

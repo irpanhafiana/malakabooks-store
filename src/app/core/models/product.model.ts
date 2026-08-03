@@ -46,10 +46,7 @@ export interface Product {
   additionalImages: AdditionalImage[];
 }
 
-export interface AdditionalImageDto {
-  no: number;
-  image: string;
-}
+export type AdditionalImageDto = AdditionalImage;
 
 export interface BookDto {
   id: string;

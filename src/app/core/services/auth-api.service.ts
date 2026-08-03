@@ -6,6 +6,15 @@ import { LoggerService } from './logger.service';
 
 export const SKIP_AUTH_HEADER = 'X-Skip-Auth-Interceptor';
 
+export interface OAuthTokenResponse {
+  access_token: string;
+  refresh_token?: string;
+  expires_in?: number;
+  token_type?: string;
+  scope?: string;
+  [key: string]: unknown;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,7 +34,7 @@ export class AuthApiService {
 
     try {
       const res = await firstValueFrom(
-        this.http.post<any>(this.AUTH_URL, body.toString(), {
+        this.http.post<OAuthTokenResponse>(this.AUTH_URL, body.toString(), {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         })
       );
@@ -49,7 +58,7 @@ export class AuthApiService {
 
     try {
       const res = await firstValueFrom(
-        this.http.post<any>(this.AUTH_URL, body.toString(), {
+        this.http.post<OAuthTokenResponse>(this.AUTH_URL, body.toString(), {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             [SKIP_AUTH_HEADER]: 'true'

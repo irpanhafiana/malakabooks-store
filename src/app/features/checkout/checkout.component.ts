@@ -7,13 +7,8 @@ import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
 import { OrderStore } from '../../store/order.store';
 import { Address, Order, Payment } from '../../core/models';
-import { InputComponent } from '../../shared/ui/input/input.component';
-import { SelectComponent } from '../../shared/ui/select/select.component';
-import { RadioComponent } from '../../shared/ui/radio/radio.component';
-import { RadioIndicatorComponent } from '../../shared/ui/radio-indicator/radio-indicator.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { PriceComponent } from '../../shared/ui/price/price.component';
-import { MapPickerComponent } from '../../shared/ui/map-picker/map-picker.component';
 import { ToastService } from '../../core/services/toast.service';
 import { AddressApiService } from '../../core/services/address-api.service';
 import { UserApiService } from '../../core/services/user-api.service';
@@ -21,11 +16,24 @@ import { LoggerService } from '../../core/services/logger.service';
 import { ShippingService } from '../../core/services/shipping.service';
 import { PaymentApiService } from '../../core/services/payment-api.service';
 
+import { CheckoutAddressComponent } from './components/checkout-address/checkout-address.component';
+import { CheckoutShippingComponent } from './components/checkout-shipping/checkout-shipping.component';
+import { CheckoutPaymentComponent } from './components/checkout-payment/checkout-payment.component';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-checkout',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, InputComponent, SelectComponent, RadioComponent, RadioIndicatorComponent, ButtonComponent, PriceComponent, DecimalPipe, MapPickerComponent],
+  imports: [
+    RouterLink,
+    ReactiveFormsModule,
+    DecimalPipe,
+    ButtonComponent,
+    PriceComponent,
+    CheckoutAddressComponent,
+    CheckoutShippingComponent,
+    CheckoutPaymentComponent
+  ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
@@ -59,9 +67,23 @@ export class CheckoutComponent implements OnInit {
 
   couriers = signal<string[]>([]);
 
-  provinceOptions = computed(() => this.provinces().map(p => ({ value: p, label: p })));
-  cityOptions = computed(() => this.cities().map(c => ({ value: c, label: c })));
-  districtOptions = computed(() => this.districts().map(d => ({ value: d.region_code, label: d.subdistrict_name ? `${d.district_name} - ${d.subdistrict_name}` : d.district_name })));
+  provinceOptions = computed(() => this.provinces().map(p => {
+    const name = p.prov_name || '';
+    return { value: name, label: name };
+  }));
+  cityOptions = computed(() => this.cities().map(c => {
+    const name = c.city_name || '';
+    return { value: name, label: name };
+  }));
+  districtOptions = computed(() => this.districts().map(d => {
+    const code = d.region_code || d.address_code || d.district_id || '';
+    const dName = d.district_name || '';
+    const subName = d.subdistrict_name || d.sub_district_name || '';
+    return {
+      value: code,
+      label: subName ? `${dName} - ${subName}` : dName
+    };
+  }));
   courierOptions = computed(() => this.couriers().map(c => ({ value: c, label: c.toUpperCase() })));
 
   courierServices = this.shippingService.courierServices;
@@ -74,9 +96,11 @@ export class CheckoutComponent implements OnInit {
       else if (s.cost && Array.isArray(s.cost)) { price = s.cost[0]?.value || 0; }
       else if (s.cost && typeof s.cost === 'object') { price = s.cost.value || 0; }
 
+      const firstCost = Array.isArray(s.cost) ? s.cost[0] : null;
+      const etd = s.etd || firstCost?.etd || '-';
       return {
         value: idx.toString(),
-        label: `${s.service_display || s.service || 'Reg'} - Rp ${price.toLocaleString('id-ID')} (ETA: ${s.etd || s.cost?.[0]?.etd || '-'})`
+        label: `${s.service_display || s.service || 'Reg'} - Rp ${price.toLocaleString('id-ID')} (ETA: ${etd})`
       };
     });
   });
@@ -292,25 +316,30 @@ export class CheckoutComponent implements OnInit {
   async resolvedistrictForAddress(addr: Address): Promise<string | null> {
     try {
       const provs = await this.addressApi.getProvinces();
-      const prov = provs.find(p => p.toLowerCase() === addr.province.toLowerCase());
-      if (!prov) return null;
+      const provObj = provs.find(p => (p.prov_name || '').toLowerCase() === addr.province.toLowerCase());
+      const provName = provObj ? (provObj.prov_name || '') : '';
+      if (!provName) return null;
 
-      const cities = await this.addressApi.getCities(prov);
-      const city = cities.find(c => c.toLowerCase() === addr.city.toLowerCase());
-      if (!city) return null;
+      const cities = await this.addressApi.getCities(provName);
+      const cityObj = cities.find(c => (c.city_name || '').toLowerCase() === addr.city.toLowerCase());
+      const cityName = cityObj ? (cityObj.city_name || '') : '';
+      if (!cityName) return null;
 
       if (addr.district) {
         const targetDistrict = addr.district.toLowerCase();
         const targetSubDistrict = addr.subDistrict?.toLowerCase();
 
-        const districts = await this.addressApi.getDistricts(prov, city);
-        const dist = districts.find(d =>
-          d.district_name.toLowerCase() === targetDistrict &&
-          (targetSubDistrict ? d.subdistrict_name.toLowerCase() === targetSubDistrict : true)
-        );
-        return dist ? dist.region_code : city;
+        const districts = await this.addressApi.getDistricts(provName, cityName);
+        const dist = districts.find(d => {
+          const dName = (d.district_name || '').toLowerCase();
+          const subName = (d.subdistrict_name || d.sub_district_name || '').toLowerCase();
+          return dName === targetDistrict && (targetSubDistrict ? subName === targetSubDistrict : true);
+        });
+        if (dist) {
+          return dist.region_code || dist.address_code || dist.district_id || cityName;
+        }
       }
-      return city;
+      return cityName;
     } catch (e) {
       this.logger.error('Error resolving district ID for saved address:', e);
       return null;
@@ -365,7 +394,7 @@ export class CheckoutComponent implements OnInit {
       district: districtName,
       subDistrict: subDistrictName,
       postalCode: this.postalCodeControl.value || '',
-      addressCode: distObj?.origin_code || distCode || '',
+      addressCode: (distObj?.origin_code || distCode || '') as string,
       latitude: this.selectedLat() ?? (distObj?.latitude ? Number(distObj.latitude) : 0),
       longitude: this.selectedLng() ?? (distObj?.longitude ? Number(distObj.longitude) : 0),
       isDefault: user.addresses.length === 0
@@ -448,8 +477,9 @@ export class CheckoutComponent implements OnInit {
     const serviceIdx = serviceIdxStr ? parseInt(serviceIdxStr, 10) : -1;
     const selectedService = serviceIdx >= 0 ? this.courierServices()[serviceIdx] : null;
 
-    const shippingType = selectedService?.service_display || selectedService?.service || 'Reg';
-    const shippingEst = selectedService?.etd || selectedService?.cost?.[0]?.etd || '-';
+    const shippingType = (selectedService?.service_display || selectedService?.service || 'Reg') as string;
+    const firstCost = Array.isArray(selectedService?.cost) ? selectedService?.cost[0] : null;
+    const shippingEst = (selectedService?.etd || firstCost?.etd || '-') as string;
 
     const orderData: Omit<Order, 'id' | 'orderDate' | 'status' | 'trackingNumber'> = {
       userId: user.id,

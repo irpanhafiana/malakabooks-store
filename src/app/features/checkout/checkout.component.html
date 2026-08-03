@@ -15,119 +15,42 @@
     <div class="flex flex-col gap-2 lg:flex-[2]">
 
       <!-- Step 1: Shipping Address -->
-      <div class="bg-white border border-slate-100 p-4 rounded-lg">
-        <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
-          <span
-            class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">1</span>
-          Alamat Pengiriman
-        </h2>
-
-        @if (!showAddressForm()) {
-        @if (savedAddresses().length > 0) {
-        <div class="flex flex-col gap-3">
-          @for (addr of savedAddresses(); track addr.id) {
-          <div (click)="selectAddress(addr.id)"
-            class="flex items-start gap-3.5 p-4 border rounded-lg cursor-pointer  hover:bg-slate-50"
-            [class.border-primary-500]="selectedAddressId() === addr.id"
-            [class.border-slate-200]="selectedAddressId() !== addr.id">
-            <app-radio-indicator [checked]="selectedAddressId() === addr.id" class="mt-1"></app-radio-indicator>
-            <div class="flex flex-col text-xs leading-relaxed">
-              <strong class="font-bold text-slate-800">{{ addr.name }} @if (addr.isDefault) { <span
-                  class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold ml-1">Default</span>
-                }</strong>
-              <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
-              <span class="text-slate-600 font-semibold">{{ addr.street }}{{ addr.district ? ', ' + addr.district : ''
-                }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
-            </div>
-          </div>
-          }
-          <app-button type="button" (click)="addNewAddress()" variant="ghost" size="sm"
-            customClass="text-primary-600 hover:text-primary-700 !p-0 mt-1 flex items-center gap-1">
-            + Tambah Alamat Baru
-          </app-button>
-        </div>
-        } @else {
-        <div
-          class="text-center py-6 border border-dashed border-slate-200 rounded-2xl p-4 flex flex-col items-center gap-3">
-          <p class="text-slate-500 text-xs">Anda belum memiliki alamat pengiriman yang tersimpan.</p>
-          <app-button type="button" (click)="addNewAddress()" variant="outline" size="sm">
-            + Tambah Alamat Baru
-          </app-button>
-        </div>
-        }
-        } @else {
-        <form [formGroup]="addressForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <app-input label="Nama Penerima" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
-          <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="phoneControl"></app-input>
-          <div class="sm:col-span-2">
-            <app-input label="Alamat Lengkap (Jalan)" placeholder="e.g. Jl. Sudirman No. 21"
-              [control]="streetControl"></app-input>
-          </div>
-          <app-select label="Provinsi" placeholder="Pilih Provinsi" [control]="provinceControl"
-            [options]="provinceOptions()"></app-select>
-          <app-select label="Kota" placeholder="Pilih Kota" [control]="cityControl"
-            [options]="cityOptions()"></app-select>
-          <app-select label="Kecamatan" placeholder="Pilih Kecamatan" [control]="districtControl"
-            [options]="districtOptions()"></app-select>
-          <app-input label="Kode Pos" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
-
-          <div class="sm:col-span-2 mt-2">
-            <label class="block text-sm font-medium text-slate-700 mb-2">Pin Lokasi Peta</label>
-            <app-map-picker [initialLat]="selectedLat()" [initialLng]="selectedLng()"
-              (locationSelected)="onMapLocationSelected($event)">
-            </app-map-picker>
-            <p class="text-xs text-slate-500 mt-2">Klik peta atau geser pin untuk menyesuaikan titik koordinat.</p>
-          </div>
-
-          <div class="sm:col-span-2 flex justify-end gap-2.5 mt-2">
-            <app-button type="button" (click)="cancelAddressForm()" variant="ghost" size="sm">Batal</app-button>
-            <app-button type="button" (click)="saveAddressForm()" [disabled]="addressForm.invalid" variant="outline"
-              size="sm">Simpan Alamat</app-button>
-          </div>
-        </form>
-        }
-      </div>
+      <app-checkout-address
+        [savedAddresses]="savedAddresses()"
+        [selectedAddressId]="selectedAddressId()"
+        [showForm]="showAddressForm()"
+        [addressForm]="addressForm"
+        [provinceOptions]="provinceOptions()"
+        [cityOptions]="cityOptions()"
+        [districtOptions]="districtOptions()"
+        [selectedLat]="selectedLat()"
+        [selectedLng]="selectedLng()"
+        (selectAddress)="selectAddress($event)"
+        (addNewAddress)="addNewAddress()"
+        (cancelForm)="cancelAddressForm()"
+        (saveForm)="saveAddressForm()"
+        (locationSelected)="onMapLocationSelected($event)">
+      </app-checkout-address>
 
       <!-- Step 2: Shipping Courier & Service -->
-      <div class="bg-white border border-slate-100 p-4 rounded-lg">
-        <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
-          <span
-            class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">2</span>
-          Kurir & Layanan Pengiriman
-        </h2>
-        <div class="flex flex-col gap-4">
-          <app-select label="Pilih Kurir" placeholder="Pilih Kurir" [control]="courierControl"
-            [options]="courierOptions()"></app-select>
-
-          @if (courierOptions().length > 0 && courierControl.value && courierServices().length > 0) {
-          <app-select label="Pilih Layanan" placeholder="Pilih Layanan" [control]="courierServiceControl"
-            [options]="courierServiceOptions()"></app-select>
-          } @else if (courierControl.value && shippingLoading()) {
-          <div class="text-xs text-slate-500 animate-pulse">Memuat layanan yang tersedia...</div>
-          }
-        </div>
-      </div>
+      <app-checkout-shipping
+        [courierControl]="courierControl"
+        [courierServiceControl]="courierServiceControl"
+        [courierOptions]="courierOptions()"
+        [courierServiceOptions]="courierServiceOptions()"
+        [courierServicesLength]="courierServices().length"
+        [shippingLoading]="shippingLoading()">
+      </app-checkout-shipping>
 
       <!-- Step 3: Payment Method -->
-      <div class="bg-white border border-slate-100 p-4 rounded-lg">
-        <h2 class="font-display font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2">
-          <span
-            class="h-6 w-6 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs">3</span>
-          Metode Pembayaran
-        </h2>
-
-        <app-radio [options]="paymentOptions()" [control]="paymentControl" direction="col"></app-radio>
-
-        @if (isCreditCardSelected()) {
-        <div class="mt-4 p-4 border border-slate-100 bg-slate-50/50 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-4 ">
-          <div class="sm:col-span-3">
-            <app-input label="Nomor Kartu" placeholder="xxxx xxxx xxxx 4321" [control]="cardNumControl"></app-input>
-          </div>
-          <app-input label="Masa Berlaku" placeholder="MM/YY" [control]="cardExpiryControl"></app-input>
-          <app-input label="CVC" placeholder="xxx" type="password" [control]="cardCvcControl"></app-input>
-        </div>
-        }
-      </div>
+      <app-checkout-payment
+        [paymentControl]="paymentControl"
+        [paymentOptions]="paymentOptions()"
+        [isCreditCardSelected]="isCreditCardSelected()"
+        [cardNumControl]="cardNumControl"
+        [cardExpiryControl]="cardExpiryControl"
+        [cardCvcControl]="cardCvcControl">
+      </app-checkout-payment>
 
     </div>
 

@@ -27,6 +27,8 @@ export interface Order {
   shippingCourier?: string;
   shippingType?: string;
   shippingEst?: string;
+  insurance?: boolean;
+  shippingInsurance?: number;
 }
 
 export interface OrderItemDto {
