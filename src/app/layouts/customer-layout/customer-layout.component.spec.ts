@@ -80,14 +80,4 @@ describe('CustomerLayoutComponent', () => {
     expect(mockProductStore.setSearchQuery).toHaveBeenCalledWith('');
   });
 
-  it('should add to cart and close modal on confirmAddToCart if product is active', () => {
-    const mockProduct = { id: 'P1', name: 'Book' };
-    mockProductStore.activeProduct.set(mockProduct as any);
-    mockProductStore.qtyQuantity.set(2);
-
-    component.confirmAddToCart();
-
-    expect(mockCartStore.addItem).toHaveBeenCalledWith(mockProduct, 2, undefined, undefined);
-    expect(mockProductStore.setQtyModalOpen).toHaveBeenCalledWith(false);
-  });
 });

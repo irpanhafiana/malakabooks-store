@@ -56,8 +56,8 @@
 }
 body {
   font-family: var(--font-sans);
-  background-color: #f9fafb; /* gray-50 */
-  color: #111827; /* gray-900 */
+  background-color: #f8fafc; /* slate-50 */
+  color: #0f172a; /* slate-900 */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -128,12 +128,9 @@ body {
   font-family: 'Fraunces', serif !important;
 }
 
-/* Card Product Styling from layouting.md (with brand colors) */
+/* Card Product Styling */
 .card-product {
-  /* background-color: #ffffff; */
   overflow: hidden;
-  /* border-radius: 20px; */
-  /* border: 1.3px solid #f1eeff; */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -146,11 +143,11 @@ body {
   position: absolute;
   bottom: 0.5rem;
   left: 0.5rem;
-  background-color: var(--color-primary-600, #e11d48);
+  background-color: var(--color-primary-600);
   color: #ffffff;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 700;
-  padding: 0.125rem 0.375rem;
+  padding: 0.15rem 0.4rem;
   border-radius: 0.375rem;
   text-transform: uppercase;
 }
@@ -159,7 +156,7 @@ body {
   position: absolute;
   bottom: 0.75rem;
   left: 0.75rem;
-  background-color: var(--color-primary-600, #e11d48);
+  background-color: var(--color-primary-600);
   color: #ffffff;
   font-size: 11px;
   font-weight: 800;

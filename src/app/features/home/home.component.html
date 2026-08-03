@@ -34,14 +34,14 @@
                 {{ banner.title }}
               </h1>
               <p
-                class="text-[10px] lg:text-base text-white max-w-sm lg:max-w-xl leading-relaxed line-clamp-1 lg:line-clamp-2 drop-shadow-md font-medium">
+                class="text-xs lg:text-base text-white max-w-sm lg:max-w-xl leading-relaxed line-clamp-1 lg:line-clamp-2 drop-shadow-md font-medium">
                 {{ banner.subtitle }}
               </p>
             </div>
 
             <div class="relative z-10 flex items-center justify-between gap-3 mt-2 lg:mt-6 w-full">
               <a [routerLink]="banner.targetUrl"
-                class="px-3.5 py-1.5 lg:px-6 lg:py-2.5 rounded-lg bg-white text-primary-700 font-bold text-[9px] lg:text-sm hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
+                class="px-3.5 py-1.5 lg:px-6 lg:py-2.5 rounded-xl bg-white text-primary-700 font-bold text-xs lg:text-sm hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
                 {{ banner.buttonText }}
               </a>
             </div>

@@ -47,9 +47,9 @@
         </td>
         <td class="px-5 py-4 text-xs font-semibold">
           @if (log.movementType === 'STOCK_IN' || log.quantityDelta > 0) {
-          <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-100 text-green-700">Masuk</span>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/50">Masuk</span>
           } @else {
-          <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-100 text-rose-700">Keluar</span>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200/50">Keluar</span>
           }
         </td>
         <td class="px-5 py-4 text-xs font-semibold" [class.text-green-600]="log.quantityDelta > 0"
