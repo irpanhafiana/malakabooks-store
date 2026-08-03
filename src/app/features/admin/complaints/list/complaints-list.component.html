@@ -83,7 +83,7 @@
 </div>
 
 <!-- Respond Modal -->
-<app-modal appTooltip="Respons Komplain" [(isOpen)]="isModalOpen" [hasFooter]="false">
+<app-modal title="Respons Komplain" [(isOpen)]="isModalOpen">
   @if (selected()) {
   <app-complaints-form [complaint]="selected()" (onCancel)="closeModal()" (onSave)="closeModal()">
   </app-complaints-form>

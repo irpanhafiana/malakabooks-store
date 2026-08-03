@@ -2,12 +2,17 @@
 <div class="card-product group relative">
 
   <!-- Clickable details container -->
-  <div (click)="viewProductDetails()" class="block grow cursor-pointer">
+  <div 
+    (click)="viewProductDetails()" 
+    (keydown)="onKeydown($event)"
+    role="button" 
+    tabindex="0" 
+    [attr.aria-label]="'Detail produk ' + prod.title"
+    class="block grow cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-xl">
     <!-- Image Container -->
-    <div class="w-full bg-slate-50 overflow-hidden mb-3 relative flex items-center justify-center aspect-square">
+    <div class="w-full bg-slate-50 overflow-hidden mb-3 relative flex items-center justify-center aspect-square rounded-xl">
       @if (prod.coverImage && !imageError()) {
-      <img [src]="prod.coverImage" [alt]="prod.title" (error)="onImageError()" class="w-full h-full object-contain"
-        loading="lazy" />
+      <img [ngSrc]="prod.coverImage" [alt]="prod.title" (error)="onImageError()" fill class="w-full h-full object-contain" />
       } @else {
       <div
         class="w-full h-full flex items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-300">
@@ -20,7 +25,7 @@
     <!-- Meta info, Title & Ratings Wrapper -->
     <div class="flex flex-col pb-2">
       <!-- Meta info -->
-      <span [class]="'font-medium text-slate-400 uppercase tracking-wide block mb-1 line-clamp-2 ' + (size() === 'md' ? 'text-[11px]' : 'text-[10px]')">{{
+      <span [class]="'font-semibold text-slate-600 uppercase tracking-wide block mb-1 line-clamp-2 ' + (size() === 'md' ? 'text-[11px]' : 'text-[10px]')">{{
         prod.authorNames }}</span>
 
       <!-- Title -->
@@ -35,7 +40,7 @@
           <div class="flex justify-between items-center w-full gap-2">
             <!-- Left: Prices (harga coret on top, harga asli/jual below) -->
             <div class="flex flex-col items-start gap-1">
-              <span [class]="'text-slate-400 line-through font-medium leading-none ' + (size() === 'md' ? 'text-[11px]' : 'text-[10px]')">
+              <span [class]="'text-slate-500 line-through font-medium leading-none ' + (size() === 'md' ? 'text-[11px]' : 'text-[10px]')">
                 Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }}
               </span>
               <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'" [class]="'text-primary-600 font-bold leading-none ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>

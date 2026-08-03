@@ -30,9 +30,9 @@ describe('AuthGuard', () => {
   it('should redirect to login if user is not logged in', () => {
     mockAuthStore.isLoggedIn.mockReturnValue(false);
     TestBed.runInInjectionContext(() => {
-      const result = authGuard({} as any, {} as any);
+      const result = authGuard({} as any, { url: '/checkout' } as any);
       expect(result).toBe(false);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/auth/login']);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/auth/login'], { queryParams: { returnUrl: '/checkout' } });
     });
   });
 });

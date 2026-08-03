@@ -65,8 +65,11 @@
       <div class="flex flex-col gap-3">
         @for (item of order.items; track item.product.id) {
         <div class="flex items-center gap-4 text-xs">
-          <div class="h-16 w-14 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden shrink-0">
-            <img [src]="item.product.coverImage" [alt]="item.product.title" class="object-cover w-full h-full" />
+          <div class="relative h-16 w-14 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden shrink-0 flex items-center justify-center">
+            <i class="bx bx-book-open text-2xl text-slate-300"></i>
+            @if (item.product.coverImage) {
+              <img [src]="item.product.coverImage" [alt]="item.product.title" class="absolute inset-0 object-cover w-full h-full bg-slate-50" (error)="$any($event.target).style.display='none'" />
+            }
           </div>
           <div class="grow min-w-0">
             <h4 class="font-bold text-slate-800 text-sm truncate mb-0.5">{{ item.product.title }}</h4>
@@ -128,7 +131,12 @@
   @if (selectedProduct()) {
     <div class="flex flex-col gap-4 text-left p-1">
       <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
-        <img [src]="selectedProduct()?.coverImage" class="w-12 h-16 object-cover rounded-lg border border-slate-200">
+        <div class="relative w-12 h-16 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+          <i class="bx bx-book-open text-xl text-slate-300"></i>
+          @if (selectedProduct()?.coverImage) {
+            <img [src]="selectedProduct()?.coverImage" [alt]="selectedProduct()?.title" class="absolute inset-0 w-full h-full object-cover bg-slate-50" (error)="$any($event.target).style.display='none'">
+          }
+        </div>
         <span class="font-bold text-slate-800 line-clamp-2 text-sm">{{ selectedProduct()?.title }}</span>
       </div>
       
@@ -174,7 +182,7 @@
       </div>
     </div>
     
-    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-3">
+    <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex items-center gap-3 mt-4 z-10">
       <app-button variant="outline" size="md" [fullWidth]="true" class="flex-1" (click)="closeReviewSheet()">Batal</app-button>
       <app-button variant="primary" size="md" [fullWidth]="true" class="flex-1" [disabled]="reviewRating() === 0 || !reviewComment().trim() || isSubmittingReview()" (click)="submitReview()">
         {{ isSubmittingReview() ? 'Mengirim...' : 'Kirim Ulasan' }}

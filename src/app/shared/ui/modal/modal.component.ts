@@ -12,6 +12,7 @@ import { IconComponent } from '../icon/icon.component';
 export class ModalComponent implements OnInit, OnDestroy {
   readonly isOpen = model<boolean>(false);
   readonly title = input<string>('');
+  readonly showHeader = input<boolean>(true);
   readonly hasFooter = input<boolean>(true);
   readonly maxWidth = input<string>('max-w-lg');
 

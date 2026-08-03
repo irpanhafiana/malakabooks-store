@@ -5,14 +5,12 @@ import { CartStore } from '../../../store/cart.store';
 import { ProductStore } from '../../../store/product.store';
 import { PricingApiService } from '../../../core/services/pricing-api.service';
 import { QuantitySelectorComponent } from '../quantity-selector/quantity-selector.component';
-import { ButtonComponent } from '../button/button.component';
-import { PriceComponent } from '../price/price.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-qty-modal-content',
   standalone: true,
-  imports: [QuantitySelectorComponent, ButtonComponent, PriceComponent],
+  imports: [QuantitySelectorComponent],
   templateUrl: './qty-modal-content.component.html',
   styleUrl: './qty-modal-content.component.css'
 })

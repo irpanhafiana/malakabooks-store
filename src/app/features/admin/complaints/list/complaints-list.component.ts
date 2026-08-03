@@ -11,7 +11,6 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { ComplaintsFormComponent } from '../form/complaints-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-badge.component';
-import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +26,7 @@ import { TooltipDirective } from '../../../../shared/directives/tooltip.directiv
     SpinnerComponent,
     StatusBadgeComponent,
     IconComponent
-  , TooltipDirective],
+  ],
   templateUrl: './complaints-list.component.html'
 })
 export class ComplaintsListComponent implements OnInit {

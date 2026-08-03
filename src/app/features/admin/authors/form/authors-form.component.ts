@@ -58,7 +58,7 @@ import { AlertService } from '../../../../core/services/alert.service';
 
       <!-- Actions -->
       <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
-        <app-admin-button type="button" variant="outline" (click)="onCancel.emit()">Cancel</app-admin-button>
+        <app-admin-button type="button" variant="outline" (click)="onCancel.emit()">Batal</app-admin-button>
         <app-admin-button type="submit" variant="primary" [disabled]="authorForm.invalid || authorStore.loading()">
           {{ authorStore.loading() ? 'Menyimpan...' : 'Simpan Penulis' }}
         </app-admin-button>

@@ -98,18 +98,6 @@
             (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
         }
-        @if (!screen.isDesktop()) {
-        @for (prod of productStore.products(); track prod.id + '-clone1') {
-        <div class="flex-[0_0_170px] min-w-0 pl-2" aria-hidden="true">
-          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
-        </div>
-        }
-        @for (prod of productStore.products(); track prod.id + '-clone2') {
-        <div class="flex-[0_0_170px] min-w-0 pl-2" aria-hidden="true">
-          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
-        </div>
-        }
-        }
         }
       </div>
     </div>
@@ -152,18 +140,28 @@
       <div class="hidden xl:block"><app-skeleton type="card" [count]="1"></app-skeleton></div>
     </div>
     } @else {
-    <div class="hidden lg:grid grid-cols-4 xl:grid-cols-5 gap-6 gap-y-8">
-      @for (prod of catalogProducts(); track prod.id) {
-      <app-product-card [product]="prod" size="md" (addToCart)="openQtyModal($event)"></app-product-card>
-      }
-    </div>
-    <div class="lg:hidden">
-      <app-masonry-grid [items]="catalogProducts()">
-        <ng-template let-prod>
-          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
-        </ng-template>
-      </app-masonry-grid>
-    </div>
+    @defer (on viewport; prefetch on idle) {
+      <div class="hidden lg:grid grid-cols-4 xl:grid-cols-5 gap-6 gap-y-8">
+        @for (prod of catalogProducts(); track prod.id) {
+        <app-product-card [product]="prod" size="md" (addToCart)="openQtyModal($event)"></app-product-card>
+        }
+      </div>
+      <div class="lg:hidden">
+        <app-masonry-grid [items]="catalogProducts()">
+          <ng-template let-prod>
+            <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+          </ng-template>
+        </app-masonry-grid>
+      </div>
+    } @placeholder {
+      <div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-6">
+        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+        <div class="hidden xl:block"><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      </div>
+    }
     }
   </section>
 

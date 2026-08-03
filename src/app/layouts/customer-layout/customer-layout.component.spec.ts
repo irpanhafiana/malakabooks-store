@@ -7,6 +7,7 @@ import { CartStore } from '../../store/cart.store';
 import { UserStore } from '../../store/user.store';
 import { ProductStore } from '../../store/product.store';
 import { ToastService } from '../../core/services/toast.service';
+import { ScreenService } from '../../core/services/screen.service';
 import { signal, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CustomerLayoutComponent', () => {
@@ -17,7 +18,8 @@ describe('CustomerLayoutComponent', () => {
   const mockAuthStore = { isLoggedIn: signal(false), currentUser: signal(null) };
   const mockCartStore = { addItem: vi.fn(), itemsCount: signal(0) };
   const mockUserStore = {};
-  
+  const mockScreenService = { isDesktop: signal(false) };
+
   const mockProductStore = {
     selectedProductId: signal<string | null>(null),
     setSelectedProductId: vi.fn(),
@@ -52,7 +54,8 @@ describe('CustomerLayoutComponent', () => {
         { provide: CartStore, useValue: mockCartStore },
         { provide: UserStore, useValue: mockUserStore },
         { provide: ProductStore, useValue: mockProductStore },
-        { provide: ToastService, useValue: mockToast }
+        { provide: ToastService, useValue: mockToast },
+        { provide: ScreenService, useValue: mockScreenService }
       ]
     }).compileComponents();
 

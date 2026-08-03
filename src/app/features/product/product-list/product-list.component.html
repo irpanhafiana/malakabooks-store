@@ -72,18 +72,27 @@
       description="Kami tidak menemukan produk yang cocok dengan pencarian Anda. Coba ubah kata kunci atau hapus filter."
       actionText="Reset Semua Filter" (actionClick)="resetAllFilters()"></app-empty-state>
     } @else {
-    <div class="hidden lg:grid grid-cols-4 xl:grid-cols-5 gap-6 gap-y-8">
-      @for (prod of productStore.filteredProducts(); track prod.id) {
-        <app-product-card [product]="prod" size="md" (addToCart)="onAddToCart($event)"></app-product-card>
-      }
-    </div>
-    <div class="lg:hidden">
-      <app-masonry-grid [items]="productStore.filteredProducts()">
-        <ng-template let-prod>
-          <app-product-card [product]="prod" (addToCart)="onAddToCart($event)"></app-product-card>
-        </ng-template>
-      </app-masonry-grid>
-    </div>
+    @defer (on viewport; prefetch on idle) {
+      <div class="hidden lg:grid grid-cols-4 xl:grid-cols-5 gap-6 gap-y-8">
+        @for (prod of productStore.filteredProducts(); track prod.id) {
+          <app-product-card [product]="prod" size="md" (addToCart)="onAddToCart($event)"></app-product-card>
+        }
+      </div>
+      <div class="lg:hidden">
+        <app-masonry-grid [items]="productStore.filteredProducts()">
+          <ng-template let-prod>
+            <app-product-card [product]="prod" (addToCart)="onAddToCart($event)"></app-product-card>
+          </ng-template>
+        </app-masonry-grid>
+      </div>
+    } @placeholder {
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4">
+        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      </div>
+    }
     }
   </section>
 

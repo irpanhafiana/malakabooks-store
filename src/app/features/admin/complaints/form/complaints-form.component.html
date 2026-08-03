@@ -91,7 +91,7 @@
       <input type="file" accept="image/*" class="hidden" (change)="onReplyImageSelected($event)">
     </label>
 
-    <div class="border-t border-slate-100 pt-4 flex gap-3 mt-6">
+    <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
       <app-admin-button type="button" variant="outline" class="flex-1" (click)="onCancel.emit()">
         Batal
       </app-admin-button>
@@ -107,7 +107,7 @@
   </form>
 
   <!-- Image Preview Modal -->
-  <app-modal [isOpen]="previewImage() !== null" appTooltip="Lihat Foto" (isOpenChange)="!$event ? closeImagePreview() : null">
+  <app-modal [isOpen]="previewImage() !== null" title="Lihat Foto" (isOpenChange)="!$event ? closeImagePreview() : null">
     @if (previewImage()) {
       <div class="flex items-center justify-center">
         <img [src]="previewImage()" class="max-w-full h-auto max-h-[70vh] object-contain rounded-lg">

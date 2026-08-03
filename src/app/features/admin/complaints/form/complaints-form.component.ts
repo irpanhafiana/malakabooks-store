@@ -10,7 +10,6 @@ import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-b
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { effect } from '@angular/core';
-import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,8 +21,7 @@ import { TooltipDirective } from '../../../../shared/directives/tooltip.directiv
     AdminSelectComponent, 
     TextareaComponent, 
     AdminButtonComponent,
-    ModalComponent,
-    TooltipDirective
+    ModalComponent
   ],
   templateUrl: './complaints-form.component.html'
 })

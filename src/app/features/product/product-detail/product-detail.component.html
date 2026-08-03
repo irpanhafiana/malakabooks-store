@@ -117,6 +117,41 @@
           }}
         </h1>
         <p class="text-[13px] text-slate-500">{{ product()!.authorNames }}</p>
+
+        @if (product()!.stock > 0 && product()!.stock <= 5) {
+        <div class="flex items-center gap-1.5 text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200/80 px-3 py-1 rounded-lg w-fit">
+          <i class="bx bxs-error-circle text-base text-amber-600"></i>
+          <span>Sisa {{ product()!.stock }} pcs lagi! Segera pesan sebelum kehabisan</span>
+        </div>
+        }
+
+        <!-- Shipping & Trust Signals Widget -->
+        <div class="flex flex-col gap-3 p-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-xs text-slate-600 mt-1">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center shrink-0">
+              <i class="bx bx-truck text-lg"></i>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-bold text-slate-800">Estimasi Pengiriman Cepat</span>
+              <span class="text-slate-500 text-[11px]">Tiba 2-3 hari kerja dengan kurir reguler</span>
+            </div>
+          </div>
+          <hr class="border-slate-200/60" />
+          <div class="grid grid-cols-3 gap-2 text-[10px] text-center font-semibold text-slate-600">
+            <div class="flex flex-col items-center gap-1">
+              <i class="bx bx-check-shield text-lg text-emerald-600"></i>
+              <span>100% Original</span>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <i class="bx bx-refresh text-lg text-blue-600"></i>
+              <span>7 Hari Retur</span>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <i class="bx bx-lock-alt text-lg text-primary-600"></i>
+              <span>Pembayaran Aman</span>
+            </div>
+          </div>
+        </div>
       </div>
 
 
@@ -233,7 +268,6 @@
 <!-- Fixed Footer Action Bar -->
 <div
   class="shrink-0 border-t border-slate-200/60 bg-white/95 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
-  @if (authStore.isLoggedIn()) {
   <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
     [fullWidth]="true" class="flex-1">
     + Keranjang
@@ -243,12 +277,6 @@
     class="flex-1">
     Beli Sekarang
   </app-button>
-  } @else {
-  <app-button routerLink="/auth/login" (click)="goToLogin()" variant="primary" size="lg" [fullWidth]="true"
-    class="flex-1">
-    Login untuk Membeli
-  </app-button>
-  }
 </div>
 }
 </div>

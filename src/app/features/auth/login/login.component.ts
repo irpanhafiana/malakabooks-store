@@ -92,8 +92,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.isLoading.set(false);
 
     if (success) {
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
       if (this.authStore.isAdmin()) {
         this.router.navigate(['/admin']);
+      } else if (returnUrl) {
+        this.router.navigateByUrl(returnUrl);
       } else {
         this.router.navigate(['/']);
       }

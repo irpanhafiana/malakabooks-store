@@ -174,6 +174,7 @@ export class CartStore {
         }
       } catch {
         this.persistLocal(previousItems);
+        this.toastService.error('Gagal menyinkronkan keranjang dengan server.');
         return;
       } finally {
         this.state.update(s => ({ ...s, loading: false }));
@@ -184,6 +185,7 @@ export class CartStore {
   }
 
   async removeItem(productId: string) {
+    const previousItems = [...this.items()];
     const filtered = this.items().filter(item => item.product.id !== productId);
     this.persistLocal(filtered);
     this.toastService.info('Barang berhasil dihapus dari keranjang.');
@@ -193,6 +195,9 @@ export class CartStore {
       this.state.update(s => ({ ...s, loading: true }));
       try {
         await this.cartApi.removeCartItem(userId, productId);
+      } catch {
+        this.persistLocal(previousItems);
+        this.toastService.error('Gagal menghapus barang dari server.');
       } finally {
         this.state.update(s => ({ ...s, loading: false }));
       }
@@ -205,6 +210,7 @@ export class CartStore {
       return;
     }
 
+    const previousItems = [...this.items()];
     const currentItems = [...this.items()];
     const index = currentItems.findIndex(item => item.product.id === productId);
     if (index < 0) return;
@@ -224,6 +230,9 @@ export class CartStore {
       this.state.update(s => ({ ...s, loading: true }));
       try {
         await this.cartApi.addCartItem(userId, productId, quantity);
+      } catch {
+        this.persistLocal(previousItems);
+        this.toastService.error('Gagal mengubah jumlah barang di server.');
       } finally {
         this.state.update(s => ({ ...s, loading: false }));
       }

@@ -16,12 +16,14 @@ import { ScreenService } from '../../core/services/screen.service';
 import { DesktopHeaderComponent } from '../desktop/desktop-header/desktop-header.component';
 import { DesktopFooterComponent } from '../desktop/desktop-footer/desktop-footer.component';
 import { ProductModalHandler } from '../product-modal-handler.service';
+import { PriceComponent } from '../../shared/ui/price/price.component';
+import { ButtonComponent } from '../../shared/ui/button/button.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-customer-layout',
     standalone: true,
-    imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, ModalComponent, QtyModalContentComponent, ToastContainerComponent, DesktopHeaderComponent, DesktopFooterComponent],
+    imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, ModalComponent, QtyModalContentComponent, ToastContainerComponent, DesktopHeaderComponent, DesktopFooterComponent, PriceComponent, ButtonComponent],
     templateUrl: './customer-layout.component.html',
     styleUrl: './customer-layout.component.css'
 })

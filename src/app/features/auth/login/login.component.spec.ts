@@ -4,7 +4,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
 
-import { signal, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;

@@ -16,7 +16,23 @@
 
   <app-modal [isOpen]="productStore.isQtyModalOpen()" (isOpenChange)="modalHandler.closeQty()" title="Pilihan Pembelian"
     maxWidth="max-w-md">
-    <app-qty-modal-content (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
+    <app-qty-modal-content #qtyDesktop (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
+    <div modal-footer class="flex items-center justify-between gap-4">
+      <div class="flex flex-col">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+          Total Harga
+          @if (productStore.isQtyLookupLoading()) {
+          <i class="bx bx-loader-alt animate-spin text-primary-500"></i>
+          }
+        </span>
+        <app-price [value]="(productStore.qtyLookedUpPrice() || 0) * productStore.qtyQuantity()" size="lg"
+          class="text-slate-800"></app-price>
+      </div>
+      <app-button (click)="qtyDesktop.confirmAddToCart()" variant="primary" size="lg" class="grow max-w-40"
+        [disabled]="productStore.isQtyLookupLoading()">
+        {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+      </app-button>
+    </div>
   </app-modal>
 
   } @else {
@@ -109,7 +125,23 @@
       </app-bottom-sheet>
 
       <app-bottom-sheet [isOpen]="productStore.isQtyModalOpen()" (closed)="modalHandler.closeQty()">
-        <app-qty-modal-content (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
+        <app-qty-modal-content #qtyMobile (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
+        <div class="border-t border-slate-100 px-5 py-4 flex items-center justify-between gap-4 bg-white shrink-0">
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+              Total Harga
+              @if (productStore.isQtyLookupLoading()) {
+              <i class="bx bx-loader-alt animate-spin text-primary-500"></i>
+              }
+            </span>
+            <app-price [value]="(productStore.qtyLookedUpPrice() || 0) * productStore.qtyQuantity()" size="lg"
+              class="text-slate-800"></app-price>
+          </div>
+          <app-button (click)="qtyMobile.confirmAddToCart()" variant="primary" size="lg" class="grow max-w-40"
+            [disabled]="productStore.isQtyLookupLoading()">
+            {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+          </app-button>
+        </div>
       </app-bottom-sheet>
 
     </div>

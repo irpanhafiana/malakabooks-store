@@ -9,7 +9,7 @@ export class ScreenService implements OnDestroy {
   private listener: (e: MediaQueryListEvent) => void;
 
   constructor() {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
       this.mediaQueryList = window.matchMedia('(min-width: 1024px)');
       
       // Initialize with current value
@@ -20,7 +20,9 @@ export class ScreenService implements OnDestroy {
         this.isDesktop.set(e.matches);
       };
       
-      this.mediaQueryList.addEventListener('change', this.listener);
+      if (this.mediaQueryList.addEventListener) {
+        this.mediaQueryList.addEventListener('change', this.listener);
+      }
     } else {
        this.mediaQueryList = {} as MediaQueryList;
        this.listener = () => {};

@@ -17,6 +17,7 @@ export class InputComponent {
   readonly type = input<string>('text');
   readonly placeholder = input<string>('');
   readonly icon = input<string | undefined>(undefined);
+  readonly errorMessage = input<string | undefined>(undefined);
   readonly customClass = input<string>('', { alias: 'class' });
 
   // Password toggle

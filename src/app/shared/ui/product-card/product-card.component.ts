@@ -1,4 +1,5 @@
 import { Component, input, output, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { ProductStore } from '../../../store/product.store';
 import { AuthStore } from '../../../store/auth.store';
 import { Product } from '../../../core/models';
@@ -9,7 +10,7 @@ import { PriceComponent } from '../price/price.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-card',
   standalone: true,
-  imports: [IconComponent, PriceComponent],
+  imports: [NgOptimizedImage, IconComponent, PriceComponent],
 
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css'
@@ -43,6 +44,13 @@ export class ProductCardComponent {
       this.productClick.emit(this.product());
     } else {
       this.productStore.setSelectedProductId(this.product().id);
+    }
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.viewProductDetails();
     }
   }
 }

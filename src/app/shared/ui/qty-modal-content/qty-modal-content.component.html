@@ -18,25 +18,8 @@
   }
   }
 
-  <div class="flex items-center justify-center py-6 bg-slate-50/50 rounded-2xl mb-8 border border-slate-100/60">
+  <div class="flex items-center justify-center py-6 bg-slate-50/50 rounded-2xl mb-4 border border-slate-100/60">
     <app-quantity-selector [quantity]="productStore.qtyQuantity()" (quantityChange)="onQtyChange($event)"
       [stock]="productStore.activeProduct()?.stock || 0" variant="md"></app-quantity-selector>
-  </div>
-
-  <div class="flex items-center justify-between gap-4 mt-auto">
-    <div class="flex flex-col">
-      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 flex items-center gap-1">
-        Total Harga
-        @if (productStore.isQtyLookupLoading()) {
-        <i class="bx bx-loader-alt animate-spin text-primary-500"></i>
-        }
-      </span>
-      <app-price [value]="(productStore.qtyLookedUpPrice() || 0) * productStore.qtyQuantity()" size="lg"
-        class="text-slate-800"></app-price>
-    </div>
-    <app-button (click)="confirmAddToCart()" variant="primary" size="lg" class="grow max-w-40"
-      [disabled]="productStore.isQtyLookupLoading()">
-      {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
-    </app-button>
   </div>
 </div>

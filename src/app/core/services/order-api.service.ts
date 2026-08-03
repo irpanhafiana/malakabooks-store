@@ -13,6 +13,7 @@ import { environment } from '../../../environments/environment';
 import { LoggerService } from './logger.service';
 import { getStoredSessionUser } from '../auth/session.util';
 import { UserApiService } from './user-api.service';
+import { resolveImageUrl } from '../../shared/util/image.util';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +43,7 @@ export class OrderApiService {
         categoryId: '',
         price: item.price || 0,
         description: '',
-        coverImage: item.coverImage || '',
+        coverImage: resolveImageUrl(item.coverImage),
         publisher: '',
         publishedYear: 0,
         pages: 0,
