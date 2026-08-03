@@ -187,6 +187,21 @@ export class AuthStore {
     }
   }
 
+  async setGoogleSession(token: string, user: User): Promise<void> {
+    const userWithToken = { ...user, token };
+    this.persistSession(token, userWithToken);
+    this.state.set({ user: userWithToken, token, error: null });
+
+    if (user.role !== 'admin') {
+      try {
+        const products = await this.productApi.getProducts();
+        await this.cartStore.syncOnLogin(user.id, products);
+      } catch {
+        // Ignored
+      }
+    }
+  }
+
   logout() {
     this.clearPersistedSession();
     this.cartStore.clearOnLogout();

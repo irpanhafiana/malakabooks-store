@@ -1,9 +1,10 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, OnInit, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { AuthStore } from '../../../store/auth.store';
+import { GoogleAuthService } from '../../../core/services/google-auth.service';
 import { InputComponent } from '../../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 
@@ -16,8 +17,9 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
   private readonly authStore = inject(AuthStore);
+  private readonly googleAuthService = inject(GoogleAuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
@@ -34,6 +36,23 @@ export class LoginComponent implements OnInit {
     } else if (reason === 'unauthorized') {
       this.sessionMessage.set('Anda tidak memiliki akses. Silakan masuk kembali.');
     }
+
+    this.googleAuthService.initializeGsi((response: any) => {
+      this.googleAuthService.handleCredentialResponse(response);
+    });
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      const googleBtn = document.getElementById('google-button');
+      if (googleBtn) {
+        this.googleAuthService.renderButton(googleBtn);
+      }
+    }, 100);
+  }
+
+  loginWithGoogle() {
+    this.googleAuthService.promptLogin();
   }
 
   usernameControl = new FormControl('', [Validators.required]);

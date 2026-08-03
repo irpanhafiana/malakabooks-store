@@ -59,7 +59,7 @@
 
       <!-- Social Logins -->
       <div class="flex items-center justify-center gap-4">
-        <app-button type="button" variant="outline" customClass="!rounded-full !w-11 !h-11 !p-0">
+        <app-button type="button" (click)="loginWithGoogle()" variant="outline" customClass="!rounded-full !w-11 !h-11 !p-0">
           <i class="bx bxl-google text-lg text-rose-500"></i>
         </app-button>
         <app-button type="button" variant="outline" customClass="!rounded-full !w-11 !h-11 !p-0">
@@ -68,6 +68,11 @@
         <app-button type="button" variant="outline" customClass="!rounded-full !w-11 !h-11 !p-0">
           <i class="bx bxl-facebook text-lg text-blue-600"></i>
         </app-button>
+      </div>
+
+      <!-- Google Official Button Render Target -->
+      <div class="w-full flex justify-center mt-2">
+        <div id="google-button"></div>
       </div>
     </div>
 
