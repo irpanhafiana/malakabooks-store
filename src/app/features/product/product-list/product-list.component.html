@@ -100,7 +100,7 @@
 
 <!-- Filters Drawer (Modal on Desktop, Bottom Sheet on Mobile) -->
 @if (screen.isDesktop()) {
-<app-modal [isOpen]="isFiltersOpen()" (isOpenChange)="isFiltersOpen.set($event)" title="Urutkan & Filter" maxWidth="max-w-md">
+<app-modal [(isOpen)]="isFiltersOpen" title="Urutkan & Filter" maxWidth="max-w-md" [hasFooter]="false">
   <ng-container *ngTemplateOutlet="filterContent"></ng-container>
 </app-modal>
 } @else {

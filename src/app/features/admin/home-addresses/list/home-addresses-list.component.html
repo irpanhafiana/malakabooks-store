@@ -86,13 +86,15 @@
 
   <!-- Add/Edit Modal Form -->
   <app-modal [(isOpen)]="isModalOpen" [title]="editAddress() ? 'Edit Alamat' : 'Tambah Alamat Baru'">
-    <app-home-addresses-form #addrForm [address]="editAddress()" (onCancel)="closeModal()" (onSave)="closeModal()">
+    <app-home-addresses-form #addrForm [address]="editAddress()" (onCancel)="closeModal()" (onSave)="closeModal()"
+      class="p-4">
     </app-home-addresses-form>
     <div modal-footer class="flex justify-end gap-3 w-full">
       <app-admin-button type="button" variant="ghost" (click)="closeModal()">
         Batal
       </app-admin-button>
-      <app-admin-button type="button" variant="primary" (click)="addrForm.onSubmit()" [disabled]="addrForm.form.invalid || addrForm.isLoading()">
+      <app-admin-button type="button" variant="primary" (click)="addrForm.onSubmit()"
+        [disabled]="addrForm.form.invalid || addrForm.isLoading()">
         Simpan Alamat
       </app-admin-button>
     </div>

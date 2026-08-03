@@ -94,7 +94,7 @@
   </form>
 
   <!-- Image Preview Modal -->
-  <app-modal [isOpen]="previewImage() !== null" title="Lihat Foto" (isOpenChange)="!$event ? closeImagePreview() : null">
+  <app-modal [isOpen]="previewImage() !== null" title="Lihat Foto" (isOpenChange)="!$event ? closeImagePreview() : null" [hasFooter]="false">
     @if (previewImage()) {
       <div class="flex items-center justify-center">
         <img [src]="previewImage()" class="max-w-full h-auto max-h-[70vh] object-contain rounded-lg">

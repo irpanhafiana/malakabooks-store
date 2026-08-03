@@ -96,11 +96,13 @@
 
   <!-- Add/Edit Warehouse Modal Form -->
   <app-modal [(isOpen)]="isModalOpen" [title]="editWarehouse() ? 'Edit Gudang' : 'Tambah Gudang Baru'">
-    <app-warehouses-form #whForm [warehouse]="editWarehouse()" (onCancel)="closeModal()" (onSave)="closeModal()">
+    <app-warehouses-form #whForm [warehouse]="editWarehouse()" (onCancel)="closeModal()" (onSave)="closeModal()"
+      class="p-4">
     </app-warehouses-form>
     <div modal-footer class="flex justify-end gap-3 w-full">
       <app-admin-button (click)="closeModal()" type="button" variant="outline" size="sm">Batal</app-admin-button>
-      <app-admin-button (click)="whForm.onSubmitForm()" [disabled]="whForm.formGroup.invalid" type="button" variant="primary" size="sm">
+      <app-admin-button (click)="whForm.onSubmitForm()" [disabled]="whForm.formGroup.invalid" type="button"
+        variant="primary" size="sm">
         Simpan
       </app-admin-button>
     </div>

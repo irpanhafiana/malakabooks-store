@@ -118,9 +118,9 @@
 
 <!-- Review Dialog (Modal on Desktop, Bottom Sheet on Mobile) -->
 @if (screen.isDesktop()) {
-<app-modal [isOpen]="isReviewSheetOpen()" (isOpenChange)="isReviewSheetOpen.set($event)" title="Tulis Ulasan" maxWidth="max-w-lg">
+<app-modal [(isOpen)]="isReviewSheetOpen" title="Tulis Ulasan" maxWidth="max-w-lg">
   <ng-container *ngTemplateOutlet="reviewFormContent"></ng-container>
-  <div modal-footer class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 w-full">
+  <div modal-footer class="flex items-center gap-3 w-full">
     <app-button variant="outline" size="md" [fullWidth]="true" class="flex-1" (click)="closeReviewSheet()">Batal</app-button>
     <app-button variant="primary" size="md" [fullWidth]="true" class="flex-1" [disabled]="reviewRating() === 0 || !reviewComment().trim() || isSubmittingReview()" (click)="submitReview()">
       {{ isSubmittingReview() ? 'Mengirim...' : 'Kirim Ulasan' }}

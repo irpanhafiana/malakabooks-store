@@ -56,7 +56,7 @@
 
 <!-- Chat Dialog (Modal on Desktop, Bottom Sheet on Mobile) -->
 @if (screen.isDesktop()) {
-<app-modal [isOpen]="isChatOpen()" (isOpenChange)="isChatOpen.set($event)" title="Detail Komplain" maxWidth="max-w-2xl">
+<app-modal [(isOpen)]="isChatOpen" title="Detail Komplain" maxWidth="max-w-2xl" [hasFooter]="false">
   <ng-container *ngTemplateOutlet="chatContent"></ng-container>
 </app-modal>
 } @else {
@@ -174,7 +174,7 @@
   </div>
 
   <!-- Image Preview Modal for Chat -->
-  <app-modal [isOpen]="previewImage() !== null" title="Lihat Foto" (isOpenChange)="!$event ? closeImagePreview() : null">
+  <app-modal [isOpen]="previewImage() !== null" title="Lihat Foto" (isOpenChange)="!$event ? closeImagePreview() : null" [hasFooter]="false">
     @if (previewImage()) {
       <div class="flex items-center justify-center">
         <img [src]="previewImage()" class="max-w-full h-auto max-h-[60vh] object-contain rounded-lg">
@@ -186,9 +186,9 @@
 
 <!-- Ajukan Komplain Dialog (Modal on Desktop, Bottom Sheet on Mobile) -->
 @if (screen.isDesktop()) {
-<app-modal [isOpen]="isFormOpen()" (isOpenChange)="isFormOpen.set($event)" title="Ajukan Komplain" maxWidth="max-w-lg">
+<app-modal [(isOpen)]="isFormOpen" title="Ajukan Komplain" maxWidth="max-w-lg">
   <ng-container *ngTemplateOutlet="formContent"></ng-container>
-  <div modal-footer class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 w-full">
+  <div modal-footer class="flex items-center gap-3 w-full">
     <app-button type="button" (click)="isFormOpen.set(false)" variant="outline" size="md" [fullWidth]="true"
       class="flex-1">Batal</app-button>
     <app-button type="button" (click)="submitComplaint()" [disabled]="form.invalid" [loading]="submitting()" variant="primary" size="md"
