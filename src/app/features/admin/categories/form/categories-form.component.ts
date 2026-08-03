@@ -61,7 +61,7 @@ export class CategoriesFormComponent {
       icon: this.iconControl.value || 'book-open'
     };
 
-    await this.productStore.saveCategory(cData);
+    await this.productStore.saveCategory(cData, { showToast: false });
     this.alertService.success('Berhasil!', 'Data kategori berhasil disimpan.');
     this.onSave.emit();
   }

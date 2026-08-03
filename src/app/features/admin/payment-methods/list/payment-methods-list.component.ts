@@ -70,7 +70,7 @@ export class PaymentMethodsListComponent implements OnInit {
       'Apakah Anda yakin ingin menghapus metode pembayaran ini?'
     );
     if (isConfirmed) {
-      await this.paymentStore.deletePayment(id);
+      await this.paymentStore.deletePayment(id, { showToast: false });
       this.alertService.success('Berhasil!', 'Payment Method telah berhasil dihapus.');
     }
   }

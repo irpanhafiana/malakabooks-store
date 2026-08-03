@@ -1,5 +1,5 @@
 import { Component, inject, signal, HostListener, ElementRef } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
 import { CartStore } from '../../../store/cart.store';
 import { ProductStore } from '../../../store/product.store';
@@ -10,7 +10,7 @@ import { Product } from '../../../core/models';
 @Component({
   selector: 'app-desktop-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, SearchBarComponent, SpinnerComponent],
+  imports: [RouterLink, SearchBarComponent, SpinnerComponent],
   templateUrl: './desktop-header.component.html',
   styleUrl: './desktop-header.component.css',
   host: {

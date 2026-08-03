@@ -102,7 +102,7 @@ export class PaymentMethodsFormComponent {
       }))
     };
 
-    await this.paymentStore.savePayment(pData);
+    await this.paymentStore.savePayment(pData, { showToast: false });
     this.alertService.success('Berhasil!', 'Data payment method berhasil disimpan.');
     this.onSave.emit();
   }

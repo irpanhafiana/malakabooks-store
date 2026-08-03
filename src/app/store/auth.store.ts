@@ -216,13 +216,6 @@ export class AuthStore {
       return true;
     } catch (err: any) {
       this.logger.error('AuthStore.register', err);
-      const errorResponse = err?.error;
-      if (errorResponse && errorResponse.errors) {
-        const validationErrors = Object.values(errorResponse.errors).join('\n');
-        this.toastService.error(validationErrors || errorResponse.statusMessage || 'Pendaftaran gagal.');
-      } else {
-        this.toastService.error(errorResponse?.statusMessage || 'Terjadi kesalahan koneksi server.');
-      }
       return false;
     }
   }
@@ -234,7 +227,6 @@ export class AuthStore {
       this.toastService.success('Profil berhasil diperbarui!');
       return true;
     } catch {
-      this.toastService.error('Gagal memperbarui profil.');
       return false;
     }
   }
@@ -250,10 +242,8 @@ export class AuthStore {
         this.toastService.success('Alamat berhasil ditambahkan!');
         return true;
       }
-      this.toastService.error('Gagal menambahkan alamat.');
       return false;
     } catch {
-      this.toastService.error('Gagal menambahkan alamat.');
       return false;
     }
   }
@@ -269,10 +259,8 @@ export class AuthStore {
         this.toastService.success('Alamat berhasil diperbarui!');
         return true;
       }
-      this.toastService.error('Gagal memperbarui alamat.');
       return false;
     } catch {
-      this.toastService.error('Gagal memperbarui alamat.');
       return false;
     }
   }
@@ -288,10 +276,8 @@ export class AuthStore {
         this.toastService.success('Alamat berhasil dihapus!');
         return true;
       }
-      this.toastService.error('Gagal menghapus alamat.');
       return false;
     } catch {
-      this.toastService.error('Gagal menghapus alamat.');
       return false;
     }
   }

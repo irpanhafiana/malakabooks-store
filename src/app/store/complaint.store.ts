@@ -33,7 +33,6 @@ export class ComplaintStore {
       this.state.update(s => ({ ...s, complaints, loading: false }));
     } catch {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal memuat daftar komplain.');
     }
   }
 
@@ -44,48 +43,59 @@ export class ComplaintStore {
       this.state.update(s => ({ ...s, complaints, loading: false }));
     } catch {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal memuat semua komplain.');
     }
   }
 
-  async create(payload: CreateComplaintPayload, files?: File[]): Promise<boolean> {
+  async create(payload: CreateComplaintPayload, files?: File[], options?: { showToast?: boolean }): Promise<boolean> {
     try {
       const created = await this.complaintApi.createComplaint(payload, files);
       this.state.update(s => ({ ...s, complaints: [created, ...s.complaints] }));
-      this.toastService.success('Komplain berhasil dikirim.');
+      if (options?.showToast !== false) {
+        this.toastService.success('Komplain berhasil dikirim.');
+      }
       return true;
     } catch {
-      this.toastService.error('Gagal mengirim komplain.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Gagal mengirim komplain.');
+      }
       return false;
     }
   }
 
-  async respond(id: string, payload: RespondComplaintPayload, files?: File[]): Promise<boolean> {
+  async respond(id: string, payload: RespondComplaintPayload, files?: File[], options?: { showToast?: boolean }): Promise<boolean> {
     try {
       const updated = await this.complaintApi.respondComplaint(id, payload, files);
       this.state.update(s => ({
         ...s,
         complaints: s.complaints.map(c => c.id === id ? updated : c)
       }));
-      this.toastService.success('Respons berhasil disimpan.');
+      if (options?.showToast !== false) {
+        this.toastService.success('Respons berhasil disimpan.');
+      }
       return true;
     } catch {
-      this.toastService.error('Gagal menyimpan respons.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Gagal menyimpan respons.');
+      }
       return false;
     }
   }
 
-  async reply(id: string, payload: ReplyComplaintPayload, files?: File[]): Promise<boolean> {
+  async reply(id: string, payload: ReplyComplaintPayload, files?: File[], options?: { showToast?: boolean }): Promise<boolean> {
     try {
       const updated = await this.complaintApi.replyComplaint(id, payload, files);
       this.state.update(s => ({
         ...s,
         complaints: s.complaints.map(c => c.id === id ? updated : c)
       }));
-      this.toastService.success('Balasan berhasil dikirim.');
+      if (options?.showToast !== false) {
+        this.toastService.success('Balasan berhasil dikirim.');
+      }
       return true;
     } catch {
-      this.toastService.error('Gagal mengirim balasan.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Gagal mengirim balasan.');
+      }
       return false;
     }
   }

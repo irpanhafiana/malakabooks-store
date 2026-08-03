@@ -68,7 +68,7 @@ export class PromotionBannersListComponent implements OnInit {
       'Apakah Anda yakin ingin menghapus promotion banner ini?'
     );
     if (isConfirmed) {
-      await this.bannerStore.deleteBanner(id);
+      await this.bannerStore.deleteBanner(id, { showToast: false });
       this.alertService.success('Berhasil!', 'Promosi telah berhasil dihapus.');
     }
   }

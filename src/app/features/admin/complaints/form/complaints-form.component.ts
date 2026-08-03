@@ -89,7 +89,7 @@ export class ComplaintsFormComponent {
       senderId: adminUser.id,
       senderType: 'admin',
       additionalImages: this.replyImages()
-    }, this.replyImageFiles());
+    }, this.replyImageFiles(), { showToast: false });
     this.submitting.set(false);
     if (ok) {
       this.alertService.success('Berhasil!', 'Respons komplain berhasil dikirim.');

@@ -22,11 +22,11 @@ export class AuthorStore extends BaseCrudStore<Author> {
     return this.load();
   }
 
-  async saveAuthor(author: Partial<Author>, photoFile?: File) {
-    return this.save(author, photoFile);
+  async saveAuthor(author: Partial<Author>, photoFile?: File, options?: { showToast?: boolean }) {
+    return this.save(author, photoFile, options);
   }
 
-  async deleteAuthor(id: string) {
-    return this.delete(id);
+  async deleteAuthor(id: string, options?: { showToast?: boolean }) {
+    return this.delete(id, options);
   }
 }

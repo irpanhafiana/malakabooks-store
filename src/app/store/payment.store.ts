@@ -33,36 +33,45 @@ export class PaymentStore {
       this.state.update(s => ({ ...s, payments, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar payment dari server.' }));
-      this.toastService.error('Gagal memuat metode pembayaran.');
     }
   }
 
-  async savePayment(payment: Partial<Payment>) {
+  async savePayment(payment: Partial<Payment>, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const saved = await this.paymentApi.savePayment(payment);
       await this.loadPayments();
-      this.toastService.success(`Metode Pembayaran "${saved.name}" berhasil disimpan!`);
+      if (options?.showToast !== false) {
+        this.toastService.success(`Metode Pembayaran "${saved.name}" berhasil disimpan!`);
+      }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menyimpan metode pembayaran.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Gagal menyimpan metode pembayaran.');
+      }
     }
   }
 
-  async deletePayment(id: string) {
+  async deletePayment(id: string, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const success = await this.paymentApi.deletePayment(id);
       if (success) {
         await this.loadPayments();
-        this.toastService.success('Metode Pembayaran berhasil dihapus.');
+        if (options?.showToast !== false) {
+          this.toastService.success('Metode Pembayaran berhasil dihapus.');
+        }
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Metode Pembayaran tidak ditemukan.');
+        if (options?.showToast !== false) {
+          this.toastService.error('Metode Pembayaran tidak ditemukan.');
+        }
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menghapus metode pembayaran.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Gagal menghapus metode pembayaran.');
+      }
     }
   }
 }

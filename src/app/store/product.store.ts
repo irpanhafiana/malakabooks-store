@@ -154,7 +154,6 @@ export class ProductStore {
       this.state.update(s => ({ ...s, categories, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar kategori dari server.' }));
-      this.toastService.error('Gagal memuat daftar kategori.');
     }
   }
 
@@ -209,32 +208,42 @@ export class ProductStore {
   // Penulisan produk/buku admin ditangani oleh ItemStore/ItemApiService (jalur Item+Book yang
   // sesuai kontrak backend). saveProduct/deleteProduct lama dihapus — lihat catatan di ProductApiService.
 
-  async saveCategory(category: Category) {
+  async saveCategory(category: Category, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const saved = await this.categoryApi.saveCategory(category);
       await this.loadCategories();
-      this.toastService.success(`Category "${saved.name}" saved successfully!`);
+      if (options?.showToast !== false) {
+        this.toastService.success(`Category "${saved.name}" saved successfully!`);
+      }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to save category.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Failed to save category.');
+      }
     }
   }
 
-  async deleteCategory(id: string) {
+  async deleteCategory(id: string, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const success = await this.categoryApi.deleteCategory(id);
       if (success) {
         await this.loadCategories();
-        this.toastService.success('Category deleted successfully.');
+        if (options?.showToast !== false) {
+          this.toastService.success('Category deleted successfully.');
+        }
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Category not found.');
+        if (options?.showToast !== false) {
+          this.toastService.error('Category not found.');
+        }
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to delete category.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Failed to delete category.');
+      }
     }
   }
 }

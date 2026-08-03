@@ -67,7 +67,7 @@ export class AuthorsListComponent implements OnInit {
       'Apakah Anda yakin ingin menghapus author ini?'
     );
     if (isConfirmed) {
-      await this.authorStore.deleteAuthor(id);
+      await this.authorStore.deleteAuthor(id, { showToast: false });
       this.alertService.success('Berhasil!', 'Author telah berhasil dihapus.');
     }
   }

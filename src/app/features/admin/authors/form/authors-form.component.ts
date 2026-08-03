@@ -123,7 +123,7 @@ export class AuthorsFormComponent {
       photoUrl: this.photoUrlControl.value || ''
     };
 
-    await this.authorStore.saveAuthor(aData, this.selectedPhotoFile || undefined);
+    await this.authorStore.saveAuthor(aData, this.selectedPhotoFile || undefined, { showToast: false });
     this.alertService.success('Berhasil!', 'Data penulis berhasil disimpan.');
     this.onSave.emit();
   }

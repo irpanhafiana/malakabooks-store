@@ -33,7 +33,6 @@ export class PromotionBannerStore {
       this.state.update(s => ({ ...s, banners, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar banner dari server.' }));
-      this.toastService.error('Failed to load banners.');
     }
   }
 
@@ -47,7 +46,7 @@ export class PromotionBannerStore {
     }
   }
 
-  async saveBanner(request: CreatePromotionBannerRequest | UpdatePromotionBannerRequest, id?: string, imageFile?: File) {
+  async saveBanner(request: CreatePromotionBannerRequest | UpdatePromotionBannerRequest, id?: string, imageFile?: File, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const saved = id 
@@ -56,28 +55,38 @@ export class PromotionBannerStore {
       
       if (saved) {
         await this.loadAdminBanners();
-        this.toastService.success(`Banner "${saved.title}" saved successfully!`);
+        if (options?.showToast !== false) {
+          this.toastService.success(`Banner "${saved.title}" saved successfully!`);
+        }
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to save banner.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Failed to save banner.');
+      }
     }
   }
 
-  async deleteBanner(id: string) {
+  async deleteBanner(id: string, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const success = await this.bannerApi.deleteBanner(id);
       if (success) {
         await this.loadAdminBanners();
-        this.toastService.success('Banner deleted successfully.');
+        if (options?.showToast !== false) {
+          this.toastService.success('Banner deleted successfully.');
+        }
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Banner not found.');
+        if (options?.showToast !== false) {
+          this.toastService.error('Banner not found.');
+        }
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Failed to delete banner.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Failed to delete banner.');
+      }
     }
   }
 }

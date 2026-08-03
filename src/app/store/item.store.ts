@@ -33,38 +33,47 @@ export class ItemStore {
       this.state.update(s => ({ ...s, items, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat produk.' }));
-      this.toastService.error('Gagal memuat produk.');
     }
   }
 
-  async saveItem(item: Partial<CatalogItem>) {
+  async saveItem(item: Partial<CatalogItem>, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const saved = await this.itemApi.saveItem(item);
       await this.loadItems();
-      this.toastService.success(`Produk berhasil disimpan!`);
+      if (options?.showToast !== false) {
+        this.toastService.success(`Produk berhasil disimpan!`);
+      }
       return saved;
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menyimpan produk.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Gagal menyimpan produk.');
+      }
       throw e;
     }
   }
 
-  async deleteItem(id: string) {
+  async deleteItem(id: string, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const success = await this.itemApi.deleteItem(id);
       if (success) {
         await this.loadItems();
-        this.toastService.success('Item berhasil dihapus.');
+        if (options?.showToast !== false) {
+          this.toastService.success('Item berhasil dihapus.');
+        }
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Item gagal dihapus.');
+        if (options?.showToast !== false) {
+          this.toastService.error('Item gagal dihapus.');
+        }
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menghapus item.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Gagal menghapus item.');
+      }
     }
   }
 }

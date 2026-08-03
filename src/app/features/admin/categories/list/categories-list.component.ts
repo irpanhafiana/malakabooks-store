@@ -71,7 +71,7 @@ export class CategoriesListComponent implements OnInit {
       'Apakah Anda yakin ingin menghapus kategori ini? Asosiasi produk dengan kategori ini akan dihapus.'
     );
     if (isConfirmed) {
-      await this.productStore.deleteCategory(id);
+      await this.productStore.deleteCategory(id, { showToast: false });
       this.alertService.success('Berhasil!', 'Kategori telah berhasil dihapus.');
     }
   }

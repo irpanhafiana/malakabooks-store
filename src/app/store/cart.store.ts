@@ -174,7 +174,6 @@ export class CartStore {
         }
       } catch {
         this.persistLocal(previousItems);
-        this.toastService.error('Terjadi kesalahan koneksi saat menambah keranjang.');
         return;
       } finally {
         this.state.update(s => ({ ...s, loading: false }));

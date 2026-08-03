@@ -36,37 +36,46 @@ export abstract class BaseCrudStore<T extends { id?: string; name?: string; titl
     } catch {
       const errorMsg = `Gagal memuat daftar ${this.entityName}.`;
       this.state.update(s => ({ ...s, loading: false, error: errorMsg }));
-      this.toastService.error(errorMsg);
     }
   }
 
-  async save(item: Partial<T>, file?: File) {
+  async save(item: Partial<T>, file?: File, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const saved = await this.api.save(item, file);
       await this.load();
       const displayName = saved.name || saved.title || this.entityName;
-      this.toastService.success(`${this.entityName} "${displayName}" berhasil disimpan!`);
+      if (options?.showToast !== false) {
+        this.toastService.success(`${this.entityName} "${displayName}" berhasil disimpan!`);
+      }
     } catch {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error(`Gagal menyimpan ${this.entityName}.`);
+      if (options?.showToast !== false) {
+        this.toastService.error(`Gagal menyimpan ${this.entityName}.`);
+      }
     }
   }
 
-  async delete(id: string) {
+  async delete(id: string, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const success = await this.api.delete(id);
       if (success) {
         await this.load();
-        this.toastService.success(`${this.entityName} berhasil dihapus.`);
+        if (options?.showToast !== false) {
+          this.toastService.success(`${this.entityName} berhasil dihapus.`);
+        }
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error(`${this.entityName} tidak ditemukan.`);
+        if (options?.showToast !== false) {
+          this.toastService.error(`${this.entityName} tidak ditemukan.`);
+        }
       }
     } catch {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error(`Gagal menghapus ${this.entityName}.`);
+      if (options?.showToast !== false) {
+        this.toastService.error(`Gagal menghapus ${this.entityName}.`);
+      }
     }
   }
 }

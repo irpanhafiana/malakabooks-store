@@ -184,9 +184,9 @@ export class PromotionBannersFormComponent {
     };
 
     if (this.banner() && this.banner()!.id) {
-      await this.bannerStore.saveBanner(data as UpdatePromotionBannerRequest, this.banner()!.id, this.selectedImageFile || undefined);
+      await this.bannerStore.saveBanner(data as UpdatePromotionBannerRequest, this.banner()!.id, this.selectedImageFile || undefined, { showToast: false });
     } else {
-      await this.bannerStore.saveBanner(data, undefined, this.selectedImageFile || undefined);
+      await this.bannerStore.saveBanner(data, undefined, this.selectedImageFile || undefined, { showToast: false });
     }
     this.alertService.success('Berhasil!', 'Data banner berhasil disimpan.');
     this.onSave.emit();

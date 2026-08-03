@@ -39,7 +39,6 @@ export class OrderStore {
       this.state.update(s => ({ ...s, orders, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal memuat daftar pesanan Anda.');
     }
   }
 
@@ -50,7 +49,6 @@ export class OrderStore {
       this.state.update(s => ({ ...s, currentOrder: order, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal memuat detail pesanan.');
     }
   }
 
@@ -61,11 +59,10 @@ export class OrderStore {
       this.state.update(s => ({ ...s, orders, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal memuat daftar pesanan admin.');
     }
   }
 
-  async placeOrder(orderData: Omit<Order, 'id' | 'orderDate' | 'status' | 'trackingNumber'>): Promise<Order | null> {
+  async placeOrder(orderData: Omit<Order, 'id' | 'orderDate' | 'status' | 'trackingNumber'>, options?: { showToast?: boolean }): Promise<Order | null> {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const fullOrder: Order = {
@@ -83,16 +80,20 @@ export class OrderStore {
         currentOrder: placed,
         loading: false
       }));
-      this.toastService.success('Pesanan berhasil dibuat!');
+      if (options?.showToast !== false) {
+        this.toastService.success('Pesanan berhasil dibuat!');
+      }
       return placed;
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal membuat pesanan.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Gagal membuat pesanan.');
+      }
       return null;
     }
   }
 
-  async updateOrderStatus(orderId: string, status: OrderStatus) {
+  async updateOrderStatus(orderId: string, status: OrderStatus, options?: { showToast?: boolean }) {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const success = await this.orderApi.updateOrderStatus(orderId, status);
@@ -102,18 +103,24 @@ export class OrderStore {
           orders: s.orders.map(o => o.id === orderId ? { ...o, status } : o),
           loading: false
         }));
-        this.toastService.success(`Status pesanan #${orderId} diperbarui menjadi ${status}.`);
+        if (options?.showToast !== false) {
+          this.toastService.success(`Status pesanan #${orderId} diperbarui menjadi ${status}.`);
+        }
       } else {
         // The API returns false for any failure (network/server), so we must not
         // claim "not found". Resync from the server to discard the optimistic
         // assumption and surface a generic, accurate error.
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Gagal memperbarui status pesanan. Silakan coba lagi.');
+        if (options?.showToast !== false) {
+          this.toastService.error('Gagal memperbarui status pesanan. Silakan coba lagi.');
+        }
         await this.loadAllOrders();
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal memperbarui status pesanan.');
+      if (options?.showToast !== false) {
+        this.toastService.error('Gagal memperbarui status pesanan.');
+      }
     }
   }
 
