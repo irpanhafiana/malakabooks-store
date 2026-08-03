@@ -19,6 +19,9 @@ import { ToastService } from '../../../core/services/toast.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-mardika-kopi-detail',
   standalone: true,
+  host: {
+    class: 'flex flex-col flex-1 min-h-0 w-full overflow-hidden'
+  },
   imports: [
     RouterLink,
     PriceComponent,

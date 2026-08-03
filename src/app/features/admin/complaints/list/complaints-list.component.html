@@ -83,9 +83,20 @@
 </div>
 
 <!-- Respond Modal -->
-<app-modal title="Respons Komplain" [(isOpen)]="isModalOpen">
-  @if (selected()) {
-  <app-complaints-form [complaint]="selected()" (onCancel)="closeModal()" (onSave)="closeModal()">
-  </app-complaints-form>
-  }
+<app-modal [(isOpen)]="isModalOpen" title="Tindak Lanjut Komplain">
+  <app-complaints-form #complaintsForm [complaint]="selected()" (onCancel)="closeModal()" (onSave)="closeModal()"></app-complaints-form>
+  <div modal-footer class="flex justify-end gap-3 w-full">
+    <app-admin-button type="button" variant="outline" class="flex-1" (click)="closeModal()">
+      Batal
+    </app-admin-button>
+    <app-admin-button
+      type="button"
+      class="flex-1"
+      (click)="complaintsForm.submitRespond()"
+      [disabled]="complaintsForm.respondForm.invalid"
+      [loading]="complaintsForm.submitting()"
+    >
+      Simpan Respons
+    </app-admin-button>
+  </div>
 </app-modal>

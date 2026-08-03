@@ -96,10 +96,15 @@
   </div>
   }
 
-  <!-- Add/Edit Stock Modal Form -->
   <app-modal [(isOpen)]="isModalOpen" [title]="editStock() ? 'Edit Stok Gudang' : 'Tambah Stok Gudang Baru'">
-    <app-stocks-form [stock]="editStock()" (onCancel)="closeModal()" (onSave)="closeModal()">
+    <app-stocks-form #stockForm [stock]="editStock()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-stocks-form>
+    <div modal-footer class="flex justify-end gap-3 w-full">
+      <app-admin-button (click)="closeModal()" type="button" variant="outline" size="sm">Batal</app-admin-button>
+      <app-admin-button (click)="stockForm.onSubmitForm()" [disabled]="stockForm.formGroup.invalid" type="button" variant="primary" size="sm">
+        Simpan
+      </app-admin-button>
+    </div>
   </app-modal>
 
 </div>

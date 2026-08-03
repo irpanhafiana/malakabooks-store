@@ -6,7 +6,6 @@ import { ComplaintStore } from '../../../../store/complaint.store';
 import { AuthStore } from '../../../../store/auth.store';
 import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { TextareaComponent } from '../../../../shared/ui/textarea/textarea.component';
-import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { effect } from '@angular/core';
@@ -20,7 +19,6 @@ import { effect } from '@angular/core';
     ReactiveFormsModule, 
     AdminSelectComponent, 
     TextareaComponent, 
-    AdminButtonComponent,
     ModalComponent
   ],
   templateUrl: './complaints-form.component.html'

@@ -98,8 +98,13 @@
   <!-- Add/Edit Modal Form -->
   <app-modal [(isOpen)]="isModalOpen"
     [title]="editPayment() ? 'Edit Metode Pembayaran' : 'Tambah Metode Pembayaran Baru'">
-    <app-payment-methods-form [payment]="editPayment()" (onCancel)="closeModal()" (onSave)="closeModal()">
+    <app-payment-methods-form #pmForm [payment]="editPayment()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-payment-methods-form>
+    <div modal-footer class="flex justify-end gap-3 w-full">
+      <app-admin-button (click)="closeModal()" type="button" variant="outline" size="sm">Batal</app-admin-button>
+      <app-admin-button (click)="pmForm.onSubmitForm()" [disabled]="pmForm.paymentForm.invalid" type="button" variant="primary"
+        size="sm">Simpan Payment</app-admin-button>
+    </div>
   </app-modal>
 
 </div>

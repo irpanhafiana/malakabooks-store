@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Warehouse } from '../../../../core/models';
 import { WarehouseStore } from '../../../../store/warehouse.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
-import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AdminCheckboxComponent } from '../../../../shared/ui/admin-checkbox/admin-checkbox.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
@@ -11,7 +10,7 @@ import { AlertService } from '../../../../core/services/alert.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-warehouses-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminCheckboxComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminCheckboxComponent],
   templateUrl: './warehouses-form.component.html'
 })
 export class WarehousesFormComponent {

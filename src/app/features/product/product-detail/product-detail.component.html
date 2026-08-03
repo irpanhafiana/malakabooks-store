@@ -112,7 +112,8 @@
           <span class="text-[13px] text-slate-500 font-medium">{{ product()!.totalReviews * 12 + (product()!.stock %
             7) + 5 }} Terjual</span>
         </div>
-        <h1 class="text-xl lg:text-3xl font-display font-black text-slate-800 tracking-tight leading-[1.15]">{{
+      </div>
+      <h1 class="text-xl lg:text-3xl font-display font-black text-slate-800 tracking-tight leading-[1.15]">{{
           product()!.title
           }}
         </h1>
@@ -156,7 +157,6 @@
 
 
     </div>
-  </div>
 
   <!-- Detail Information Tabs -->
   <div class="mt-8 pb-4">
@@ -266,8 +266,7 @@
 </div>
 
 <!-- Fixed Footer Action Bar -->
-<div
-  class="shrink-0 border-t border-slate-200/60 bg-white/95 backdrop-blur-xl p-4 flex items-center gap-3 relative z-50">
+<div class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 z-50">
   <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
     [fullWidth]="true" class="flex-1">
     + Keranjang

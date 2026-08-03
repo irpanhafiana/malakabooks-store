@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Author } from '../../../../core/models';
 import { AuthorStore } from '../../../../store/author.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
-import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { EditorComponent } from '../../../../shared/ui/editor/editor.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
@@ -11,7 +10,7 @@ import { AlertService } from '../../../../core/services/alert.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-authors-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, EditorComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, EditorComponent],
   template: `
     <form [formGroup]="authorForm" (ngSubmit)="onSubmitForm()" class="flex flex-col gap-5">
       <app-admin-input
@@ -56,13 +55,6 @@ import { AlertService } from '../../../../core/services/alert.service';
         </div>
       </div>
 
-      <!-- Actions -->
-      <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
-        <app-admin-button type="button" variant="outline" (click)="onCancel.emit()">Batal</app-admin-button>
-        <app-admin-button type="submit" variant="primary" [disabled]="authorForm.invalid || authorStore.loading()">
-          {{ authorStore.loading() ? 'Menyimpan...' : 'Simpan Penulis' }}
-        </app-admin-button>
-      </div>
     </form>
   `
 })
@@ -71,7 +63,7 @@ export class AuthorsFormComponent {
   readonly onCancel = output<void>();
   readonly onSave = output<void>();
 
-  protected readonly authorStore = inject(AuthorStore);
+  readonly authorStore = inject(AuthorStore);
   private readonly alertService = inject(AlertService);
   private readonly cdr = inject(ChangeDetectorRef);
 

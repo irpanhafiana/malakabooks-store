@@ -10,7 +10,7 @@
   <app-toast-container></app-toast-container>
 
   <app-modal [isOpen]="modalHandler.isDetailOpen()" (isOpenChange)="modalHandler.closeProductDetails()" title="Detail Produk"
-    maxWidth="max-w-4xl">
+    maxWidth="max-w-4xl" [noScroll]="true" [hasFooter]="false">
     <app-product-detail [productId]="modalHandler.selectedDetailId()"></app-product-detail>
   </app-modal>
 

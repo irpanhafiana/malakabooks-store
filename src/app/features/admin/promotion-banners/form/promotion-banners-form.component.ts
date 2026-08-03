@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { PromotionBanner, CreatePromotionBannerRequest, UpdatePromotionBannerRequest } from '../../../../core/models';
 import { PromotionBannerStore } from '../../../../store/promotion-banner.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
-import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AdminCheckboxComponent } from '../../../../shared/ui/admin-checkbox/admin-checkbox.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
@@ -11,7 +10,7 @@ import { AlertService } from '../../../../core/services/alert.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-promotion-banners-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminCheckboxComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminCheckboxComponent],
   template: `
     <form [formGroup]="bannerForm" (ngSubmit)="onSubmitForm()" class="flex flex-col gap-5">
       <app-admin-input
@@ -94,13 +93,6 @@ import { AlertService } from '../../../../core/services/alert.service';
         </div>
       </div>
 
-      <!-- Actions -->
-      <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
-        <app-admin-button type="button" variant="outline" (click)="onCancel.emit()">Batal</app-admin-button>
-        <app-admin-button type="submit" variant="primary" [disabled]="bannerForm.invalid || bannerStore.loading()">
-          {{ bannerStore.loading() ? 'Menyimpan...' : 'Simpan' }}
-        </app-admin-button>
-      </div>
     </form>
   `
 })
@@ -109,7 +101,7 @@ export class PromotionBannersFormComponent {
   readonly onCancel = output<void>();
   readonly onSave = output<void>();
 
-  protected readonly bannerStore = inject(PromotionBannerStore);
+  readonly bannerStore = inject(PromotionBannerStore);
   private readonly alertService = inject(AlertService);
   private readonly cdr = inject(ChangeDetectorRef);
 

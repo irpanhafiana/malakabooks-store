@@ -95,10 +95,15 @@
   </div>
   }
 
-  <!-- Add/Edit Author Modal Form -->
   <app-modal [(isOpen)]="isModalOpen" [title]="editAuthor() ? 'Edit Penulis' : 'Tambah Penulis Baru'">
-    <app-authors-form [author]="editAuthor()" (onCancel)="closeModal()" (onSave)="closeModal()">
+    <app-authors-form #authorsForm [author]="editAuthor()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-authors-form>
+    <div modal-footer class="flex justify-end gap-3 w-full">
+      <app-admin-button type="button" variant="outline" (click)="closeModal()">Batal</app-admin-button>
+      <app-admin-button type="button" variant="primary" (click)="authorsForm.onSubmitForm()" [disabled]="authorsForm.authorForm.invalid || authorsForm.authorStore.loading()">
+        Simpan Penulis
+      </app-admin-button>
+    </div>
   </app-modal>
 
 </div>

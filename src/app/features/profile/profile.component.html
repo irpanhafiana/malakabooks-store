@@ -168,14 +168,13 @@
     <app-input label="Alamat Email" placeholder="e.g. customer@example.com" type="email" [control]="emailControl"
       class="bg-slate-50 opacity-70 pointer-events-none"></app-input>
     <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="phoneControl"></app-input>
-
-    <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex items-center gap-3 mt-4 z-10">
-      <app-button type="button" (click)="showEditProfile.set(false)" variant="outline" size="md"
-        class="flex-1">Batal</app-button>
-      <app-button type="submit" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary"
-        size="md" class="flex-1">Simpan Profil</app-button>
-    </div>
   </form>
+  <div modal-footer class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 w-full">
+    <app-button type="button" (click)="showEditProfile.set(false)" variant="outline" size="md"
+      class="flex-1">Batal</app-button>
+    <app-button type="button" (click)="onSubmitProfile()" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary"
+      size="md" class="flex-1">Simpan Profil</app-button>
+  </div>
 </app-modal>
 
 <app-modal [isOpen]="showMockModal() !== null" (isOpenChange)="showMockModal.set(null)"
@@ -294,14 +293,13 @@
         class="bg-slate-50 opacity-70 pointer-events-none"></app-input>
       <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="phoneControl"></app-input>
     </div>
-
-    <div class="shrink-0 border-t border-slate-200/60 bg-white/85 backdrop-blur-xl p-4 flex items-center gap-3">
-      <app-button type="button" (click)="showEditProfile.set(false)" variant="outline" size="lg" [fullWidth]="true"
-        class="flex-1">Batal</app-button>
-      <app-button type="submit" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary"
-        size="lg" [fullWidth]="true" class="flex-1">Simpan Profil</app-button>
-    </div>
   </form>
+  <div class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 w-full">
+    <app-button type="button" (click)="showEditProfile.set(false)" variant="outline" size="lg" [fullWidth]="true"
+      class="flex-1">Batal</app-button>
+    <app-button type="button" (click)="onSubmitProfile()" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary"
+      size="lg" [fullWidth]="true" class="flex-1">Simpan Profil</app-button>
+  </div>
 </app-bottom-sheet>
 
 <!-- Mock Settings Settings Dialog -->

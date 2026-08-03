@@ -139,7 +139,7 @@
 
 <!-- Item Details (Modal on Desktop, Bottom Sheet on Mobile) -->
 @if (screen.isDesktop()) {
-<app-modal [isOpen]="isItemSheetOpen()" (isOpenChange)="isItemSheetOpen.set($event)" title="Detail Produk Kopi" maxWidth="max-w-4xl">
+<app-modal [isOpen]="isItemSheetOpen()" (isOpenChange)="isItemSheetOpen.set($event)" title="Detail Produk Kopi" maxWidth="max-w-4xl" [noScroll]="true" [hasFooter]="false">
   <app-mardika-kopi-detail [productId]="selectedKopiId()" (closed)="closeItemSheet()"></app-mardika-kopi-detail>
 </app-modal>
 } @else {

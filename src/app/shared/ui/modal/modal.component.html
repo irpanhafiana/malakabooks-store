@@ -18,7 +18,7 @@
     }
 
     <!-- Body -->
-    <div class="overflow-y-auto grow min-h-0 flex flex-col">
+    <div class="grow min-h-0 flex flex-col" [class.overflow-y-auto]="!noScroll()" [class.overflow-hidden]="noScroll()">
       <ng-content></ng-content>
     </div>
 

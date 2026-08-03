@@ -91,19 +91,6 @@
       <input type="file" accept="image/*" class="hidden" (change)="onReplyImageSelected($event)">
     </label>
 
-    <div class="sticky -bottom-5 -mx-5 -mb-5 bg-white border-t border-slate-100 px-5 py-4 flex justify-end gap-3 mt-4 z-10">
-      <app-admin-button type="button" variant="outline" class="flex-1" (click)="onCancel.emit()">
-        Batal
-      </app-admin-button>
-      <app-admin-button
-        type="submit"
-        class="flex-1"
-        [disabled]="respondForm.invalid"
-        [loading]="submitting()"
-      >
-        Simpan Respons
-      </app-admin-button>
-    </div>
   </form>
 
   <!-- Image Preview Modal -->

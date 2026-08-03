@@ -5,7 +5,6 @@ import { WarehouseStockStore } from '../../../../store/warehouse-stock.store';
 import { WarehouseStore } from '../../../../store/warehouse.store';
 import { ItemStore } from '../../../../store/item.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
-import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { computed } from '@angular/core';
@@ -14,7 +13,7 @@ import { computed } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-stocks-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminSelectComponent],
   templateUrl: './stocks-form.component.html'
 })
 export class StocksFormComponent {

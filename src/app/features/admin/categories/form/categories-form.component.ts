@@ -3,14 +3,13 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Category } from '../../../../core/models';
 import { ProductStore } from '../../../../store/product.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
-import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-categories-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent],
   templateUrl: './categories-form.component.html',
   styleUrl: './categories-form.component.css'
 })

@@ -96,10 +96,15 @@
   </div>
   }
 
-  <!-- Add/Edit Modal Form -->
   <app-modal [(isOpen)]="isModalOpen" [title]="editBanner() ? 'Edit Promosi' : 'Tambah Promosi Baru'">
-    <app-promotion-banners-form [banner]="editBanner()" (onCancel)="closeModal()" (onSave)="closeModal()">
+    <app-promotion-banners-form #bannerForm [banner]="editBanner()" (onCancel)="closeModal()" (onSave)="closeModal()">
     </app-promotion-banners-form>
+    <div modal-footer class="flex justify-end gap-3 w-full">
+      <app-admin-button type="button" variant="outline" (click)="closeModal()">Batal</app-admin-button>
+      <app-admin-button type="button" variant="primary" (click)="bannerForm.onSubmitForm()" [disabled]="bannerForm.bannerForm.invalid || bannerForm.bannerStore.loading()">
+        Simpan
+      </app-admin-button>
+    </div>
   </app-modal>
 
 </div>

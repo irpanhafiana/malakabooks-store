@@ -61,11 +61,25 @@
 @if (screen.isDesktop()) {
 <app-modal [isOpen]="showAddressForm()" (isOpenChange)="showAddressForm.set($event)" [title]="editingAddressId() ? 'Perbaharui Alamat' : 'Tambah Alamat Baru'" maxWidth="max-w-xl">
   <ng-container *ngTemplateOutlet="addressFormContent"></ng-container>
+  <div modal-footer class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 w-full">
+    <app-button type="button" (click)="cancelAddressForm()" variant="outline" size="md" [fullWidth]="true"
+      class="flex-1">Batal</app-button>
+    <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()"
+      [disabled]="addressForm.invalid" variant="primary" size="md" [fullWidth]="true" class="flex-1">Simpan
+      Alamat</app-button>
+  </div>
 </app-modal>
 } @else {
 <app-bottom-sheet [isOpen]="showAddressForm()" [title]="editingAddressId() ? 'Perbaharui Alamat' : 'Tambah Alamat Baru'"
   (closed)="cancelAddressForm()">
   <ng-container *ngTemplateOutlet="addressFormContent"></ng-container>
+  <div class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 w-full">
+    <app-button type="button" (click)="cancelAddressForm()" variant="outline" size="md" [fullWidth]="true"
+      class="flex-1">Batal</app-button>
+    <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()"
+      [disabled]="addressForm.invalid" variant="primary" size="md" [fullWidth]="true" class="flex-1">Simpan
+      Alamat</app-button>
+  </div>
 </app-bottom-sheet>
 }
 
@@ -92,15 +106,6 @@
         </app-map-picker>
         <p class="text-xs text-slate-500 mt-2">Klik peta atau geser pin untuk menyesuaikan titik koordinat.</p>
       </div>
-    </div>
-
-    <!-- Sticky Bottom Action Bar -->
-    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-3">
-      <app-button type="button" (click)="cancelAddressForm()" variant="outline" size="md" [fullWidth]="true"
-        class="flex-1">Batal</app-button>
-      <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()"
-        [disabled]="addressForm.invalid" variant="primary" size="md" [fullWidth]="true" class="flex-1">Simpan
-        Alamat</app-button>
     </div>
   </form>
 </ng-template>

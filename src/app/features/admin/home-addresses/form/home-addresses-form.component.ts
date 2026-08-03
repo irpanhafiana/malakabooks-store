@@ -4,7 +4,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HomeAddress, ProvinceLocation, CityLocation, DistrictLocation } from '../../../../core/models';
 import { AdminHomeAddressStore } from '../../../../store/admin-home-address.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
-import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { AddressApiService } from '../../../../core/services/address-api.service';
 import { MapPickerComponent } from '../../../../shared/ui/map-picker/map-picker.component';
@@ -13,7 +12,7 @@ import { MapPickerComponent } from '../../../../shared/ui/map-picker/map-picker.
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home-addresses-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminButtonComponent, AdminSelectComponent, MapPickerComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminSelectComponent, MapPickerComponent],
   templateUrl: './home-addresses-form.component.html'
 })
 export class HomeAddressesFormComponent implements OnInit {

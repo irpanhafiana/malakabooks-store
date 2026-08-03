@@ -15,6 +15,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   readonly showHeader = input<boolean>(true);
   readonly hasFooter = input<boolean>(true);
   readonly maxWidth = input<string>('max-w-lg');
+  readonly noScroll = input<boolean>(false);
 
   private readonly el = inject(ElementRef);
 
