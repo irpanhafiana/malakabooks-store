@@ -100,7 +100,7 @@
       </div>
 
       <!-- Native Responsive SVG Line Chart -->
-      <div class="w-full h-56 pt-2">
+      <div class="w-full h-56 pt-2 relative">
         <svg viewBox="0 0 1000 200" preserveAspectRatio="none" class="w-full h-full overflow-visible">
           <!-- Grid lines -->
           <line x1="0" y1="50" x2="1000" y2="50" stroke="#f8fafc" stroke-width="1" />
@@ -120,11 +120,40 @@
           <path [attr.d]="svgLinePath()" fill="none" class="stroke-primary-500" stroke-width="2.5"
             stroke-linejoin="round" stroke-linecap="round" />
 
+          <!-- Hover vertical line guide -->
+          @if (hoveredPoint(); as activePt) {
+            <line [attr.x1]="activePt.x" y1="10" [attr.x2]="activePt.x" y2="185" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4" />
+          }
+
           <!-- Dots on points -->
           @for (pt of chartPoints(); track $index) {
-          <circle [attr.cx]="pt.x" [attr.cy]="pt.y" r="4" fill="#ffffff" class="stroke-primary-500" stroke-width="2" />
+          <g class="cursor-pointer" (mouseenter)="setHoveredPoint(pt)" (mouseleave)="clearHoveredPoint()">
+            <!-- Transparent larger hit target for smooth mouseover -->
+            <circle [attr.cx]="pt.x" [attr.cy]="pt.y" r="18" fill="transparent" />
+
+            <!-- Visible dot -->
+            <circle [attr.cx]="pt.x" [attr.cy]="pt.y"
+                    [attr.r]="hoveredPoint()?.x === pt.x ? 7 : 4.5"
+                    fill="#ffffff"
+                    class="stroke-primary-500 transition-all duration-150"
+                    [attr.stroke-width]="hoveredPoint()?.x === pt.x ? 3 : 2" />
+
+            <title>{{ pt.label }}: {{ pt.amount | currency: 'IDR' : 'symbol' : '1.0-0' }}</title>
+          </g>
           }
         </svg>
+
+        <!-- Dynamic Floating HTML Tooltip overlay -->
+        @if (hoveredPoint(); as activePt) {
+        <div class="absolute pointer-events-none transition-all duration-75 transform -translate-x-1/2 -translate-y-full z-20 bg-slate-900 text-white text-xs py-1.5 px-3 rounded-xl shadow-xl border border-slate-700 flex flex-col items-center gap-0.5 whitespace-nowrap mb-2"
+             [style.left.%]="(activePt.x / 1000) * 100"
+             [style.top.%]="(activePt.y / 200) * 100">
+          <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{{ activePt.label }}</span>
+          <span class="font-bold text-emerald-400 text-xs">{{ activePt.amount | currency: 'IDR' : 'symbol' : '1.0-0' }}</span>
+          <!-- Arrow -->
+          <div class="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45 border-r border-b border-slate-700"></div>
+        </div>
+        }
       </div>
 
       <!-- Chart labels -->

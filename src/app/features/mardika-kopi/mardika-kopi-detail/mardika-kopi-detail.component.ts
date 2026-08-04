@@ -1,4 +1,5 @@
 import { Component, inject, signal, OnInit, input, output, effect, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import Swal from 'sweetalert2';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe, Location } from '@angular/common';
@@ -128,20 +129,51 @@ export class MardikaKopiDetailComponent implements OnInit {
 
   openQuantityModal(event: Event) {
     event.stopPropagation();
+    if (this.product()!.stock <= 0) {
+      Swal.fire({
+        title: 'Stok Kosong',
+        text: 'Saat ini stok produk sedang kosong. Anda tetap bisa memasukkannya ke keranjang untuk di-checkout nanti. Lanjutkan?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Lanjutkan',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.executeOpenQtyModal('cart');
+        }
+      });
+      return;
+    }
+    this.executeOpenQtyModal('cart');
+  }
+
+  private executeOpenQtyModal(action: 'cart' | 'buy') {
     this.productStore.setQtyQuantity(1);
-    this.productStore.setQtyAction('cart');
+    this.productStore.setQtyAction(action);
     this.productStore.setReopenDetailOnQtyClose(true);
     this.productStore.setQtyModalOpen(true);
+    this.productStore.setSelectedProductId(null);
     this.closed.emit();
   }
 
   buyNow(event: Event) {
     event.stopPropagation();
-    this.productStore.setQtyQuantity(1);
-    this.productStore.setQtyAction('buy');
-    this.productStore.setReopenDetailOnQtyClose(true);
-    this.productStore.setQtyModalOpen(true);
-    this.closed.emit();
+    if (this.product()!.stock <= 0) {
+      Swal.fire({
+        title: 'Stok Kosong',
+        text: 'Saat ini stok produk sedang kosong. Anda tetap bisa membelinya untuk diproses nanti. Lanjutkan?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Beli',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.executeOpenQtyModal('buy');
+        }
+      });
+      return;
+    }
+    this.executeOpenQtyModal('buy');
   }
 
   goToLogin() {

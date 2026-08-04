@@ -1,0 +1,48 @@
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": {
+        "totalRevenue": 276700.0,
+        "totalOrders": 9,
+        "activeCustomers": 1,
+        "conversionRate": 33.33,
+        "salesActivity": [
+            {
+                "label": "Wed",
+                "amount": 31700.0
+            },
+            {
+                "label": "Thu",
+                "amount": 31700.0
+            },
+            {
+                "label": "Fri",
+                "amount": 0.0
+            },
+            {
+                "label": "Sat",
+                "amount": 0.0
+            },
+            {
+                "label": "Sun",
+                "amount": 0.0
+            },
+            {
+                "label": "Mon",
+                "amount": 0.0
+            },
+            {
+                "label": "Tue",
+                "amount": 148600.0
+            }
+        ],
+        "topCategories": [
+            {
+                "categoryName": "Perawatan Wajah",
+                "totalSpent": 100000.0,
+                "quantityPurchased": 10
+            }
+        ]
+    },
+    "isSuccess": true
+}

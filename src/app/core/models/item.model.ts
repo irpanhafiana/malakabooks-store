@@ -15,6 +15,10 @@ export interface CatalogItem {
   additionalImages?: { no: number; image: string }[];
   weight?: number;
   stock?: number;
+  quantitySold?: number;
+  rating?: number;
+  averageRating?: number;
+  totalReviews?: number;
   bookId?: string;
   isbn?: string;
   authorIds?: string[];

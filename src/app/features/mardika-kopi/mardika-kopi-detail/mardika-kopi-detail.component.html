@@ -227,12 +227,12 @@
   <!-- Sticky Bottom Action Bar -->
   <div class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 z-50">
     @if (authStore.isLoggedIn()) {
-    <app-button (click)="openQuantityModal($event)" [disabled]="product()!.stock <= 0" variant="outline" size="lg"
+    <app-button (click)="openQuantityModal($event)" variant="outline" size="lg"
       [fullWidth]="true" class="flex-1">
       + Keranjang
     </app-button>
 
-    <app-button (click)="buyNow($event)" [disabled]="product()!.stock <= 0" variant="primary" size="lg"
+    <app-button (click)="buyNow($event)" variant="primary" size="lg"
       [fullWidth]="true" class="flex-1">
       Beli Sekarang
     </app-button>

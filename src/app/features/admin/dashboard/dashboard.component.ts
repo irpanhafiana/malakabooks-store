@@ -23,6 +23,8 @@ export class DashboardComponent implements OnInit {
   loading = signal<boolean>(true);
   error = signal<boolean>(false);
 
+  hoveredPoint = signal<{ x: number; y: number; label: string; amount: number } | null>(null);
+
   // Computes chart spacing coordinates
   chartPoints = computed(() => {
     const data = this.metrics();
@@ -30,17 +32,27 @@ export class DashboardComponent implements OnInit {
 
     const width = 1000;
     const height = 200;
-    const padding = 15;
+    const padding = 25;
 
-    const xSpacing = (width - padding * 2) / (data.salesHistory.length - 1);
+    const xSpacing = (width - padding * 2) / Math.max(1, data.salesHistory.length - 1);
     const yMax = Math.max(...data.salesHistory.map(s => s.amount)) || 100;
     const graphHeight = height - padding * 2;
 
     return data.salesHistory.map((s, idx) => ({
       x: padding + idx * xSpacing,
-      y: height - padding - (s.amount / yMax) * graphHeight
+      y: height - padding - (s.amount / yMax) * graphHeight,
+      label: s.date,
+      amount: s.amount
     }));
   });
+
+  setHoveredPoint(pt: { x: number; y: number; label: string; amount: number }) {
+    this.hoveredPoint.set(pt);
+  }
+
+  clearHoveredPoint() {
+    this.hoveredPoint.set(null);
+  }
 
   // Polyline coordinates for standard line
   svgLinePath = computed(() => {
@@ -59,40 +71,7 @@ export class DashboardComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.loading.set(false);
-    this.metrics.set({
-      totalRevenue: 24500.50,
-      revenueGrowth: 12.5,
-      totalOrders: 154,
-      ordersGrowth: 8.2,
-      totalCustomers: 89,
-      customersGrowth: 5.4,
-      conversionRate: 3.2,
-      conversionGrowth: 1.1,
-      salesHistory: [
-        { date: 'Mon', amount: 1200, orders: 15 },
-        { date: 'Tue', amount: 2100, orders: 24 },
-        { date: 'Wed', amount: 1800, orders: 20 },
-        { date: 'Thu', amount: 3200, orders: 35 },
-        { date: 'Fri', amount: 2800, orders: 30 },
-        { date: 'Sat', amount: 4500, orders: 50 },
-        { date: 'Sun', amount: 3900, orders: 42 },
-      ],
-      categorySales: [
-        { category: 'Fiction', amount: 8500 },
-        { category: 'Non-Fiction', amount: 6200 },
-        { category: 'Science', amount: 4800 },
-        { category: 'Children', amount: 3100 },
-        { category: 'Biography', amount: 1900 },
-      ],
-      recentOrders: [
-        { id: 'ORD-7291', userName: 'Alex Johnson', userEmail: 'alex.j@example.com', orderDate: new Date('2026-06-28T14:30:00').toISOString(), status: 'completed', total: 145.90 },
-        { id: 'ORD-7290', userName: 'Sarah Williams', userEmail: 'sarah.w@example.com', orderDate: new Date('2026-06-28T11:15:00').toISOString(), status: 'processing', total: 89.50 },
-        { id: 'ORD-7289', userName: 'Michael Chen', userEmail: 'm.chen@example.com', orderDate: new Date('2026-06-27T09:45:00').toISOString(), status: 'shipped', total: 210.00 },
-        { id: 'ORD-7288', userName: 'Emily Davis', userEmail: 'emily.d@example.com', orderDate: new Date('2026-06-26T16:20:00').toISOString(), status: 'pending', total: 45.00 },
-        { id: 'ORD-7287', userName: 'James Wilson', userEmail: 'j.wilson@example.com', orderDate: new Date('2026-06-26T10:05:00').toISOString(), status: 'completed', total: 320.75 },
-      ] as any[]
-    });
+    this.loadData();
   }
 
   async loadData() {
