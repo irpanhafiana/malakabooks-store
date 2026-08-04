@@ -8,7 +8,7 @@ export interface AdditionalImage {
 export interface Product {
   id: string;
   itemId?: string;
-  itemType?: 'malaka' | 'mardika';
+  itemType?: 'malaka' | 'mardika' | 'ssonline';
   title: string;
   sapCode: string;
   baseUomCode?: string;
@@ -35,6 +35,8 @@ export interface Product {
   categoryName?: string;
   averageRating: number;
   totalReviews: number;
+  quantitySold?: number;
+  rating?: number;
   salesUomCode?: string;
   customerGroupCode?: string;
   priceStartDate?: string;
@@ -51,7 +53,7 @@ export type AdditionalImageDto = AdditionalImage;
 export interface BookDto {
   id: string;
   itemId?: string;
-  itemType?: 'malaka' | 'mardika';
+  itemType?: 'malaka' | 'mardika' | 'ssonline';
   title: string;
   sapCode?: string;
   authorIds: string[];

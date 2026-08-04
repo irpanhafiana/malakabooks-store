@@ -111,7 +111,8 @@ export class ItemsFormComponent {
 
   itemTypeOptions = [
     { value: 'mardika', label: 'Item Kopi (Mardika)' },
-    { value: 'malaka', label: 'Buku (Malaka)' }
+    { value: 'malaka', label: 'Buku (Malaka)' },
+    { value: 'ssonline', label: 'SS Online' }
   ];
 
   protected readonly coverImageFile = signal<File | null>(null);

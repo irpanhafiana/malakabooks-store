@@ -109,8 +109,7 @@
             }
             }
           </div>
-          <span class="text-[13px] text-slate-500 font-medium">{{ product()!.totalReviews * 12 + (product()!.stock %
-            7) + 5 }} Terjual</span>
+          <span class="text-[13px] text-slate-500 font-medium">{{ product()!.quantitySold ?? 0 }} Terjual</span>
         </div>
       </div>
       <h1 class="text-xl lg:text-3xl font-display font-black text-slate-800 tracking-tight leading-[1.15]">{{
@@ -172,7 +171,7 @@
         [class.text-slate-800]="activeTab() === 'reviews'" [class.text-slate-500]="activeTab() !== 'reviews'"
         [class.hover:bg-slate-100/50]="activeTab() !== 'reviews'"
         class="flex-1 py-2.5 text-xs font-bold rounded-xl  cursor-pointer">
-        {{ reviews().length }} Reviews ({{ product()!.averageRating }})
+        {{ reviews().length }} Reviews ({{ product()!.rating ?? product()!.averageRating }})
       </button>
     </div>
 

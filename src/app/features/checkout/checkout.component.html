@@ -67,7 +67,7 @@
             <img [src]="item.product.coverImage" [alt]="item.product.title" class="object-cover w-full h-full" />
           </div>
           <div class="grow min-w-0">
-            <h4 class="font-bold text-slate-800 truncate">{{ item.product.title }}</h4>
+            <h4 class="font-bold text-slate-800 line-clamp-2">{{ item.product.title }}</h4>
             <span class="text-slate-400">Jml: {{ item.quantity }} × Rp {{ (item.price ?? item.product.price) | number:
               '1.0-0' }}@if (item.uomCode) { ({{ item.uomCode }})}</span>
           </div>

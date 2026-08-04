@@ -56,7 +56,12 @@ export class ItemApiService {
 
   async getItemById(id: string): Promise<CatalogItem | null> {
     try {
-      const endpoint = isAdminSession() ? `${this.BASE_URL}/admin/Items/${id}` : `${this.BASE_URL}/public/Items/${id}`;
+      let endpoint = `${this.BASE_URL}/public/Items/priced/${id}`;
+      if (isAdminSession()) {
+        endpoint = `${this.BASE_URL}/admin/Items/${id}`;
+      } else if (isCustomerSession()) {
+        endpoint = `${this.BASE_URL}/customer/Items/priced/${id}`;
+      }
       const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem>>(endpoint));
       const item = envelope?.data;
       if (!item) return null;

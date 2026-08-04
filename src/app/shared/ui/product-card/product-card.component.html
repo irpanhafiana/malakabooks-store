@@ -74,12 +74,12 @@
     <!-- Ratings Badge -->
     <div class="flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-100">
       <app-icon name="star" size="10" class="text-amber-500 fill-amber-500"></app-icon>
-      <span class="text-[10px] font-bold text-amber-700">{{ prod.averageRating }}</span>
+      <span class="text-[10px] font-bold text-amber-700">{{ prod.rating ?? prod.averageRating }}</span>
     </div>
 
     <!-- Total Sold -->
     <span class="text-[10px] text-slate-500 font-medium">
-      {{ prod.totalReviews * 12 + (prod.stock % 7) + 5 }} Terjual
+      {{ prod.quantitySold ?? 0 }} Terjual
     </span>
   </div>
 </div>
