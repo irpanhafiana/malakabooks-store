@@ -78,7 +78,7 @@
   </div>
 
   <!-- Content Right Pane -->
-  <div class="flex-1 w-full bg-white border border-slate-100 rounded-lg p-4 min-h-[500px]">
+  <div class="flex-1 w-full bg-white border border-slate-100 rounded-lg p-4 min-h-125">
     @if (activeTab() === 'info') {
     <div class="flex flex-col gap-6">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -143,9 +143,8 @@
   </div>
 </div>
 
-<app-modal [(isOpen)]="showEditProfile" title="Edit Profil"
-  maxWidth="max-w-md">
-  <form [formGroup]="profileForm" (submit)="onSubmitProfile()" class="flex flex-col gap-4">
+<app-modal [(isOpen)]="showEditProfile" title="Edit Profil" maxWidth="max-w-md">
+  <form [formGroup]="profileForm" (submit)="onSubmitProfile()" class="flex flex-col gap-4 p-4">
     <div class="flex flex-col items-center gap-3">
       <div class="relative">
         @if (avatarPreview()) {
@@ -166,14 +165,13 @@
 
     <app-input label="Nama Lengkap" placeholder="e.g. Hadi Jafri" [control]="nameControl"></app-input>
     <app-input label="Alamat Email" placeholder="e.g. customer@example.com" type="email" [control]="emailControl"
-      class="bg-slate-50 opacity-70 pointer-events-none"></app-input>
+      class="cursor-not-allowed"></app-input>
     <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="phoneControl"></app-input>
   </form>
-  <div modal-footer class="flex items-center gap-3 w-full">
-    <app-button type="button" (click)="showEditProfile.set(false)" variant="outline" size="md"
-      class="flex-1">Batal</app-button>
-    <app-button type="button" (click)="onSubmitProfile()" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary"
-      size="md" class="flex-1">Simpan Profil</app-button>
+  <div modal-footer class="flex items-center justify-end gap-3 w-full">
+    <app-button type="button" (click)="showEditProfile.set(false)" variant="outline" size="md">Batal</app-button>
+    <app-button type="button" (click)="onSubmitProfile()" [loading]="isProfileSaving()" [disabled]="profileForm.invalid"
+      variant="primary" size="md">Simpan Profil</app-button>
   </div>
 </app-modal>
 
@@ -297,8 +295,8 @@
   <div class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 w-full">
     <app-button type="button" (click)="showEditProfile.set(false)" variant="outline" size="lg" [fullWidth]="true"
       class="flex-1">Batal</app-button>
-    <app-button type="button" (click)="onSubmitProfile()" [loading]="isProfileSaving()" [disabled]="profileForm.invalid" variant="primary"
-      size="lg" [fullWidth]="true" class="flex-1">Simpan Profil</app-button>
+    <app-button type="button" (click)="onSubmitProfile()" [loading]="isProfileSaving()" [disabled]="profileForm.invalid"
+      variant="primary" size="lg" [fullWidth]="true" class="flex-1">Simpan Profil</app-button>
   </div>
 </app-bottom-sheet>
 

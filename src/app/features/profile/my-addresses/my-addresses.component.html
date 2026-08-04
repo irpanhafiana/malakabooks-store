@@ -1,5 +1,14 @@
 <div class="h-full lg:h-auto relative bg-slate-50/30">
   <div class="px-0 lg:px-4 pb-20 pt-0 h-full lg:h-auto flex flex-col overflow-y-auto lg:overflow-visible no-scrollbar">
+    <div class="hidden lg:flex justify-between items-center pt-2 pb-2">
+      <h2 class="text-lg font-bold text-slate-800">Alamat Saya</h2>
+      <app-button type="button" (click)="addNewAddress()" variant="primary" size="sm">
+        <div class="flex items-center gap-1">
+          <i class="bx bx-plus text-lg"></i>
+          <span>Tambah Alamat</span>
+        </div>
+      </app-button>
+    </div>
     <div class="flex flex-col gap-3 w-full mx-auto py-2">
 
       @if (isAddressesLoading()) {
@@ -19,11 +28,13 @@
           <strong class="font-bold text-slate-800 text-sm flex items-center gap-2">
             {{ addr.name }}
             @if (addr.isDefault) {
-            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">Utama</span>
+            <span
+              class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">Utama</span>
             }
           </strong>
           <span class="text-slate-500 font-medium">{{ addr.phone }}</span>
-          <span class="text-slate-600 font-semibold text-xs mt-0.5">{{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }},
+          <span class="text-slate-600 font-semibold text-xs mt-0.5">{{ addr.street }}{{ addr.district ? ', ' +
+            addr.district : '' }},
             {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
         </div>
         <div class="flex items-center gap-1.5 ml-4 shrink-0">
@@ -44,28 +55,35 @@
         </div>
       </div>
       } @empty {
-      <p class="text-xs text-slate-400 text-center py-6">Belum ada alamat pengiriman tersimpan.</p>
+      <app-empty-state
+        icon="map"
+        title="Belum Ada Alamat"
+        description="Belum ada alamat pengiriman tersimpan. Silakan tambahkan alamat baru."
+        actionText="Tambah Alamat"
+        (actionClick)="addNewAddress()">
+      </app-empty-state>
       }
       }
     </div>
   </div>
 
-  <!-- Floating Action Button -->
+  <!-- Floating Action Button (Mobile Only) -->
   <button type="button" (click)="addNewAddress()"
-    class="absolute bottom-6 right-6 w-14 h-14 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 hover:scale-105 active:scale-95 transition-all z-10 cursor-pointer shadow-lg shadow-primary-600/30">
+    class="lg:hidden absolute bottom-6 right-6 w-14 h-14 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 hover:scale-105 active:scale-95 transition-all z-10 cursor-pointer shadow-lg shadow-primary-600/30">
     <i class="bx bx-plus text-2xl"></i>
   </button>
 </div>
 
 <!-- Add/Edit Address Dialog (Modal on Desktop, Bottom Sheet on Mobile) -->
 @if (screen.isDesktop()) {
-<app-modal [(isOpen)]="showAddressForm" [title]="editingAddressId() ? 'Perbaharui Alamat' : 'Tambah Alamat Baru'" maxWidth="max-w-xl">
+<app-modal [(isOpen)]="showAddressForm" [title]="editingAddressId() ? 'Perbaharui Alamat' : 'Tambah Alamat Baru'"
+  maxWidth="max-w-xl">
   <ng-container *ngTemplateOutlet="addressFormContent"></ng-container>
-  <div modal-footer class="flex items-center gap-3 w-full">
-    <app-button type="button" (click)="cancelAddressForm()" variant="outline" size="md" [fullWidth]="true"
-      class="flex-1">Batal</app-button>
-    <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()"
-      [disabled]="addressForm.invalid" variant="primary" size="md" [fullWidth]="true" class="flex-1">Simpan
+  <div modal-footer class="flex items-center justify-end gap-3 w-full">
+    <app-button type="button" (click)="cancelAddressForm()" variant="outline" size="md"
+      [fullWidth]="true">Batal</app-button>
+    <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()" [disabled]="addressForm.invalid"
+      variant="primary" size="md" [fullWidth]="true">Simpan
       Alamat</app-button>
   </div>
 </app-modal>
@@ -76,15 +94,15 @@
   <div class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 w-full">
     <app-button type="button" (click)="cancelAddressForm()" variant="outline" size="md" [fullWidth]="true"
       class="flex-1">Batal</app-button>
-    <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()"
-      [disabled]="addressForm.invalid" variant="primary" size="md" [fullWidth]="true" class="flex-1">Simpan
+    <app-button type="button" (click)="saveAddressForm()" [loading]="isAddressSaving()" [disabled]="addressForm.invalid"
+      variant="primary" size="md" [fullWidth]="true" class="flex-1">Simpan
       Alamat</app-button>
   </div>
 </app-bottom-sheet>
 }
 
 <ng-template #addressFormContent>
-  <form [formGroup]="addressForm" class="flex flex-col">
+  <form [formGroup]="addressForm" class="flex flex-col p-4">
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2 overflow-y-auto" style="max-height: 60vh">
       <app-input label="Nama Penerima" placeholder="e.g. Dewi Lestari" [control]="recipientControl"></app-input>
       <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="addrPhoneControl"></app-input>

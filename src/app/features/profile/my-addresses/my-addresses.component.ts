@@ -13,6 +13,7 @@ import { UserApiService } from '../../../core/services/user-api.service';
 import { BottomSheetComponent } from '../../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import { MapPickerComponent } from '../../../shared/ui/map-picker/map-picker.component';
+import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 
 import { NgTemplateOutlet } from '@angular/common';
 import { ScreenService } from '../../../core/services/screen.service';
@@ -32,7 +33,8 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
     BottomSheetComponent,
     ModalComponent,
     SkeletonComponent,
-    MapPickerComponent
+    MapPickerComponent,
+    EmptyStateComponent
   ],
   templateUrl: './my-addresses.component.html',
   styleUrl: './my-addresses.component.css'

@@ -30,17 +30,17 @@
   --font-display: 'Plus Jakarta Sans', sans-serif;
 
   /* Custom Color Tokens - Deep Navy Primary and Crimson Accent */
-  --color-primary-50: #e6f0f5;
-  --color-primary-100: #ccdfeb;
-  --color-primary-200: #99bfd7;
-  --color-primary-300: #669ec3;
-  --color-primary-400: #337eaf;
-  --color-primary-500: #005e9c;
-  --color-primary-600: #003049; /* Deep Navy Primary */
-  --color-primary-700: #00263a;
-  --color-primary-800: #001c2c;
-  --color-primary-900: #00131e;
-  --color-primary-950: #000b11;
+  --color-primary-50: #fff7f2;
+  --color-primary-100: #ffecd9;
+  --color-primary-200: #ffdbb9;
+  --color-primary-300: #ffc48e;
+  --color-primary-400: #ffa55d;
+  --color-primary-500: #ff8933;
+  --color-primary-600: #FE7743; /* Orange Primary */
+  --color-primary-700: #e6561e;
+  --color-primary-800: #b53d10;
+  --color-primary-900: #8f3210;
+  --color-primary-950: #4d1804;
 
   --color-accent-50: #fdf2f2;
   --color-accent-100: #fde2e2;
@@ -183,3 +183,12 @@ body {
 }
 
 @import 'leaflet/dist/leaflet.css';
+
+/* Freeze background scrolling when modal is open */
+body.overflow-hidden app-root,
+body.overflow-hidden app-root .overflow-y-auto,
+body.overflow-hidden app-root .overflow-x-auto,
+body.overflow-hidden app-root .overflow-auto,
+body.overflow-hidden app-root main {
+  overflow: hidden !important;
+}

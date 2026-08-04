@@ -1,0 +1,11 @@
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": {
+        "waitingForPaymentCount": 0,
+        "processCount": 0,
+        "deliveryCount": 0,
+        "finishedCount": 3
+    },
+    "isSuccess": true
+}

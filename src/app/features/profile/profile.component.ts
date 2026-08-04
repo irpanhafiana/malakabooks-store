@@ -8,6 +8,7 @@ import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { ToastService } from '../../core/services/toast.service';
 import { LoggerService } from '../../core/services/logger.service';
 import { UserApiService } from '../../core/services/user-api.service';
+import { OrderApiService } from '../../core/services/order-api.service';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { ScreenService } from '../../core/services/screen.service';
@@ -57,6 +58,7 @@ export class ProfileComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly logger = inject(LoggerService);
   private readonly userApi = inject(UserApiService);
+  private readonly orderApi = inject(OrderApiService);
 
   isProfileSaving = signal<boolean>(false);
   avatarPreview = signal<string>('');
@@ -79,10 +81,10 @@ export class ProfileComponent implements OnInit {
   ];
 
   // Order status counts
-  pendingCount = computed(() => this.orderStore.orders().filter(o => o.status === 'pending').length);
-  processingCount = computed(() => this.orderStore.orders().filter(o => o.status === 'processing').length);
-  shippedCount = computed(() => this.orderStore.orders().filter(o => o.status === 'shipped').length);
-  completedCount = computed(() => this.orderStore.orders().filter(o => o.status === 'completed').length);
+  pendingCount = signal<number>(0);
+  processingCount = signal<number>(0);
+  shippedCount = signal<number>(0);
+  completedCount = signal<number>(0);
 
   // Latest order
   latestOrder = computed(() => {
@@ -134,6 +136,17 @@ export class ProfileComponent implements OnInit {
 
     // Load user orders
     this.orderStore.loadUserOrders(user.id);
+    this.fetchStatusCounts(user.id);
+  }
+
+  private async fetchStatusCounts(userId: string) {
+    const counts = await this.orderApi.getOrderStatusCounts(userId);
+    if (counts) {
+      this.pendingCount.set(counts['waitingForPaymentCount'] || 0);
+      this.processingCount.set(counts['processCount'] || 0);
+      this.shippedCount.set(counts['deliveryCount'] || 0);
+      this.completedCount.set(counts['finishedCount'] || 0);
+    }
   }
 
   selectTab(tab: ProfileTab) {

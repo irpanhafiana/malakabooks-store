@@ -24,9 +24,10 @@ export class AddressApiService {
   async getProvinces(): Promise<ProvinceLocation[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.get<ApiResponse<{ data: ProvinceLocation[] }>>(`${this.BASE_URL}/customer/Simasrim/Province`)
+        this.http.get<ApiResponse<{ data: string[] }>>(`${this.BASE_URL}/customer/Simasrim/Province`)
       );
-      return envelope?.data?.data || [];
+      const rawData = envelope?.data?.data || [];
+      return rawData.map(name => ({ prov_name: name }));
     } catch (e) {
       this.logger.error('AddressApiService.getProvinces', 'Failed to load provinces from Simasrim:', e);
       return [];
@@ -36,9 +37,10 @@ export class AddressApiService {
   async getCities(province: string): Promise<CityLocation[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<ApiResponse<{ data: CityLocation[] }>>(`${this.BASE_URL}/customer/Simasrim/City`, { prov: province })
+        this.http.post<ApiResponse<{ data: string[] }>>(`${this.BASE_URL}/customer/Simasrim/City`, { prov: province })
       );
-      return envelope?.data?.data || [];
+      const rawData = envelope?.data?.data || [];
+      return rawData.map(name => ({ city_name: name }));
     } catch (e) {
       this.logger.error('AddressApiService.getCities', `Failed to load cities for province ${province} from Simasrim:`, e);
       return [];

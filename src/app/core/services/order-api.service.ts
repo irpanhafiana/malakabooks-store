@@ -119,6 +119,18 @@ export class OrderApiService {
     }
   }
 
+  async getOrderStatusCounts(userId: string): Promise<Record<string, number> | null> {
+    try {
+      const res = await firstValueFrom(
+        this.http.get<ApiResponse<Record<string, number>>>(`${this.BASE_URL}/customer/Orders/user/${userId}/status-counts`)
+      );
+      return res?.data || null;
+    } catch (e) {
+      this.logger.error('OrderApiService.getOrderStatusCounts', `Gagal mengambil status counts untuk user ${userId}:`, e);
+      return null;
+    }
+  }
+
   async getOrdersByUserId(userId: string): Promise<Order[]> {
     try {
       const ordersResRaw = await firstValueFrom(this.http.get<ApiResponse<OrderResponseDto[]>>(`${this.BASE_URL}/customer/Orders/user/${userId}`));

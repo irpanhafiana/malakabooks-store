@@ -1,4 +1,5 @@
-<div class="px-0 lg:px-4 pb-4 pt-0 h-full lg:h-auto flex flex-col overflow-y-auto lg:overflow-visible no-scrollbar bg-slate-50/30">
+<div
+  class="px-0 lg:px-4 pb-4 pt-0 h-full lg:h-auto flex flex-col overflow-y-auto lg:overflow-visible no-scrollbar bg-slate-50/30">
   <div class="flex flex-col gap-4 w-full mx-auto py-2">
 
     @if (orderStore.loading()) {
@@ -29,11 +30,8 @@
     </div>
 
     } @else if (orderStore.orders().length === 0) {
-    <app-empty-state
-      icon="shopping-bag"
-      title="Belum Ada Pesanan"
-      description="Anda belum pernah melakukan pembelian. Mulai belanja sekarang!"
-      actionText="Mulai Belanja"
+    <app-empty-state icon="shopping-bag" title="Belum Ada Pesanan"
+      description="Anda belum pernah melakukan pembelian. Mulai belanja sekarang!" actionText="Mulai Belanja"
       routerLink="/product">
     </app-empty-state>
 
@@ -65,10 +63,13 @@
       <div class="flex flex-col gap-3">
         @for (item of order.items; track item.product.id) {
         <div class="flex items-center gap-4 text-xs">
-          <div class="relative h-16 w-14 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden shrink-0 flex items-center justify-center">
+          <div
+            class="relative h-16 w-14 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden shrink-0 flex items-center justify-center">
             <i class="bx bx-book-open text-2xl text-slate-300"></i>
             @if (item.product.coverImage) {
-              <img [src]="item.product.coverImage" [alt]="item.product.title" class="absolute inset-0 object-cover w-full h-full bg-slate-50" (error)="$any($event.target).style.display='none'" />
+            <img [src]="item.product.coverImage" [alt]="item.product.title"
+              class="absolute inset-0 object-cover w-full h-full bg-slate-50"
+              (error)="$any($event.target).style.display='none'" />
             }
           </div>
           <div class="grow min-w-0">
@@ -89,7 +90,8 @@
         @if (order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled') {
         <div class="flex items-center gap-1.5 text-slate-500 font-semibold min-w-0">
           <app-icon name="truck" size="16" class="text-slate-400 shrink-0"></app-icon>
-          <span class="truncate text-sm">Resi: <strong class="text-slate-800 select-all font-bold">{{ order.trackingNumber }}</strong></span>
+          <span class="truncate text-sm">Resi: <strong class="text-slate-800 select-all font-bold">{{
+              order.trackingNumber }}</strong></span>
         </div>
         <div class="flex items-center gap-3 shrink-0">
           <div class="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
@@ -121,8 +123,10 @@
 <app-modal [(isOpen)]="isReviewSheetOpen" title="Tulis Ulasan" maxWidth="max-w-lg">
   <ng-container *ngTemplateOutlet="reviewFormContent"></ng-container>
   <div modal-footer class="flex items-center gap-3 w-full">
-    <app-button variant="outline" size="md" [fullWidth]="true" class="flex-1" (click)="closeReviewSheet()">Batal</app-button>
-    <app-button variant="primary" size="md" [fullWidth]="true" class="flex-1" [disabled]="reviewRating() === 0 || !reviewComment().trim() || isSubmittingReview()" (click)="submitReview()">
+    <app-button variant="outline" size="md" [fullWidth]="true" class="flex-1"
+      (click)="closeReviewSheet()">Batal</app-button>
+    <app-button variant="primary" size="md" [fullWidth]="true" class="flex-1"
+      [disabled]="reviewRating() === 0 || !reviewComment().trim() || isSubmittingReview()" (click)="submitReview()">
       {{ isSubmittingReview() ? 'Mengirim...' : 'Kirim Ulasan' }}
     </app-button>
   </div>
@@ -131,8 +135,10 @@
 <app-bottom-sheet [isOpen]="isReviewSheetOpen()" title="Tulis Ulasan" (closed)="closeReviewSheet()">
   <ng-container *ngTemplateOutlet="reviewFormContent"></ng-container>
   <div class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 w-full">
-    <app-button variant="outline" size="md" [fullWidth]="true" class="flex-1" (click)="closeReviewSheet()">Batal</app-button>
-    <app-button variant="primary" size="md" [fullWidth]="true" class="flex-1" [disabled]="reviewRating() === 0 || !reviewComment().trim() || isSubmittingReview()" (click)="submitReview()">
+    <app-button variant="outline" size="md" [fullWidth]="true" class="flex-1"
+      (click)="closeReviewSheet()">Batal</app-button>
+    <app-button variant="primary" size="md" [fullWidth]="true" class="flex-1"
+      [disabled]="reviewRating() === 0 || !reviewComment().trim() || isSubmittingReview()" (click)="submitReview()">
       {{ isSubmittingReview() ? 'Mengirim...' : 'Kirim Ulasan' }}
     </app-button>
   </div>
@@ -141,57 +147,58 @@
 
 <ng-template #reviewFormContent>
   @if (selectedProduct()) {
-    <div class="flex flex-col gap-4 text-left p-1">
-      <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
-        <div class="relative w-12 h-16 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
-          <i class="bx bx-book-open text-xl text-slate-300"></i>
-          @if (selectedProduct()?.coverImage) {
-            <img [src]="selectedProduct()?.coverImage" [alt]="selectedProduct()?.title" class="absolute inset-0 w-full h-full object-cover bg-slate-50" (error)="$any($event.target).style.display='none'">
-          }
-        </div>
-        <span class="font-bold text-slate-800 line-clamp-2 text-sm">{{ selectedProduct()?.title }}</span>
+  <div class="flex flex-col gap-4 text-left p-4">
+    <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+      <div
+        class="relative w-12 h-16 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+        <i class="bx bx-book-open text-xl text-slate-300"></i>
+        @if (selectedProduct()?.coverImage) {
+        <img [src]="selectedProduct()?.coverImage" [alt]="selectedProduct()?.title"
+          class="absolute inset-0 w-full h-full object-cover bg-slate-50"
+          (error)="$any($event.target).style.display='none'">
+        }
       </div>
-      
-      <div class="flex flex-col gap-2">
-        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Penilaian Anda</label>
-        <div class="flex items-center gap-2 text-3xl">
-          @for (star of [1,2,3,4,5]; track star) {
-            <i class="bx bxs-star cursor-pointer transition-transform active:scale-90"
-               [class.text-amber-400]="reviewRating() >= star"
-               [class.text-slate-200]="reviewRating() < star"
-               (click)="reviewRating.set(star)"></i>
-          }
-        </div>
-      </div>
-      
-      <div class="flex flex-col gap-2">
-        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Komentar</label>
-        <textarea 
-          [ngModel]="reviewComment()"
-          (input)="updateComment($event)"
-          class="w-full p-3 border border-slate-200 rounded-xl focus:ring-primary-500 focus:border-primary-500 text-sm font-sans" 
-          rows="4" 
-          placeholder="Bagaimana pendapat Anda tentang buku ini?"></textarea>
-      </div>
+      <span class="font-bold text-slate-800 line-clamp-2 text-sm">{{ selectedProduct()?.title }}</span>
+    </div>
 
-      <div class="flex flex-col gap-2">
-        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Foto (Opsional)</label>
-        <div class="flex flex-wrap gap-3">
-          @for (img of reviewImages(); track img.no) {
-            <div class="relative w-20 h-20 border border-slate-200 rounded-xl overflow-hidden group shadow-xs">
-              <img [src]="img.image" class="w-full h-full object-cover">
-              <button (click)="removeImage($index)" class="absolute top-1 right-1 bg-white/90 text-rose-500 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-xs cursor-pointer">
-                <i class="bx bx-x"></i>
-              </button>
-            </div>
-          }
-          <label class="w-20 h-20 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors">
-            <i class="bx bx-plus text-2xl"></i>
-            <span class="text-xs mt-1 font-semibold">Tambah</span>
-            <input type="file" accept="image/*" class="hidden" (change)="onImageSelected($event)">
-          </label>
-        </div>
+    <div class="flex flex-col gap-2">
+      <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Penilaian Anda</label>
+      <div class="flex items-center gap-2 text-3xl">
+        @for (star of [1,2,3,4,5]; track star) {
+        <i class="bx bxs-star cursor-pointer transition-transform active:scale-90"
+          [class.text-amber-400]="reviewRating() >= star" [class.text-slate-200]="reviewRating() < star"
+          (click)="reviewRating.set(star)"></i>
+        }
       </div>
     </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Komentar</label>
+      <textarea [ngModel]="reviewComment()" (input)="updateComment($event)"
+        class="w-full p-3 border border-slate-200 rounded-xl focus:ring-primary-500 focus:border-primary-500 text-sm font-sans"
+        rows="4" placeholder="Bagaimana pendapat Anda tentang buku ini?"></textarea>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Foto (Opsional)</label>
+      <div class="flex flex-wrap gap-3">
+        @for (img of reviewImages(); track img.no) {
+        <div class="relative w-20 h-20 border border-slate-200 rounded-xl overflow-hidden group shadow-xs">
+          <img [src]="img.image" class="w-full h-full object-cover">
+          <button (click)="removeImage($index)"
+            class="absolute top-1 right-1 bg-white/90 text-rose-500 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-xs cursor-pointer">
+            <i class="bx bx-x"></i>
+          </button>
+        </div>
+        }
+        <label
+          class="w-20 h-20 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors">
+          <i class="bx bx-plus text-2xl"></i>
+          <span class="text-xs mt-1 font-semibold">Tambah</span>
+          <input type="file" accept="image/*" class="hidden" (change)="onImageSelected($event)">
+        </label>
+      </div>
+    </div>
+  </div>
   }
 </ng-template>

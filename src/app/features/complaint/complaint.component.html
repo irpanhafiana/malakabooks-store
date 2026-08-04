@@ -1,5 +1,14 @@
 <div class="h-full lg:h-auto relative bg-slate-50/30">
   <div class="px-0 lg:px-4 pb-20 pt-0 h-full lg:h-auto flex flex-col overflow-y-auto lg:overflow-visible no-scrollbar">
+    <div class="hidden lg:flex justify-between items-center pt-2 pb-2">
+      <h2 class="text-lg font-bold text-slate-800">Komplain Saya</h2>
+      <app-button type="button" (click)="openForm()" variant="primary" size="sm">
+        <div class="flex items-center gap-1">
+          <i class="bx bx-plus text-lg"></i>
+          <span>Tambah Komplain</span>
+        </div>
+      </app-button>
+    </div>
     <div class="flex flex-col gap-4 w-full mx-auto py-2">
 
       @if (complaintStore.loading()) {
@@ -47,9 +56,9 @@
     </div>
   </div>
 
-  <!-- Floating Action Button -->
+  <!-- Floating Action Button (Mobile Only) -->
   <button type="button" (click)="openForm()"
-    class="absolute bottom-6 right-6 w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg shadow-primary-600/30 flex items-center justify-center hover:bg-primary-700 hover:scale-105 active:scale-95 transition-all z-30 cursor-pointer">
+    class="lg:hidden absolute bottom-6 right-6 w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg shadow-primary-600/30 flex items-center justify-center hover:bg-primary-700 hover:scale-105 active:scale-95 transition-all z-30 cursor-pointer">
     <i class="bx bx-plus text-2xl"></i>
   </button>
 </div>
