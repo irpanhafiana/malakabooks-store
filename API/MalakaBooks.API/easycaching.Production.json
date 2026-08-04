@@ -1,6 +1,26 @@
 {
-  "EasyCaching": {
-    "Provider": "InMemory",
-    "DefaultExpirationMinutes": 30
-  }
+    "EasyCachingConfig": {
+        "redis": {
+            "MaxRdSecond": 120,
+            "EnableLogging": false,
+            "LockMs": 5000,
+            "SleepMs": 300,
+            "SerializerName": "MalakaBooks-Service",
+            "dbconfig": {
+                "Username": "default",
+                "Password": "VMlV9X143JBkci8pNA5ZhBNcEZ2Nlysm",
+                "IsSsl": false,
+                "SslHost": null,
+                "ConnectionTimeout": 5000,
+                "AllowAdmin": true,
+                "Endpoints": [
+                    {
+                        "Host": "redis-19065.crce305.ap-seast-1-1.ec2.cloud.redislabs.com",
+                        "Port": 19065
+                    }
+                ],
+                "Database": 0
+            }
+        }
+    }
 }

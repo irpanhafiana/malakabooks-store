@@ -1,17 +1,17 @@
 {
-  "MongoDbSetting": {
-    "ConnectionString": "mongodb://mongo:27017",
-    "DatabaseName": "MalakaBooksDb",
-    "BooksCollection": "books",
-    "AuthorsCollection": "authors",
-    "PaymentsCollection": "payments",
-    "CategoriesCollection": "categories",
-    "OrdersCollection": "orders",
-    "CartsCollection": "carts",
-    "AddressesCollection": "addresses",
-    "UsersCollection": "users",
-    "ReviewsCollection": "reviews",
-    "ComplaintsCollection": "complaints",
-    "PromotionBannersCollection": "promotionbanners"
-  }
+    "MongoDbSetting": {
+        "ConnectionString": "mongodb+srv://productionsjmartdevteam:TABFfZv9R0VTWwB7@cluster1.asehs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1",
+        "DatabaseName": "SSOnlineDb",
+        "BooksCollection": "books",
+        "AuthorsCollection": "authors",
+        "PaymentsCollection": "payments",
+        "CategoriesCollection": "categories",
+        "OrdersCollection": "orders",
+        "CartsCollection": "carts",
+        "AddressesCollection": "addresses",
+        "UsersCollection": "users",
+        "ReviewsCollection": "reviews",
+        "ComplaintsCollection": "complaints",
+        "PromotionBannersCollection": "promotionbanners"
+    }
 }

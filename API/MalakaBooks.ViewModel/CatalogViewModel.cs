@@ -19,8 +19,18 @@ public class ItemResponse
     public int Stock { get; set; }
     public bool IsActive { get; set; }
     public ItemMetadataResponse? Metadata { get; set; }
+    public int QuantitySold { get; set; }
+    public double Rating { get; set; }
+    public double AverageRating { get; set; }
+    public int TotalReviews { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+}
+
+public class ItemAutofillResponse
+{
+    public string Id { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 }
 
 public class ItemMetadataResponse
