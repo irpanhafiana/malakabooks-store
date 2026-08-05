@@ -105,8 +105,8 @@ export class DetailShipmentComponent implements OnInit {
 
   get shipperName(): string {
     const details = this.trackingDetails;
-    if (!details) return 'MalakaBooks Store';
-    return details.shipper_name || details.shipper || details.shipperName || 'MalakaBooks Store';
+    if (!details) return 'SS Online Shop';
+    return details.shipper_name || details.shipper || details.shipperName || 'SS Online Shop';
   }
 
   get trackingLogs(): any[] {

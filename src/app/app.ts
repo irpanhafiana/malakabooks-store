@@ -10,5 +10,5 @@ import { CustomerAlertComponent } from './shared/ui/customer-alert/customer-aler
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('malakabooks');
+  protected readonly title = signal('SS Online Shop');
 }

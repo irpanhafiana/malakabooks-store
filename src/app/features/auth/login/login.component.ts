@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   });
 
   fillDemoCredentials() {
-    this.usernameControl.setValue('customer@malakabooks.local');
+    this.usernameControl.setValue('customer@ssonlineshop.local');
     this.passwordControl.setValue('ChangeMe123!');
     this.usernameControl.markAsDirty();
     this.passwordControl.markAsDirty();

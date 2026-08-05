@@ -53,7 +53,7 @@ describe('LoginComponent', () => {
 
   it('should fill demo credentials', () => {
     component.fillDemoCredentials();
-    expect(component.usernameControl.value).toBe('customer@malakabooks.local');
+    expect(component.usernameControl.value).toBe('customer@ssonlineshop.local');
     expect(component.passwordControl.value).toBe('ChangeMe123!');
     expect(component.loginForm.valid).toBe(true);
   });
@@ -64,7 +64,7 @@ describe('LoginComponent', () => {
 
     await component.onSubmit();
 
-    expect(mockAuthStore.login).toHaveBeenCalledWith('customer@malakabooks.local', 'ChangeMe123!');
+    expect(mockAuthStore.login).toHaveBeenCalledWith('customer@ssonlineshop.local', 'ChangeMe123!');
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
   });
 });
