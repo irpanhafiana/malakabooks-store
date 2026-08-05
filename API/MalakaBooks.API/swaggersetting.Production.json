@@ -1,7 +1,10 @@
 {
-  "SwaggerSetting": {
-    "Title": "MalakaBooks API",
-    "Description": "Swagger documentation for the MalakaBooks bookstore API.",
-    "OAuthAppName": "MalakaBooks Swagger UI"
-  }
+    "SwaggerSetting": {
+        "OidcClientId": "MalakaBooks-swagger",
+        "OidcApiName": "MalakaBooks_Scope",
+        "IdentityServerBaseUrl": "http://192.168.1.15:44310",
+        "Title": "MalakaBooks Service",
+        "Description": "MalakaBooks bookstore backend API",
+        "BaseResourceImageUrl": "http://192.168.1.15:10100/MalakaService"
+    }
 }
