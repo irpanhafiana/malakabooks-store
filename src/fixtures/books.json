@@ -1,55 +1,123 @@
 {
     "statusCode": 200,
     "statusMessage": "OK",
-    "data": {
-        "data": {
-            "ket": "Sukses mendapatkan detail resi",
-            "user_id": 16,
-            "created_date": "2025-11-11 10:34:13",
-            "kode_transaksi": "DB25111110346660",
-            "order_id": "SMR-A00016C3207641",
-            "awb": "0864330152552467",
-            "status": "delivered",
-            "rq_cancel": "no",
-            "shipper_name": "Ibu Lily",
-            "shipper_phone": "0895348004022",
-            "shipper_city": "BOGOR",
-            "shipper_addr_detail": "agen jne 125 bogor jl raya pemda karadenan pangkalan 4 no 36",
-            "shipper_addr": "PASIR JAMBU, SUKARAJA, BOGOR, JAWA BARAT",
-            "receiver_name": "Ahmad Saebani",
-            "receiver_phone": "085959149153",
-            "receiver_city": "KOTA BOGOR",
-            "receiver_addr_detail": "Perumahan vila bogor indah 2 blok GG 8 no. 2, ciparigi, bogor utara",
-            "receiver_addr": "CIPARIGI, BOGOR UTARA, KOTA BOGOR, JAWA BARAT",
-            "pickup_date": "2025-11-11 14:00:00",
-            "pickup_name": "Ibu Lily",
-            "pickup_phone": "0895348004022",
-            "pickup_addr": "agen jne 125 bogor jl raya pemda karadenan pangkalan 4 no 36. PASIR JAMBU, SUKARAJA, BOGOR, JAWA BARAT",
-            "origin_code": "BGR",
-            "destination_code": "BGR",
-            "service_code": "EZ",
-            "estimasi": "2-7",
-            "berat": "1.00",
-            "jumlah": 1,
-            "deskripsi": "dokumen",
-            "ins": "",
-            "packing_kayu": "N",
-            "asuransi_by_simasrim": "N",
-            "nilai_barang": 0.0,
-            "total_asuransi": 0.0,
-            "ongkir": 9000.0,
-            "diskon": 1800.0,
-            "ppn_persen": "1.2%",
-            "ppn_total": 0.0,
-            "platform_fee": 90.0,
-            "amount": 7290.0,
-            "diskon_resi": 0.0,
-            "bpik": [],
-            "ekspedisi": "jne",
-            "descode": "320-BGR29-38E"
+    "data": [
+        {
+            "id": "6a7293c6572cbb1352ddf828",
+            "name": "BENG BENG KALPA BOX ISI 12 PCS",
+            "sapCode": "2b3dd951-9c51-4699-8d82-b4d4f3e3ef69",
+            "itemType": "ssonline",
+            "categoryId": "6a6974c74913417719d186a1",
+            "coverImage": "/images/items/2b86fa0e-30ce-43ca-a64e-580bc2e829a6.png",
+            "additionalImages": [],
+            "uomGroupId": "6a575f09500f03996c1e3702",
+            "uomGroup": {
+                "id": "6a575f09500f03996c1e3702",
+                "name": "PCS",
+                "baseUomCode": "JASA",
+                "details": [
+                    {
+                        "code": "JASA",
+                        "name": "JASA",
+                        "conversionFactor": 1.0,
+                        "isBaseUom": true,
+                        "isDefaultForSales": true,
+                        "sortOrder": 1,
+                        "isActive": true
+                    }
+                ],
+                "isActive": true,
+                "alias": "46152a71-9035-4a2b-a173-347089a4874c"
+            },
+            "baseUomCode": "JASA",
+            "description": "<p>asd</p>",
+            "weight": 100.0,
+            "stock": 0,
+            "isActive": false,
+            "quantitySold": 0,
+            "rating": 0.0,
+            "averageRating": 0.0,
+            "totalReviews": 0,
+            "createdAt": "2026-08-05T08:37:10.831+07:00",
+            "updatedAt": "2026-08-05T08:49:21.065+07:00"
         },
-        "code": "001",
-        "status": "Success"
-    },
-    "isSuccess": true
+        {
+            "id": "6a7293c7572cbb1352ddf829",
+            "name": "BENG BENG KALPA KARTON ISI 8 BOX",
+            "sapCode": "f8961740-ecec-4f2b-9502-0dd3943e2ff4",
+            "itemType": "ssonline",
+            "categoryId": "6a6974c74913417719d186a1",
+            "coverImage": "/images/items/35bb8844-cb70-4df1-95ed-038b8bf83cec.png",
+            "additionalImages": [],
+            "uomGroupId": "6a575f09500f03996c1e3702",
+            "uomGroup": {
+                "id": "6a575f09500f03996c1e3702",
+                "name": "PCS",
+                "baseUomCode": "JASA",
+                "details": [
+                    {
+                        "code": "JASA",
+                        "name": "JASA",
+                        "conversionFactor": 1.0,
+                        "isBaseUom": true,
+                        "isDefaultForSales": true,
+                        "sortOrder": 1,
+                        "isActive": true
+                    }
+                ],
+                "isActive": true,
+                "alias": "46152a71-9035-4a2b-a173-347089a4874c"
+            },
+            "baseUomCode": "JASA",
+            "description": "<p>asd</p>",
+            "weight": 100.0,
+            "stock": 0,
+            "isActive": false,
+            "quantitySold": 0,
+            "rating": 0.0,
+            "averageRating": 0.0,
+            "totalReviews": 0,
+            "createdAt": "2026-08-05T08:37:11.124+07:00",
+            "updatedAt": "2026-08-05T08:37:11.124+07:00"
+        },
+        {
+            "id": "6a7293c7572cbb1352ddf82a",
+            "name": "BRAVEN CODE EDP COOL WATER 100ML",
+            "sapCode": "f9e7ef8e-fcbf-438f-8b55-70b8ad78aa70",
+            "itemType": "ssonline",
+            "categoryId": "6a6974c74913417719d186a1",
+            "coverImage": "/images/items/e15c86a6-ea78-47ed-934a-0a596551fe66.png",
+            "additionalImages": [],
+            "uomGroupId": "6a575f09500f03996c1e3702",
+            "uomGroup": {
+                "id": "6a575f09500f03996c1e3702",
+                "name": "PCS",
+                "baseUomCode": "JASA",
+                "details": [
+                    {
+                        "code": "JASA",
+                        "name": "JASA",
+                        "conversionFactor": 1.0,
+                        "isBaseUom": true,
+                        "isDefaultForSales": true,
+                        "sortOrder": 1,
+                        "isActive": true
+                    }
+                ],
+                "isActive": true,
+                "alias": "46152a71-9035-4a2b-a173-347089a4874c"
+            },
+            "baseUomCode": "JASA",
+            "description": "<p>asd</p>",
+            "weight": 100.0,
+            "stock": 0,
+            "isActive": false,
+            "quantitySold": 0,
+            "rating": 0.0,
+            "averageRating": 0.0,
+            "totalReviews": 0,
+            "createdAt": "2026-08-05T08:37:11.269+07:00",
+            "updatedAt": "2026-08-05T08:37:11.269+07:00"
+        }
+    ]
 }

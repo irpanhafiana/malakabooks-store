@@ -1,0 +1,11 @@
+{
+    "name": "test",
+    "itemCode": "2b3dd951-9c51-4699-8d82-b4d4f3e3ef69",
+    "startDate": "2026-08-01T00:00:00.000Z",
+    "endDate": "2026-09-01T00:00:00.000Z",
+    "isActive": true,
+    "details": [
+        { "customerGroupCode": "100", "uomCode": "JASA", "price": "10000" },
+        { "customerGroupCode": "103", "uomCode": "JASA", "price": "20000" }
+    ]
+}

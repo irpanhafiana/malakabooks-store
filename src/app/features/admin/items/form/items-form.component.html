@@ -138,10 +138,17 @@
   }
 
   <div
-    class="border-t border-slate-100 pt-4 flex justify-end gap-3 mt-6">
-    <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
-    <app-admin-button (click)="onSubmitForm()" [disabled]="formGroup.invalid" type="button" variant="primary" size="sm">
-      Simpan
-    </app-admin-button>
+    class="border-t border-slate-100 pt-4 flex justify-between items-center mt-6">
+    <div>
+      <app-admin-button (click)="bulkInsert()" type="button" variant="outline" size="sm">
+        Bulk Insert (SS Online - PCS)
+      </app-admin-button>
+    </div>
+    <div class="flex gap-3">
+      <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
+      <app-admin-button (click)="onSubmitForm()" [disabled]="formGroup.invalid" type="button" variant="primary" size="sm">
+        Simpan
+      </app-admin-button>
+    </div>
   </div>
 </form>

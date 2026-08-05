@@ -13,6 +13,7 @@ import { computed } from '@angular/core';
 import { EditorComponent } from '../../../../shared/ui/editor/editor.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import skuData from '../../../../../fixtures/sku_only.json';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +35,7 @@ export class ItemsFormComponent {
   private readonly alertService = inject(AlertService);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  readonly skuList = signal<string[]>(skuData as string[]);
   readonly categories = signal<any[]>([]);
 
   nameControl = new FormControl('', [Validators.required]);
@@ -295,6 +297,68 @@ export class ItemsFormComponent {
 
     const data = this.getPayload();
     await this.itemStore.saveItem(data);
+    this.onSave.emit();
+  }
+
+  async bulkInsert() {
+    const isConfirmed = await this.alertService.confirm(
+      'Bulk Insert?',
+      'Apakah Anda yakin ingin melakukan bulk insert data dari JSON?'
+    );
+    if (!isConfirmed) return;
+
+    let defaultCoverFile: File | null = null;
+    try {
+      // Pastikan menggunakan / di awal agar fetch dari root (public folder)
+      const response = await fetch('/default.png');
+      if (response.ok) {
+        const blob = await response.blob();
+        defaultCoverFile = new File([blob], 'default.png', { type: blob.type });
+      } else {
+        console.error('File default.png tidak ditemukan (status HTTP tidak ok)');
+      }
+    } catch (e) {
+      console.warn('Gagal memuat gambar /default.png', e);
+    }
+
+    for (const sku of this.skuList()) {
+      const payload: any = {
+        name: sku,
+        sapCode: crypto.randomUUID(),
+        itemType: 'ssonline',
+        categoryId: '6a6974c74913417719d186a1',
+        uomGroupId: '6a575f09500f03996c1e3702',
+        baseUomCode: 'JASA',
+        isActive: false,
+        weight: 100,
+        stock: 0,
+        description: '<p>asd</p>',
+        coverImage: '',
+        coverImageFile: defaultCoverFile,
+        additionalImages: [],
+        additionalImageFiles: [],
+        categoryName: 'Merchandise',
+        uomGroup: {
+          name: 'PCS',
+          baseUomCode: 'JASA',
+          isActive: true,
+          details: [
+            {
+              code: 'JASA',
+              name: 'JASA',
+              conversionFactor: 1,
+              isBaseUom: true,
+              isDefaultForSales: true,
+              sortOrder: 1,
+              isActive: true
+            }
+          ]
+        }
+      };
+      
+      await this.itemStore.saveItem(payload);
+    }
+
     this.onSave.emit();
   }
 

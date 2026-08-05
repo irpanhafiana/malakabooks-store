@@ -13,6 +13,7 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { computed } from '@angular/core';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import itemFilteredData from '../../../../../fixtures/item_filtered.json';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -225,6 +226,52 @@ export class PricingsFormComponent {
     };
 
     await this.pricingStore.savePricing(data);
+    this.onSave.emit();
+  }
+
+  async bulkInsert() {
+    const isConfirmed = await this.alertService.confirm(
+      'Bulk Insert Pricing?',
+      'Apakah Anda yakin ingin melakukan bulk insert pricing data dari JSON?'
+    );
+    if (!isConfirmed) return;
+
+    const items = this.itemStore.items() || [];
+    const itemMap = new Map(items.map(i => [i.name, i]));
+    const dataList = itemFilteredData as any[];
+
+    for (const data of dataList) {
+      const sku = data['SKU'];
+      const price = data['HARGA JUAL'];
+
+      const item = itemMap.get(sku);
+      if (item) {
+        const payload: any = {
+          name: `Harga Jual - ${sku}`,
+          itemId: item.id,
+          itemCode: item.sapCode,
+          startDate: new Date().toISOString(),
+          endDate: new Date('2036-12-31T23:59:59.000Z').toISOString(),
+          isActive: true,
+          details: [
+            {
+              customerGroupCode: '103', // Online
+              uomCode: 'JASA', // uomCode tetap JASA
+              price: price
+            },
+            {
+              customerGroupCode: '106', // Non Member (lebih mahal 20%)
+              uomCode: 'JASA', // uomCode tetap JASA
+              price: Math.round(price * 1.2) // Kenaikan 20% (di antara 15-25%)
+            }
+          ]
+        };
+        await this.pricingStore.savePricing(payload);
+      } else {
+        console.warn(`Item dengan SKU "${sku}" tidak ditemukan di master data.`);
+      }
+    }
+
     this.onSave.emit();
   }
 }

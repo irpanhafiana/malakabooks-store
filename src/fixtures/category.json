@@ -1,0 +1,23 @@
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": [
+        {
+            "id": "6a6974c74913417719d186a1",
+            "name": "Merchandise",
+            "slug": "merchandise",
+            "description": "",
+            "icon": "book-open",
+            "alias": "ac936fb3-6b4a-4d13-830d-214ad07f1894"
+        },
+        {
+            "id": "6a71866e2259858d3a768d17",
+            "name": "Perawatan Wajah",
+            "slug": "perawatan-wajah",
+            "description": "",
+            "icon": "face",
+            "alias": "962a0d87-c53f-4526-b75e-547c63fae404"
+        }
+    ],
+    "isSuccess": true
+}

@@ -1,0 +1,160 @@
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": [
+        {
+            "id": "6a575f09500f03996c1e3702",
+            "name": "PCS",
+            "baseUomCode": "JASA",
+            "details": [
+                {
+                    "code": "JASA",
+                    "name": "JASA",
+                    "conversionFactor": 1.0,
+                    "isBaseUom": true,
+                    "isDefaultForSales": true,
+                    "sortOrder": 1,
+                    "isActive": true
+                }
+            ],
+            "isActive": true,
+            "alias": "46152a71-9035-4a2b-a173-347089a4874c"
+        },
+        {
+            "id": "6a575f09500f03996c1e3704",
+            "name": "CUP",
+            "baseUomCode": "CUP",
+            "details": [
+                {
+                    "code": "CUP",
+                    "name": "CUP",
+                    "conversionFactor": 1.0,
+                    "isBaseUom": true,
+                    "isDefaultForSales": false,
+                    "sortOrder": 1,
+                    "isActive": true
+                }
+            ],
+            "isActive": true,
+            "alias": "062cbcd6-3414-4803-a66c-45b7d765f33f"
+        },
+        {
+            "id": "6a575f09500f03996c1e3706",
+            "name": "CUSTOMBLEND1",
+            "baseUomCode": "GR",
+            "details": [
+                {
+                    "code": "GR",
+                    "name": "GR",
+                    "conversionFactor": 1.0,
+                    "isBaseUom": true,
+                    "isDefaultForSales": true,
+                    "sortOrder": 1,
+                    "isActive": true
+                },
+                {
+                    "code": "100g",
+                    "name": "100g",
+                    "conversionFactor": 100.0,
+                    "isBaseUom": false,
+                    "isDefaultForSales": false,
+                    "sortOrder": 2,
+                    "isActive": true
+                },
+                {
+                    "code": "200g",
+                    "name": "200g",
+                    "conversionFactor": 200.0,
+                    "isBaseUom": false,
+                    "isDefaultForSales": false,
+                    "sortOrder": 3,
+                    "isActive": true
+                },
+                {
+                    "code": "1Kg",
+                    "name": "1Kg",
+                    "conversionFactor": 1000.0,
+                    "isBaseUom": false,
+                    "isDefaultForSales": false,
+                    "sortOrder": 4,
+                    "isActive": true
+                }
+            ],
+            "isActive": true,
+            "alias": "b3c44ef4-528e-4f80-85a5-de8a369187c5"
+        },
+        {
+            "id": "6a6853c69130cc8fb75291b7",
+            "name": "BUKU",
+            "baseUomCode": "JASA",
+            "details": [
+                {
+                    "code": "JASA",
+                    "name": "JASA",
+                    "conversionFactor": 1.0,
+                    "isBaseUom": true,
+                    "isDefaultForSales": false,
+                    "sortOrder": 1,
+                    "isActive": true
+                }
+            ],
+            "isActive": true,
+            "alias": "170e86e2-85fb-4566-897d-e66954213480"
+        },
+        {
+            "id": "6a6853c89130cc8fb75291d3",
+            "name": "Manual",
+            "baseUomCode": "Manual",
+            "details": [
+                {
+                    "code": "Manual",
+                    "name": "Manual",
+                    "conversionFactor": 1.0,
+                    "isBaseUom": true,
+                    "isDefaultForSales": true,
+                    "sortOrder": 1,
+                    "isActive": true
+                }
+            ],
+            "isActive": true,
+            "alias": "bc690e1c-9d72-4347-af05-4e2b1dd99fd0"
+        },
+        {
+            "id": "6a6c13391d7c8a1edf69bda9",
+            "name": "UOMSS",
+            "baseUomCode": "PCS",
+            "details": [
+                {
+                    "code": "PCS",
+                    "name": "PCS",
+                    "conversionFactor": 1.0,
+                    "isBaseUom": true,
+                    "isDefaultForSales": false,
+                    "sortOrder": 1,
+                    "isActive": true
+                },
+                {
+                    "code": "LSN",
+                    "name": "Lusin",
+                    "conversionFactor": 12.0,
+                    "isBaseUom": false,
+                    "isDefaultForSales": false,
+                    "sortOrder": 1,
+                    "isActive": true
+                },
+                {
+                    "code": "DUS",
+                    "name": "DUS",
+                    "conversionFactor": 144.0,
+                    "isBaseUom": false,
+                    "isDefaultForSales": true,
+                    "sortOrder": 1,
+                    "isActive": true
+                }
+            ],
+            "isActive": true,
+            "alias": "7e5ac0e7-6345-4d15-b6a4-829220193a32"
+        }
+    ],
+    "isSuccess": true
+}
