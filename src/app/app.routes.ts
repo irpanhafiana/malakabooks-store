@@ -61,6 +61,10 @@ export const routes: Routes = [
       {
         path: 'reports',
         loadComponent: () => import('./features/admin/reports/reports.component').then(c => c.ReportsComponent)
+      },
+      {
+        path: 'pos/transaction',
+        loadComponent: () => import('./features/admin/pos/transaction-form/transaction-form.component').then(c => c.TransactionFormComponent)
       }
     ]
   },
