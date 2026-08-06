@@ -1,4 +1,5 @@
-import { Component, input, computed, ChangeDetectionStrategy, signal, ElementRef, HostListener, inject, OnDestroy, effect } from '@angular/core';
+import { Component, input, computed, ChangeDetectionStrategy, signal, ElementRef, HostListener, inject, OnDestroy, DestroyRef, effect } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -19,6 +20,7 @@ export class AdminSelectComponent implements OnDestroy {
   readonly customClass = input<string>('', { alias: 'class' });
 
   private readonly elementRef = inject(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly isOpen = signal(false);
   readonly searchQuery = signal('');
@@ -31,8 +33,10 @@ export class AdminSelectComponent implements OnDestroy {
     effect(() => {
       const ctrl = this.control();
       this.valueSub?.unsubscribe();
+      // takeUntilDestroyed() tanpa argumen hanya sah di injection context.
+      // effect() bukan injection context, jadi DestroyRef diambil dari field di atas.
       this.valueSub = ctrl.valueChanges
-        .pipe(startWith(ctrl.value))
+        .pipe(startWith(ctrl.value), takeUntilDestroyed(this.destroyRef))
         .subscribe(val => {
           this.controlValue.set(val);
         });

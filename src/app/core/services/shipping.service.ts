@@ -132,30 +132,47 @@ export class ShippingService {
   setShippingCostFromService(service: ShippingTariffItem | null) {
     let cost = 0;
     if (service) {
-      if (typeof service['price'] === 'number') {
-        cost = service['price'];
-      } else if (service['price'] && typeof service['price'] === 'object') {
-        const priceObj = service['price'] as Record<string, number>;
-        cost = priceObj['medium_price'] || priceObj['small_price'] || priceObj['large_price'] || 0;
-      } else if (typeof service['cost'] === 'number') {
-        cost = service['cost'];
-      } else if (service['cost'] && Array.isArray(service['cost']) && service['cost'][0]) {
-        const costItem = service['cost'][0] as Record<string, number>;
-        cost = costItem['value'] || 0;
-      } else if (service['cost'] && typeof service['cost'] === 'object') {
-        const costObj = service['cost'] as Record<string, number>;
-        cost = costObj['value'] || 0;
-      } else if (typeof service.tariff === 'number') {
-        cost = service.tariff;
-      } else if (typeof service.tariff === 'string') {
-        cost = parseFloat(service.tariff) || 0;
-      }
+      cost = this.extractServicePrice(service);
     }
+    this.shippingCost.set(cost > 0 ? cost : 0);
+  }
 
-    if (cost > 0) {
-      this.shippingCost.set(cost);
-    } else {
-      this.shippingCost.set(0);
+  extractServicePrice(s: ShippingTariffItem): number {
+    if (!s) return 0;
+    let price = 0;
+    if (typeof s['price'] === 'number') {
+      price = s['price'];
+    } else if (s['price'] && typeof s['price'] === 'object') {
+      const pObj = s['price'] as Record<string, number>;
+      price = pObj['medium_price'] || pObj['small_price'] || pObj['large_price'] || 0;
+    } else if (typeof s['cost'] === 'number') {
+      price = s['cost'];
+    } else if (s['cost'] && Array.isArray(s['cost'])) {
+      const cArr = s['cost'] as Record<string, number>[];
+      price = cArr[0]?.['value'] || 0;
+    } else if (s['cost'] && typeof s['cost'] === 'object') {
+      const cObj = s['cost'] as Record<string, number>;
+      price = cObj['value'] || 0;
+    } else if (typeof s.tariff === 'number') {
+      price = s.tariff;
+    } else if (typeof s.tariff === 'string') {
+      price = parseFloat(s.tariff) || 0;
+    }
+    return price;
+  }
+
+  async resolveDistrictForAddress(addr: { provinceName?: string; city?: string; district?: string }): Promise<string> {
+    if (!addr.provinceName || !addr.city || !addr.district) return '';
+    try {
+      const districts = await this.addressApi.getDistricts(addr.provinceName, addr.city);
+      const match = districts.find(d =>
+        d.district_name === addr.district ||
+        d.subdistrict_name === addr.district ||
+        (d.region_code && d.region_code === addr.district)
+      );
+      return match ? (match.region_code || match.address_code || match.district_id || '') : '';
+    } catch {
+      return '';
     }
   }
 }

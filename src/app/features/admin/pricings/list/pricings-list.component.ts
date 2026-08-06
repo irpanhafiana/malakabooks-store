@@ -12,12 +12,13 @@ import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.componen
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-input/admin-search-input.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pricings-list',
   standalone: true,
-  imports: [CommonModule, TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent, TooltipDirective],
+  imports: [CommonModule, TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './pricings-list.component.html'
 })
 export class PricingsListComponent implements OnInit {
@@ -51,9 +52,8 @@ export class PricingsListComponent implements OnInit {
     this.itemStore.loadItems();
   }
 
-  onSearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+  onSearch(query: string) {
+    this.searchQuery.set(query);
     this.pagination.setPage(1);
   }
 

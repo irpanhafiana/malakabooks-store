@@ -140,9 +140,11 @@
   <div
     class="border-t border-slate-100 pt-4 flex justify-between items-center mt-6">
     <div>
-      <app-admin-button (click)="bulkInsert()" type="button" variant="outline" size="sm">
-        Bulk Insert (SS Online - PCS)
-      </app-admin-button>
+      @if (!isProduction) {
+        <app-admin-button (click)="bulkInsert()" type="button" variant="outline" size="sm">
+          Bulk Insert (SS Online - PCS)
+        </app-admin-button>
+      }
     </div>
     <div class="flex gap-3">
       <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>

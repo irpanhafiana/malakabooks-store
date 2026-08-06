@@ -13,12 +13,13 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { StocksFormComponent } from '../form/stocks-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-input/admin-search-input.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-stocks-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, StocksFormComponent, SpinnerComponent, TooltipDirective],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, StocksFormComponent, SpinnerComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './stocks-list.component.html'
 })
 export class StocksListComponent implements OnInit {
@@ -69,9 +70,8 @@ export class StocksListComponent implements OnInit {
     this.itemStore.loadItems();
   }
 
-  onSearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+  onSearch(query: string) {
+    this.searchQuery.set(query);
     this.pagination.setPage(1);
   }
 

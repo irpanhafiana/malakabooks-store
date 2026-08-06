@@ -11,12 +11,13 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { PaymentMethodsFormComponent } from '../form/payment-methods-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-input/admin-search-input.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-payment-methods-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, PaymentMethodsFormComponent, SpinnerComponent, TooltipDirective],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, PaymentMethodsFormComponent, SpinnerComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './payment-methods-list.component.html'
 })
 export class PaymentMethodsListComponent implements OnInit {
@@ -44,9 +45,8 @@ export class PaymentMethodsListComponent implements OnInit {
     this.paymentStore.loadPayments();
   }
 
-  onSearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+  onSearch(query: string) {
+    this.searchQuery.set(query);
     this.pagination.setPage(1);
   }
 

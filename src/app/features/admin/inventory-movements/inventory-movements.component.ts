@@ -1,4 +1,5 @@
-import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { InventoryMovementStore } from '../../../store/inventory-movement.store';
 import { ItemStore } from '../../../store/item.store';
 import { TableComponent } from '../../../shared/ui/table/table.component';
@@ -65,11 +66,13 @@ export class InventoryMovementsComponent implements OnInit {
     10
   );
 
+  private readonly destroyRef = inject(DestroyRef);
+
   ngOnInit() {
     this.movementStore.loadInventoryMovements();
     this.itemStore.loadItems();
 
-    this.filterControl.valueChanges.subscribe(val => {
+    this.filterControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(val => {
       this.selectedItemId.set(val || '');
       this.movementStore.loadInventoryMovements(val || undefined);
       this.pagination.setPage(1);

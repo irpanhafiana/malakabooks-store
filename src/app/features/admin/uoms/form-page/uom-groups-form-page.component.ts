@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UomGroupStore } from '../../../../store/uom-group.store';
 import { UomGroup } from '../../../../core/models';
 import { UomGroupsFormComponent } from '../form/uom-groups-form.component';
@@ -16,6 +17,7 @@ export class UomGroupsFormPageComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly uomGroupStore = inject(UomGroupStore);
+  private readonly destroyRef = inject(DestroyRef);
 
   @ViewChild(UomGroupsFormComponent) uomGroupsForm!: UomGroupsFormComponent;
 
@@ -25,7 +27,7 @@ export class UomGroupsFormPageComponent implements OnInit {
   ngOnInit() {
     this.uomGroupStore.loadUomGroups();
 
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.pageTitle.set('Edit Master UoM');

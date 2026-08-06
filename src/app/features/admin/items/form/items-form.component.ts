@@ -1,5 +1,5 @@
 import { Component, input, output, effect, inject, ChangeDetectionStrategy, signal, ChangeDetectorRef } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { ItemStore } from '../../../../store/item.store';
 import { UomGroupStore } from '../../../../store/uom-group.store';
@@ -9,11 +9,12 @@ import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-inp
 import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
 import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { AlertService } from '../../../../core/services/alert.service';
+import { LoggerService } from '../../../../core/services/logger.service';
 import { computed } from '@angular/core';
+import { environment } from '../../../../../environments/environment';
 import { EditorComponent } from '../../../../shared/ui/editor/editor.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
-import skuData from '../../../../../fixtures/sku_only.json';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +24,7 @@ import skuData from '../../../../../fixtures/sku_only.json';
   templateUrl: './items-form.component.html'
 })
 export class ItemsFormComponent {
+  protected readonly isProduction = environment.production;
   readonly item = input<any>(null);
   readonly onCancel = output<void>();
   readonly onSave = output<void>();
@@ -33,9 +35,10 @@ export class ItemsFormComponent {
   protected readonly authorStore = inject(AuthorStore);
   private readonly categoryApi = inject(CategoryApiService);
   private readonly alertService = inject(AlertService);
+  private readonly logger = inject(LoggerService);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  readonly skuList = signal<string[]>(skuData as string[]);
+  readonly skuList = signal<string[]>([]);
   readonly categories = signal<any[]>([]);
 
   nameControl = new FormControl('', [Validators.required]);
@@ -172,7 +175,7 @@ export class ItemsFormComponent {
       }
     });
 
-    this.uomGroupIdControl.valueChanges.subscribe(uomId => {
+    this.uomGroupIdControl.valueChanges.pipe(takeUntilDestroyed()).subscribe(uomId => {
       if (uomId) {
         const uom = this.uomGroupStore.uomGroups().find(g => g.id === uomId);
         if (uom) {
@@ -183,18 +186,18 @@ export class ItemsFormComponent {
       }
     });
 
-    this.itemTypeControl.valueChanges.subscribe(val => {
+    this.itemTypeControl.valueChanges.pipe(takeUntilDestroyed()).subscribe(val => {
       this.itemTypeChange.emit(val || 'mardika');
     });
 
-    this.authorSelectControl.valueChanges.subscribe(authorId => {
+    this.authorSelectControl.valueChanges.pipe(takeUntilDestroyed()).subscribe(authorId => {
       if (authorId) {
         const current = this.selectedAuthorIds();
         if (!current.includes(authorId)) {
           this.selectedAuthorIds.set([...current, authorId]);
         }
         // Reset control so user can pick again
-        setTimeout(() => this.authorSelectControl.setValue('', { emitEvent: false }), 0);
+        this.authorSelectControl.setValue('', { emitEvent: false });
       }
     });
   }
@@ -212,7 +215,7 @@ export class ItemsFormComponent {
       const cats = await this.categoryApi.getCategories();
       this.categories.set(cats);
     } catch (e) {
-      console.error(e);
+      this.logger.error('Gagal memuat kategori', e);
     }
   }
 
@@ -315,10 +318,15 @@ export class ItemsFormComponent {
         const blob = await response.blob();
         defaultCoverFile = new File([blob], 'default.png', { type: blob.type });
       } else {
-        console.error('File default.png tidak ditemukan (status HTTP tidak ok)');
+        this.logger.error('File default.png tidak ditemukan (status HTTP tidak ok)');
       }
     } catch (e) {
-      console.warn('Gagal memuat gambar /default.png', e);
+      this.logger.warn('Gagal memuat gambar /default.png', e);
+    }
+
+    if (this.skuList().length === 0) {
+      const skuDataModule = await import('../../../../../fixtures/sku_only.json');
+      this.skuList.set(skuDataModule.default as string[]);
     }
 
     for (const sku of this.skuList()) {
@@ -375,7 +383,7 @@ export class ItemsFormComponent {
       this.cdr.markForCheck();
     };
     reader.onerror = () => {
-      console.error('Failed to read cover image file');
+      this.logger.error('Gagal membaca berkas gambar sampul');
     };
     reader.readAsDataURL(file);
 
@@ -395,7 +403,7 @@ export class ItemsFormComponent {
       this.cdr.markForCheck();
     };
     reader.onerror = () => {
-      console.error('Failed to read additional image file');
+      this.logger.error('Gagal membaca berkas gambar tambahan');
     };
     reader.readAsDataURL(file);
 

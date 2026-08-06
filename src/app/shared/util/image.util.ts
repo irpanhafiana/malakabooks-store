@@ -9,3 +9,12 @@ export function resolveImageUrl(url: string | null | undefined): string {
   const path = url.startsWith('/') ? url : `/${url}`;
   return `${serverOrigin}${path}`;
 }
+
+export function readFileAsBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (err) => reject(err);
+    reader.readAsDataURL(file);
+  });
+}

@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LoggerService } from '../../../core/services/logger.service';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +38,7 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
 
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly logger = inject(LoggerService);
+  private readonly alertService = inject(AlertService);
 
   // Reusable Color Options
   readonly textColors = [
@@ -183,8 +185,8 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
   }
 
   // --- Insert Links / Media ---
-  insertLink() {
-    const url = prompt('Masukkan URL Link:', 'https://');
+  async insertLink() {
+    const url = await this.alertService.prompt('Masukkan URL Link:', 'https://', 'https://');
     if (url && url !== 'https://') {
       this.execCommand('createLink', url);
     }

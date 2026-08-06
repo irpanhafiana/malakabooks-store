@@ -26,11 +26,11 @@ export class AuthApiService {
   async loginAndGetToken(username: string, password: string): Promise<{ accessToken: string; refreshToken: string } | null> {
     const body = new URLSearchParams();
     body.set('grant_type', 'password');
-    body.set('client_id', 'MalakaBooks-FE');
+    body.set('client_id', environment.clientId || 'MalakaBooks-FE');
     body.set('username', username);
     body.set('password', password);
-    body.set('client_secret', 'MalakaBooks-FE');
-    body.set('scope', 'Create Update Delete Read offline_access MalakaBooks_Scope General_Scope');
+    body.set('client_secret', environment.clientSecret || 'MalakaBooks-FE');
+    body.set('scope', environment.scope || 'Create Update Delete Read offline_access MalakaBooks_Scope General_Scope');
 
     try {
       const res = await firstValueFrom(
@@ -52,8 +52,8 @@ export class AuthApiService {
   async refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string } | null> {
     const body = new URLSearchParams();
     body.set('grant_type', 'refresh_token');
-    body.set('client_id', 'MalakaBooks-FE');
-    body.set('client_secret', 'MalakaBooks-FE');
+    body.set('client_id', environment.clientId || 'MalakaBooks-FE');
+    body.set('client_secret', environment.clientSecret || 'MalakaBooks-FE');
     body.set('refresh_token', refreshToken);
 
     try {

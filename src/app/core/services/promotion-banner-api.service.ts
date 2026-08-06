@@ -14,11 +14,11 @@ export class PromotionBannerApiService {
   private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
-  private mapBanner(b: any): PromotionBanner {
+  private mapBanner(b: Partial<PromotionBanner>): PromotionBanner {
     const rawImage = b.imageUrl || b.imageBase64 || '';
     const resolvedImage = resolveImageUrl(rawImage);
     return {
-      id: b.id,
+      id: b.id || '',
       title: b.title || '',
       subtitle: b.subtitle || '',
       imageUrl: resolvedImage,
@@ -42,7 +42,7 @@ export class PromotionBannerApiService {
         this.http.get<ApiResponse<PromotionBanner[]>>(`${this.BASE_URL}/public/PromotionBanners`)
       );
       const list = envelope?.data || [];
-      return list.map((b: any) => this.mapBanner(b));
+      return list.map(b => this.mapBanner(b));
     } catch (e) {
       this.logger.warn('PromotionBannerApiService.getActiveBanners', 'Banners could not be loaded:', e);
       return [];
@@ -55,7 +55,7 @@ export class PromotionBannerApiService {
         this.http.get<ApiResponse<PromotionBanner[]>>(`${this.BASE_URL}/public/PromotionBanners`)
       );
       const list = envelope?.data || [];
-      return list.map((b: any) => this.mapBanner(b));
+      return list.map(b => this.mapBanner(b));
     } catch (e) {
       this.logger.error('PromotionBannerApiService.getAdminBanners', 'Banners could not be loaded:', e);
       return [];

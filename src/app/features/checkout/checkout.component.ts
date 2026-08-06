@@ -15,6 +15,7 @@ import { UserApiService } from '../../core/services/user-api.service';
 import { LoggerService } from '../../core/services/logger.service';
 import { ShippingService } from '../../core/services/shipping.service';
 import { PaymentApiService } from '../../core/services/payment-api.service';
+import { DokuCheckoutService } from '../../core/services/doku-checkout.service';
 
 import { CheckoutAddressComponent } from './components/checkout-address/checkout-address.component';
 import { CheckoutShippingComponent } from './components/checkout-shipping/checkout-shipping.component';
@@ -49,6 +50,7 @@ export class CheckoutComponent implements OnInit {
   private readonly logger = inject(LoggerService);
   private readonly shippingService = inject(ShippingService);
   private readonly paymentApi = inject(PaymentApiService);
+  private readonly dokuCheckout = inject(DokuCheckoutService);
 
   isLoading = signal<boolean>(false);
   showAddressForm = signal<boolean>(false);
@@ -89,13 +91,7 @@ export class CheckoutComponent implements OnInit {
   courierServices = this.shippingService.courierServices;
   courierServiceOptions = computed(() => {
     return this.courierServices().map((s, idx) => {
-      let price = 0;
-      if (typeof s.price === 'number') { price = s.price; }
-      else if (s.price && typeof s.price === 'object') { price = s.price.medium_price || s.price.small_price || s.price.large_price || 0; }
-      else if (typeof s.cost === 'number') { price = s.cost; }
-      else if (s.cost && Array.isArray(s.cost)) { price = s.cost[0]?.value || 0; }
-      else if (s.cost && typeof s.cost === 'object') { price = s.cost.value || 0; }
-
+      const price = this.shippingService.extractServicePrice(s);
       const firstCost = Array.isArray(s.cost) ? s.cost[0] : null;
       const etd = s.etd || firstCost?.etd || '-';
       return {
@@ -152,7 +148,13 @@ export class CheckoutComponent implements OnInit {
   cardExpiryControl = new FormControl('', [Validators.required]);
   cardCvcControl = new FormControl('', [Validators.required]);
 
-  async ngOnInit() {
+  ngOnInit() {
+    void this.initialize().catch(err => {
+      this.logger.error('Checkout initialization error:', err);
+    });
+  }
+
+  private async initialize() {
     // Check auth, redirect if not logged in
     if (!this.authStore.isLoggedIn()) {
       this.toastService.info('Please sign in to complete your checkout.');
@@ -507,7 +509,13 @@ export class CheckoutComponent implements OnInit {
         const checkoutUrl = placed.paymentUrl;
 
         if (checkoutUrl) {
-          (window as any).loadJokulCheckout(checkoutUrl);
+          const opened = await this.dokuCheckout.open(checkoutUrl);
+          if (!opened) {
+            // Order sudah tercatat di backend — jangan tinggalkan pengguna diam
+            // di halaman checkout tanpa umpan balik.
+            this.toastService.error('Order placed, but failed to load payment gateway. Please check your order history.');
+            this.router.navigate(['/order-success'], { queryParams: { id: placed.id } });
+          }
         } else {
           this.logger.error('Failed to resolve checkout URL from order response:', placed);
           this.toastService.error('Order placed, but failed to load payment gateway. Please check your order history.');

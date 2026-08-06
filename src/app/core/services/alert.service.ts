@@ -105,4 +105,18 @@ export class AlertService {
       this.resolveFn = null;
     }
   }
+
+  async prompt(title: string, inputPlaceholder: string = 'https://', defaultValue: string = ''): Promise<string | null> {
+    const res = await Swal.fire({
+      ...this.swalConfig,
+      title,
+      input: 'text',
+      inputPlaceholder,
+      inputValue: defaultValue,
+      showCancelButton: true,
+      confirmButtonText: 'Simpan',
+      cancelButtonText: 'Batal'
+    });
+    return res.isConfirmed && res.value ? res.value : null;
+  }
 }

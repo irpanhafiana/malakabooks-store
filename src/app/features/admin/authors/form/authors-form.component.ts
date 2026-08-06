@@ -5,6 +5,7 @@ import { AuthorStore } from '../../../../store/author.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { EditorComponent } from '../../../../shared/ui/editor/editor.component';
 import { AlertService } from '../../../../core/services/alert.service';
+import { readFileAsBase64 } from '../../../../shared/util/image.util';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,17 +121,18 @@ export class AuthorsFormComponent {
     this.onSave.emit();
   }
 
-  onFileSelected(event: Event) {
+  async onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
       this.selectedPhotoFile = file;
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.photoUrlControl.setValue(reader.result as string);
+      try {
+        const base64 = await readFileAsBase64(file);
+        this.photoUrlControl.setValue(base64);
         this.cdr.markForCheck();
-      };
-      reader.readAsDataURL(file);
+      } catch {
+        // ignore
+      }
     }
   }
 }

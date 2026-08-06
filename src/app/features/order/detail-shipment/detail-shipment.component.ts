@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { OrderApiService } from '../../../core/services/order-api.service';
@@ -20,6 +21,7 @@ export class DetailShipmentComponent implements OnInit {
   private readonly orderApi = inject(OrderApiService);
   private readonly toastService = inject(ToastService);
   private readonly logger = inject(LoggerService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
@@ -28,7 +30,7 @@ export class DetailShipmentComponent implements OnInit {
   orderIdRouteParam = '';
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.orderIdRouteParam = id;

@@ -10,12 +10,13 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-input/admin-search-input.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-uom-groups-list',
   standalone: true,
-  imports: [TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent, TooltipDirective],
+  imports: [TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './uom-groups-list.component.html'
 })
 export class UomGroupsListComponent implements OnInit {
@@ -41,9 +42,8 @@ export class UomGroupsListComponent implements OnInit {
     this.uomGroupStore.loadUomGroups();
   }
 
-  onSearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+  onSearch(query: string) {
+    this.searchQuery.set(query);
     this.pagination.setPage(1);
   }
 

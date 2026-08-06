@@ -12,12 +12,13 @@ import { PromotionBannersFormComponent } from '../form/promotion-banners-form.co
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { NgClass } from '@angular/common';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-input/admin-search-input.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-promotion-banners-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, PromotionBannersFormComponent, SpinnerComponent, NgClass, TooltipDirective],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, PromotionBannersFormComponent, SpinnerComponent, NgClass, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './promotion-banners-list.component.html'
 })
 export class PromotionBannersListComponent implements OnInit {
@@ -42,9 +43,8 @@ export class PromotionBannersListComponent implements OnInit {
     this.bannerStore.loadAdminBanners();
   }
 
-  onSearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+  onSearch(query: string) {
+    this.searchQuery.set(query);
     this.pagination.setPage(1);
   }
 

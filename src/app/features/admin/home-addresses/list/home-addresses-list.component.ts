@@ -11,12 +11,13 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { HomeAddressesFormComponent } from '../form/home-addresses-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-input/admin-search-input.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home-addresses-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, HomeAddressesFormComponent, SpinnerComponent, TooltipDirective],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, HomeAddressesFormComponent, SpinnerComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './home-addresses-list.component.html'
 })
 export class HomeAddressesListComponent implements OnInit {
@@ -45,9 +46,8 @@ export class HomeAddressesListComponent implements OnInit {
     this.store.loadHomeAddresses();
   }
 
-  onSearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+  onSearch(query: string) {
+    this.searchQuery.set(query);
     this.pagination.setPage(1);
   }
 

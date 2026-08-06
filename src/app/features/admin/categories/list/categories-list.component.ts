@@ -11,12 +11,13 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { CategoriesFormComponent } from '../form/categories-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-input/admin-search-input.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-categories-list',
   standalone: true,
-  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, CategoriesFormComponent, SpinnerComponent, TooltipDirective],
+  imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, CategoriesFormComponent, SpinnerComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './categories-list.component.html',
   styleUrl: './categories-list.component.css'
 })
@@ -45,9 +46,8 @@ export class CategoriesListComponent implements OnInit {
     this.productStore.loadCategories();
   }
 
-  onSearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+  onSearch(query: string) {
+    this.searchQuery.set(query);
     this.pagination.setPage(1);
   }
 

@@ -18,7 +18,9 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin href="media/poppins-latin-400-normal.woff2">
   <link rel="preload" as="font" type="font/woff2" crossorigin href="media/poppins-latin-600-normal.woff2">
   <link rel="preload" as="font" type="font/woff2" crossorigin href="media/fraunces-latin-700-normal.woff2">
-<link rel="stylesheet" href="https://jokul.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.css">
+  <!-- Aset Jokul/DOKU checkout dimuat lazy oleh DokuCheckoutService (URL dari
+       environment), sehingga tidak ada stylesheet cross-origin render-blocking
+       di sini dan dev/production memakai endpoint yang sesuai. -->
   <!-- Critical inline styles: paint the brand background + a loader immediately,
        before the Angular JS bundle bootstraps, to eliminate the white FOUC flash. -->
   <style>
@@ -47,7 +49,6 @@
     }
     @keyframes app-boot-spin { to { transform: rotate(360deg); } }
   </style>
-  <script src="https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>

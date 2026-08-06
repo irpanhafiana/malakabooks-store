@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, computed, ChangeDetectionStrategy, effect } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, ChangeDetectionStrategy, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
@@ -26,62 +26,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly bannerStore = inject(PromotionBannerStore);
   protected readonly screen = inject(ScreenService);
 
-  slides = [
-    {
-      badge: 'Pusat Belanja',
-      title: 'Temukan Berbagai Produk Pilihan Terlengkap',
-      description: 'Jelajahi koleksi barang harian, peralatan, aksesoris, dan gaya hidup berkualitas di SS Online Shop.',
-      buttonText: 'Mulai Belanja',
-      buttonLink: '/product',
-      promoCode: 'SHOP10',
-      bgGradient: 'from-indigo-800 via-indigo-700 to-blue-900',
-      imageUrl: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1200&q=80'
-    },
-    {
-      badge: 'Special Promo',
-      title: 'Kebutuhan Rumah & Peralatan Modern',
-      description: 'Lengkapi rumah dan aktivitas Anda dengan peralatan praktis dan berkualitas tinggi.',
-      buttonText: 'Lihat Promo',
-      buttonLink: '/product',
-      promoCode: 'PROMO20',
-      bgGradient: 'from-slate-900 via-slate-800 to-indigo-950',
-      imageUrl: 'https://images.unsplash.com/photo-1526178613552-2b45c6c302f0?auto=format&fit=crop&w=1200&q=80'
-    },
-    {
-      badge: 'Lifestyle & Aksesoris',
-      title: 'Aksesoris & Perlengkapan Gaya Hidup',
-      description: 'Dapatkan aksesoris pilihan terbaik dengan penawaran menarik hanya di SS Online Shop.',
-      buttonText: 'Cari Produk',
-      buttonLink: '/product',
-      promoCode: 'STYLE15',
-      bgGradient: 'from-emerald-950 via-teal-900 to-blue-950',
-      imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80'
-    }
-  ];
-
   currentSlide = signal<number>(0);
 
-  readonly catalogProducts = computed(() => {
-    let list = [...this.productStore.products()];
-    const catId = this.productStore.selectedCategoryId();
-    const sort = this.productStore.sortBy();
-
-    if (catId) {
-      list = list.filter(p => p.categoryId === catId);
-    }
-
-    if (sort === 'price-asc') {
-      list.sort((a, b) => a.price - b.price);
-    } else if (sort === 'price-desc') {
-      list.sort((a, b) => b.price - a.price);
-    } else if (sort === 'rating') {
-      list.sort((a, b) => b.averageRating - a.averageRating);
-    } else {
-      list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    }
-
-    return list;
-  });
+  readonly catalogProducts = this.productStore.filteredProducts;
 
   private embla?: EmblaCarouselType;
   private bestSellerEmbla?: EmblaCarouselType;

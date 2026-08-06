@@ -1,4 +1,4 @@
-import { Component, input, output, effect, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, input, output, effect, inject, ChangeDetectionStrategy, signal, computed } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { Pricing, PricingDetail } from '../../../../core/models';
@@ -10,10 +10,19 @@ import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-b
 import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { AdminCheckboxComponent } from '../../../../shared/ui/admin-checkbox/admin-checkbox.component';
 import { AlertService } from '../../../../core/services/alert.service';
+import { LoggerService } from '../../../../core/services/logger.service';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
-import { computed } from '@angular/core';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
-import itemFilteredData from '../../../../../fixtures/item_filtered.json';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { environment } from '../../../../../environments/environment';
+import {
+  CUSTOMER_GROUP_ONLINE,
+  CUSTOMER_GROUP_NON_MEMBER,
+  PRICING_UOM_CODE,
+  NON_MEMBER_PRICE_MULTIPLIER,
+  PRICING_DEFAULT_END_DATE,
+  CUSTOMER_GROUP_OPTIONS
+} from '../../../../core/constants/pricing.constants';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,14 +32,16 @@ import itemFilteredData from '../../../../../fixtures/item_filtered.json';
   templateUrl: './pricings-form.component.html'
 })
 export class PricingsFormComponent {
+  protected readonly isProduction = environment.production;
   readonly pricing = input<Pricing | null>(null);
   readonly onCancel = output<void>();
   readonly onSave = output<void>();
 
   private readonly pricingStore = inject(PricingStore);
   protected readonly itemStore = inject(ItemStore);
-  private readonly uomGroupStore = inject(UomGroupStore);
+  protected readonly uomGroupStore = inject(UomGroupStore);
   private readonly alertService = inject(AlertService);
+  private readonly logger = inject(LoggerService);
 
   nameControl = new FormControl('', [Validators.required]);
   itemIdControl = new FormControl('', [Validators.required]);
@@ -54,14 +65,7 @@ export class PricingsFormComponent {
   detailUomCode = new FormControl('', [Validators.required]);
   detailPrice = new FormControl(0, [Validators.required, Validators.min(0)]);
 
-  customerGroupOptions = [
-    { value: '100', label: 'Mitra' },
-    { value: '102', label: 'Warung' },
-    { value: '103', label: 'Online' },
-    { value: '104', label: 'Grosir' },
-    { value: '105', label: 'Member' },
-    { value: '106', label: 'Non Member' }
-  ];
+  customerGroupOptions = CUSTOMER_GROUP_OPTIONS;
 
   itemOptions = computed(() => {
     const list = this.itemStore.items() || [];
@@ -146,7 +150,7 @@ export class PricingsFormComponent {
     });
 
     // Auto set UoM code when header item is picked (for default detail uom)
-    this.itemIdControl.valueChanges.subscribe(itemId => {
+    this.itemIdControl.valueChanges.pipe(takeUntilDestroyed()).subscribe(itemId => {
       this.selectedItemId.set(itemId || '');
       if (itemId) {
         const item = this.itemMap().get(itemId);
@@ -238,7 +242,8 @@ export class PricingsFormComponent {
 
     const items = this.itemStore.items() || [];
     const itemMap = new Map(items.map(i => [i.name, i]));
-    const dataList = itemFilteredData as any[];
+    const itemFilteredModule = await import('../../../../../fixtures/item_filtered.json');
+    const dataList = itemFilteredModule.default as any[];
 
     for (const data of dataList) {
       const sku = data['SKU'];
@@ -251,24 +256,24 @@ export class PricingsFormComponent {
           itemId: item.id,
           itemCode: item.sapCode,
           startDate: new Date().toISOString(),
-          endDate: new Date('2036-12-31T23:59:59.000Z').toISOString(),
+          endDate: new Date(PRICING_DEFAULT_END_DATE).toISOString(),
           isActive: true,
           details: [
             {
-              customerGroupCode: '103', // Online
-              uomCode: 'JASA', // uomCode tetap JASA
+              customerGroupCode: CUSTOMER_GROUP_ONLINE,
+              uomCode: PRICING_UOM_CODE,
               price: price
             },
             {
-              customerGroupCode: '106', // Non Member (lebih mahal 20%)
-              uomCode: 'JASA', // uomCode tetap JASA
-              price: Math.round(price * 1.2) // Kenaikan 20% (di antara 15-25%)
+              customerGroupCode: CUSTOMER_GROUP_NON_MEMBER,
+              uomCode: PRICING_UOM_CODE,
+              price: Math.round(price * NON_MEMBER_PRICE_MULTIPLIER)
             }
           ]
         };
         await this.pricingStore.savePricing(payload);
       } else {
-        console.warn(`Item dengan SKU "${sku}" tidak ditemukan di master data.`);
+        this.logger.warn(`Item dengan SKU "${sku}" tidak ditemukan di master data.`);
       }
     }
 

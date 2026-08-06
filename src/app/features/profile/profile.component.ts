@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
@@ -59,6 +60,7 @@ export class ProfileComponent implements OnInit {
   private readonly logger = inject(LoggerService);
   private readonly userApi = inject(UserApiService);
   private readonly orderApi = inject(OrderApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   isProfileSaving = signal<boolean>(false);
   avatarPreview = signal<string>('');
@@ -122,7 +124,7 @@ export class ProfileComponent implements OnInit {
     this.avatarPreview.set(user.avatar || '');
 
     if (user.phone) {
-      this.userApi.getExternalProfile(user.phone).subscribe({
+      this.userApi.getExternalProfile(user.phone).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (res: any) => {
           if (res && res.id) {
             localStorage.setItem('externalProfileId', res.id);

@@ -53,6 +53,16 @@
   --color-accent-800: #7f1010;
   --color-accent-900: #640c0c;
 
+  /* Z-Index Tokens */
+  --z-dropdown: 20;
+  --z-sticky: 30;
+  --z-drawer: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+
+  /* Extra Font Size Tokens */
+  --text-2xs: 0.625rem;
+  --text-3xs: 0.5rem;
 }
 body {
   font-family: var(--font-sans);

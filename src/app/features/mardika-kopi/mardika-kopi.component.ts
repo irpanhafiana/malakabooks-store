@@ -16,6 +16,7 @@ import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.
 import { MardikaKopiDetailComponent } from './mardika-kopi-detail/mardika-kopi-detail.component';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
 import { ItemApiService } from '../../core/services/item-api.service';
+import { LoggerService } from '../../core/services/logger.service';
 import { resolveImageUrl } from '../../shared/util/image.util';
 import { isAdminSession } from '../../core/auth/session.util';
 
@@ -36,39 +37,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected readonly bannerStore = inject(PromotionBannerStore);
   private readonly itemApi = inject(ItemApiService);
-
-  slides = [
-    {
-      badge: 'Bookstore Reimagined',
-      title: 'Find Books & Items That Ignite Your Mind',
-      description: 'Discover a premium collection of literary classics, coding books, journals, pens, and custom digital audiobooks.',
-      buttonText: 'Browse Books',
-      buttonLink: '/product',
-      promoCode: 'PROMO10',
-      bgGradient: 'from-primary-700 via-primary-600 to-rose-500',
-      imageUrl: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1200&q=80'
-    },
-    {
-      badge: 'Special Promotion',
-      title: 'Pena & Jurnal Premium Eksklusif',
-      description: 'Tingkatkan kualitas catatan harian Anda dengan aksesoris buatan pengrajin lokal berbahan jati dan kulit asli.',
-      buttonText: 'Lihat Aksesoris',
-      buttonLink: '/product',
-      promoCode: 'CRAFT20',
-      bgGradient: 'from-slate-950 via-purple-950 to-indigo-900',
-      imageUrl: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80'
-    },
-    {
-      badge: 'Digital Library',
-      title: 'Dengarkan Audiobooks Di Mana Saja',
-      description: 'Nikmati kisah sastra klasik yang dinarasikan oleh pengisi suara profesional dalam bentuk berkas audio berkualitas tinggi.',
-      buttonText: 'Cari Audiobooks',
-      buttonLink: '/product',
-      promoCode: 'AUDIO5',
-      bgGradient: 'from-emerald-950 via-teal-900 to-amber-900',
-      imageUrl: 'https://images.unsplash.com/photo-1508962914676-134849a727f0?auto=format&fit=crop&w=1200&q=80'
-    }
-  ];
+  private readonly logger = inject(LoggerService);
 
   currentSlide = signal<number>(0);
   kopiItems = signal<Product[]>([]);
@@ -163,7 +132,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       this.kopiItems.set(products);
     } catch (e) {
-      console.error(e);
+      this.logger.error('Gagal memuat produk Mardika Kopi', e);
     } finally {
       this.kopiLoading.set(false);
     }

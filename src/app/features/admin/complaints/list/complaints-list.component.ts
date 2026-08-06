@@ -11,6 +11,7 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { ComplaintsFormComponent } from '../form/complaints-form.component';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-badge.component';
+import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-input/admin-search-input.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +26,8 @@ import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-
     ComplaintsFormComponent,
     SpinnerComponent,
     StatusBadgeComponent,
-    IconComponent
+    IconComponent,
+    AdminSearchInputComponent
   ],
   templateUrl: './complaints-list.component.html'
 })
@@ -48,9 +50,8 @@ export class ComplaintsListComponent implements OnInit {
   protected isModalOpen = false;
   protected readonly selected = signal<Complaint | null>(null);
 
-  onSearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+  onSearch(query: string) {
+    this.searchQuery.set(query);
   }
 
   ngOnInit() {

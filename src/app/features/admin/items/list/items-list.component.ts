@@ -11,12 +11,13 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { createClientPagination } from '../../../../shared/util/pagination.util';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-input/admin-search-input.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-items-list',
   standalone: true,
-  imports: [TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent, RouterLink, TooltipDirective],
+  imports: [TableComponent, AdminButtonComponent, IconComponent, PaginationComponent, SpinnerComponent, RouterLink, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './items-list.component.html'
 })
 export class ItemsListComponent implements OnInit {
@@ -52,9 +53,8 @@ export class ItemsListComponent implements OnInit {
     this.uomGroupStore.loadUomGroups();
   }
 
-  onSearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+  onSearch(query: string) {
+    this.searchQuery.set(query);
     this.pagination.setPage(1);
   }
 

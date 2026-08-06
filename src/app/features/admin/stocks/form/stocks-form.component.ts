@@ -8,6 +8,7 @@ import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-inp
 import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { AlertService } from '../../../../core/services/alert.service';
 import { computed } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,7 +75,7 @@ export class StocksFormComponent {
     });
 
     // Automatically fill baseUomCode when itemId changes
-    this.itemIdControl.valueChanges.subscribe(itemId => {
+    this.itemIdControl.valueChanges.pipe(takeUntilDestroyed()).subscribe(itemId => {
       if (itemId) {
         const item = this.itemStore.items().find(i => i.id === itemId);
         if (item) {

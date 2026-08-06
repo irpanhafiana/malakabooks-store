@@ -11,12 +11,13 @@ import { createClientPagination } from '../../../../shared/util/pagination.util'
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-input/admin-search-input.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-list',
   standalone: true,
-  imports: [TableComponent, BadgeComponent, AdminButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent, IconComponent, TooltipDirective],
+  imports: [TableComponent, BadgeComponent, AdminButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent, IconComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'
 })
@@ -39,9 +40,8 @@ export class UsersListComponent implements OnInit {
     this.userStore.loadUsers();
   }
 
-  onSearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+  onSearch(query: string) {
+    this.searchQuery.set(query);
     this.pagination.setPage(1);
   }
 

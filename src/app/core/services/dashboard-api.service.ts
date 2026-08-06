@@ -3,6 +3,7 @@ import { DashboardMetrics, AdminDashboardDataDto, ApiResponse } from '../models'
 import { OrderApiService } from './order-api.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
@@ -11,12 +12,13 @@ import { firstValueFrom } from 'rxjs';
 export class DashboardApiService {
   private readonly orderApi = inject(OrderApiService);
   private readonly http = inject(HttpClient);
+  private readonly logger = inject(LoggerService);
   private readonly BASE_URL = environment.apiBaseUrl;
 
   async getDashboardMetrics(): Promise<DashboardMetrics> {
     const [response, orders] = await Promise.all([
       firstValueFrom(this.http.get<ApiResponse<AdminDashboardDataDto>>(`${this.BASE_URL}/admin/Dashboard`)).catch(err => {
-        console.error('Failed to fetch dashboard metrics:', err);
+        this.logger.error('Failed to fetch dashboard metrics:', err);
         return null;
       }),
       this.orderApi.getOrders().catch(() => [])
