@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Warehouse } from '../core/models';
 import { WarehouseApiService } from '../core/services/warehouse-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface WarehouseState {
   warehouses: Warehouse[];
@@ -14,7 +14,7 @@ interface WarehouseState {
 })
 export class WarehouseStore {
   private readonly warehouseApi = inject(WarehouseApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<WarehouseState>({
     warehouses: [],
@@ -33,7 +33,7 @@ export class WarehouseStore {
       this.state.update(s => ({ ...s, warehouses, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar gudang.' }));
-      this.toastService.error('Gagal memuat daftar gudang.');
+      this.alertService.error('Gagal memuat daftar gudang.');
     }
   }
 
@@ -42,10 +42,10 @@ export class WarehouseStore {
     try {
       const saved = await this.warehouseApi.saveWarehouse(warehouse);
       await this.loadWarehouses();
-      this.toastService.success(`Gudang "${saved.name}" berhasil disimpan!`);
+      this.alertService.success(`Gudang "${saved.name}" berhasil disimpan!`);
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menyimpan gudang.');
+      this.alertService.error('Gagal menyimpan gudang.');
     }
   }
 
@@ -55,14 +55,14 @@ export class WarehouseStore {
       const success = await this.warehouseApi.deleteWarehouse(id);
       if (success) {
         await this.loadWarehouses();
-        this.toastService.success('Gudang berhasil dihapus.');
+        this.alertService.success('Gudang berhasil dihapus.');
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Gudang gagal dihapus.');
+        this.alertService.error('Gudang gagal dihapus.');
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menghapus gudang.');
+      this.alertService.error('Gagal menghapus gudang.');
     }
   }
 }

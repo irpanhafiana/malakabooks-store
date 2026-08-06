@@ -1,12 +1,12 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
-import { ToastService } from '../services/toast.service';
+import { AlertService } from '../services/alert.service';
 import type { ApiResponse } from '../models/api-response.model';
 
 /**
  * Sertakan header ini pada request yang ingin menangani error-nya sendiri
- * (mis. pengecekan silent) agar interceptor tidak memunculkan toast.
+ * (mis. pengecekan silent) agar interceptor tidak memunculkan alertService.
  */
 export const SKIP_ERROR_HEADER = 'X-Skip-Error-Interceptor';
 
@@ -29,7 +29,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  const toast = inject(ToastService);
+  const alertService = inject(AlertService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -39,24 +39,24 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         envelope && typeof envelope === 'object' ? envelope.statusMessage ?? null : null;
 
       if (error.status === 0) {
-        toast.error('Tidak dapat terhubung ke server. Periksa koneksi internet Anda.');
+        alertService.error('Tidak dapat terhubung ke server. Periksa koneksi internet Anda.');
       } else if (error.status === 400) {
         if (envelope && envelope.errors && typeof envelope.errors === 'object') {
           const validationMsgs = Object.values(envelope.errors).flat();
           if (validationMsgs.length > 0) {
-            toast.error(validationMsgs.join(', '));
+            alertService.error(validationMsgs.join(', '));
           } else {
-            toast.error(serverMessage || 'Terjadi kesalahan validasi data.');
+            alertService.error(serverMessage || 'Terjadi kesalahan validasi data.');
           }
         } else {
-          toast.error(serverMessage || 'Permintaan tidak valid (400).');
+          alertService.error(serverMessage || 'Permintaan tidak valid (400).');
         }
       } else if (error.status === 403) {
-        toast.error(serverMessage || 'Anda tidak memiliki izin untuk melakukan tindakan ini.');
+        alertService.error(serverMessage || 'Anda tidak memiliki izin untuk melakukan tindakan ini.');
       } else if (error.status === 404) {
-        toast.error(serverMessage || 'Sumber daya tidak ditemukan (404).');
+        alertService.error(serverMessage || 'Sumber daya tidak ditemukan (404).');
       } else if (error.status >= 500) {
-        toast.error(serverMessage || 'Terjadi kesalahan pada server. Silakan coba lagi nanti.');
+        alertService.error(serverMessage || 'Terjadi kesalahan pada server. Silakan coba lagi nanti.');
       }
 
       return throwError(() => error);

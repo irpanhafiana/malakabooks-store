@@ -3,7 +3,7 @@ import { User, RegisterPayload, Address } from '../core/models';
 import { AuthApiService } from '../core/services/auth-api.service';
 import { UserApiService } from '../core/services/user-api.service';
 import { ProductApiService } from '../core/services/product-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 import { LoggerService } from '../core/services/logger.service';
 import { CartStore } from './cart.store';
 import { decodeJwt, isTokenExpired, jwtHasAdminRole, mapJwtToUser } from '../core/auth/jwt.util';
@@ -22,7 +22,7 @@ export class AuthStore {
   private readonly authApi = inject(AuthApiService);
   private readonly userApi = inject(UserApiService);
   private readonly productApi = inject(ProductApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
   private readonly logger = inject(LoggerService);
   private readonly cartStore = inject(CartStore);
 
@@ -162,7 +162,7 @@ export class AuthStore {
         const { accessToken, refreshToken } = result;
         const user = mapJwtToUser(decodeJwt(accessToken));
         if (!user) {
-          this.toastService.error('Token tidak valid: User ID tidak ditemukan.');
+          this.alertService.error('Token tidak valid: User ID tidak ditemukan.');
           return false;
         }
 
@@ -176,13 +176,13 @@ export class AuthStore {
           await this.cartStore.syncOnLogin(user.id, products);
         }
 
-        this.toastService.success(`Selamat datang kembali, ${user.name}!`);
+        this.alertService.success(`Selamat datang kembali, ${user.name}!`);
         return true;
       }
-      this.toastService.error('Email atau password salah.');
+      this.alertService.error('Email atau password salah.');
       return false;
     } catch (err) {
-      this.toastService.error('Terjadi kesalahan autentikasi. Silakan coba lagi.');
+      this.alertService.error('Terjadi kesalahan autentikasi. Silakan coba lagi.');
       return false;
     }
   }
@@ -206,13 +206,13 @@ export class AuthStore {
     this.clearPersistedSession();
     this.cartStore.clearOnLogout();
     this.state.set({ user: null, token: null, error: null });
-    this.toastService.info('Anda telah keluar.');
+    this.alertService.info('Anda telah keluar.');
   }
 
   async register(payload: RegisterPayload): Promise<boolean> {
     try {
       await this.userApi.register(payload);
-      this.toastService.success('Pendaftaran akun berhasil! Silakan masuk.');
+      this.alertService.success('Pendaftaran akun berhasil! Silakan masuk.');
       return true;
     } catch (err: any) {
       this.logger.error('AuthStore.register', err);
@@ -224,7 +224,7 @@ export class AuthStore {
     try {
       const savedUser = await this.userApi.saveUser(updatedUser, avatarFile);
       this.syncUser(savedUser);
-      this.toastService.success('Profil berhasil diperbarui!');
+      this.alertService.success('Profil berhasil diperbarui!');
       return true;
     } catch {
       return false;
@@ -239,7 +239,7 @@ export class AuthStore {
       if (success) {
         const updatedAddresses = await this.userApi.getAddressesByUserId(user.id);
         this.syncUser({ addresses: updatedAddresses } as Partial<User>);
-        this.toastService.success('Alamat berhasil ditambahkan!');
+        this.alertService.success('Alamat berhasil ditambahkan!');
         return true;
       }
       return false;
@@ -256,7 +256,7 @@ export class AuthStore {
       if (success) {
         const updatedAddresses = await this.userApi.getAddressesByUserId(user.id);
         this.syncUser({ addresses: updatedAddresses } as Partial<User>);
-        this.toastService.success('Alamat berhasil diperbarui!');
+        this.alertService.success('Alamat berhasil diperbarui!');
         return true;
       }
       return false;
@@ -273,7 +273,7 @@ export class AuthStore {
       if (success) {
         const updatedAddresses = await this.userApi.getAddressesByUserId(user.id);
         this.syncUser({ addresses: updatedAddresses } as Partial<User>);
-        this.toastService.success('Alamat berhasil dihapus!');
+        this.alertService.success('Alamat berhasil dihapus!');
         return true;
       }
       return false;

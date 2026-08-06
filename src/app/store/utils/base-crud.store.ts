@@ -1,5 +1,5 @@
 import { signal, computed, inject } from '@angular/core';
-import { ToastService } from '../../core/services/toast.service';
+import { AlertService } from '../../core/services/alert.service';
 
 export interface GenericCrudState<T> {
   items: T[];
@@ -15,7 +15,7 @@ export interface CrudApiService<T> {
 
 export abstract class BaseCrudStore<T extends { id?: string; name?: string; title?: string }> {
   protected abstract readonly api: CrudApiService<T>;
-  protected readonly toastService = inject(ToastService);
+  protected readonly alertService = inject(AlertService);
   protected abstract readonly entityName: string;
 
   protected readonly state = signal<GenericCrudState<T>>({
@@ -46,12 +46,12 @@ export abstract class BaseCrudStore<T extends { id?: string; name?: string; titl
       await this.load();
       const displayName = saved.name || saved.title || this.entityName;
       if (options?.showToast !== false) {
-        this.toastService.success(`${this.entityName} "${displayName}" berhasil disimpan!`);
+        this.alertService.success(`${this.entityName} "${displayName}" berhasil disimpan!`);
       }
     } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error(`Gagal menyimpan ${this.entityName}.`);
+        this.alertService.error(`Gagal menyimpan ${this.entityName}.`);
       }
     }
   }
@@ -63,18 +63,18 @@ export abstract class BaseCrudStore<T extends { id?: string; name?: string; titl
       if (success) {
         await this.load();
         if (options?.showToast !== false) {
-          this.toastService.success(`${this.entityName} berhasil dihapus.`);
+          this.alertService.success(`${this.entityName} berhasil dihapus.`);
         }
       } else {
         this.state.update(s => ({ ...s, loading: false }));
         if (options?.showToast !== false) {
-          this.toastService.error(`${this.entityName} tidak ditemukan.`);
+          this.alertService.error(`${this.entityName} tidak ditemukan.`);
         }
       }
     } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error(`Gagal menghapus ${this.entityName}.`);
+        this.alertService.error(`Gagal menghapus ${this.entityName}.`);
       }
     }
   }

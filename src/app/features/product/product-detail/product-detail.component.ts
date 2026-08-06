@@ -1,5 +1,4 @@
 import { Component, inject, signal, OnInit, input, effect, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
-import Swal from 'sweetalert2';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe, Location } from '@angular/common';
@@ -14,7 +13,7 @@ import { PriceComponent } from '../../../shared/ui/price/price.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
-import { ToastService } from '../../../core/services/toast.service';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,7 +43,7 @@ export class ProductDetailComponent implements OnInit {
   protected readonly userStore = inject(UserStore);
   protected readonly authStore = inject(AuthStore);
   protected readonly productStore = inject(ProductStore);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly location = inject(Location);
 
@@ -130,15 +129,12 @@ export class ProductDetailComponent implements OnInit {
   openQuantityModal(event: Event) {
     event.stopPropagation();
     if (this.product()!.stock <= 0) {
-      Swal.fire({
-        title: 'Stok Kosong',
-        text: 'Saat ini stok produk sedang kosong. Anda tetap bisa memasukkannya ke keranjang untuk di-checkout nanti. Lanjutkan?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Lanjutkan',
-        cancelButtonText: 'Batal'
-      }).then((result) => {
-        if (result.isConfirmed) {
+      this.alertService.confirm(
+        'Stok Kosong',
+        'Saat ini stok produk sedang kosong. Anda tetap bisa memasukkannya ke keranjang untuk di-checkout nanti. Lanjutkan?',
+        'Ya, Lanjutkan'
+      ).then((isConfirmed) => {
+        if (isConfirmed) {
           this.executeOpenQtyModal('cart');
         }
       });
@@ -158,15 +154,12 @@ export class ProductDetailComponent implements OnInit {
   buyNow(event: Event) {
     event.stopPropagation();
     if (this.product()!.stock <= 0) {
-      Swal.fire({
-        title: 'Stok Kosong',
-        text: 'Saat ini stok produk sedang kosong. Anda tetap bisa membelinya untuk diproses nanti. Lanjutkan?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Beli',
-        cancelButtonText: 'Batal'
-      }).then((result) => {
-        if (result.isConfirmed) {
+      this.alertService.confirm(
+        'Stok Kosong',
+        'Saat ini stok produk sedang kosong. Anda tetap bisa membelinya untuk diproses nanti. Lanjutkan?',
+        'Ya, Beli'
+      ).then((isConfirmed) => {
+        if (isConfirmed) {
           this.executeOpenQtyModal('buy');
         }
       });
@@ -190,9 +183,9 @@ export class ProductDetailComponent implements OnInit {
   toggleWishlist() {
     this.isWishlisted.update(v => !v);
     if (this.isWishlisted()) {
-      this.toastService.success('Produk ditambahkan ke wishlist');
+      this.alertService.success('Produk ditambahkan ke wishlist');
     } else {
-      this.toastService.info('Produk dihapus dari wishlist');
+      this.alertService.info('Produk dihapus dari wishlist');
     }
   }
 

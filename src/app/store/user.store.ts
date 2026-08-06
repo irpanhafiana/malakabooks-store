@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { User } from '../core/models';
 import { UserApiService } from '../core/services/user-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface UserState {
   users: User[];
@@ -14,7 +14,7 @@ interface UserState {
 })
 export class UserStore {
   private readonly userApi = inject(UserApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<UserState>({
     users: [],
@@ -34,7 +34,7 @@ export class UserStore {
       this.state.update(s => ({ ...s, users, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar pengguna.' }));
-      this.toastService.error('Gagal memuat daftar pengguna.');
+      this.alertService.error('Gagal memuat daftar pengguna.');
     }
   }
 

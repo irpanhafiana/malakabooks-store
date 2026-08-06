@@ -4,7 +4,7 @@ import { AuthStore } from './auth.store';
 import { AuthApiService } from '../core/services/auth-api.service';
 import { UserApiService } from '../core/services/user-api.service';
 import { ProductApiService } from '../core/services/product-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 import { LoggerService } from '../core/services/logger.service';
 import { CartStore } from './cart.store';
 
@@ -25,7 +25,7 @@ describe('AuthStore', () => {
         { provide: AuthApiService, useValue: mockAuthApi },
         { provide: UserApiService, useValue: mockUserApi },
         { provide: ProductApiService, useValue: mockProductApi },
-        { provide: ToastService, useValue: mockToast },
+        { provide: AlertService, useValue: mockToast },
         { provide: LoggerService, useValue: mockLogger },
         { provide: CartStore, useValue: mockCartStore }
       ]

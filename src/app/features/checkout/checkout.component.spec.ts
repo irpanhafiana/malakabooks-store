@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
 import { OrderStore } from '../../store/order.store';
-import { ToastService } from '../../core/services/toast.service';
+import { AlertService } from '../../core/services/alert.service';
 import { AddressApiService } from '../../core/services/address-api.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { ShippingService } from '../../core/services/shipping.service';
@@ -58,7 +58,7 @@ describe('CheckoutComponent', () => {
         { provide: AuthStore, useValue: mockAuthStore },
         { provide: CartStore, useValue: mockCartStore },
         { provide: OrderStore, useValue: mockOrderStore },
-        { provide: ToastService, useValue: mockToast },
+        { provide: AlertService, useValue: mockToast },
         { provide: AddressApiService, useValue: mockAddressApi },
         { provide: UserApiService, useValue: mockUserApi },
         { provide: ShippingService, useValue: mockShippingService },

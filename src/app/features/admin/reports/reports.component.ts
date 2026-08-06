@@ -3,7 +3,7 @@ import { OrderApiService } from '../../../core/services/order-api.service';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { AdminButtonComponent } from '../../../shared/ui/admin-button/admin-button.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
-import { ToastService } from '../../../core/services/toast.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { buildCsv, downloadCsv } from '../../../shared/util/csv.util';
 
 @Component({
@@ -17,7 +17,7 @@ import { buildCsv, downloadCsv } from '../../../shared/util/csv.util';
 export class ReportsComponent {
   private readonly orderApi = inject(OrderApiService);
   private readonly productApi = inject(ProductApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   salesLoading = signal<boolean>(false);
   invLoading = signal<boolean>(false);
@@ -42,9 +42,9 @@ export class ReportsComponent {
       ]);
 
       downloadCsv(buildCsv(headers, rows), 'sales-revenue-report.csv');
-      this.toastService.success('Sales report downloaded successfully!');
+      this.alertService.success('Sales report downloaded successfully!');
     } catch (e) {
-      this.toastService.error('Failed to generate sales report.');
+      this.alertService.error('Failed to generate sales report.');
     } finally {
       this.salesLoading.set(false);
     }
@@ -68,9 +68,9 @@ export class ReportsComponent {
       ]);
 
       downloadCsv(buildCsv(headers, rows), 'products-inventory-report.csv');
-      this.toastService.success('Inventory report downloaded successfully!');
+      this.alertService.success('Inventory report downloaded successfully!');
     } catch (e) {
-      this.toastService.error('Failed to generate inventory report.');
+      this.alertService.error('Failed to generate inventory report.');
     } finally {
       this.invLoading.set(false);
     }

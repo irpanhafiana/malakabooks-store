@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CartStore } from './cart.store';
 import { CartApiService } from '../core/services/cart-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 import { Product } from '../core/models';
 
 describe('CartStore', () => {
@@ -24,7 +24,7 @@ describe('CartStore', () => {
       providers: [
         CartStore,
         { provide: CartApiService, useValue: mockCartApi },
-        { provide: ToastService, useValue: mockToast }
+        { provide: AlertService, useValue: mockToast }
       ]
     });
     store = TestBed.inject(CartStore);

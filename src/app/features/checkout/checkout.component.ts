@@ -9,7 +9,7 @@ import { OrderStore } from '../../store/order.store';
 import { Address, Order, Payment } from '../../core/models';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { PriceComponent } from '../../shared/ui/price/price.component';
-import { ToastService } from '../../core/services/toast.service';
+import { AlertService } from '../../core/services/alert.service';
 import { AddressApiService } from '../../core/services/address-api.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { LoggerService } from '../../core/services/logger.service';
@@ -43,7 +43,7 @@ export class CheckoutComponent implements OnInit {
   protected readonly cartStore = inject(CartStore);
   private readonly orderStore = inject(OrderStore);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
   private readonly router = inject(Router);
   private readonly addressApi = inject(AddressApiService);
   private readonly userApi = inject(UserApiService);
@@ -157,7 +157,7 @@ export class CheckoutComponent implements OnInit {
   private async initialize() {
     // Check auth, redirect if not logged in
     if (!this.authStore.isLoggedIn()) {
-      this.toastService.info('Please sign in to complete your checkout.');
+      this.alertService.info('Please sign in to complete your checkout.');
       this.router.navigate(['/auth/login']);
       return;
     }
@@ -423,26 +423,26 @@ export class CheckoutComponent implements OnInit {
 
   isOrderInvalid(): boolean {
     if (this.showAddressForm() || !this.selectedAddressId()) {
-      this.toastService.error('Please complete your shipping address');
+      this.alertService.error('Please complete your shipping address');
       return true;
     }
     if (this.courierControl.invalid) {
-      this.toastService.error('Please select a shipping courier');
+      this.alertService.error('Please select a shipping courier');
       return true;
     }
     if (this.courierServiceControl.invalid) {
-      this.toastService.error('Please select a shipping service');
+      this.alertService.error('Please select a shipping service');
       return true;
     }
     const selectedPayment = this.payments().find(p => p.id === this.paymentControl.value);
 
     if (selectedPayment?.methodType === 'credit_card') {
       if (this.cardNumControl.invalid || this.cardExpiryControl.invalid || this.cardCvcControl.invalid) {
-        this.toastService.error('Please complete your credit card details');
+        this.alertService.error('Please complete your credit card details');
         return true;
       }
     } else if (this.paymentControl.invalid) {
-      this.toastService.error('Please select a payment method');
+      this.alertService.error('Please select a payment method');
       return true;
     }
     return false;
@@ -455,7 +455,7 @@ export class CheckoutComponent implements OnInit {
     const addr = this.savedAddresses().find(a => a.id === this.selectedAddressId());
 
     if (!user || !addr) {
-      this.toastService.error('Please verify your shipping address details.');
+      this.alertService.error('Please verify your shipping address details.');
       return;
     }
 
@@ -513,12 +513,12 @@ export class CheckoutComponent implements OnInit {
           if (!opened) {
             // Order sudah tercatat di backend — jangan tinggalkan pengguna diam
             // di halaman checkout tanpa umpan balik.
-            this.toastService.error('Order placed, but failed to load payment gateway. Please check your order history.');
+            this.alertService.error('Order placed, but failed to load payment gateway. Please check your order history.');
             this.router.navigate(['/order-success'], { queryParams: { id: placed.id } });
           }
         } else {
           this.logger.error('Failed to resolve checkout URL from order response:', placed);
-          this.toastService.error('Order placed, but failed to load payment gateway. Please check your order history.');
+          this.alertService.error('Order placed, but failed to load payment gateway. Please check your order history.');
           this.router.navigate(['/order-success'], { queryParams: { id: placed.id } });
         }
       } else {

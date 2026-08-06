@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { PromotionBanner, CreatePromotionBannerRequest, UpdatePromotionBannerRequest } from '../core/models';
 import { PromotionBannerApiService } from '../core/services/promotion-banner-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface PromotionBannerState {
   banners: PromotionBanner[];
@@ -14,7 +14,7 @@ interface PromotionBannerState {
 })
 export class PromotionBannerStore {
   private readonly bannerApi = inject(PromotionBannerApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<PromotionBannerState>({
     banners: [],
@@ -56,13 +56,13 @@ export class PromotionBannerStore {
       if (saved) {
         await this.loadAdminBanners();
         if (options?.showToast !== false) {
-          this.toastService.success(`Banner "${saved.title}" saved successfully!`);
+          this.alertService.success(`Banner "${saved.title}" saved successfully!`);
         }
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error('Failed to save banner.');
+        this.alertService.error('Failed to save banner.');
       }
     }
   }
@@ -74,18 +74,18 @@ export class PromotionBannerStore {
       if (success) {
         await this.loadAdminBanners();
         if (options?.showToast !== false) {
-          this.toastService.success('Banner deleted successfully.');
+          this.alertService.success('Banner deleted successfully.');
         }
       } else {
         this.state.update(s => ({ ...s, loading: false }));
         if (options?.showToast !== false) {
-          this.toastService.error('Banner not found.');
+          this.alertService.error('Banner not found.');
         }
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error('Failed to delete banner.');
+        this.alertService.error('Failed to delete banner.');
       }
     }
   }

@@ -6,7 +6,7 @@ import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
 import { UserStore } from '../../store/user.store';
 import { ProductStore } from '../../store/product.store';
-import { ToastService } from '../../core/services/toast.service';
+import { AlertService } from '../../core/services/alert.service';
 import { ScreenService } from '../../core/services/screen.service';
 import { signal, NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -54,7 +54,7 @@ describe('CustomerLayoutComponent', () => {
         { provide: CartStore, useValue: mockCartStore },
         { provide: UserStore, useValue: mockUserStore },
         { provide: ProductStore, useValue: mockProductStore },
-        { provide: ToastService, useValue: mockToast },
+        { provide: AlertService, useValue: mockToast },
         { provide: ScreenService, useValue: mockScreenService }
       ]
     }).compileComponents();

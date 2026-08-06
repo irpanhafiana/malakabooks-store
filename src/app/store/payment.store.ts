@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Payment } from '../core/models';
 import { PaymentApiService } from '../core/services/payment-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface PaymentState {
   payments: Payment[];
@@ -14,7 +14,7 @@ interface PaymentState {
 })
 export class PaymentStore {
   private readonly paymentApi = inject(PaymentApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<PaymentState>({
     payments: [],
@@ -42,12 +42,12 @@ export class PaymentStore {
       const saved = await this.paymentApi.savePayment(payment);
       await this.loadPayments();
       if (options?.showToast !== false) {
-        this.toastService.success(`Metode Pembayaran "${saved.name}" berhasil disimpan!`);
+        this.alertService.success(`Metode Pembayaran "${saved.name}" berhasil disimpan!`);
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error('Gagal menyimpan metode pembayaran.');
+        this.alertService.error('Gagal menyimpan metode pembayaran.');
       }
     }
   }
@@ -59,18 +59,18 @@ export class PaymentStore {
       if (success) {
         await this.loadPayments();
         if (options?.showToast !== false) {
-          this.toastService.success('Metode Pembayaran berhasil dihapus.');
+          this.alertService.success('Metode Pembayaran berhasil dihapus.');
         }
       } else {
         this.state.update(s => ({ ...s, loading: false }));
         if (options?.showToast !== false) {
-          this.toastService.error('Metode Pembayaran tidak ditemukan.');
+          this.alertService.error('Metode Pembayaran tidak ditemukan.');
         }
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error('Gagal menghapus metode pembayaran.');
+        this.alertService.error('Gagal menghapus metode pembayaran.');
       }
     }
   }

@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { CatalogItem } from '../core/models';
 import { ItemApiService } from '../core/services/item-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface ItemState {
   items: CatalogItem[];
@@ -14,7 +14,7 @@ interface ItemState {
 })
 export class ItemStore {
   private readonly itemApi = inject(ItemApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<ItemState>({
     items: [],
@@ -42,13 +42,13 @@ export class ItemStore {
       const saved = await this.itemApi.saveItem(item);
       await this.loadItems();
       if (options?.showToast !== false) {
-        this.toastService.success(`Produk berhasil disimpan!`);
+        this.alertService.success(`Produk berhasil disimpan!`);
       }
       return saved;
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error('Gagal menyimpan produk.');
+        this.alertService.error('Gagal menyimpan produk.');
       }
       throw e;
     }
@@ -61,18 +61,18 @@ export class ItemStore {
       if (success) {
         await this.loadItems();
         if (options?.showToast !== false) {
-          this.toastService.success('Item berhasil dihapus.');
+          this.alertService.success('Item berhasil dihapus.');
         }
       } else {
         this.state.update(s => ({ ...s, loading: false }));
         if (options?.showToast !== false) {
-          this.toastService.error('Item gagal dihapus.');
+          this.alertService.error('Item gagal dihapus.');
         }
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error('Gagal menghapus item.');
+        this.alertService.error('Gagal menghapus item.');
       }
     }
   }

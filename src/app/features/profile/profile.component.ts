@@ -6,7 +6,7 @@ import { AuthStore } from '../../store/auth.store';
 import { User } from '../../core/models';
 import { InputComponent } from '../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
-import { ToastService } from '../../core/services/toast.service';
+import { AlertService } from '../../core/services/alert.service';
 import { LoggerService } from '../../core/services/logger.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { OrderApiService } from '../../core/services/order-api.service';
@@ -54,7 +54,7 @@ export class ProfileComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
   protected readonly orderStore = inject(OrderStore);
   protected readonly screen = inject(ScreenService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly logger = inject(LoggerService);
@@ -172,11 +172,11 @@ export class ProfileComponent implements OnInit {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      this.toastService.error('File harus berupa gambar.');
+      this.alertService.error('File harus berupa gambar.');
       return;
     }
     if (file.size > 2 * 1024 * 1024) {
-      this.toastService.error('Ukuran gambar maksimal 2MB.');
+      this.alertService.error('Ukuran gambar maksimal 2MB.');
       return;
     }
 
@@ -212,7 +212,7 @@ export class ProfileComponent implements OnInit {
 
   logout() {
     this.authStore.logout();
-    this.toastService.success('Logged out successfully.');
+    this.alertService.success('Logged out successfully.');
     this.router.navigate(['/auth/login']);
   }
 

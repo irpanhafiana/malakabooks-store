@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { CartItem, Product } from '../core/models';
 import { CartApiService } from '../core/services/cart-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 import { SESSION_CART_KEY } from '../core/auth/session.util';
 
 interface CartState {
@@ -16,7 +16,7 @@ interface CartState {
 })
 export class CartStore {
   private readonly cartApi = inject(CartApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<CartState>({
     items: [],
@@ -125,7 +125,7 @@ export class CartStore {
 
   async addItem(product: Product, quantity = 1, uomCode?: string, price?: number) {
     if (product.stock <= 0) {
-      this.toastService.error('Maaf, produk ini kehabisan stok!');
+      this.alertService.error('Maaf, produk ini kehabisan stok!');
       return;
     }
 
@@ -140,7 +140,7 @@ export class CartStore {
     if (index >= 0) {
       newQty = currentItems[index].quantity + quantity;
       if (newQty > product.stock) {
-        this.toastService.error(`Hanya tersisa ${product.stock} barang.`);
+        this.alertService.error(`Hanya tersisa ${product.stock} barang.`);
         return;
       }
       currentItems[index] = {
@@ -169,26 +169,26 @@ export class CartStore {
         if (!success) {
           // Rollback local state jika sinkronisasi backend gagal
           this.persistLocal(previousItems);
-          this.toastService.error('Gagal menyinkronkan keranjang dengan server.');
+          this.alertService.error('Gagal menyinkronkan keranjang dengan server.');
           return;
         }
       } catch {
         this.persistLocal(previousItems);
-        this.toastService.error('Gagal menyinkronkan keranjang dengan server.');
+        this.alertService.error('Gagal menyinkronkan keranjang dengan server.');
         return;
       } finally {
         this.state.update(s => ({ ...s, loading: false }));
       }
     }
 
-    this.toastService.success(`"${product.title}" berhasil ditambahkan ke keranjang.`);
+    this.alertService.success(`"${product.title}" berhasil ditambahkan ke keranjang.`);
   }
 
   async removeItem(productId: string) {
     const previousItems = [...this.items()];
     const filtered = this.items().filter(item => item.product.id !== productId);
     this.persistLocal(filtered);
-    this.toastService.info('Barang berhasil dihapus dari keranjang.');
+    this.alertService.info('Barang berhasil dihapus dari keranjang.');
 
     const userId = this.getCurrentUserId();
     if (userId) {
@@ -197,7 +197,7 @@ export class CartStore {
         await this.cartApi.removeCartItem(userId, productId);
       } catch {
         this.persistLocal(previousItems);
-        this.toastService.error('Gagal menghapus barang dari server.');
+        this.alertService.error('Gagal menghapus barang dari server.');
       } finally {
         this.state.update(s => ({ ...s, loading: false }));
       }
@@ -217,7 +217,7 @@ export class CartStore {
 
     const stock = currentItems[index].product.stock;
     if (quantity > stock) {
-      this.toastService.error(`Hanya tersedia ${stock} barang.`);
+      this.alertService.error(`Hanya tersedia ${stock} barang.`);
       return;
     }
 
@@ -232,7 +232,7 @@ export class CartStore {
         await this.cartApi.addCartItem(userId, productId, quantity);
       } catch {
         this.persistLocal(previousItems);
-        this.toastService.error('Gagal mengubah jumlah barang di server.');
+        this.alertService.error('Gagal mengubah jumlah barang di server.');
       } finally {
         this.state.update(s => ({ ...s, loading: false }));
       }
@@ -243,10 +243,10 @@ export class CartStore {
     const formattedCode = code.trim().toUpperCase();
     if (formattedCode === 'PROMO10') {
       this.state.update(s => ({ ...s, discountCode: 'PROMO10' }));
-      this.toastService.success('Kode Promo 10% berhasil digunakan!');
+      this.alertService.success('Kode Promo 10% berhasil digunakan!');
       return true;
     } else {
-      this.toastService.error('Kode promo tidak valid. Coba gunakan "PROMO10".');
+      this.alertService.error('Kode promo tidak valid. Coba gunakan "PROMO10".');
       return false;
     }
   }

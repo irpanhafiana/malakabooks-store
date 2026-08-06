@@ -4,14 +4,14 @@ import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
 import { UserStore } from '../../store/user.store';
 import { ProductStore } from '../../store/product.store';
-import { ToastService } from '../../core/services/toast.service';
+import { AlertService } from '../../core/services/alert.service';
 import { SearchBarComponent } from '../../shared/ui/search-bar/search-bar.component';
 import { ProductDetailComponent } from '../../features/product/product-detail/product-detail.component';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { PricingApiService } from '../../core/services/pricing-api.service';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { QtyModalContentComponent } from '../../shared/ui/qty-modal-content/qty-modal-content.component';
-import { ToastContainerComponent } from '../../shared/ui/toast-container/toast-container.component';
+
 import { ScreenService } from '../../core/services/screen.service';
 import { DesktopHeaderComponent } from '../desktop/desktop-header/desktop-header.component';
 import { DesktopFooterComponent } from '../desktop/desktop-footer/desktop-footer.component';
@@ -23,7 +23,7 @@ import { ButtonComponent } from '../../shared/ui/button/button.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-customer-layout',
     standalone: true,
-    imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, ModalComponent, QtyModalContentComponent, ToastContainerComponent, DesktopHeaderComponent, DesktopFooterComponent, PriceComponent, ButtonComponent],
+    imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, ModalComponent, QtyModalContentComponent,  DesktopHeaderComponent, DesktopFooterComponent, PriceComponent, ButtonComponent],
     templateUrl: './customer-layout.component.html',
     styleUrl: './customer-layout.component.css'
 })
@@ -33,7 +33,7 @@ export class CustomerLayoutComponent {
     protected readonly userStore = inject(UserStore);
     protected readonly productStore = inject(ProductStore);
     protected readonly pricingApi = inject(PricingApiService);
-    protected readonly toastService = inject(ToastService);
+    protected readonly alertService = inject(AlertService);
     protected readonly screen = inject(ScreenService);
     protected readonly modalHandler = inject(ProductModalHandler);
     private readonly router = inject(Router);

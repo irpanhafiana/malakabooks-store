@@ -5,7 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { OrderApiService } from '../../../core/services/order-api.service';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
-import { ToastService } from '../../../core/services/toast.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
@@ -19,7 +19,7 @@ import { LoggerService } from '../../../core/services/logger.service';
 export class DetailShipmentComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly orderApi = inject(OrderApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
   private readonly logger = inject(LoggerService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -161,7 +161,7 @@ export class DetailShipmentComponent implements OnInit {
   copyToClipboard(text: string) {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text).then(() => {
-        this.toastService.success('Nomor resi berhasil disalin!');
+        this.alertService.success('Nomor resi berhasil disalin!');
       }).catch(err => {
         this.logger.error('Gagal menyalin resi:', err);
       });
@@ -173,7 +173,7 @@ export class DetailShipmentComponent implements OnInit {
       input.select();
       try {
         document.execCommand('copy');
-        this.toastService.success('Nomor resi berhasil disalin!');
+        this.alertService.success('Nomor resi berhasil disalin!');
       } catch (err) {
         this.logger.error('Gagal menyalin resi (fallback):', err);
       }

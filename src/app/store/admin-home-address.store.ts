@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HomeAddress } from '../core/models';
 import { AdminHomeAddressApiService } from '../core/services/admin-home-address-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface AdminHomeAddressState {
   addresses: HomeAddress[];
@@ -14,7 +14,7 @@ interface AdminHomeAddressState {
 })
 export class AdminHomeAddressStore {
   private readonly api = inject(AdminHomeAddressApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<AdminHomeAddressState>({
     addresses: [],
@@ -34,7 +34,7 @@ export class AdminHomeAddressStore {
       this.state.update(s => ({ ...s, addresses, loading: false }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal memuat alamat.');
+      this.alertService.error('Gagal memuat alamat.');
     }
   }
 
@@ -43,10 +43,10 @@ export class AdminHomeAddressStore {
     try {
       const saved = await this.api.saveHomeAddress(address);
       await this.loadHomeAddresses(); // Re-seed client list
-      this.toastService.success(`Alamat "${saved.label}" berhasil disimpan!`);
+      this.alertService.success(`Alamat "${saved.label}" berhasil disimpan!`);
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menyimpan alamat.');
+      this.alertService.error('Gagal menyimpan alamat.');
     }
   }
 
@@ -56,14 +56,14 @@ export class AdminHomeAddressStore {
       const success = await this.api.deleteHomeAddress(id);
       if (success) {
         await this.loadHomeAddresses();
-        this.toastService.success('Alamat berhasil dihapus.');
+        this.alertService.success('Alamat berhasil dihapus.');
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Alamat tidak ditemukan.');
+        this.alertService.error('Alamat tidak ditemukan.');
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menghapus alamat.');
+      this.alertService.error('Gagal menghapus alamat.');
     }
   }
 }

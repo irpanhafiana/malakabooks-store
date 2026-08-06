@@ -1,25 +1,15 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
-  private readonly router = inject(Router);
-
-  // Custom Modal States (signals)
-  isOpen = signal<boolean>(false);
-  title = signal<string>('');
-  text = signal<string>('');
-  type = signal<'success' | 'error' | 'confirm'>('success');
-  confirmButtonText = signal<string>('Ya, Lanjutkan');
-  cancelButtonText = signal<string>('Batal');
-
-  private resolveFn: ((value: boolean) => void) | null = null;
 
   private readonly swalConfig = {
     buttonsStyling: false,
+    width: '25rem',
+    padding: '1.25rem',
     customClass: {
       popup: 'rounded-2xl border border-slate-200 shadow-xl p-6 font-sans bg-white',
       title: 'text-sm font-extrabold text-slate-800 font-display tracking-tight mb-2',
@@ -29,81 +19,69 @@ export class AlertService {
     }
   };
 
-  private isAdminRoute(): boolean {
-    return this.router.url.startsWith('/admin');
-  }
-
   async confirm(title: string, text: string, confirmButtonText: string = 'Ya, Lanjutkan'): Promise<boolean> {
-    if (this.isAdminRoute()) {
-      const res = await Swal.fire({
-        ...this.swalConfig,
-        title,
-        text,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText,
-        cancelButtonText: 'Batal'
-      });
-      return res.isConfirmed;
-    } else {
-      if (this.resolveFn) {
-        this.resolveFn(false);
-        this.resolveFn = null;
-      }
-
-      this.title.set(title);
-      this.text.set(text);
-      this.type.set('confirm');
-      this.confirmButtonText.set(confirmButtonText);
-      this.cancelButtonText.set('Batal');
-      this.isOpen.set(true);
-
-      return new Promise<boolean>((resolve) => {
-        this.resolveFn = resolve;
-      });
-    }
+    const res = await Swal.fire({
+      ...this.swalConfig,
+      title,
+      text,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText,
+      cancelButtonText: 'Batal'
+    });
+    return res.isConfirmed;
   }
 
-  success(title: string, text: string) {
-    if (this.isAdminRoute()) {
-      Swal.fire({
-        ...this.swalConfig,
-        title,
-        text,
-        icon: 'success',
-        confirmButtonText: 'Tutup'
-      });
-    } else {
-      this.title.set(title);
-      this.text.set(text);
-      this.type.set('success');
-      this.isOpen.set(true);
-    }
+  success(titleOrText: string, text: string = '') {
+    const finalTitle = text ? titleOrText : 'Berhasil';
+    const finalText = text ? text : titleOrText;
+    
+    Swal.fire({
+      ...this.swalConfig,
+      title: finalTitle,
+      text: finalText,
+      icon: 'success',
+      confirmButtonText: 'Tutup'
+    });
   }
 
-  error(title: string, text: string) {
-    if (this.isAdminRoute()) {
-      Swal.fire({
-        ...this.swalConfig,
-        title,
-        text,
-        icon: 'error',
-        confirmButtonText: 'Tutup'
-      });
-    } else {
-      this.title.set(title);
-      this.text.set(text);
-      this.type.set('error');
-      this.isOpen.set(true);
-    }
+  error(titleOrText: string, text: string = '') {
+    const finalTitle = text ? titleOrText : 'Gagal';
+    const finalText = text ? text : titleOrText;
+    
+    Swal.fire({
+      ...this.swalConfig,
+      title: finalTitle,
+      text: finalText,
+      icon: 'error',
+      confirmButtonText: 'Tutup'
+    });
   }
 
-  close(value: boolean) {
-    this.isOpen.set(false);
-    if (this.resolveFn) {
-      this.resolveFn(value);
-      this.resolveFn = null;
-    }
+  info(titleOrText: string, text: string = '') {
+    const finalTitle = text ? titleOrText : 'Informasi';
+    const finalText = text ? text : titleOrText;
+    
+    Swal.fire({
+      ...this.swalConfig,
+      title: finalTitle,
+      text: finalText,
+      icon: 'info',
+      confirmButtonText: 'Tutup'
+    });
+  }
+
+  warning(titleOrText: string, text: string = '') {
+    const finalTitle = text ? titleOrText : 'Peringatan';
+    const finalText = text ? text : titleOrText;
+    
+    Swal.fire({
+      ...this.swalConfig,
+      title: finalTitle,
+      text: finalText,
+      icon: 'warning',
+      confirmButtonText: 'Tutup'
+    });
   }
 
   async prompt(title: string, inputPlaceholder: string = 'https://', defaultValue: string = ''): Promise<string | null> {

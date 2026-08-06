@@ -1,7 +1,7 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ToastService } from '../../../core/services/toast.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { InputComponent } from '../../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 
@@ -14,7 +14,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
   styleUrl: './forgot-password.component.css'
 })
 export class ForgotPasswordComponent {
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   isLoading = signal<boolean>(false);
   isSubmitted = signal<boolean>(false);
@@ -31,7 +31,7 @@ export class ForgotPasswordComponent {
     setTimeout(() => {
       this.isLoading.set(false);
       this.isSubmitted.set(true);
-      this.toastService.success('Simulated password reset link sent.');
+      this.alertService.success('Simulated password reset link sent.');
     }, 800);
   }
 }

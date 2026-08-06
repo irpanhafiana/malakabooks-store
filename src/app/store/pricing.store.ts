@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Pricing } from '../core/models';
 import { PricingApiService } from '../core/services/pricing-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface PricingState {
   pricings: Pricing[];
@@ -14,7 +14,7 @@ interface PricingState {
 })
 export class PricingStore {
   private readonly pricingApi = inject(PricingApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<PricingState>({
     pricings: [],
@@ -33,7 +33,7 @@ export class PricingStore {
       this.state.update(s => ({ ...s, pricings, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat pricings.' }));
-      this.toastService.error('Gagal memuat daftar harga.');
+      this.alertService.error('Gagal memuat daftar harga.');
     }
   }
 
@@ -42,10 +42,10 @@ export class PricingStore {
     try {
       const saved = await this.pricingApi.savePricing(pricing);
       await this.loadPricings();
-      this.toastService.success(`Pricing "${saved.name}" berhasil disimpan!`);
+      this.alertService.success(`Pricing "${saved.name}" berhasil disimpan!`);
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menyimpan pricing.');
+      this.alertService.error('Gagal menyimpan pricing.');
     }
   }
 
@@ -55,14 +55,14 @@ export class PricingStore {
       const success = await this.pricingApi.deletePricing(id);
       if (success) {
         await this.loadPricings();
-        this.toastService.success('Pricing berhasil dihapus.');
+        this.alertService.success('Pricing berhasil dihapus.');
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Pricing gagal dihapus.');
+        this.alertService.error('Pricing gagal dihapus.');
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menghapus pricing.');
+      this.alertService.error('Gagal menghapus pricing.');
     }
   }
 }

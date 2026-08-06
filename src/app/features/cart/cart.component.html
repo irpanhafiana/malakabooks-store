@@ -50,7 +50,7 @@
               (quantityChange)="cartStore.updateQuantity(item.product.id, $event)" [stock]="item.product.stock"
               [disabled]="cartStore.loading()" variant="sm"></app-quantity-selector>
 
-            <app-button type="button" [disabled]="cartStore.loading()" (click)="cartStore.removeItem(item.product.id)"
+            <app-button type="button" [disabled]="cartStore.loading()" (click)="removeItem(item.product.id)"
               variant="ghost"
               customClass="text-slate-400 hover:text-rose-500 hover:bg-rose-50 !p-1.5 rounded-lg active:scale-90 disabled:opacity-40">
               <app-icon name="trash" size="16"></app-icon>

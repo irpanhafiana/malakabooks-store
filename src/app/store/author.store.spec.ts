@@ -2,12 +2,12 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { AuthorStore } from './author.store';
 import { AuthorApiService } from '../core/services/author-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 describe('BaseCrudStore (via AuthorStore)', () => {
   let store: AuthorStore;
   let authorApiMock: Partial<AuthorApiService>;
-  let toastMock: Partial<ToastService>;
+  let toastMock: Partial<AlertService>;
 
   const mockAuthors = [
     { id: '1', name: 'Pramoedya Ananta Toer', role: 'Author', biography: '', photoUrl: '' }
@@ -29,7 +29,7 @@ describe('BaseCrudStore (via AuthorStore)', () => {
       providers: [
         AuthorStore,
         { provide: AuthorApiService, useValue: authorApiMock },
-        { provide: ToastService, useValue: toastMock }
+        { provide: AlertService, useValue: toastMock }
       ]
     });
 

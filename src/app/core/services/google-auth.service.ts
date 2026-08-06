@@ -1,7 +1,7 @@
 import { Injectable, inject, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { decodeJwt } from '../auth/jwt.util';
-import { ToastService } from './toast.service';
+import { AlertService } from './alert.service';
 import { LoggerService } from './logger.service';
 import { AuthStore } from '../../store/auth.store';
 import { User } from '../models';
@@ -13,7 +13,7 @@ declare const google: any;
 })
 export class GoogleAuthService {
   private readonly router = inject(Router);
-  private readonly toast = inject(ToastService);
+  private readonly alertService = inject(AlertService);
   private readonly logger = inject(LoggerService);
   private readonly authStore = inject(AuthStore);
   private readonly ngZone = inject(NgZone);
@@ -78,14 +78,14 @@ export class GoogleAuthService {
 
       await this.ngZone.run(async () => {
         await this.authStore.setGoogleSession(response.credential, user);
-        this.toast.success(`Selamat datang, ${name}!`);
+        this.alertService.success(`Selamat datang, ${name}!`);
         await this.router.navigate(['/']);
       });
 
       return true;
     } catch (err) {
       this.logger.error('GoogleAuthService.handleCredentialResponse', err);
-      this.toast.error('Gagal melakukan autentikasi dengan Google.');
+      this.alertService.error('Gagal melakukan autentikasi dengan Google.');
       return false;
     }
   }

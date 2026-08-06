@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { UomGroup } from '../core/models';
 import { UomGroupApiService } from '../core/services/uom-group-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface UomGroupState {
   uomGroups: UomGroup[];
@@ -14,7 +14,7 @@ interface UomGroupState {
 })
 export class UomGroupStore {
   private readonly uomGroupApi = inject(UomGroupApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<UomGroupState>({
     uomGroups: [],
@@ -33,7 +33,7 @@ export class UomGroupStore {
       this.state.update(s => ({ ...s, uomGroups, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat satuan ukuran.' }));
-      this.toastService.error('Gagal memuat satuan ukuran.');
+      this.alertService.error('Gagal memuat satuan ukuran.');
     }
   }
 
@@ -42,10 +42,10 @@ export class UomGroupStore {
     try {
       const saved = await this.uomGroupApi.saveUomGroup(uomGroup);
       await this.loadUomGroups();
-      this.toastService.success(`Satuan ukuran "${saved.name}" berhasil disimpan!`);
+      this.alertService.success(`Satuan ukuran "${saved.name}" berhasil disimpan!`);
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menyimpan satuan ukuran.');
+      this.alertService.error('Gagal menyimpan satuan ukuran.');
     }
   }
 
@@ -55,14 +55,14 @@ export class UomGroupStore {
       const success = await this.uomGroupApi.deleteUomGroup(id);
       if (success) {
         await this.loadUomGroups();
-        this.toastService.success('Satuan ukuran berhasil dihapus.');
+        this.alertService.success('Satuan ukuran berhasil dihapus.');
       } else {
         this.state.update(s => ({ ...s, loading: false }));
-        this.toastService.error('Satuan ukuran gagal dihapus.');
+        this.alertService.error('Satuan ukuran gagal dihapus.');
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
-      this.toastService.error('Gagal menghapus satuan ukuran.');
+      this.alertService.error('Gagal menghapus satuan ukuran.');
     }
   }
 }

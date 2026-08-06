@@ -4,14 +4,14 @@ import { filter } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthStore } from '../../store/auth.store';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
-import { ToastContainerComponent } from '../../shared/ui/toast-container/toast-container.component';
+
 import { OrderStore } from '../../store/order.store';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, IconComponent, ToastContainerComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, IconComponent],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css'
 })

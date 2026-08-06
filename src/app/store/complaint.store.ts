@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Complaint, CreateComplaintPayload, RespondComplaintPayload, ReplyComplaintPayload } from '../core/models';
 import { ComplaintApiService } from '../core/services/complaint-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface ComplaintState {
   complaints: Complaint[];
@@ -14,7 +14,7 @@ interface ComplaintState {
 })
 export class ComplaintStore {
   private readonly complaintApi = inject(ComplaintApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<ComplaintState>({
     complaints: [],
@@ -51,12 +51,12 @@ export class ComplaintStore {
       const created = await this.complaintApi.createComplaint(payload, files);
       this.state.update(s => ({ ...s, complaints: [created, ...s.complaints] }));
       if (options?.showToast !== false) {
-        this.toastService.success('Komplain berhasil dikirim.');
+        this.alertService.success('Komplain berhasil dikirim.');
       }
       return true;
     } catch {
       if (options?.showToast !== false) {
-        this.toastService.error('Gagal mengirim komplain.');
+        this.alertService.error('Gagal mengirim komplain.');
       }
       return false;
     }
@@ -70,12 +70,12 @@ export class ComplaintStore {
         complaints: s.complaints.map(c => c.id === id ? updated : c)
       }));
       if (options?.showToast !== false) {
-        this.toastService.success('Respons berhasil disimpan.');
+        this.alertService.success('Respons berhasil disimpan.');
       }
       return true;
     } catch {
       if (options?.showToast !== false) {
-        this.toastService.error('Gagal menyimpan respons.');
+        this.alertService.error('Gagal menyimpan respons.');
       }
       return false;
     }
@@ -89,12 +89,12 @@ export class ComplaintStore {
         complaints: s.complaints.map(c => c.id === id ? updated : c)
       }));
       if (options?.showToast !== false) {
-        this.toastService.success('Balasan berhasil dikirim.');
+        this.alertService.success('Balasan berhasil dikirim.');
       }
       return true;
     } catch {
       if (options?.showToast !== false) {
-        this.toastService.error('Gagal mengirim balasan.');
+        this.alertService.error('Gagal mengirim balasan.');
       }
       return false;
     }

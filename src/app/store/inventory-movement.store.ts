@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { InventoryMovement } from '../core/models';
 import { InventoryMovementApiService } from '../core/services/inventory-movement-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface InventoryMovementState {
   movements: InventoryMovement[];
@@ -14,7 +14,7 @@ interface InventoryMovementState {
 })
 export class InventoryMovementStore {
   private readonly movementApi = inject(InventoryMovementApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<InventoryMovementState>({
     movements: [],
@@ -40,14 +40,14 @@ export class InventoryMovementStore {
     const success = await this.movementApi.receiveGoods(payload);
     if (success) {
       if (options?.showToast !== false) {
-        this.toastService.success('Berhasil menyimpan data mutasi stok.');
+        this.alertService.success('Berhasil menyimpan data mutasi stok.');
       }
       await this.loadInventoryMovements();
       return true;
     } else {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal menyimpan mutasi stok.' }));
       if (options?.showToast !== false) {
-        this.toastService.error('Gagal menyimpan mutasi stok.');
+        this.alertService.error('Gagal menyimpan mutasi stok.');
       }
       return false;
     }

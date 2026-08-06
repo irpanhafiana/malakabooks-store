@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Order, OrderStatus } from '../core/models';
 import { OrderApiService } from '../core/services/order-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 import { CartStore } from './cart.store';
 
 interface OrderState {
@@ -16,7 +16,7 @@ interface OrderState {
 })
 export class OrderStore {
   private readonly orderApi = inject(OrderApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
   private readonly cartStore = inject(CartStore);
 
   private readonly state = signal<OrderState>({
@@ -81,13 +81,13 @@ export class OrderStore {
         loading: false
       }));
       if (options?.showToast !== false) {
-        this.toastService.success('Pesanan berhasil dibuat!');
+        this.alertService.success('Pesanan berhasil dibuat!');
       }
       return placed;
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error('Gagal membuat pesanan.');
+        this.alertService.error('Gagal membuat pesanan.');
       }
       return null;
     }
@@ -104,7 +104,7 @@ export class OrderStore {
           loading: false
         }));
         if (options?.showToast !== false) {
-          this.toastService.success(`Status pesanan #${orderId} diperbarui menjadi ${status}.`);
+          this.alertService.success(`Status pesanan #${orderId} diperbarui menjadi ${status}.`);
         }
       } else {
         // The API returns false for any failure (network/server), so we must not
@@ -112,14 +112,14 @@ export class OrderStore {
         // assumption and surface a generic, accurate error.
         this.state.update(s => ({ ...s, loading: false }));
         if (options?.showToast !== false) {
-          this.toastService.error('Gagal memperbarui status pesanan. Silakan coba lagi.');
+          this.alertService.error('Gagal memperbarui status pesanan. Silakan coba lagi.');
         }
         await this.loadAllOrders();
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error('Gagal memperbarui status pesanan.');
+        this.alertService.error('Gagal memperbarui status pesanan.');
       }
     }
   }

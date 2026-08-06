@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
 import { AdminInputComponent } from '../../../shared/ui/admin-input/admin-input.component';
 import { AdminButtonComponent } from '../../../shared/ui/admin-button/admin-button.component';
-import { ToastService } from '../../../core/services/toast.service';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,7 +17,7 @@ export class AdminLoginComponent implements OnInit {
   private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   isLoading = signal<boolean>(false);
   sessionMessage = signal<string>('');
@@ -57,7 +57,7 @@ export class AdminLoginComponent implements OnInit {
       if (this.authStore.isAdmin()) {
         this.router.navigate(['/admin']);
       } else {
-        this.toastService.error('Akses ditolak: Anda bukan seorang administrator.');
+        this.alertService.error('Akses ditolak: Anda bukan seorang administrator.');
         this.authStore.logout();
       }
     }

@@ -6,10 +6,7 @@
     <router-outlet></router-outlet>
   </main>
 
-  <app-desktop-footer></app-desktop-footer>
-  <app-toast-container></app-toast-container>
-
-  } @else {
+  <app-desktop-footer></app-desktop-footer>} @else {
   <!-- MOBILE SHELL -->
   <div class="h-dvh w-full bg-slate-50 flex justify-center overflow-hidden inner-root"
     style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
@@ -41,10 +38,7 @@
         </div>
       </main>
 
-      <!-- Global Toasts Alert Overlay -->
-      <app-toast-container></app-toast-container>
-
-    </div>
+      <!-- Global Toasts Alert Overlay --></div>
   </div>
   }
 </div>

@@ -2,7 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { Product, Category } from '../core/models';
 import { ProductApiService } from '../core/services/product-api.service';
 import { CategoryApiService } from '../core/services/category-api.service';
-import { ToastService } from '../core/services/toast.service';
+import { AlertService } from '../core/services/alert.service';
 
 interface ProductState {
   products: Product[];
@@ -29,7 +29,7 @@ interface ProductState {
 export class ProductStore {
   private readonly productApi = inject(ProductApiService);
   private readonly categoryApi = inject(CategoryApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   private readonly state = signal<ProductState>({
     products: [],
@@ -132,7 +132,7 @@ export class ProductStore {
       this.state.update(s => ({ ...s, products, categories, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat produk dan kategori dari server.' }));
-      this.toastService.error('Gagal memuat daftar produk dan kategori.');
+      this.alertService.error('Gagal memuat daftar produk dan kategori.');
     }
   }
 
@@ -143,7 +143,7 @@ export class ProductStore {
       this.state.update(s => ({ ...s, products, loading: false, error: null }));
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat katalog produk dari server.' }));
-      this.toastService.error('Gagal memuat katalog produk.');
+      this.alertService.error('Gagal memuat katalog produk.');
     }
   }
 
@@ -214,12 +214,12 @@ export class ProductStore {
       const saved = await this.categoryApi.saveCategory(category);
       await this.loadCategories();
       if (options?.showToast !== false) {
-        this.toastService.success(`Category "${saved.name}" saved successfully!`);
+        this.alertService.success(`Category "${saved.name}" saved successfully!`);
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error('Failed to save category.');
+        this.alertService.error('Failed to save category.');
       }
     }
   }
@@ -231,18 +231,18 @@ export class ProductStore {
       if (success) {
         await this.loadCategories();
         if (options?.showToast !== false) {
-          this.toastService.success('Category deleted successfully.');
+          this.alertService.success('Category deleted successfully.');
         }
       } else {
         this.state.update(s => ({ ...s, loading: false }));
         if (options?.showToast !== false) {
-          this.toastService.error('Category not found.');
+          this.alertService.error('Category not found.');
         }
       }
     } catch (e) {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
-        this.toastService.error('Failed to delete category.');
+        this.alertService.error('Failed to delete category.');
       }
     }
   }

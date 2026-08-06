@@ -16,7 +16,7 @@ import { BottomSheetComponent } from '../../../shared/ui/bottom-sheet/bottom-she
 import { ExternalMessageService } from '../../../core/services/external-message.service';
 import { LoggerService } from '../../../core/services/logger.service';
 import { ReviewApiService } from '../../../core/services/review-api.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { Product } from '../../../core/models';
 
 @Component({
@@ -34,7 +34,7 @@ export class OrderHistoryComponent implements OnInit {
   private readonly externalMessageService = inject(ExternalMessageService);
   private readonly logger = inject(LoggerService);
   private readonly reviewApi = inject(ReviewApiService);
-  private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   ngOnInit() {
     const user = this.authStore.currentUser();
@@ -135,7 +135,7 @@ export class OrderHistoryComponent implements OnInit {
       }, orderId, this.reviewImageFiles());
 
       this.closeReviewSheet();
-      this.toastService.success('Ulasan Anda telah dikirim');
+      this.alertService.success('Ulasan Anda telah dikirim');
     } catch (err: any) {
       let msg = 'Terjadi kesalahan saat mengirim ulasan.';
       if (err?.error?.statusMessage) {
@@ -145,7 +145,7 @@ export class OrderHistoryComponent implements OnInit {
       } else if (err?.message) {
         msg = err.message;
       }
-      this.toastService.error(msg);
+      this.alertService.error(msg);
     } finally {
       this.isSubmittingReview.set(false);
     }
