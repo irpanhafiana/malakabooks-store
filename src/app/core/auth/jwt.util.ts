@@ -57,7 +57,16 @@ export function jwtHasAdminRole(decoded: DecodedJwt | null): boolean {
     }
     return false;
   };
-  return matches('Malaka-Admin') || matches('admin');
+  const containsAdmin = () => {
+    if (Array.isArray(roles)) {
+      return roles.some(r => typeof r === 'string' && r.toLowerCase().includes('admin'));
+    }
+    if (typeof roles === 'string') {
+      return roles.toLowerCase().includes('admin');
+    }
+    return false;
+  };
+  return matches('SSOnline-Admin') || matches('Malaka-Admin') || matches('admin') || containsAdmin();
 }
 
 /**

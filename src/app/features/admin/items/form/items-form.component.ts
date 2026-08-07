@@ -334,9 +334,9 @@ export class ItemsFormComponent {
         name: sku,
         sapCode: crypto.randomUUID(),
         itemType: 'ssonline',
-        categoryId: '6a6974c74913417719d186a1',
-        uomGroupId: '6a575f09500f03996c1e3702',
-        baseUomCode: 'JASA',
+        categoryId: '6a75858e154b28c7022892aa',
+        uomGroupId: '6a75861e154b28c7022892ab',
+        baseUomCode: 'PCS',
         isActive: false,
         weight: 100,
         stock: 0,
@@ -347,16 +347,25 @@ export class ItemsFormComponent {
         additionalImageFiles: [],
         categoryName: 'Merchandise',
         uomGroup: {
-          name: 'PCS',
-          baseUomCode: 'JASA',
+          name: 'UOM-EXAMPLE',
+          baseUomCode: 'PCS',
           isActive: true,
           details: [
             {
-              code: 'JASA',
-              name: 'JASA',
+              code: 'PCS',
+              name: 'PCS',
               conversionFactor: 1,
               isBaseUom: true,
               isDefaultForSales: true,
+              sortOrder: 1,
+              isActive: true
+            },
+            {
+              code: 'BOX',
+              name: 'BOX',
+              conversionFactor: 12,
+              isBaseUom: false,
+              isDefaultForSales: false,
               sortOrder: 1,
               isActive: true
             }
