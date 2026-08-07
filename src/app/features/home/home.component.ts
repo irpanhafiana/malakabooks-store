@@ -1,10 +1,11 @@
 import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, ChangeDetectionStrategy, effect } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import { ProductStore } from '../../store/product.store';
 import { CartStore } from '../../store/cart.store';
 import { UserStore } from '../../store/user.store';
+import { AuthStore } from '../../store/auth.store';
 import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
@@ -23,8 +24,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly productStore = inject(ProductStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
+  protected readonly authStore = inject(AuthStore);
   protected readonly bannerStore = inject(PromotionBannerStore);
   protected readonly screen = inject(ScreenService);
+  private readonly router = inject(Router);
 
   currentSlide = signal<number>(0);
 
@@ -141,6 +144,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openQtyModal(product: any) {
+    if (!this.authStore.isLoggedIn()) {
+      this.router.navigate(['/auth/login'], { queryParams: { redirect: this.router.url } });
+      return;
+    }
     this.productStore.setActiveProduct(product);
     this.productStore.setQtyQuantity(1);
     this.productStore.setQtyAction('cart');

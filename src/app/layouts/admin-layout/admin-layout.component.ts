@@ -98,9 +98,6 @@ export class AdminLayoutComponent {
         } else if (url.includes('/promotion-banners')) {
           this.activeRouteName.set('Kelola Banner Promosi');
           this.pageDescription.set('Manajemen banner promosi dan diskon');
-        } else if (url.includes('/pos/transaction')) {
-          this.activeRouteName.set('Kasir Transaksi POS');
-          this.pageDescription.set('Kelola kasir transaksi toko fisik dan scan QR checkout customer');
         } else if (url.includes('/complaints')) {
           this.activeRouteName.set('Kelola Komplain');
           this.pageDescription.set('Manajemen komplain dan keluhan pelanggan');

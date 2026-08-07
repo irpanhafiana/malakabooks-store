@@ -94,6 +94,12 @@ export class ProductModalHandler {
   }
 
   confirmAddToCart() {
+    if (!this.authStore.isLoggedIn()) {
+      this.closeQty(true);
+      this.closeProductDetails();
+      this.router.navigate(['/auth/login'], { queryParams: { redirect: this.router.url } });
+      return;
+    }
     const prod = this.productStore.activeProduct();
     const qty = this.productStore.qtyQuantity();
     const action = this.productStore.qtyAction();

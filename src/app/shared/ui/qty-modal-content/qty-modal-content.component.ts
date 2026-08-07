@@ -47,6 +47,13 @@ export class QtyModalContentComponent {
   }
 
   confirmAddToCart() {
+    if (!this.authStore.isLoggedIn()) {
+      this.productStore.setQtyModalOpen(false);
+      this.productStore.setSelectedProductId(null);
+      this.router.navigate(['/auth/login'], { queryParams: { redirect: this.router.url } });
+      this.confirmed.emit(true);
+      return;
+    }
     const prod = this.productStore.activeProduct();
     const qty = this.productStore.qtyQuantity();
     const action = this.productStore.qtyAction();

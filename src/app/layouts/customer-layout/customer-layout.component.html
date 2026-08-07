@@ -28,7 +28,11 @@
       </div>
       <app-button (click)="qtyDesktop.confirmAddToCart()" variant="primary" size="lg" class="grow max-w-40"
         [disabled]="productStore.isQtyLookupLoading()">
-        {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+        @if (!authStore.isLoggedIn()) {
+          Login untuk Membeli
+        } @else {
+          {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+        }
       </app-button>
       } @else {
       <div class="w-full py-3 bg-slate-100 rounded-xl text-center">
@@ -163,7 +167,11 @@
           </div>
           <app-button (click)="qtyMobile.confirmAddToCart()" variant="primary" size="lg" class="grow max-w-40"
             [disabled]="productStore.isQtyLookupLoading()">
-            {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+            @if (!authStore.isLoggedIn()) {
+              Login untuk Membeli
+            } @else {
+              {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+            }
           </app-button>
           } @else {
           <div class="w-full py-3 bg-slate-100 rounded-xl text-center">

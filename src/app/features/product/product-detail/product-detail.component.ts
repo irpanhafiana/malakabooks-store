@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, input, effect, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe, Location } from '@angular/common';
 import { ProductApiService } from '../../../core/services/product-api.service';
@@ -37,6 +37,7 @@ export class ProductDetailComponent implements OnInit {
   readonly productIdInput = input<string | null>(null, { alias: 'productId' });
 
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly productApi = inject(ProductApiService);
   private readonly reviewApi = inject(ReviewApiService);
   protected readonly cartStore = inject(CartStore);
@@ -128,6 +129,10 @@ export class ProductDetailComponent implements OnInit {
 
   openQuantityModal(event: Event) {
     event.stopPropagation();
+    if (!this.authStore.isLoggedIn()) {
+      this.goToLogin();
+      return;
+    }
     if (this.product()!.stock <= 0) {
       this.alertService.confirm(
         'Stok Kosong',
@@ -153,6 +158,10 @@ export class ProductDetailComponent implements OnInit {
 
   buyNow(event: Event) {
     event.stopPropagation();
+    if (!this.authStore.isLoggedIn()) {
+      this.goToLogin();
+      return;
+    }
     if (this.product()!.stock <= 0) {
       this.alertService.confirm(
         'Stok Kosong',
@@ -170,6 +179,7 @@ export class ProductDetailComponent implements OnInit {
 
   goToLogin() {
     this.productStore.setSelectedProductId(null);
+    this.router.navigate(['/auth/login'], { queryParams: { redirect: this.router.url } });
   }
 
   goBack() {

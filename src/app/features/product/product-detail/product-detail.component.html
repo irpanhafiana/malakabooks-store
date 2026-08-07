@@ -267,15 +267,22 @@
 <!-- Fixed Footer Action Bar -->
 <div class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 z-50">
   @if (product()!.stock > 0) {
-  <app-button (click)="openQuantityModal($event)" variant="outline" size="lg"
-    [fullWidth]="true" class="flex-1">
-    + Keranjang
-  </app-button>
+    @if (authStore.isLoggedIn()) {
+    <app-button (click)="openQuantityModal($event)" variant="outline" size="lg"
+      [fullWidth]="true" class="flex-1">
+      + Keranjang
+    </app-button>
 
-  <app-button (click)="buyNow($event)" variant="primary" size="lg" [fullWidth]="true"
-    class="flex-1">
-    Beli Sekarang
-  </app-button>
+    <app-button (click)="buyNow($event)" variant="primary" size="lg" [fullWidth]="true"
+      class="flex-1">
+      Beli Sekarang
+    </app-button>
+    } @else {
+    <app-button (click)="goToLogin()" variant="primary" size="lg" [fullWidth]="true"
+      class="flex-1">
+      Login untuk Membeli
+    </app-button>
+    }
   } @else {
   <div class="flex-1 py-3 px-4 bg-slate-100 rounded-xl text-center">
     <span class="text-sm font-bold text-slate-500">Stok produk ini sedang habis (Stok 0)</span>

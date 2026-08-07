@@ -1,7 +1,0 @@
-/* TransactionFormComponent — mode kasir di dalam admin-layout */
-:host {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}

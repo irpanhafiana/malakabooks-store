@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, input, output, effect, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe, Location } from '@angular/common';
 import { ProductApiService } from '../../../core/services/product-api.service';
@@ -38,6 +38,7 @@ export class MardikaKopiDetailComponent implements OnInit {
   readonly closed = output<void>();
 
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly productApi = inject(ProductApiService);
   private readonly reviewApi = inject(ReviewApiService);
   protected readonly cartStore = inject(CartStore);
@@ -128,6 +129,10 @@ export class MardikaKopiDetailComponent implements OnInit {
 
   openQuantityModal(event: Event) {
     event.stopPropagation();
+    if (!this.authStore.isLoggedIn()) {
+      this.goToLogin();
+      return;
+    }
     if (this.product()!.stock <= 0) {
       this.alertService.confirm(
         'Stok Kosong',
@@ -154,6 +159,10 @@ export class MardikaKopiDetailComponent implements OnInit {
 
   buyNow(event: Event) {
     event.stopPropagation();
+    if (!this.authStore.isLoggedIn()) {
+      this.goToLogin();
+      return;
+    }
     if (this.product()!.stock <= 0) {
       this.alertService.confirm(
         'Stok Kosong',
@@ -171,6 +180,7 @@ export class MardikaKopiDetailComponent implements OnInit {
 
   goToLogin() {
     this.closed.emit();
+    this.router.navigate(['/auth/login'], { queryParams: { redirect: this.router.url } });
   }
 
   goBack() {

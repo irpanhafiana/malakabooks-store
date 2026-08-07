@@ -3,7 +3,6 @@ import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { AlertService } from '../services/alert.service';
 import type { ApiResponse } from '../models/api-response.model';
-import { isPosApiUrl } from '../auth/pos-session.util';
 
 /**
  * Sertakan header ini pada request yang ingin menangani error-nya sendiri
@@ -27,12 +26,6 @@ export const SKIP_ERROR_HEADER = 'X-Skip-Error-Interceptor';
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   if (req.headers.has(SKIP_ERROR_HEADER)) {
-    return next(req);
-  }
-
-  // Halaman POS memunculkan errornya sendiri lewat SweetAlert2 (Swal.fire).
-  // Tanpa guard ini setiap kegagalan muncul dua kali: toast + dialog.
-  if (isPosApiUrl(req.url)) {
     return next(req);
   }
 

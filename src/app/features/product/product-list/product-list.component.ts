@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ProductStore } from '../../../store/product.store';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
+import { AuthStore } from '../../../store/auth.store';
 import { Product } from '../../../core/models';
 import { ScreenService } from '../../../core/services/screen.service';
 import { ModalComponent } from '../../../shared/ui/modal/modal.component';
@@ -28,6 +29,7 @@ export class ProductListComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
+  protected readonly authStore = inject(AuthStore);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
 
@@ -104,6 +106,10 @@ export class ProductListComponent implements OnInit {
   }
 
   onAddToCart(product: Product) {
+    if (!this.authStore.isLoggedIn()) {
+      this.router.navigate(['/auth/login'], { queryParams: { redirect: this.router.url } });
+      return;
+    }
     this.productStore.setActiveProduct(product);
     this.productStore.setQtyQuantity(1);
     this.productStore.setQtyAction('cart');
