@@ -8,6 +8,12 @@ export const environment = {
   clientSecret: 'MalakaBooks-FE',
   scope: 'Create Update Delete Read offline_access MalakaBooks_Scope General_Scope',
   dokuScriptUrl: 'https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js',
-  dokuStyleUrl: 'https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.css'
+  dokuStyleUrl: 'https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.css',
+
+  // Gateway POS (SAP) — dipakai HANYA oleh halaman /admin/pos/*.
+  // Sesi & token-nya terpisah dari IdentityServer MalakaBooks.
+  posApiUrl: 'http://192.168.1.15:10100',
+  posAuthUrl: 'http://192.168.1.15:10100/pos-api/token',
+  posOutstandingUrl: 'http://192.168.1.15:10100'
 };
 

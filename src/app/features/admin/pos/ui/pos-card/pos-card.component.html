@@ -1,0 +1,20 @@
+@if (title() || icon()) {
+<div [class]="headerClass()">
+  <div class="flex items-center gap-3">
+    @if (icon()) {
+    <i [class]="icon() + ' text-xl text-primary-600'"></i>
+    }
+    @if (title()) {
+    <h3 class="font-display font-bold text-slate-800 text-sm">{{ title() }}</h3>
+    }
+  </div>
+  <div>
+    <ng-content select="[header-actions]"></ng-content>
+  </div>
+</div>
+} @else {
+<ng-content select="[custom-header]"></ng-content>
+}
+<div [class]="padding()">
+  <ng-content></ng-content>
+</div>

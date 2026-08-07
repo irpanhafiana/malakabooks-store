@@ -1,0 +1,31 @@
+@if (routerLink()) {
+  <a [routerLink]="routerLink()" [class]="buttonClasses()" [class.pointer-events-none]="disabled()" [attr.aria-disabled]="disabled() ? true : null">
+    @if (icon()) {
+      <i class="bx" [ngClass]="[icon(), iconClass()]"></i>
+    }
+    @if (label()) {
+      {{ label() }}
+    }
+    <ng-content></ng-content>
+  </a>
+} @else if (href()) {
+  <a [href]="href()" [class]="buttonClasses()" [class.pointer-events-none]="disabled()" [attr.aria-disabled]="disabled() ? true : null">
+    @if (icon()) {
+      <i class="bx" [ngClass]="[icon(), iconClass()]"></i>
+    }
+    @if (label()) {
+      {{ label() }}
+    }
+    <ng-content></ng-content>
+  </a>
+} @else {
+  <button [type]="type()" [disabled]="disabled()" [class]="buttonClasses()">
+    @if (icon()) {
+      <i class="bx" [ngClass]="[icon(), iconClass()]"></i>
+    }
+    @if (label()) {
+      {{ label() }}
+    }
+    <ng-content></ng-content>
+  </button>
+}

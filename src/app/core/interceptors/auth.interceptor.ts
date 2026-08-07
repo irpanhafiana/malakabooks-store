@@ -6,6 +6,7 @@ import { isTokenExpired } from '../auth/jwt.util';
 import { SESSION_TOKEN_KEY, SESSION_USER_KEY, SESSION_CART_KEY } from '../auth/session.util';
 import { AuthStore } from '../../store/auth.store';
 import { SKIP_AUTH_HEADER } from '../services/auth-api.service';
+import { isPosApiUrl } from '../auth/pos-session.util';
 
 function clearSession() {
   localStorage.removeItem(SESSION_USER_KEY);
@@ -44,6 +45,13 @@ function handleTokenRefresh(
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Skip auth intercept for refresh token calls (prevents infinite loop)
   if (req.headers.has(SKIP_AUTH_HEADER)) {
+    return next(req);
+  }
+
+  // Gateway POS punya sesi sendiri (sj_pos_token) — ditangani posAuthInterceptor.
+  // Tanpa guard ini, token MalakaBooks ikut terkirim ke gateway POS, 401-nya
+  // memicu refresh MalakaBooks, dan kasir dilempar ke /admin/login.
+  if (isPosApiUrl(req.url)) {
     return next(req);
   }
 

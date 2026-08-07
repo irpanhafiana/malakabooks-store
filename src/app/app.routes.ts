@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { posGuard } from './core/guards/pos.guard';
 
 export const routes: Routes = [
   // Auth layout viewport routes for Admin Login
@@ -62,9 +63,21 @@ export const routes: Routes = [
         path: 'reports',
         loadComponent: () => import('./features/admin/reports/reports.component').then(c => c.ReportsComponent)
       },
+      // Halaman kasir POS. Menembak gateway SAP (environment.posApiUrl), bukan
+      // MalakaBooks.API, sehingga butuh sesi kedua di atas adminGuard: posGuard.
+      {
+        path: 'pos/login',
+        loadComponent: () => import('./features/admin/pos/login/pos-login.component').then(c => c.PosLoginComponent)
+      },
       {
         path: 'pos/transaction',
+        canActivate: [posGuard],
         loadComponent: () => import('./features/admin/pos/transaction-form/transaction-form.component').then(c => c.TransactionFormComponent)
+      },
+      {
+        path: 'pos/held-transaction',
+        canActivate: [posGuard],
+        loadComponent: () => import('./features/admin/pos/held-transaction/held-transaction.component').then(c => c.HeldTransactionComponent)
       }
     ]
   },

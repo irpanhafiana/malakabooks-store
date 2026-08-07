@@ -1,0 +1,164 @@
+<app-pos-card customClass="bg-white rounded-2xl border border-slate-200 flex-1 overflow-hidden flex flex-col"
+  padding="p-0 flex-1 overflow-hidden flex flex-col">
+  <div custom-header
+    class="bg-slate-50/80 px-4 py-3 border-b border-slate-200 flex justify-between items-center shrink-0 rounded-t-2xl">
+    <div class="flex items-center gap-2.5 pl-1">
+      <i class='bx bx-shopping-bag text-slate-300 text-2xl'></i>
+      <div class="flex flex-col">
+        <div class="flex items-center gap-2">
+          <span class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Keranjang Belanja</span>
+          <span
+            class="bg-primary-50 text-primary-700 font-bold px-1.5 py-0.5 rounded-md text-3xs uppercase">{{activeRows().length}}
+            Item</span>
+        </div>
+        <span class="text-3xs text-slate-300">Daftar item belanjaan transaksi kasir</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      @if (loadedSalesOrder()) {
+      <app-pos-button variant="warning" size="sm" (click)="tundaLagi.emit()" [disabled]="!canTunda()" icon="bx-undo"
+        iconClass="text-base" label="Tunda Lagi [F9]"></app-pos-button>
+      } @else {
+      <app-pos-button variant="warning" size="sm" (click)="executeTunda.emit()" [disabled]="!canTunda()"
+        icon="bx-pause-circle" iconClass="text-base" label="TUNDA [F9]"></app-pos-button>
+      }
+      <app-pos-button variant="danger" size="sm" (click)="resetTransaksi.emit()" icon="bx-refresh" iconClass="text-base"
+        label="Reset [F12]"></app-pos-button>
+      <app-pos-button variant="secondary" size="sm" routerLink="/admin" icon="bx-left-arrow-alt" iconClass="text-base"
+        label="Kembali"></app-pos-button>
+    </div>
+  </div>
+
+  <div class="flex-1 overflow-auto custom-scrollbar relative">
+    @if (activeRows().length === 0) {
+    <div class="h-full flex flex-col justify-center items-center text-slate-400 p-8">
+      <i class='bx bx-receipt text-6xl mb-4 opacity-20 text-primary-900'></i>
+      <p class="font-semibold text-lg text-slate-600">Keranjang Kosong</p>
+      <p class="text-sm max-w-xs mt-2 text-center text-slate-400">Scan barcode produk [F1] di panel kiri untuk memulai
+        transaksi</p>
+      <div class="mt-4 flex items-center gap-2 text-primary-400 animate-pulse">
+        <i class='bx bx-left-arrow-alt text-2xl'></i>
+        <span class="text-xs font-semibold">Scan produk di sini [F1]</span>
+      </div>
+    </div>
+    } @else {
+    <table class="w-full text-left text-sm whitespace-nowrap table-fixed">
+      <thead
+        class="bg-slate-50 text-slate-500 text-3xs uppercase font-semibold sticky top-0 z-20 border-b border-slate-200">
+        <tr>
+          <th class="py-2 px-2 w-12 text-center">#</th>
+          <th class="py-2 px-2 w-12 text-center">SIAP</th>
+          <th class="py-2 px-2 w-64">Detail Produk</th>
+          @for (col of uomColumns(); track col.label) {
+          <th class="py-2 px-2 w-20 text-center">{{col.label}}</th>
+          }
+          <th class="py-2 px-2 w-12 text-center"><i class='bx bx-cog'></i></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        @for (prod of activeProducts(); track prod.rowId; let idx = $index) {
+        <tr class="transition-colors group animate-fade-in" [class.bg-emerald-50]="itemReadyState()[prod.rowId]">
+          <td class="py-2 px-2 text-center font-medium text-slate-400">{{idx + 1}}</td>
+          <td class="py-2 px-2 text-center" (click)="toggleItemReady.emit(prod.rowId)">
+            <div
+              class="w-8 h-8 rounded-lg flex items-center justify-center transition-all border mx-auto cursor-pointer"
+              [class]="itemReadyState()[prod.rowId] ? 'bg-emerald-500 border-emerald-600 text-white' : 'bg-white border-slate-300 text-slate-300 hover:border-slate-400'">
+              <i class='bx bx-check text-xl font-medium'></i>
+            </div>
+          </td>
+          <td class="py-2 px-2 truncate">
+            <p class="font-semibold text-slate-700 text-xs truncate whitespace-normal leading-tight">
+              {{prod.name}}</p>
+            <p class="text-3xs text-slate-400 font-mono mt-0.5">{{prod.id}}</p>
+          </td>
+          @for (col of uomColumns(); track col.label) {
+          <td class="py-2 px-2 text-center">
+            @if (getUomByLevel(prod, col.level); as detail) {
+            <input type="number" min="0" [id]="'uom-' + prod.rowId + '-' + col.level"
+              [ngModel]="inputState()[prod.rowId]?.[detail.name] || ''"
+              (ngModelChange)="updateInputState.emit({ rowId: prod.rowId, uom: detail.name, value: $event })"
+              (keydown.enter)="focusSearch.emit($event)"
+              class="w-16 text-center border border-slate-200 rounded-lg bg-white py-1 text-xs font-medium focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-100 transition-all font-mono">
+            @let rawPrice = (unitPrices()[prod.id]?.[detail.name] || 0);
+            @let uomPrice = rawPrice > 0 ? rawPrice : (prod.price * (detail.conversion || 1));
+            <p class="text-3xs text-slate-400 mt-1 uppercase">{{detail.name}}</p>
+            <p class="text-3xs font-mono font-medium" [class.text-emerald-600]="rawPrice > 0"
+              [class.text-slate-400]="rawPrice === 0">
+              {{ uomPrice | currency:'IDR':'Rp ':'1.0-0' }}
+            </p>
+            } @else {
+            <span class="text-slate-300">-</span>
+            }
+          </td>
+          }
+          <td class="py-2 px-2 text-center">
+            <app-pos-button variant="soft-danger" size="sm" (click)="removeProduct.emit(prod.rowId)"
+              customClass="!w-8 !h-8 mx-auto !p-0 flex items-center justify-center">
+              <i class='bx bx-trash text-lg'></i>
+            </app-pos-button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+
+  <!-- Komposisi non-rokok: batas minimum per nota, bisa di-bypass salesman -->
+  @if (nonRokokStats().required > 0 && activeRows().length > 0) {
+  <div class="px-5 py-3 border-t border-slate-200 bg-slate-50/50 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="flex flex-col">
+        <span class="text-3xs font-black text-slate-400 uppercase tracking-widest">Komposisi Non-Rokok</span>
+        <div class="flex items-center gap-2 mt-0.5">
+          <div class="w-24 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+            <div class="h-full transition-all duration-500"
+              [class]="nonRokokStats().isViolated ? 'bg-rose-500' : 'bg-emerald-500'"
+              [style.width.%]="nonRokokStats().current"></div>
+          </div>
+          <span class="text-xs font-bold" [class]="nonRokokStats().isViolated ? 'text-rose-600' : 'text-emerald-600'">
+            {{ nonRokokStats().current.toFixed(1) }}%
+          </span>
+          <span class="text-2xs text-slate-400 font-medium">(Min: {{ nonRokokStats().required }}%)</span>
+        </div>
+      </div>
+    </div>
+
+    @if (nonRokokStats().isViolated && !isNonRokokBypassed()) {
+    <app-pos-button variant="warning" size="sm" (click)="requestNonRokokBypass.emit()" customClass="animate-pulse">
+      <i class='bx bx-shield-quarter'></i> BYPASS SALESMAN
+    </app-pos-button>
+    } @else if (isNonRokokBypassed()) {
+    <div class="bg-emerald-100 text-emerald-700 text-3xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+      <i class='bx bxs-check-shield'></i> BYPASS AKTIF
+    </div>
+    }
+  </div>
+  }
+
+  <div class="px-5 py-4 bg-white border-t border-slate-200 shrink-0 z-10 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <div class="flex flex-col">
+        <span class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Total Belanja</span>
+        <span class="text-2xl font-black text-slate-800 tracking-tight">
+          {{totalBayar() | currency:'IDR':'Rp':'1.0-0'}}</span>
+      </div>
+      @if (customerData()) {
+      <div class="flex items-center gap-1.5 bg-yellow-50 border border-yellow-200 px-3 py-2 rounded-xl">
+        <i class='bx bxs-star text-yellow-400 text-lg'></i>
+        <div class="flex flex-col">
+          <span class="text-3xs font-bold text-yellow-500 uppercase tracking-widest">Poin Transaksi</span>
+          <span class="text-sm font-black font-mono"
+            [class]="customerPoints() > 0 ? 'text-yellow-600' : 'text-slate-300'">
+            {{ customerPoints() > 0 ? '+' + customerPoints() : '—' }}
+          </span>
+        </div>
+      </div>
+      }
+    </div>
+    <app-pos-button variant="primary" size="md" (click)="openPaymentModal.emit()"
+      [disabled]="activeRows().length === 0 || !customerData()" customClass="tracking-wide w-fit">
+      <i class='bx bx-credit-card-front text-xl'></i> PROSES TRANSAKSI [F2]
+    </app-pos-button>
+  </div>
+</app-pos-card>

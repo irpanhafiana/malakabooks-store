@@ -5,6 +5,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { posAuthInterceptor } from './core/interceptors/pos-auth.interceptor';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { SelectivePreloadingStrategy } from './core/strategies/selective-preloading-strategy';
@@ -23,7 +24,12 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withPreloading(SelectivePreloadingStrategy)),
     // errorInterceptor terluar: catchError-nya berjalan setelah authInterceptor
     // menangani 401, sehingga hanya menampilkan toast untuk error yang tersisa.
-    provideHttpClient(withFetch(), withInterceptors([errorInterceptor, authInterceptor, loadingInterceptor])),
+    // posAuthInterceptor terpisah dari authInterceptor: gateway POS (SAP) punya
+    // token & alur 401 sendiri. Keduanya saling melewatkan lewat isPosApiUrl().
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([errorInterceptor, posAuthInterceptor, authInterceptor, loadingInterceptor])
+    ),
     provideAnimationsAsync()
   ]
 };

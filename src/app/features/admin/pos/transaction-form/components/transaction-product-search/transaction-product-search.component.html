@@ -1,0 +1,109 @@
+<!-- PRODUK SIAP — disembunyikan saat panel tambahan aktif -->
+@if (!showPickingPanel()) {
+<app-pos-card
+  customClass="bg-white rounded-2xl border border-slate-200 relative z-30 flex-1 overflow-hidden flex flex-col"
+  padding="p-4 w-full h-full flex flex-col gap-2 overflow-visible">
+  <div custom-header
+    class="bg-slate-50/80 px-4 py-3 border-b border-slate-200 flex justify-between items-center shrink-0 rounded-t-2xl">
+    <div class="flex items-center gap-2.5 pl-1">
+      <i class='bx bx-check-circle text-slate-300 text-2xl'></i>
+      <div class="flex flex-col">
+        <span class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Produk yang Siap Dikasir</span>
+        <span class="text-3xs text-slate-300">Scan produk yang siap diproses di kasir [F1]</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <app-pos-button variant="success" size="sm" (click)="importB2C.emit()">
+        <i class='bx bx-qr-scan'></i> Scan Produk
+      </app-pos-button>
+    </div>
+  </div>
+  <div class="relative shrink-0 w-full">
+    <app-pos-input type="text" inputId="product-ready-search-input" [ngModel]="searchQueryReady()"
+      (ngModelChange)="searchReadyChange.emit($event)" (focus)="isSearchReadyFocused.set(true)"
+      (blur)="onSearchReadyBlur()" (keydown)="searchReadyKeyDown.emit($event)" size="sm"
+      placeholder="Scan produk yang siap di kasir [F1]" icon="bx-scan" iconClass="text-emerald-500 text-base"
+      customClass="bg-emerald-50 border-emerald-300 focus:border-emerald-500 placeholder:text-emerald-400 text-slate-900">
+    </app-pos-input>
+
+    @if (isSearchReadyFocused() && searchQueryReady().length >= 3 && searchReadyResults().length > 0) {
+    <div id="product-ready-results-container"
+      class="absolute z-50 top-full left-0 mt-2 w-full bg-white shadow-xl rounded-xl border border-slate-200 py-1 max-h-48 overflow-y-auto animate-fade-in custom-scrollbar">
+      @for (prod of searchReadyResults(); track prod.id; let idx = $index) {
+      <div (click)="selectReadyItem.emit({ product: prod, query: searchQueryReady() })"
+        [class.bg-emerald-100]="idx === productReadySelectedIndex()"
+        [class.border-l-4]="idx === productReadySelectedIndex()"
+        [class.border-emerald-500]="idx === productReadySelectedIndex()"
+        class="px-3 py-2 hover:bg-emerald-50 cursor-pointer flex flex-col transition-colors border-b last:border-b-0 border-slate-50 group">
+        <span class="font-semibold text-xs text-slate-700 group-hover:text-emerald-600 transition-colors">{{
+          prod.name }}</span>
+        <span class="text-3xs text-slate-400 font-mono mt-0.5">{{ prod.id }}</span>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="mt-2 flex-1 overflow-y-auto text-center flex flex-col items-center justify-center opacity-40">
+    <span class="text-sm text-slate-400">Scan barcode produk [F1]</span>
+  </div>
+</app-pos-card>
+}
+
+<!-- PRODUK TAMBAHAN (belum siap / perlu diambil gudang) -->
+<app-pos-card
+  [customClass]="'bg-white rounded-2xl border border-slate-200 flex flex-col relative z-20 shrink-0 ' + (showPickingPanel() ? 'flex-1 overflow-visible' : '')"
+  [padding]="showPickingPanel() ? 'p-4 w-full h-full flex flex-col gap-2 overflow-visible' : 'p-0'">
+  <div custom-header
+    class="bg-slate-50/80 px-4 py-3 border-b border-slate-200 flex justify-between items-center shrink-0 rounded-t-2xl"
+    [class.rounded-b-2xl]="!showPickingPanel()" [class.border-b-0]="!showPickingPanel()">
+    <div class="flex items-center gap-2.5 pl-1">
+      <i class='bx bx-package text-slate-300 text-2xl'></i>
+      <div class="flex flex-col">
+        <span class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Produk Tambahan</span>
+        <span class="text-3xs text-slate-300">Cari item produk tambahan gudang</span>
+      </div>
+    </div>
+    <app-pos-button [variant]="showPickingPanel() ? 'outline' : 'warning'" size="sm"
+      (click)="togglePickingPanel.emit()">
+      <i class='bx text-sm' [class]="showPickingPanel() ? 'bx-x' : 'bx-plus'"></i>
+      {{ showPickingPanel() ? 'Tutup Tambahan' : 'Tambah Produk' }}
+    </app-pos-button>
+  </div>
+  @if (showPickingPanel()) {
+  <div class="relative shrink-0 w-full">
+    <app-pos-input type="text" inputId="product-picking-search-input" [ngModel]="searchQueryPicking()"
+      (ngModelChange)="searchPickingChange.emit($event)" (focus)="isSearchPickingFocused.set(true)"
+      (blur)="onSearchPickingBlur()" (keydown)="searchPickingKeyDown.emit($event)" size="sm"
+      placeholder="Cari produk tambahan [F1]" icon="bx-scan" iconClass="text-amber-500 text-base"
+      customClass="bg-amber-50 border-amber-300 focus:border-amber-500 placeholder:text-amber-400 text-slate-900">
+    </app-pos-input>
+
+    @if (isSearchPickingFocused() && searchQueryPicking().length >= 3 && searchPickingResults().length > 0) {
+    <div id="product-picking-results-container"
+      class="absolute z-50 top-full left-0 mt-2 w-full bg-white shadow-xl rounded-xl border border-slate-200 py-1 max-h-48 overflow-y-auto animate-fade-in custom-scrollbar">
+      @for (prod of searchPickingResults(); track prod.id; let idx = $index) {
+      <div (click)="selectPickingItem.emit({ product: prod, query: searchQueryPicking() })"
+        [class.bg-primary-50]="idx === productPickingSelectedIndex()"
+        [class.border-l-4]="idx === productPickingSelectedIndex()"
+        [class.border-primary-500]="idx === productPickingSelectedIndex()"
+        class="px-3 py-2 hover:bg-primary-50 cursor-pointer flex flex-col transition-colors border-b last:border-b-0 border-slate-50 group">
+        <span class="font-semibold text-xs text-slate-700 group-hover:text-primary-600 transition-colors">{{
+          prod.name }}</span>
+        <span class="text-3xs text-slate-400 font-mono mt-0.5">{{ prod.id }}</span>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="mt-2 flex-1 overflow-y-auto text-center flex flex-col items-center justify-center opacity-40">
+    @if(isInitialLoading()) {
+    <i class='bx bx-loader-alt animate-spin text-4xl text-slate-400 mb-2'></i>
+    <span class="text-xs text-slate-400">Memuat Data Item...</span>
+    } @else {
+    <span class="text-sm text-slate-400">Scan barcode produk [F1]</span>
+    }
+  </div>
+  }
+</app-pos-card>
