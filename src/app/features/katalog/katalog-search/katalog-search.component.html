@@ -1,0 +1,74 @@
+<div class="h-full flex flex-col bg-gray-50">
+  <!-- Fixed Search Bar -->
+  <div class="shrink-0 bg-gray-50 z-30 px-3 pb-3 pt-1">
+    <div class="relative flex-1 items-center justify-center">
+      <i class='bx bx-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 text-lg pointer-events-none'></i>
+      <input #searchInput type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+        placeholder="Lagi cari produk apa?"
+        class="w-full py-2.5 pl-10 pr-10 bg-white border border-gray-200 rounded-full focus:outline-none focus:border-primary-600 focus:ring-1 focus:ring-primary-600 text-sm font-medium text-gray-800 placeholder:text-gray-300">
+
+      <!-- Clear Button -->
+      @if (searchQuery()) {
+      <button (click)="searchQuery.set('')" aria-label="Hapus pencarian"
+        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 transition-colors p-2">
+        <i class='bx bxs-x-circle text-lg'></i>
+      </button>
+      }
+    </div>
+  </div>
+
+  <div class="px-3 flex-1 overflow-y-auto pb-10">
+    <!-- Default State -->
+    @if (!searchQuery()) {
+    <div class="py-16 text-center">
+      <i class='bx bx-search text-4xl text-gray-200 mb-2'></i>
+      <h3 class="text-sm font-bold text-gray-800">Cari produk yang kamu inginkan</h3>
+      <p class="text-xs text-gray-400 mt-1">Ketik kata kunci untuk mencari buku atau produk.</p>
+    </div>
+    }
+
+    <!-- Results -->
+    @if (searchQuery() && products().length > 0) {
+    <div class="space-y-3 py-3">
+      <div class="flex items-center justify-between px-1 mb-2">
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Hasil Pencarian</h3>
+        <span class="text-[10px] font-bold text-primary-600 opacity-60 tracking-tight">{{ products().length }} Ditemukan</span>
+      </div>
+      @for (product of products(); track product.id) {
+      <div (click)="selectedProductForSheet.set(product)"
+        class="bg-white p-3 rounded-lg flex gap-4 active:scale-[0.98] transition-all cursor-pointer group">
+        <div class="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden border border-gray-100">
+          <img [ngSrc]="product.coverImage" [alt]="product.title" fill class="w-full h-full object-cover">
+          <div
+            class="badge-uom">
+            {{ product.salesUomCode || product.baseUomCode || 'PCS' }}
+          </div>
+        </div>
+        <div class="flex-1 min-w-0 flex flex-col justify-center">
+          <h3
+            class="text-sm font-semibold text-gray-800 line-clamp-2 leading-tight tracking-tight group-hover:text-primary-600 transition-colors">
+            {{ product.title }}</h3>
+          <p class="text-[10px] text-gray-400 mt-1 uppercase font-medium tracking-wide">{{ product.categoryName || 'Umum' }}</p>
+          <span class="text-base font-bold text-primary-600 tracking-tight mt-1">{{ product.price | currency:'IDR':'Rp ':'1.0-0' }}</span>
+        </div>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- Not Found State -->
+    @if (searchQuery() && products().length === 0) {
+    <div class="py-16 text-center">
+      <i class='bx bx-search-alt text-4xl text-gray-200 mb-2'></i>
+      <h3 class="text-sm font-bold text-gray-800">Produk tidak ditemukan</h3>
+      <p class="text-xs text-gray-400 mt-1">Coba gunakan kata kunci lain.</p>
+    </div>
+    }
+  </div>
+
+  <!-- Selection Sheet -->
+  @if (selectedProductForSheet()) {
+  <app-katalog-selection-sheet [product]="selectedProductForSheet()" (close)="selectedProductForSheet.set(null)"
+    (confirm)="cartStore.addToCart(selectedProductForSheet()!, $event.quantity, $event.uom, $event.price)"></app-katalog-selection-sheet>
+  }
+</div>

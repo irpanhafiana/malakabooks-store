@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { katalogCheckoutAbandonGuard } from './core/guards/katalog-checkout-abandon.guard';
 
 export const routes: Routes = [
   // Auth layout viewport routes for Admin Login
@@ -175,6 +176,24 @@ export const routes: Routes = [
     ]
   },
 
+  // B2C Katalog (Belanja Offline - Flow copy sj-pos-katalog)
+  {
+    path: 'katalog',
+    loadComponent: () => import('./layouts/katalog-layout/katalog-layout.component').then(c => c.KatalogLayoutComponent),
+    children: [
+      { path: '', loadComponent: () => import('./features/katalog/katalog-home/katalog-home.component').then(c => c.KatalogHomeComponent) },
+      { path: 'product/:id', loadComponent: () => import('./features/katalog/katalog-product-detail/katalog-product-detail.component').then(c => c.KatalogProductDetailComponent) },
+      { path: 'search', loadComponent: () => import('./features/katalog/katalog-search/katalog-search.component').then(c => c.KatalogSearchComponent) },
+      { path: 'cart', loadComponent: () => import('./features/katalog/katalog-cart/katalog-cart.component').then(c => c.KatalogCartComponent) },
+      {
+        path: 'checkout',
+        loadComponent: () => import('./features/katalog/katalog-checkout/katalog-checkout.component').then(c => c.KatalogCheckoutComponent),
+        canDeactivate: [katalogCheckoutAbandonGuard]
+      }
+    ]
+  },
+
   // Catch-all redirection to store home page
   { path: '**', redirectTo: '' }
 ];
+

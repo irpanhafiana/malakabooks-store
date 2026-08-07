@@ -1,0 +1,84 @@
+<div class="fixed inset-0 z-100 flex items-end justify-center pointer-events-none">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-slate-900/30 backdrop-blur-[2px] transition-opacity duration-300 opacity-0"
+    [class.opacity-0]="!isVisible()" [class.opacity-100]="isVisible()" [class.pointer-events-none]="!isVisible()"
+    [class.pointer-events-auto]="isVisible()" (click)="initiateClose()"></div>
+
+  <!-- Sheet Content -->
+  <div
+    class="relative w-full max-w-lg bg-white rounded-t-2xl shadow-[0_-15px_50px_rgba(254,119,67,0.1)] transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] pointer-events-auto max-h-[92vh] flex flex-col"
+    [class.translate-y-full]="!isVisible()" [class.translate-y-0]="isVisible()">
+    <!-- Handle -->
+    <div class="w-full flex justify-center py-3 shrink-0">
+      <div class="w-12 h-1.5 bg-gray-100 rounded-full"></div>
+    </div>
+
+    <!-- Scrollable Body -->
+    <div
+      class="flex-1 overflow-y-auto px-5 pb-32 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <!-- Product Card -->
+      <div class="flex gap-3 mb-6">
+        <div class="relative w-24 h-24 rounded-lg overflow-hidden border border-gray-100 shrink-0">
+          <img [ngSrc]="product()!.coverImage" [alt]="product()!.title" fill class="w-full h-full object-cover">
+          <div
+            class="badge-uom">
+            {{ selectedUom() }}
+          </div>
+        </div>
+        <div class="flex-1 min-w-0 flex flex-col justify-start">
+          <p class="text-[10px] text-gray-400 font-medium tracking-wide uppercase mb-0.5">{{ product()?.categoryName || 'Umum' }}</p>
+          <h2 class="text-base font-bold text-gray-800 leading-tight tracking-tight line-clamp-2 mb-1.5">{{
+            product()?.title }}</h2>
+          <div class="flex items-baseline gap-2 flex-wrap">
+            <span class="text-lg font-bold text-primary-600 tracking-tight">{{ currentPrice() | currency:'IDR':'Rp
+              ':'1.0-0' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Varian Section -->
+        <section>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Pilih Varian</h3>
+            <span class="text-[10px] font-bold text-primary-600 opacity-60 tracking-tight">{{ uomOptions().length
+              }} Tersedia</span>
+          </div>
+          <div class="flex flex-wrap gap-1">
+            @for (uom of uomOptions(); track uom) {
+            <button (click)="selectedUom.set(uom)" [class]="'px-3 py-2 rounded-lg text-[14px] font-medium transition-all border-2 tracking-tight active:scale-95 ' +
+                  (selectedUom() === uom
+                    ? 'bg-primary-600 border-primary-700 text-white'
+                    : 'bg-gray-50 border-gray-50 text-gray-600 hover:text-gray-800')">
+              {{ uom }}
+            </button>
+            }
+          </div>
+        </section>
+
+        <!-- Quantity Section -->
+        <section>
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Atur Jumlah</h3>
+          <app-katalog-quantity-selector
+            [quantity]="quantity()"
+            (changeQty)="quantity.set($event)">
+          </app-katalog-quantity-selector>
+        </section>
+      </div>
+    </div>
+
+    <!-- Bottom Action Area -->
+    <div class="absolute bottom-0 left-0 right-0 px-5 pt-4 bg-white border-t border-gray-100"
+      style="padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);">
+      <button (click)="onConfirm()"
+        class="w-full bg-primary-600 border-2 border-primary-700 text-white rounded-full py-4 px-5 flex items-center justify-between active:scale-[0.98] transition-all tracking-tight">
+        <div class="flex items-center gap-2">
+          <i class='bx bx-plus text-xl'></i>
+          <span class="font-bold tracking-tight text-sm">Tambah Ke Keranjang</span>
+        </div>
+        <span class="text-base font-bold tracking-tight">{{ currentPrice() * quantity() | currency:'IDR':'Rp ':'1.0-0'
+          }}</span>
+      </button>
+    </div>
+  </div>
+</div>

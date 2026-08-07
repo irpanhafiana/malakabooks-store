@@ -1,0 +1,31 @@
+<header class="flex items-center justify-between py-2 px-2 shrink-0 bg-gray-50/90 backdrop-blur-md sticky top-0 z-40 h-16">
+  <div class="flex items-center gap-1 overflow-hidden flex-1">
+    <button (click)="goBack()" aria-label="Kembali" class="p-2 rounded-full flex items-center justify-center active:scale-95 transition-transform shrink-0">
+      <i class='bx bx-chevron-left text-primary-600 text-3xl font-black'></i>
+    </button>
+  
+    <div class="flex-1 min-w-0">
+      <h2 class="text-xl font-bold text-primary-600 tracking-tight truncate">{{ pageTitle() }}</h2>
+    </div>
+  </div>
+
+  <!-- Right Actions -->
+  <div class="flex items-center gap-1 shrink-0 px-2">
+    @if (currentUrl() === '/katalog/search') {
+      <button routerLink="/katalog/cart" class="relative p-2 rounded-full flex items-center justify-center active:scale-95 transition-transform text-primary-600">
+        <i class='bx bx-shopping-bag text-2xl'></i>
+        @if (cartStore.totalItemsCount() > 0) {
+          <span class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent-600 text-[9px] font-bold text-white shadow-sm">
+            {{ cartStore.totalItemsCount() }}
+          </span>
+        }
+      </button>
+    }
+
+    @if (currentUrl() === '/katalog/cart') {
+      <button routerLink="/katalog/search" class="p-2 rounded-full flex items-center justify-center active:scale-95 transition-transform text-primary-600">
+        <i class='bx bx-plus text-2xl font-bold'></i>
+      </button>
+    }
+  </div>
+</header>

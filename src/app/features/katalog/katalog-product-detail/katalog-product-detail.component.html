@@ -1,0 +1,88 @@
+@if (isLoading()) {
+  <div class="p-4 text-center">
+    <i class='bx bx-loader-alt bx-spin text-3xl text-primary-600'></i>
+    <p class="text-xs text-gray-400 mt-2">Memuat detail produk...</p>
+  </div>
+} @else if (product()) {
+  <div class="px-3 pb-5">
+    <!-- Product Image -->
+    <div class="relative w-full aspect-square rounded-lg overflow-hidden bg-white mt-2">
+      <img
+        [ngSrc]="product()!.coverImage"
+        [alt]="product()!.title"
+        fill
+        priority
+        class="absolute top-0 left-0 w-full h-full object-cover"
+      >
+      <div class="badge-uom">
+        {{ selectedUom() }}
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="pt-4 space-y-5">
+      <div class="space-y-1">
+        <p class="text-[10px] text-gray-400 font-medium tracking-wide uppercase">{{ product()?.categoryName || 'Umum' }}</p>
+        <h1 class="text-lg font-bold text-gray-800 tracking-tight leading-tight">{{ product()?.title }}</h1>
+        <p class="text-base font-bold text-primary-600 tracking-tight">{{ product()?.price | currency:'IDR':'Rp ':'1.0-0' }}</p>
+      </div>
+
+      <!-- UOM Selection -->
+      @if (uomOptions().length > 1) {
+      <section>
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Pilih Varian</h3>
+          <span class="text-[10px] font-bold text-primary-600 opacity-60 tracking-tight">{{ uomOptions().length }} Tersedia</span>
+        </div>
+        <div class="flex flex-wrap gap-1">
+          @for (uom of uomOptions(); track uom) {
+            <button
+              (click)="selectedUom.set(uom)"
+              [class]="'px-5 py-3 rounded-full text-sm font-bold transition-all border-2 tracking-tight active:scale-95 ' +
+                (selectedUom() === uom
+                  ? 'bg-primary-600 border-primary-700 text-white'
+                  : 'bg-gray-50 border-gray-50 text-gray-500 hover:border-gray-300 hover:text-gray-800')"
+            >
+              {{ uom }}
+            </button>
+          }
+        </div>
+      </section>
+      }
+
+      <!-- Description -->
+      <section>
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Deskripsi</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          {{ product()?.description || 'Tidak ada deskripsi produk.' }}
+        </p>
+      </section>
+
+      <!-- Quantity Control -->
+      <section>
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Atur Jumlah</h3>
+        <app-katalog-quantity-selector
+          [quantity]="quantity()"
+          (changeQty)="quantity.set($event)">
+        </app-katalog-quantity-selector>
+      </section>
+    </div>
+
+    <!-- Add to Cart -->
+    <div class="mt-8">
+      <button
+        (click)="addToCart()"
+        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all"
+      >
+        <i class='bx bx-shopping-bag text-xl'></i>
+        Tambah ke Keranjang
+      </button>
+    </div>
+  </div>
+} @else {
+  <div class="py-16 text-center">
+    <i class='bx bx-search-alt text-4xl text-gray-300 mb-2'></i>
+    <h3 class="text-lg font-bold text-gray-800">Produk Tidak Ditemukan</h3>
+    <p class="text-xs text-gray-400 mt-1">Maaf, produk yang Anda cari tidak tersedia.</p>
+  </div>
+}

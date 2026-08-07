@@ -144,10 +144,11 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Customer & Admin Typography & Fonts Override */
+/* Customer, Admin & Katalog Typography & Fonts Override */
 .customer-root,
 .admin-root,
-.inner-root {
+.inner-root,
+.katalog-root {
   --font-sans: 'Poppins', sans-serif !important;
   --font-display: 'Fraunces', serif !important;
   font-family: 'Poppins', sans-serif !important;
@@ -155,7 +156,8 @@ body {
 
 .customer-root h1, .customer-root h2, .customer-root h3, .customer-root h4, .customer-root h5, .customer-root h6,
 .admin-root h1, .admin-root h2, .admin-root h3, .admin-root h4, .admin-root h5, .admin-root h6,
-.inner-root h1, .inner-root h2, .inner-root h3, .inner-root h4, .inner-root h5, .inner-root h6 {
+.inner-root h1, .inner-root h2, .inner-root h3, .inner-root h4, .inner-root h5, .inner-root h6,
+.katalog-root h1, .katalog-root h2, .katalog-root h3, .katalog-root h4, .katalog-root h5, .katalog-root h6 {
   font-family: 'Fraunces', serif !important;
   font-weight: 700 !important;
 }

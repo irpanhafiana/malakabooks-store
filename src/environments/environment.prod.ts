@@ -3,6 +3,7 @@ export const environment = {
   apiBaseUrl: 'https://tokosuburjaya.com:17800/ssonline/api/v1',
   authUrl: 'https://tokosuburjaya.com/connect/token',
   apiUrl: 'https://tokosuburjaya.com:17800/ssonline/api/v1/',
+  posApiUrl: 'http://192.168.1.15:10100/',
   originCode: '32.71.10.8',
   clientId: '996cc633-23c1-4fb7-a6b6-6fd20dd5051d,',
   clientSecret: '996cc633-23c1-4fb7-a6b6-6fd20dd5051e,',

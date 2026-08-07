@@ -1,0 +1,62 @@
+<div class="h-dvh w-full bg-gray-50 font-sans overflow-hidden flex justify-center katalog-root"
+  style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
+  <!-- Mobile Frame Container -->
+  <div class="w-full max-w-120 bg-gray-50 relative flex flex-col shadow-2xl border-x border-gray-100 overflow-hidden"
+    style="height: calc(100% / clamp(0.75, 100vw / 480, 1));
+           transform: scale(clamp(0.75, 100vw / 480, 1));
+           transform-origin: center top;">
+
+    @if (showHeader()) {
+    <app-katalog-header class="sticky top-0 z-40"></app-katalog-header>
+    }
+
+    <!-- Area Scrollable -->
+    <main class="flex-1 overflow-x-hidden overflow-y-auto scrollbar-hide" [class.pb-28]="showBottomNav()">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- NAVBAR MELAYANG (Inside Frame) -->
+    @if (showBottomNav()) {
+    <div class="absolute left-1/2 -translate-x-1/2 w-fit z-50"
+      style="bottom: calc(env(safe-area-inset-bottom) + 1.5rem);">
+      <app-katalog-bottom-nav class="rounded-3xl shadow-[0_10px_40px_-5px_rgba(254,119,67,0.35)]"></app-katalog-bottom-nav>
+    </div>
+    }
+
+    <!-- Global Toast -->
+    @if (toastService.currentToast()) {
+    <div class="absolute left-1/2 -translate-x-1/2 z-200 w-[calc(100%-2rem)] transition-all duration-300"
+      style="top: calc(env(safe-area-inset-top) + 1rem);" role="status" aria-live="polite"
+      [class.opacity-0]="!toastService.visible()" [class.opacity-100]="toastService.visible()"
+      [class.-translate-y-2]="!toastService.visible()" [class.translate-y-0]="toastService.visible()">
+      <div class="flex items-center gap-3 px-4 py-3 bg-white rounded-lg border-2 shadow-sm"
+        [class.border-green-200]="toastService.currentToast()?.type === 'success'"
+        [class.border-red-200]="toastService.currentToast()?.type === 'error'"
+        [class.border-blue-200]="toastService.currentToast()?.type === 'info'">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+          [class.bg-green-100]="toastService.currentToast()?.type === 'success'"
+          [class.text-green-600]="toastService.currentToast()?.type === 'success'"
+          [class.bg-red-100]="toastService.currentToast()?.type === 'error'"
+          [class.text-red-600]="toastService.currentToast()?.type === 'error'"
+          [class.bg-blue-100]="toastService.currentToast()?.type === 'info'"
+          [class.text-blue-600]="toastService.currentToast()?.type === 'info'">
+          @if (toastService.currentToast()?.type === 'success') {
+          <i class='bx bx-check text-xl'></i>
+          } @else if (toastService.currentToast()?.type === 'error') {
+          <i class='bx bx-x text-xl'></i>
+          } @else {
+          <i class='bx bx-info-circle text-xl'></i>
+          }
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-bold text-gray-800 tracking-tight">{{ toastService.currentToast()?.title }}</p>
+          @if (toastService.currentToast()?.message) {
+          <p class="text-xs text-gray-400 tracking-tight line-clamp-1 mt-0.5">{{ toastService.currentToast()?.message }}
+          </p>
+          }
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

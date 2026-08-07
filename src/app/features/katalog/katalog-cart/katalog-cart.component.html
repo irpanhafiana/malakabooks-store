@@ -1,0 +1,165 @@
+<div class="h-full flex flex-col bg-gray-50">
+  @if (cartStore.cartItems().length > 0) {
+  <!-- Scrollable Item List -->
+  <div class="flex-1 overflow-y-auto px-3 py-5 space-y-3 pb-60">
+
+    @for (item of cartStore.cartItems(); track item.id + item.uom) {
+    <div (click)="openItemSheet(item)"
+      class="flex gap-4 bg-white p-3 rounded-lg relative active:scale-[0.98] transition-all cursor-pointer group">
+      <!-- Thumbnail -->
+      <div class="relative w-20 h-20 bg-gray-50 rounded-lg overflow-hidden shrink-0 border border-gray-100">
+        <img [ngSrc]="item.image" [alt]="item.name" fill class="w-full h-full object-cover">
+        <div
+          class="badge-uom">
+          {{ item.uom }}
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="flex-1 flex flex-col justify-between py-0.5">
+        <div>
+          <div class="flex justify-between items-start">
+            <h3
+              class="text-sm font-semibold text-gray-800 leading-tight pr-4 line-clamp-2 tracking-tight group-hover:text-primary-600 transition-colors">
+              {{ item.name }}</h3>
+            <button (click)="requestDelete(item.id, item.uom, item.name); $event.stopPropagation()"
+              aria-label="Hapus produk" class="text-gray-300 hover:text-red-500 transition-colors p-1 -m-1">
+              <i class='bx bx-trash text-lg'></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-base font-bold text-primary-600 tracking-tight">{{ item.price | currency:'IDR':'Rp ':'1.0-0'
+            }}</span>
+
+          <!-- Quantity -->
+          <div (click)="$event.stopPropagation()">
+            <app-katalog-quantity-selector [quantity]="item.quantity" size="sm"
+              (changeQty)="cartStore.updateQuantity(item.id, item.uom, $event)">
+            </app-katalog-quantity-selector>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Fixed Bottom Summary Card -->
+  <div class="fixed bottom-0 left-0 right-0 max-w-120 mx-auto px-5 pt-4 bg-white border-t border-gray-100 z-50"
+    style="padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);">
+
+    <button (click)="requestCheckout()" [disabled]="isProcessing()"
+      class="w-full border-2 rounded-full py-4 px-5 flex items-center justify-between active:scale-[0.98] transition-all tracking-tight disabled:opacity-50 shadow-lg"
+      [class.bg-primary-600]="!b2cOrderStore.lastOrderId()" [class.border-primary-700]="!b2cOrderStore.lastOrderId()"
+      [class.text-white]="!b2cOrderStore.lastOrderId()" [class.bg-yellow-400]="!!b2cOrderStore.lastOrderId()"
+      [class.border-yellow-500]="!!b2cOrderStore.lastOrderId()" [class.text-slate-900]="!!b2cOrderStore.lastOrderId()"
+      [class.shadow-primary-600/20]="!b2cOrderStore.lastOrderId()"
+      [class.shadow-yellow-600/10]="!!b2cOrderStore.lastOrderId()">
+
+      @if (isProcessing()) {
+      <div class="flex items-center gap-2">
+        <i class='bx bx-loader-alt bx-spin text-xl'></i>
+        <span class="font-bold tracking-tight text-sm">Memvalidasi Harga...</span>
+      </div>
+      } @else {
+      <div class="flex items-center gap-2">
+        @if (!!b2cOrderStore.lastOrderId()) {
+        <i class='bx bx-time-five text-xl'></i>
+        <span class="font-bold tracking-tight text-sm">Selesaikan Pembayaran</span>
+        } @else {
+        <i class='bx bx-check-double text-xl'></i>
+        <span class="font-bold tracking-tight text-sm">Checkout Sekarang</span>
+        }
+      </div>
+      <span class="text-base font-bold tracking-tight">{{ cartStore.totalAmount() | currency:'IDR':'Rp ':'1.0-0'
+        }}</span>
+      }
+    </button>
+
+  </div>
+
+  } @else {
+  <!-- Empty State -->
+  <div class="py-16 text-center">
+    <i class='bx bx-shopping-bag text-4xl text-gray-200 mb-2'></i>
+    <h3 class="text-lg font-bold text-gray-800">Keranjang Kosong</h3>
+    <p class="text-xs text-gray-400 mt-1 mb-6">Belum ada produk pilihanmu. Mari mulai belanja hari ini!</p>
+    <a routerLink="/katalog" class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-bold px-8 py-3 rounded-full text-sm">
+      MULAI BELANJA
+    </a>
+  </div>
+  }
+
+  <!-- Selection Sheet -->
+  @if (selectedProductForSheet()) {
+  <app-katalog-selection-sheet [product]="selectedProductForSheet()" (close)="selectedProductForSheet.set(null)"
+    (confirm)="cartStore.addToCart(selectedProductForSheet()!, $event.quantity, $event.uom, $event.price)"></app-katalog-selection-sheet>
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (pendingDelete()) {
+  <app-katalog-confirm-dialog [show]="isDeleteVisible()" title="Hapus Produk?" [messageHtml]="getDeleteMessageHtml()"
+    confirmText="Ya, Hapus" cancelText="Batal" type="danger" (confirmClick)="confirmDelete()"
+    (cancelClick)="cancelDelete()">
+  </app-katalog-confirm-dialog>
+  }
+
+  <!-- Checkout Confirmation Modal -->
+  @if (isCheckoutConfirming()) {
+  <app-katalog-confirm-dialog [show]="isCheckoutVisible()" title="Lanjut Bayar?"
+    message="Kami akan memvalidasi harga terbaru sebelum kamu melakukan pembayaran di kasir." confirmText="Ya, Lanjut"
+    cancelText="Batal" type="info" (confirmClick)="startValidation()" (cancelClick)="cancelCheckout()">
+  </app-katalog-confirm-dialog>
+  }
+
+  <!-- Price Change Modal -->
+  @if (showPriceChangeModal()) {
+  <div class="fixed inset-0 z-160 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-red-900/20 backdrop-blur-sm transition-opacity duration-300"
+      [class.opacity-0]="!isPriceModalVisible()" [class.opacity-100]="isPriceModalVisible()"></div>
+    <div
+      class="relative w-full max-w-sm bg-white rounded-2xl p-8 space-y-6 shadow-2xl transition-all duration-300 ease-out"
+      [class.opacity-0]="!isPriceModalVisible()" [class.scale-95]="!isPriceModalVisible()"
+      [class.opacity-100]="isPriceModalVisible()" [class.scale-100]="isPriceModalVisible()">
+      <div class="text-center space-y-2">
+        <div
+          class="w-20 h-20 bg-orange-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-orange-100">
+          <i class='bx bx-error text-[40px] text-orange-500'></i>
+        </div>
+        <h2 class="text-xl font-bold text-gray-800 tracking-tight">Harga Telah Berubah</h2>
+        <p class="text-xs text-gray-400">Ada <span class="font-bold text-primary-600">{{ priceChangeItems().length }}
+            produk</span> yang mengalami perubahan harga terbaru:</p>
+      </div>
+
+      <div class="max-h-42.5 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+        @for (item of priceChangeItems(); track item.id + item.uom) {
+        <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 flex justify-between items-center">
+          <div class="min-w-0 flex-1">
+            <p class="text-[11px] font-bold text-gray-800 truncate">{{ item.name }}</p>
+            <div class="flex items-center gap-1 mt-0.5">
+              <span class="text-[9px] px-1 bg-gray-200 rounded text-gray-500 font-bold uppercase">{{ item.uom }}</span>
+            </div>
+          </div>
+          <div class="text-right shrink-0 ml-3">
+            <p class="text-[10px] text-gray-400 line-through">{{ item.oldPrice | currency:'IDR':'':'1.0-0' }}</p>
+            <p class="text-[11px] font-black text-red-600">{{ item.newPrice | currency:'IDR':'':'1.0-0' }}</p>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="space-y-3">
+        <button (click)="updatePricesAndProceed()"
+          class="w-full bg-primary-600 border-2 border-primary-700 text-white rounded-full py-4 px-4 font-bold active:scale-[0.98] transition-all tracking-tight">
+          Update Harga & Lanjut
+        </button>
+        <button (click)="dismissPriceModal()"
+          class="w-full bg-gray-50 border-2 border-gray-100 text-gray-500 rounded-full py-3 px-4 font-bold text-xs active:scale-[0.98] transition-all tracking-tight">
+          Tinjau Keranjang
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,19 @@
+<div class="card-product group" (click)="clickCard.emit(product())">
+  <div class="relative block overflow-hidden cursor-pointer aspect-4/3">
+    <img [ngSrc]="product().coverImage" [alt]="product().title" fill [priority]="priority()"
+      class="absolute top-0 left-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+    <div class="badge-uom">
+      {{ product().salesUomCode || product().baseUomCode || 'PCS' }}
+    </div>
+  </div>
+  <div class="p-3 flex flex-col">
+    <div class="flex flex-col items-start justify-between mb-2">
+      <h3
+        class="text-[13px] font-semibold text-gray-800 line-clamp-2 leading-tight group-hover:text-primary-600 transition-colors">
+        {{ product().title }}
+      </h3>
+      <span class="font-bold text-primary-600 text-base">{{ product().price | currency:'IDR':'Rp ':'1.0-0' }}</span>
+    </div>
+    <p class="text-[10px] text-gray-400 mb-1 font-medium tracking-wide uppercase">{{ product().categoryName || 'Umum' }}</p>
+  </div>
+</div>
