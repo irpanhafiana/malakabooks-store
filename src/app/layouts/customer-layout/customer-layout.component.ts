@@ -39,23 +39,6 @@ export class CustomerLayoutComponent {
     private readonly router = inject(Router);
 
     isSearchActive = signal<boolean>(false);
-    showModeSelector = signal<boolean>(false);
-
-    constructor() {
-        if (typeof localStorage !== 'undefined' && !localStorage.getItem('mk_shopping_mode')) {
-            this.showModeSelector.set(true);
-        }
-    }
-
-    selectMode(mode: 'online' | 'offline') {
-        if (typeof localStorage !== 'undefined') {
-            localStorage.setItem('mk_shopping_mode', mode);
-        }
-        this.showModeSelector.set(false);
-        if (mode === 'offline') {
-            this.router.navigate(['/katalog']);
-        }
-    }
 
     onSearch(query: string) {
         this.productStore.setSearchQuery(query);

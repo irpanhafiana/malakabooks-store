@@ -1,13 +1,17 @@
 <form [formGroup]="formGroup" class="flex flex-col gap-4 text-slate-700">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <app-admin-select label="Pilih Gudang" [control]="$any(warehouseIdControl)" [options]="warehouseOptions()"></app-admin-select>
+    <app-admin-select label="Pilih Gudang" [control]="$any(warehouseIdControl)"
+      [options]="warehouseOptions()"></app-admin-select>
     <app-admin-select label="Pilih Item" [control]="$any(itemIdControl)" [options]="itemOptions()"></app-admin-select>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <app-admin-input label="Base UoM Code" placeholder="Contoh: PCS" [control]="baseUomCodeControl" [readonly]="true"></app-admin-input>
-    <app-admin-input label="Jumlah Stok Fisik" type="number" placeholder="0" [control]="quantityOnHandControl"></app-admin-input>
-    <app-admin-input label="Jumlah Stok Dipesan (Reserved)" type="number" placeholder="0" [control]="reservedQuantityControl"></app-admin-input>
+    <app-admin-input label="Base UoM Code" placeholder="Contoh: PCS" [control]="baseUomCodeControl"
+      [readonly]="true"></app-admin-input>
+    <app-admin-input label="Jumlah Stok Fisik" type="number" placeholder="0"
+      [control]="quantityOnHandControl"></app-admin-input>
+    <app-admin-input label="Jumlah Stok Dipesan (Reserved)" type="number" placeholder="0"
+      [control]="reservedQuantityControl"></app-admin-input>
   </div>
 
 </form>

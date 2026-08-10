@@ -184,48 +184,4 @@
     </div>
   </div>
   }
-</div>
-
-<!-- Shopping Mode Selector Dialog (First Visit) -->
-@if (showModeSelector()) {
-  <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">
-    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-    <div class="relative w-full max-w-sm bg-white rounded-2xl p-6 space-y-6 shadow-2xl text-center">
-      <div class="space-y-2">
-        <div class="w-16 h-16 bg-blue-50 text-blue-800 rounded-2xl flex items-center justify-center mx-auto text-3xl font-bold border border-blue-100">
-          <i class="bx bx-store-alt"></i>
-        </div>
-        <h2 class="text-xl font-extrabold text-slate-800 tracking-tight">Pilih Mode Belanja</h2>
-        <p class="text-xs text-slate-400">Bagaimana Anda ingin berbelanja di MalakaBooks hari ini?</p>
-      </div>
-
-      <div class="space-y-3">
-        <button
-          (click)="selectMode('online')"
-          class="w-full p-4 bg-slate-50 hover:bg-slate-100 border-2 border-slate-100 rounded-2xl flex items-center gap-4 text-left transition-all active:scale-[0.98] group cursor-pointer"
-        >
-          <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
-            <i class="bx bx-globe"></i>
-          </div>
-          <div>
-            <h3 class="text-sm font-bold text-slate-800">Belanja Online</h3>
-            <p class="text-[11px] text-slate-400">Dikirim langsung ke rumah Anda</p>
-          </div>
-        </button>
-
-        <button
-          (click)="selectMode('offline')"
-          class="w-full p-4 bg-blue-800 hover:bg-blue-900 border-2 border-blue-900 text-white rounded-2xl flex items-center gap-4 text-left transition-all active:scale-[0.98] group cursor-pointer shadow-lg shadow-blue-800/20"
-        >
-          <div class="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
-            <i class="bx bx-qr-scan"></i>
-          </div>
-          <div>
-            <h3 class="text-sm font-bold text-white">Belanja Offline</h3>
-            <p class="text-[11px] text-blue-100">Pilih barang & tunjukkan QR di kasir</p>
-          </div>
-        </button>
-      </div>
-    </div>
-  </div>
-}
+</div>
