@@ -75,8 +75,8 @@ export class ProductListComponent implements OnInit {
     this.productStore.setCategoryFilter(catId);
   }
 
-  onSortChange(sortBy: any) {
-    this.productStore.setSortBy(sortBy);
+  onSortChange(sortBy: 'rating' | 'featured' | 'price-asc' | 'price-desc' | string) {
+    this.productStore.setSortBy(sortBy as any);
   }
 
   openFilters() {

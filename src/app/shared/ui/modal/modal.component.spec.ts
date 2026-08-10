@@ -25,7 +25,7 @@ describe('ModalComponent', () => {
   });
 
   it('should close modal when close() is called', () => {
-    fixture.componentRef.setInput('isOpen', true);
+    component.isOpen.set(true);
     fixture.detectChanges();
     
     expect(component.isOpen()).toBe(true);

@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { OrderStore } from '../../store/order.store';
 import { ComplaintStore } from '../../store/complaint.store';
+import { Complaint } from '../../core/models';
 import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
@@ -48,7 +49,7 @@ export class ComplaintComponent implements OnInit {
 
   protected isFormOpen = signal<boolean>(false);
   protected isChatOpen = signal<boolean>(false);
-  protected selectedComplaint = signal<any>(null);
+  protected selectedComplaint = signal<Complaint | null>(null);
   protected readonly submitting = signal<boolean>(false);
   protected readonly replying = signal<boolean>(false);
   protected previewImage = signal<string | null>(null);
@@ -63,7 +64,7 @@ export class ComplaintComponent implements OnInit {
   protected readonly replyControl = this.fb.control('', Validators.required);
   protected complaintImages = signal<{no: number, image: string}[]>([]);
   protected replyImages = signal<{no: number, image: string}[]>([]);
-  protected selectedOrderItems = signal<any[]>([]);
+  protected selectedOrderItems = signal<any[]>([]); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   ngOnInit() {
     const user = this.authStore.currentUser();
@@ -107,7 +108,7 @@ export class ComplaintComponent implements OnInit {
     this.previewImage.set(null);
   }
 
-  protected openChat(complaint: any) {
+  protected openChat(complaint: Complaint) {
     this.selectedComplaint.set(complaint);
     this.replyControl.reset();
     this.replyImages.set([]);

@@ -58,7 +58,7 @@ export class OrdersListComponent implements OnInit {
   protected readonly detailResiOpen = signal(false);
   protected readonly detailResiLoading = signal(false);
   protected readonly detailResiError = signal<string | null>(null);
-  protected readonly detailResiData = signal<any>(null);
+  protected readonly detailResiData = signal<unknown>(null);
   protected readonly selectedOrder = signal<Order | null>(null);
 
 
@@ -113,17 +113,18 @@ export class OrdersListComponent implements OnInit {
 
     try {
       const res = await this.orderStore.createShipment(orderId);
-      if (res?.isSuccess || res?.shipmentCreated) {
+      if ((res as any)?.isSuccess || (res as any)?.shipmentCreated) {
         this.alertService.success(
           'Berhasil!',
-          `Pengiriman berhasil dibuat. AWB: ${res.awbNo || '-'}`
+          `Pengiriman berhasil dibuat. AWB: ${(res as any).awbNo || '-'}`
         );
         this.orderStore.loadAllOrders(); // Refresh status order
       } else {
-        this.alertService.error('Gagal!', res?.statusMessage || res?.message || 'Gagal memproses pengiriman.');
+        this.alertService.error('Gagal!', (res as any)?.statusMessage || (res as any)?.message || 'Gagal memproses pengiriman.');
       }
-    } catch (e: any) {
-      const errorMsg = e?.error?.statusMessage || e?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman.';
+    } catch (e: unknown) {
+      const err = e as { error?: { statusMessage?: string; message?: string } };
+      const errorMsg = err?.error?.statusMessage || err?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman.';
       this.alertService.error('Error!', errorMsg);
     }
   }
@@ -143,8 +144,8 @@ export class OrdersListComponent implements OnInit {
 
     try {
       const results = await this.orderStore.createBulkShipments(selectedIds);
-      const responses = Array.isArray(results) ? results : (results?.results || []);
-      const successCount = responses.filter((r: any) => r.isSuccess || r.shipmentCreated).length;
+      const responses = Array.isArray(results) ? results : ((results as any)?.results || []);
+      const successCount = responses.filter((r: { isSuccess?: boolean; shipmentCreated?: boolean }) => r.isSuccess || r.shipmentCreated).length;
       const failCount = selectedIds.length - successCount;
 
       if (successCount > 0) {
@@ -163,13 +164,14 @@ export class OrdersListComponent implements OnInit {
 
       this.selectedOrderIds.set([]); // Clear selection
       this.orderStore.loadAllOrders(); // Refresh order status
-    } catch (e: any) {
-      const errorMsg = e?.error?.statusMessage || e?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman massal.';
+    } catch (e: unknown) {
+      const err = e as { error?: { statusMessage?: string; message?: string } };
+      const errorMsg = err?.error?.statusMessage || err?.error?.message || 'Terjadi kesalahan sistem saat membuat pengiriman massal.';
       this.alertService.error('Error!', errorMsg);
     }
   }
 
-  async onCancelShipment(order: Order) {
+  async onCancelShipment(order: any) {
     const isConfirmed = await this.alertService.confirm(
       'Batalkan Resi?',
       `Apakah Anda yakin ingin membatalkan resi pengiriman untuk pesanan #${order.id}? Tindakan ini tidak dapat dibatalkan.`
@@ -178,19 +180,20 @@ export class OrdersListComponent implements OnInit {
 
     try {
       const res = await this.orderStore.cancelShipment(order.id);
-      if (res?.isSuccess || res?.shipmentCancelled) {
+      if ((res as any)?.isSuccess || (res as any)?.shipmentCancelled) {
         this.alertService.success('Berhasil!', 'Resi pengiriman berhasil dibatalkan.');
         this.orderStore.loadAllOrders();
       } else {
-        this.alertService.error('Gagal!', res?.statusMessage || res?.message || 'Gagal membatalkan resi.');
+        this.alertService.error('Gagal!', (res as any)?.statusMessage || (res as any)?.message || 'Gagal membatalkan resi.');
       }
-    } catch (e: any) {
-      const errorMsg = e?.error?.statusMessage || e?.error?.message || 'Terjadi kesalahan sistem saat membatalkan resi.';
+    } catch (e: unknown) {
+      const err = e as { error?: { statusMessage?: string; message?: string } };
+      const errorMsg = err?.error?.statusMessage || err?.error?.message || 'Terjadi kesalahan sistem saat membatalkan resi.';
       this.alertService.error('Error!', errorMsg);
     }
   }
 
-  async onDetailResi(order: Order) {
+  async onDetailResi(order: any) {
     this.selectedOrder.set(order);
     this.detailResiOpen.set(true);
     this.detailResiLoading.set(true);
@@ -209,8 +212,9 @@ export class OrdersListComponent implements OnInit {
     try {
       const res = await this.orderStore.getDetailResi(courier, awb);
       this.detailResiData.set(res);
-    } catch (e: any) {
-      this.detailResiError.set(e?.error?.statusMessage || e?.error?.message || e?.message || 'Gagal memuat detail resi pengiriman.');
+    } catch (e: unknown) {
+      const err = e as { error?: { statusMessage?: string; message?: string }; message?: string };
+      this.detailResiError.set(err?.error?.statusMessage || err?.error?.message || err?.message || 'Gagal memuat detail resi pengiriman.');
     } finally {
       this.detailResiLoading.set(false);
     }
@@ -245,15 +249,15 @@ export class OrdersListComponent implements OnInit {
     return getWaybillHistory(this.detailResiDetails());
   });
 
-  protected drLogDate(log: any): string {
+  protected drLogDate(log: unknown): string {
     return getWaybillLogDate(log);
   }
 
-  protected drLogDesc(log: any): string {
+  protected drLogDesc(log: unknown): string {
     return getWaybillLogDesc(log);
   }
 
-  protected drLogLoc(log: any): string {
+  protected drLogLoc(log: unknown): string {
     return getWaybillLogLoc(log);
   }
 
@@ -266,7 +270,7 @@ export class OrdersListComponent implements OnInit {
     return 'bg-slate-50 text-slate-600 border-slate-100';
   }
 
-  protected drEntries(obj: any): { key: string; val: string }[] {
+  protected drEntries(obj: unknown): { key: string; val: string }[] {
     return getWaybillSummaryEntries(obj);
   }
 

@@ -84,8 +84,8 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
   }
 
   // --- ControlValueAccessor implementation ---
-  writeValue(value: any): void {
-    const val = value || '';
+  writeValue(value: unknown): void {
+    const val = (value as string) || '';
     if (this.editorRef) {
       this.editorRef.nativeElement.innerHTML = val || '<p><br></p>';
     }
@@ -103,11 +103,11 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
     }
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 

@@ -13,7 +13,7 @@ import { startWith } from 'rxjs/operators';
 })
 export class AdminSelectComponent implements OnDestroy {
   readonly control = input.required<FormControl>();
-  readonly options = input.required<{ value: any; label: string }[]>();
+  readonly options = input.required<{ value: unknown; label: string }[]>();
   readonly id = input<string>('admin-select-' + Math.random().toString(36).substring(2, 9));
   readonly label = input<string>('');
   readonly placeholder = input<string>('');
@@ -24,7 +24,7 @@ export class AdminSelectComponent implements OnDestroy {
 
   readonly isOpen = signal(false);
   readonly searchQuery = signal('');
-  readonly controlValue = signal<any>(null);
+  readonly controlValue = signal<unknown>(null);
 
   private valueSub?: Subscription;
 
@@ -85,7 +85,7 @@ export class AdminSelectComponent implements OnDestroy {
     this.searchQuery.set(value);
   }
 
-  selectOption(opt: { value: any; label: string }) {
+  selectOption(opt: { value: unknown; label: string }) {
     this.control().setValue(opt.value);
     this.control().markAsDirty();
     this.control().markAsTouched();

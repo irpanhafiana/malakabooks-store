@@ -74,14 +74,14 @@
 }
 
 <ng-template #chatContent>
-  @if (selectedComplaint()) {
+  @if (selectedComplaint(); as complaint) {
   <div class="flex flex-col h-[65vh]">
     <div class="pb-3 border-b border-slate-100 shrink-0">
       <div class="flex justify-between items-start mb-1">
-        <h3 class="font-bold text-slate-800 text-sm lg:text-base">{{ selectedComplaint().subject }}</h3>
-        <app-status-badge [status]="selectedComplaint().status" type="complaint"></app-status-badge>
+        <h3 class="font-bold text-slate-800 text-sm lg:text-base">{{ complaint.subject }}</h3>
+        <app-status-badge [status]="complaint.status" type="complaint"></app-status-badge>
       </div>
-      <p class="text-slate-500 text-xs">Order #{{ selectedComplaint().orderId }}</p>
+      <p class="text-slate-500 text-xs">Order #{{ complaint.orderId }}</p>
     </div>
 
     <!-- Chat Messages -->
@@ -89,24 +89,24 @@
       <!-- Original Description -->
       <div class="flex justify-end">
         <div class="bg-primary-600 text-white p-3.5 rounded-2xl rounded-tr-none max-w-[85%] text-sm shadow-xs">
-          <p>{{ selectedComplaint().description }}</p>
+          <p>{{ complaint.description }}</p>
 
-          @if (selectedComplaint().additionalImages?.length > 0) {
+          @if ((complaint.additionalImages?.length ?? 0) > 0) {
           <div class="flex flex-wrap gap-2 mt-2">
-            @for (img of selectedComplaint().additionalImages; track img.no) {
+            @for (img of complaint.additionalImages; track img.no) {
             <img [src]="img.image" (click)="openImagePreview(img.image)" (keydown.enter)="openImagePreview(img.image)" tabindex="0" role="button" alt="Foto Komplain Tambahan"
               class="w-16 h-16 object-cover rounded-lg border border-primary-400 cursor-pointer hover:opacity-80 transition-opacity">
             }
           </div>
           }
 
-          <p class="text-[10px] text-primary-100 text-right mt-1">{{ selectedComplaint().createdAt | date:'shortTime' }}
+          <p class="text-[10px] text-primary-100 text-right mt-1">{{ complaint.createdAt | date:'shortTime' }}
           </p>
         </div>
       </div>
 
       <!-- Replies -->
-      @for (msg of selectedComplaint().messages; track msg.createdAt) {
+      @for (msg of complaint.messages; track msg.createdAt) {
       <div class="flex" [class.justify-end]="msg.senderType === 'customer'">
         <div class="p-3.5 rounded-2xl max-w-[85%] text-sm shadow-xs"
           [class.bg-primary-600]="msg.senderType === 'customer'" [class.text-white]="msg.senderType === 'customer'"
@@ -119,7 +119,7 @@
           }
           <p>{{ msg.message }}</p>
 
-          @if (msg.additionalImages?.length > 0) {
+          @if ((msg.additionalImages?.length ?? 0) > 0) {
           <div class="flex flex-wrap gap-2 mt-2">
             @for (img of msg.additionalImages; track img.no) {
             <img [src]="img.image" (click)="openImagePreview(img.image)" (keydown.enter)="openImagePreview(img.image)" tabindex="0" role="button" alt="Foto Balasan Tambahan"

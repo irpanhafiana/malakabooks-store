@@ -243,15 +243,15 @@ export class PricingsFormComponent {
     const items = this.itemStore.items() || [];
     const itemMap = new Map(items.map(i => [i.name, i]));
     const itemFilteredModule = await import('../../../../../fixtures/item_filtered.json');
-    const dataList = itemFilteredModule.default as any[];
+    const dataList = itemFilteredModule.default as Record<string, string | number>[];
 
     for (const data of dataList) {
       const sku = data['SKU'];
       const price = data['HARGA JUAL'];
 
-      const item = itemMap.get(sku);
+      const item = itemMap.get(sku as string);
       if (item) {
-        const payload: any = {
+        const payload: Partial<Pricing> = {
           name: `Harga Jual - ${sku}`,
           itemId: item.id,
           itemCode: item.sapCode,
@@ -262,12 +262,12 @@ export class PricingsFormComponent {
             {
               customerGroupCode: CUSTOMER_GROUP_ONLINE,
               uomCode: PRICING_UOM_CODE,
-              price: price
+              price: Number(price)
             },
             {
               customerGroupCode: CUSTOMER_GROUP_NON_MEMBER,
               uomCode: PRICING_UOM_CODE,
-              price: Math.round(price * NON_MEMBER_PRICE_MULTIPLIER)
+              price: Math.round(Number(price) * NON_MEMBER_PRICE_MULTIPLIER)
             }
           ]
         };

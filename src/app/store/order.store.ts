@@ -124,7 +124,7 @@ export class OrderStore {
     }
   }
 
-  async createShipment(orderId: string): Promise<any> {
+  async createShipment(orderId: string): Promise<unknown> {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const result = await this.orderApi.createShipment(orderId);
@@ -136,7 +136,7 @@ export class OrderStore {
     }
   }
 
-  async createBulkShipments(orderIds: string[]): Promise<any> {
+  async createBulkShipments(orderIds: string[]): Promise<unknown> {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const result = await this.orderApi.createBulkShipment(orderIds);
@@ -148,7 +148,7 @@ export class OrderStore {
     }
   }
 
-  async cancelShipment(orderId: string): Promise<any> {
+  async cancelShipment(orderId: string): Promise<unknown> {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const result = await this.orderApi.cancelShipment(orderId);
@@ -159,7 +159,7 @@ export class OrderStore {
       throw e;
     }
   }
-  async getDetailResi(courier: string, awb: string): Promise<any> {
+  async getDetailResi(courier: string, awb: string): Promise<unknown> {
     this.state.update(s => ({ ...s, loading: true }));
     try {
       const result = await this.orderApi.detailResi(courier, awb);

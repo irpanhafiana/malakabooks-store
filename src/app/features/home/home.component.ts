@@ -6,6 +6,7 @@ import { ProductStore } from '../../store/product.store';
 import { CartStore } from '../../store/cart.store';
 import { UserStore } from '../../store/user.store';
 import { AuthStore } from '../../store/auth.store';
+import { Product } from '../../core/models';
 import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
@@ -143,7 +144,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.productStore.setCategoryFilter(catId);
   }
 
-  openQtyModal(product: any) {
+  openQtyModal(product: Product) {
     if (!this.authStore.isLoggedIn()) {
       this.router.navigate(['/auth/login'], { queryParams: { redirect: this.router.url } });
       return;

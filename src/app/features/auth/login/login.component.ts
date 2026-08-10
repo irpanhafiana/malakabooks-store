@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.sessionMessage.set('Anda tidak memiliki akses. Silakan masuk kembali.');
     }
 
-    this.googleAuthService.initializeGsi((response: any) => {
+    this.googleAuthService.initializeGsi((response: unknown) => {
       this.googleAuthService.handleCredentialResponse(response);
     });
   }

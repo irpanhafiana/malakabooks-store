@@ -25,7 +25,7 @@ export class DetailShipmentComponent implements OnInit {
 
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
-  readonly trackingData = signal<any>(null);
+  readonly trackingData = signal<unknown>(null);
 
   orderIdRouteParam = '';
 
@@ -52,9 +52,9 @@ export class DetailShipmentComponent implements OnInit {
       } else {
         this.error.set('Data tracking kosong dari API server.');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.logger.error('Gagal fetch tracking info:', err);
-      this.error.set(err?.message || 'Gagal memuat status pengiriman dari server Simasrim. Silakan periksa koneksi Anda.');
+      this.error.set((err as Error)?.message || 'Gagal memuat status pengiriman dari server Simasrim. Silakan periksa koneksi Anda.');
     } finally {
       this.loading.set(false);
     }
@@ -67,8 +67,9 @@ export class DetailShipmentComponent implements OnInit {
   }
 
   // Helper to extract nested "data" if it exists in response
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get trackingDetails(): any {
-    const res = this.trackingData();
+    const res = this.trackingData() as any;
     if (!res) return null;
     if (res.data) {
       return res.data;
@@ -111,6 +112,7 @@ export class DetailShipmentComponent implements OnInit {
     return details.shipper_name || details.shipper || details.shipperName || 'SS Online Shop';
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get trackingLogs(): any[] {
     const details = this.trackingDetails;
     if (!details) return [];
@@ -129,14 +131,17 @@ export class DetailShipmentComponent implements OnInit {
     return [];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getLogDate(log: any): string {
     return log.date || log.dateTime || log.timestamp || log.time || '';
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getLogDescription(log: any): string {
     return log.desc || log.description || log.status || log.note || '';
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getLogLocation(log: any): string {
     return log.location || log.city || log.position || '';
   }

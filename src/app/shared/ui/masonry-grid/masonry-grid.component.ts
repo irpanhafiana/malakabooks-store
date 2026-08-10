@@ -10,11 +10,12 @@ import { NgTemplateOutlet } from '@angular/common';
   styleUrl: './masonry-grid.component.css'
 })
 export class MasonryGridComponent {
-  items = input<any[]>([]);
+  items = input<unknown[]>([]);
 
-  @ContentChild(TemplateRef) itemTemplate!: TemplateRef<any>;
+  @ContentChild(TemplateRef) itemTemplate!: TemplateRef<unknown>;
 
-  trackById(item: any): any {
-    return item?.id || item?.product?.id || item;
+  trackById(item: unknown): unknown {
+    const it = item as { id?: unknown; product?: { id?: unknown } } | null;
+    return it?.id || it?.product?.id || item;
   }
 }

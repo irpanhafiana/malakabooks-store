@@ -23,7 +23,7 @@ export class BottomSheetComponent implements OnDestroy {
   lazyRenderContent = signal<boolean>(false);
 
   private startY = 0;
-  private openTimerId: any = null;
+  private openTimerId: ReturnType<typeof setTimeout> | null = null;
   private readonly cdr = inject(ChangeDetectorRef);
 
   constructor() {

@@ -136,14 +136,15 @@ export class OrderHistoryComponent implements OnInit {
 
       this.closeReviewSheet();
       this.alertService.success('Ulasan Anda telah dikirim');
-    } catch (err: any) {
+    } catch (err: unknown) {
       let msg = 'Terjadi kesalahan saat mengirim ulasan.';
-      if (err?.error?.statusMessage) {
-        msg = err.error.statusMessage;
-      } else if (err?.error?.message) {
-        msg = err.error.message;
-      } else if (err?.message) {
-        msg = err.message;
+      const e = err as { error?: { statusMessage?: string, message?: string }, message?: string };
+      if (e?.error?.statusMessage) {
+        msg = e.error.statusMessage;
+      } else if (e?.error?.message) {
+        msg = e.error.message;
+      } else if (e?.message) {
+        msg = e.message;
       }
       this.alertService.error(msg);
     } finally {

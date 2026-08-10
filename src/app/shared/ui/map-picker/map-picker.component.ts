@@ -31,7 +31,9 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
   private _lat?: number;
   private _lng?: number;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private map: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private marker: any;
 
   isLocating = false;
@@ -79,6 +81,7 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
       });
 
       // Handle map click
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.map.on('click', (e: any) => {
         this.marker.setLatLng(e.latlng);
         this.emitLocation(e.latlng.lat, e.latlng.lng);

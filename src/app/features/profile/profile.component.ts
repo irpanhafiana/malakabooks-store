@@ -125,11 +125,12 @@ export class ProfileComponent implements OnInit {
 
     if (user.phone) {
       this.userApi.getExternalProfile(user.phone).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-        next: (res: any) => {
-          if (res && res.id) {
-            localStorage.setItem('externalProfileId', res.id);
-          } else if (res && res.data && res.data.id) {
-            localStorage.setItem('externalProfileId', res.data.id);
+        next: (res: unknown) => {
+          const r = res as { id?: string, data?: { id?: string } };
+          if (r && r.id) {
+            localStorage.setItem('externalProfileId', r.id);
+          } else if (r && r.data && r.data.id) {
+            localStorage.setItem('externalProfileId', r.data.id);
           }
         },
         error: (err) => this.logger.error('Failed to get external profile id:', err)

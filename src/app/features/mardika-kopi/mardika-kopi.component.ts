@@ -110,7 +110,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
           categoryName: item.itemType,
           price: item.price || 0,
           description: item.description,
-          coverImage: resolveImageUrl((item as any).coverImage || ''),
+          coverImage: resolveImageUrl((item as {coverImage?: string}).coverImage || ''),
           publisher: '',
           publishedYear: new Date().getFullYear(),
           pages: 0,
@@ -128,7 +128,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
           createdAt: item.createdAt || new Date().toISOString(),
           uomGroup: item.uomGroup,
           baseUomCode: item.baseUomCode,
-          additionalImages: (item as any).additionalImages || []
+          additionalImages: ((item as {additionalImages?: string[]}).additionalImages || []) as unknown as any[]
         });
       }
       this.kopiItems.set(products);
@@ -184,7 +184,7 @@ export class MardikaKopiComponent implements OnInit, OnDestroy, AfterViewInit {
     this.productStore.setCategoryFilter(catId);
   }
 
-  openQtyModal(product: any) {
+  openQtyModal(product: Product) {
     if (!this.authStore.isLoggedIn()) {
       this.router.navigate(['/auth/login'], { queryParams: { redirect: this.router.url } });
       return;
