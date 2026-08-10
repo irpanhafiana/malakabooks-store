@@ -130,6 +130,6 @@ export class AdminLayoutComponent {
 
   onSignOut() {
     this.authStore.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(['/admin/login']);
   }
 }
