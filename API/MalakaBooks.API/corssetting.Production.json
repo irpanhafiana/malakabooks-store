@@ -1,9 +1,16 @@
 {
-  "CorsSetting": {
-    "PolicyName": "DefaultCors",
-    "AllowedOrigins": [
-      "https://malakabooks.example.com"
-    ],
-    "AllowCredentials": true
-  }
+    "CORSSetting": {
+        "Enabled": true,
+        "CORSPolicies": [
+            {
+                "PolicyName": "AllowOriginsAngular",
+                "Origins": [ "http://localhost:4200", "http://192.168.1.138:4200" ],
+                "Methods": [ "GET", "POST", "PUT", "DELETE" ],
+                "Headers": [ "Authorization", "Content-Type", "access-control-allow-origin", "IdempotencyKey" ],
+                "ExposedHeaders": [],
+                "AllowCredentials": false,
+                "IsDefault": true
+            }
+        ]
+    }
 }

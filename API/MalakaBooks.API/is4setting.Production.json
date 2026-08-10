@@ -1,9 +1,67 @@
 {
-  "Is4Setting": {
-    "Authority": "https://identity.malakabooks.example.com",
-    "RequireHttpsMetadata": true,
-    "SwaggerClientId": "malakabooks-swagger",
-    "SwaggerClientSecret": "replace-in-production",
-    "ApiName": "malakabooks.api"
-  }
+    "IS4Setting": {
+        "IdentityServerBaseUrl": "https://tokosuburjaya.com",
+        "ApiName": "MaBooks-7e9c2893",
+        "RequireHttpsMetadata": false,
+        "PolicySettings": {
+            "Roles": [
+                {
+                    "Policy": "MalakaAdminPolicy",
+                    "Name": [ "SSOnline-Admin" ]
+                },
+                {
+                    "Policy": "MalakaCustomerPolicy",
+                    "Name": [ "SSOnline-Admin", "SSOnline-Customer" ]
+                }
+            ],
+            "Scopes": [
+                {
+                    "Policy": "CreatePolicy",
+                    "Name": [ "Create" ]
+                },
+                {
+                    "Policy": "ReadPolicy",
+                    "Name": [ "Read" ]
+                },
+                {
+                    "Policy": "UpdatePolicy",
+                    "Name": [ "Update" ]
+                },
+                {
+                    "Policy": "DeletePolicy",
+                    "Name": [ "Delete" ]
+                },
+                {
+                    "Policy": "ScopesPolicy",
+                    "Name": [ "Create", "Read", "Update", "Delete" ]
+                }
+            ],
+            "Claims": [
+                {
+                    "Policy": "ClaimsPolicy",
+                    "Entries": [
+                        {
+                            "Name": "client_id",
+                            "Values": [ "996cc633-23c1-4fb7-a6b6-6fd20dd5051d," ]
+                        }
+                    ]
+                }
+            ]
+            //"Customs": [
+            //  {
+            //    "Policy": "CustomPolicy1",
+            //    "Entries": [
+            //      {
+            //        "Name": "salesmanNik",
+            //        "Values": [ "Client1", "Client2" ]
+            //      },
+            //      {
+            //        "Name": "customer_code",
+            //        "Values": [ "Code1", "Code2" ]
+            //      }
+            //    ]
+            //  },        
+            //]    
+        }
+    }
 }

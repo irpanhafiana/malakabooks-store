@@ -1,5 +1,8 @@
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace MalakaBooks.Entity;
 
+[BsonIgnoreExtraElements]
 public class CategoryEntity : BaseObject
 {
     public string Name { get; set; } = string.Empty;

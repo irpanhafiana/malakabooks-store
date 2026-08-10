@@ -13,6 +13,9 @@ public record GetItemsByTypeQuery(string ItemType) : IRequest<IReadOnlyCollectio
 public record GetItemByIdQuery(string Id) : IRequest<ItemResponse?>;
 public record GetPublicPricedItemsQuery(string? ItemType = null) : IRequest<IReadOnlyCollection<PricedItemResponse>>;
 public record GetCustomerPricedItemsQuery(string? ItemType = null) : IRequest<IReadOnlyCollection<PricedItemResponse>>;
+public record GetItemAutofillQuery(string? SearchTerm = null) : IRequest<IReadOnlyCollection<ItemAutofillResponse>>;
+public record GetPublicPricedItemByIdQuery(string Id) : IRequest<PricedItemResponse?>;
+public record GetCustomerPricedItemByIdQuery(string Id) : IRequest<PricedItemResponse?>;
 public record CreateItemCommand(CreateItemRequest Request) : IRequest<ItemResponse>;
 public record UpdateItemCommand(string Id, UpdateItemRequest Request) : IRequest<bool>;
 public record SyncItemCommand(SyncItemRequest Request) : IRequest<bool>;
@@ -170,6 +173,8 @@ public class GetPublicPricedItemsHandler(
     IBookRepository bookRepository,
     IAuthorRepository authorRepository,
     IPricingRepository pricingRepository,
+    IOrderRepository orderRepository,
+    IReviewRepository reviewRepository,
     IOptions<AppSetting> appOptions) : IRequestHandler<GetPublicPricedItemsQuery, IReadOnlyCollection<PricedItemResponse>>
 {
     private readonly string _defaultCustomerGroupCode = appOptions.Value.PricingSetting?.DefaultPublicCustomerGroupCode?.Trim() ?? string.Empty;
@@ -183,6 +188,8 @@ public class GetPublicPricedItemsHandler(
             bookRepository,
             authorRepository,
             pricingRepository,
+            orderRepository,
+            reviewRepository,
             request.ItemType,
             _defaultCustomerGroupCode,
             _secondaryCustomerGroupCode,
@@ -196,6 +203,8 @@ public class GetCustomerPricedItemsHandler(
     IBookRepository bookRepository,
     IAuthorRepository authorRepository,
     IPricingRepository pricingRepository,
+    IOrderRepository orderRepository,
+    IReviewRepository reviewRepository,
     IHttpContextAccessor httpContextAccessor,
     IOptions<AppSetting> appOptions) : IRequestHandler<GetCustomerPricedItemsQuery, IReadOnlyCollection<PricedItemResponse>>
 {
@@ -210,6 +219,8 @@ public class GetCustomerPricedItemsHandler(
             bookRepository,
             authorRepository,
             pricingRepository,
+            orderRepository,
+            reviewRepository,
             request.ItemType,
             ResolveCustomerGroupCode(),
             _secondaryCustomerGroupCode,
@@ -238,6 +249,8 @@ internal static class PricedItemResolver
         IBookRepository bookRepository,
         IAuthorRepository authorRepository,
         IPricingRepository pricingRepository,
+        IOrderRepository orderRepository,
+        IReviewRepository reviewRepository,
         string? itemType,
         string customerGroupCode,
         string secondaryCustomerGroupCode,
@@ -279,15 +292,127 @@ internal static class PricedItemResolver
             .GroupBy(pricing => pricing.ItemId)
             .ToDictionary(group => group.Key, group => group.ToArray(), StringComparer.Ordinal);
 
+        var orders = itemIds.Length > 0 ? await orderRepository.GetByItemIdsAsync(itemIds, cancellationToken) : [];
+        var reviews = itemIds.Length > 0 ? await reviewRepository.GetByItemIdsAsync(itemIds, cancellationToken) : [];
+
+        var quantitySoldByItemId = orders
+            .Where(order => string.Equals(order.PaymentStatus, "paid", StringComparison.OrdinalIgnoreCase))
+            .SelectMany(order => order.Items)
+            .Where(item => !string.IsNullOrWhiteSpace(item.ItemId))
+            .GroupBy(item => item.ItemId, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.Sum(item => item.Quantity), StringComparer.OrdinalIgnoreCase);
+
+        var ratingByItemId = reviews
+            .Where(review => !string.IsNullOrWhiteSpace(review.ItemId))
+            .GroupBy(review => review.ItemId, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => new
+                {
+                    Rating = group.Average(review => (double)review.Rating),
+                    TotalReviews = group.Count()
+                },
+                StringComparer.OrdinalIgnoreCase);
+
         return itemList
-            .Select(item => ToPricedResponse(
-                item,
-                uomGroupsById.GetValueOrDefault(item.UomGroupId ?? string.Empty),
-                pricingByItemId,
-                customerGroupCode,
-                secondaryCustomerGroupCode,
-                ItemMetadataResolver.Resolve(item, booksByItemId, authorsById)))
+            .Select(item =>
+            {
+                var response = ToPricedResponse(
+                    item,
+                    uomGroupsById.GetValueOrDefault(item.UomGroupId ?? string.Empty),
+                    pricingByItemId,
+                    customerGroupCode,
+                    secondaryCustomerGroupCode,
+                    ItemMetadataResolver.Resolve(item, booksByItemId, authorsById));
+
+                if (!string.IsNullOrWhiteSpace(item.Id) && quantitySoldByItemId.TryGetValue(item.Id, out var quantitySold))
+                {
+                    response.QuantitySold = quantitySold;
+                }
+
+                if (!string.IsNullOrWhiteSpace(item.Id) && ratingByItemId.TryGetValue(item.Id, out var rating))
+                {
+                    response.Rating = rating.Rating;
+                    response.AverageRating = rating.Rating;
+                    response.TotalReviews = rating.TotalReviews;
+                }
+
+                return response;
+            })
             .ToArray();
+    }
+
+    internal static async Task<PricedItemResponse?> ResolveSingleAsync(
+        IItemRepository itemRepository,
+        IUomGroupRepository uomGroupRepository,
+        IBookRepository bookRepository,
+        IAuthorRepository authorRepository,
+        IPricingRepository pricingRepository,
+        IOrderRepository orderRepository,
+        IReviewRepository reviewRepository,
+        string itemId,
+        string customerGroupCode,
+        string secondaryCustomerGroupCode,
+        CancellationToken cancellationToken)
+    {
+        var item = await itemRepository.GetByIdAsync(itemId, cancellationToken);
+        if (item is null)
+        {
+            return null;
+        }
+
+        var uomGroupIds = !string.IsNullOrWhiteSpace(item.UomGroupId) ? [item.UomGroupId] : Array.Empty<string>();
+        var uomGroups = uomGroupIds.Length > 0 ? await uomGroupRepository.GetByIdsAsync(uomGroupIds, cancellationToken) : [];
+
+        var book = await bookRepository.GetByItemIdAsync(itemId, cancellationToken);
+        var booksByItemId = book is not null ? new Dictionary<string, Entity.BookEntity> { { itemId, book } } : new Dictionary<string, Entity.BookEntity>();
+
+        var authorIds = book?.AuthorIds?.Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToArray() ?? [];
+        var authors = authorIds.Length > 0 ? await authorRepository.GetByIdsAsync(authorIds, cancellationToken) : [];
+        var uomGroupsById = uomGroups
+            .Where(group => !string.IsNullOrWhiteSpace(group.Id))
+            .ToDictionary(group => group.Id!, group => group);
+        var authorsById = authors
+            .Where(author => !string.IsNullOrWhiteSpace(author.Id))
+            .ToDictionary(author => author.Id!, author => author, StringComparer.Ordinal);
+
+        var pricings = string.IsNullOrWhiteSpace(customerGroupCode)
+            ? []
+            : await pricingRepository.GetActiveByItemIdsAsync([itemId], DateTime.UtcNow, cancellationToken);
+
+        var pricingByItemId = pricings
+            .GroupBy(pricing => pricing.ItemId)
+            .ToDictionary(group => group.Key, group => group.ToArray(), StringComparer.Ordinal);
+
+        var response = ToPricedResponse(
+            item,
+            uomGroupsById.GetValueOrDefault(item.UomGroupId ?? string.Empty),
+            pricingByItemId,
+            customerGroupCode,
+            secondaryCustomerGroupCode,
+            ItemMetadataResolver.Resolve(item, booksByItemId, authorsById));
+
+        var orders = await orderRepository.GetByItemIdsAsync([itemId], cancellationToken);
+        var reviews = await reviewRepository.GetByItemIdsAsync([itemId], cancellationToken);
+
+        var quantitySold = orders
+            .Where(order => string.Equals(order.PaymentStatus, "paid", StringComparison.OrdinalIgnoreCase))
+            .SelectMany(order => order.Items)
+            .Where(orderItem => string.Equals(orderItem.ItemId, itemId, StringComparison.OrdinalIgnoreCase))
+            .Sum(orderItem => orderItem.Quantity);
+
+        var itemReviews = reviews.Where(review => string.Equals(review.ItemId, itemId, StringComparison.OrdinalIgnoreCase)).ToArray();
+        
+        response.QuantitySold = quantitySold;
+        if (itemReviews.Length > 0)
+        {
+            var rating = itemReviews.Average(review => (double)review.Rating);
+            response.Rating = rating;
+            response.AverageRating = rating;
+            response.TotalReviews = itemReviews.Length;
+        }
+
+        return response;
     }
 
     private static PricedItemResponse ToPricedResponse(
@@ -510,4 +635,87 @@ public class DeleteItemHandler(IItemRepository itemRepository) : IRequestHandler
 {
     public async Task<bool> Handle(DeleteItemCommand request, CancellationToken cancellationToken) =>
         await itemRepository.DeleteAsync(request.Id, cancellationToken);
+}
+
+public class GetItemAutofillHandler(IItemRepository itemRepository) : IRequestHandler<GetItemAutofillQuery, IReadOnlyCollection<ItemAutofillResponse>>
+{
+    public async Task<IReadOnlyCollection<ItemAutofillResponse>> Handle(GetItemAutofillQuery request, CancellationToken cancellationToken)
+    {
+        var items = await itemRepository.SearchAsync(request.SearchTerm ?? string.Empty, cancellationToken);
+        return items.Select(x => new ItemAutofillResponse { Id = x.Id ?? string.Empty, Name = x.Name }).ToArray();
+    }
+}
+
+public class GetPublicPricedItemByIdHandler(
+    IItemRepository itemRepository,
+    IUomGroupRepository uomGroupRepository,
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository,
+    IPricingRepository pricingRepository,
+    IOrderRepository orderRepository,
+    IReviewRepository reviewRepository,
+    IOptions<AppSetting> appOptions) : IRequestHandler<GetPublicPricedItemByIdQuery, PricedItemResponse?>
+{
+    private readonly string _defaultCustomerGroupCode = appOptions.Value.PricingSetting?.DefaultPublicCustomerGroupCode?.Trim() ?? string.Empty;
+    private readonly string _secondaryCustomerGroupCode = appOptions.Value.PricingSetting?.SecondaryPublicCustomerGroupCode?.Trim() ?? string.Empty;
+
+    public async Task<PricedItemResponse?> Handle(GetPublicPricedItemByIdQuery request, CancellationToken cancellationToken)
+    {
+        return await PricedItemResolver.ResolveSingleAsync(
+            itemRepository,
+            uomGroupRepository,
+            bookRepository,
+            authorRepository,
+            pricingRepository,
+            orderRepository,
+            reviewRepository,
+            request.Id,
+            _defaultCustomerGroupCode,
+            _secondaryCustomerGroupCode,
+            cancellationToken);
+    }
+}
+
+public class GetCustomerPricedItemByIdHandler(
+    IItemRepository itemRepository,
+    IUomGroupRepository uomGroupRepository,
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository,
+    IPricingRepository pricingRepository,
+    IOrderRepository orderRepository,
+    IReviewRepository reviewRepository,
+    IHttpContextAccessor httpContextAccessor,
+    IOptions<AppSetting> appOptions) : IRequestHandler<GetCustomerPricedItemByIdQuery, PricedItemResponse?>
+{
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly string _secondaryCustomerGroupCode = appOptions.Value.PricingSetting?.SecondaryCustomerGroupCode?.Trim() ?? string.Empty;
+
+    public async Task<PricedItemResponse?> Handle(GetCustomerPricedItemByIdQuery request, CancellationToken cancellationToken)
+    {
+        return await PricedItemResolver.ResolveSingleAsync(
+            itemRepository,
+            uomGroupRepository,
+            bookRepository,
+            authorRepository,
+            pricingRepository,
+            orderRepository,
+            reviewRepository,
+            request.Id,
+            ResolveCustomerGroupCode(),
+            _secondaryCustomerGroupCode,
+            cancellationToken);
+    }
+
+    private string ResolveCustomerGroupCode()
+    {
+        var claimsPrincipal = _httpContextAccessor.HttpContext?.User;
+        if (claimsPrincipal is null)
+        {
+            return string.Empty;
+        }
+
+        return claimsPrincipal.Claims
+            .FirstOrDefault(claim => string.Equals(claim.Type, "customer_group", StringComparison.OrdinalIgnoreCase))
+            ?.Value?.Trim() ?? string.Empty;
+    }
 }

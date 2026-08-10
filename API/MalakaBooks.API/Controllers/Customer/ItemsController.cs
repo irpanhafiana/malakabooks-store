@@ -27,4 +27,21 @@ public class ItemsController(IMediator mediator) : ApiControllerBase
     [HttpGet("priced/type/{itemType}")]
     public async Task<IActionResult> GetPricedByType(string itemType, CancellationToken cancellationToken) =>
         Success(await mediator.Send(new GetCustomerPricedItemsQuery(itemType), cancellationToken));
+
+    /// <summary>
+    /// Retrieves an item together with its default resolved customer price by identifier.
+    /// </summary>
+    [HttpGet("priced/{id}")]
+    public async Task<IActionResult> GetPricedById(string id, CancellationToken cancellationToken)
+    {
+        var item = await mediator.Send(new GetCustomerPricedItemByIdQuery(id), cancellationToken);
+        return item is null ? NotFound() : Success(item);
+    }
+
+    /// <summary>
+    /// Retrieves an autofill item list.
+    /// </summary>
+    [HttpGet("autofill")]
+    public async Task<IActionResult> GetAutofill([FromQuery] string? search, CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetItemAutofillQuery(search), cancellationToken));
 }

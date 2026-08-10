@@ -18,6 +18,20 @@ public class ItemRepository : IItemRepository
     public async Task<IReadOnlyCollection<ItemEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await _collection.Find(Builders<ItemEntity>.Filter.Empty).ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyCollection<ItemEntity>> SearchAsync(string searchTerm, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            return await GetAllAsync(cancellationToken);
+        }
+
+        var filter = Builders<ItemEntity>.Filter.Regex(
+            item => item.Name,
+            new MongoDB.Bson.BsonRegularExpression(System.Text.RegularExpressions.Regex.Escape(searchTerm.Trim()), "i"));
+
+        return await _collection.Find(filter).ToListAsync(cancellationToken);
+    }
+
     public async Task<IReadOnlyCollection<ItemEntity>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken = default) =>
         await _collection.Find(Builders<ItemEntity>.Filter.In(x => x.Id, ids)).ToListAsync(cancellationToken);
 

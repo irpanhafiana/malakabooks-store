@@ -2,6 +2,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MalakaBooks.Entity;
 
+[BsonIgnoreExtraElements]
 public class UserEntity : BaseObject
 {
     public string UserId { get; set; } = string.Empty;

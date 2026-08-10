@@ -56,6 +56,16 @@ public class OrdersController(IMediator mediator) : ApiControllerBase
 
 
     /// <summary>
+    /// Retrieves the status counts of orders for the specified user.
+    /// </summary>
+    /// <param name="userId">The identifier of the user whose orders are retrieved.</param>
+    /// <param name="cancellationToken">Token to observe for request cancellation.</param>
+    /// <returns>An IActionResult containing the counts of orders in different statuses.</returns>
+    [HttpGet("user/{userId}/status-counts")]
+    public async Task<IActionResult> GetStatusCountsByUser(string userId, CancellationToken cancellationToken) =>
+        Success(await mediator.Send(new GetOrderStatusCountsByUserQuery(userId), cancellationToken));
+
+    /// <summary>
     /// Gets an order by identifier.
     /// </summary>
     /// <remarks>Dispatches a GetOrderByIdQuery through the mediator.</remarks>

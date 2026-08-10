@@ -249,3 +249,11 @@ public class CreateOrderShipmentResponse
     public DateTime? ShipmentCreatedAt { get; set; }
     public DateTime? ShipmentLastAttemptAt { get; set; }
 }
+
+public class OrderStatusCountsResponse
+{
+    public int WaitingForPaymentCount { get; set; }
+    public int ProcessCount { get; set; }
+    public int DeliveryCount { get; set; }
+    public int FinishedCount { get; set; }
+}

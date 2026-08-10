@@ -2,6 +2,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MalakaBooks.Entity;
 
+[BsonIgnoreExtraElements]
 public class PromotionBannerEntity : BaseObject
 {
     public string Title { get; set; } = string.Empty;
