@@ -85,7 +85,7 @@
   }
 
   <app-modal [(isOpen)]="isModalOpen" [title]="editAuthor() ? 'Edit Penulis' : 'Tambah Penulis Baru'">
-    <app-authors-form #authorsForm [author]="editAuthor()" (onCancel)="closeModal()" (onSave)="closeModal()">
+    <app-authors-form #authorsForm [author]="editAuthor()" (cancel)="closeModal()" (save)="closeModal()">
     </app-authors-form>
     <div modal-footer class="flex justify-end gap-3 w-full">
       <app-admin-button type="button" variant="outline" (click)="closeModal()">Batal</app-admin-button>

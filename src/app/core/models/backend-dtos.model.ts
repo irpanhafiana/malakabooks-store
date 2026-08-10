@@ -1,13 +1,4 @@
-/**
- * DTO respons backend yang mencerminkan `MalakaBooks.ViewModel` (serialisasi Newtonsoft
- * camelCase, null di-drop). Dipakai untuk mentipekan panggilan HTTP di boundary agar
- * pemetaan `dto -> domain` diperiksa compiler, menggantikan `http.get<any>`.
- *
- * Catatan: field dibuat optional bila backend bisa menghilangkannya (NullValueHandling.Ignore)
- * atau bila casing dari sistem eksternal (Simasrim) tidak konsisten.
- */
 
-/** Cerminan `AddressResponse` (: HomeAddressResponse + UserId, IsDefault). */
 export interface AddressResponseDto {
   id: string;
   label: string;
@@ -26,11 +17,6 @@ export interface AddressResponseDto {
   isDefault: boolean;
 }
 
-/**
- * Cerminan `UserResponse` (id, firstName, lastName, phone, avatar, createdAt).
- * `role`/`email` TIDAK ada di kontrak `UserResponse` backend saat ini — dibiarkan optional
- * agar pemetaan yang membacanya jujur bahwa nilainya mungkin undefined.
- */
 export interface UserResponseDto {
   id: string;
   firstName?: string;

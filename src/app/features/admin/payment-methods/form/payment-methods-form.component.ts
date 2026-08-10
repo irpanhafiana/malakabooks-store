@@ -18,8 +18,8 @@ import { TooltipDirective } from '../../../../shared/directives/tooltip.directiv
 })
 export class PaymentMethodsFormComponent {
   readonly payment = input<Payment | null>(null);
-  readonly onCancel = output<void>();
-  readonly onSave = output<void>();
+  readonly cancel = output<void>();
+  readonly save = output<void>();
 
   private readonly paymentStore = inject(PaymentStore);
   private readonly alertService = inject(AlertService);
@@ -104,6 +104,6 @@ export class PaymentMethodsFormComponent {
 
     await this.paymentStore.savePayment(pData, { showToast: false });
     this.alertService.success('Berhasil!', 'Data payment method berhasil disimpan.');
-    this.onSave.emit();
+    this.save.emit();
   }
 }

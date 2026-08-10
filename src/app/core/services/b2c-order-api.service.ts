@@ -9,10 +9,10 @@ import { environment } from '../../../environments/environment';
 export class B2cOrderApiService {
   private http = inject(HttpClient);
 
-  postB2COrder(payload: any[]): Observable<any> {
-    const baseUrl = (environment as any).posApiUrl || 'http://192.168.1.15:10100/';
+  postB2COrder(payload: Record<string, unknown>[]): Observable<unknown> {
+    const baseUrl = (environment as { posApiUrl?: string }).posApiUrl || 'http://192.168.1.15:10100/';
     const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
     const url = `${cleanBase}pos-api/api/v2/DraftObjects/B2CService`;
-    return this.http.post<any>(url, payload);
+    return this.http.post<unknown>(url, payload);
   }
 }

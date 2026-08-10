@@ -47,7 +47,7 @@ export class AddressApiService {
     }
   }
 
-  async getDistricts(province: string, city: string, district: string = ''): Promise<DistrictLocation[]> {
+  async getDistricts(province: string, city: string, district = ''): Promise<DistrictLocation[]> {
     try {
       const envelope = await firstValueFrom(
         this.http.post<ApiResponse<{ data: DistrictLocation[] }>>(`${this.BASE_URL}/customer/Simasrim/District`, { province, city, district })

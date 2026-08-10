@@ -46,15 +46,15 @@ export class KatalogCartStore {
     });
   }
 
-  addToCart(product: Product, quantity: number = 1, selectedUom?: string, overridePrice?: number) {
+  addToCart(product: Product, quantity = 1, selectedUom?: string, overridePrice?: number) {
     const currentItems = this._cartItems();
     const targetUom = selectedUom || product.salesUomCode || product.baseUomCode || 'PCS';
     const finalPrice = overridePrice !== undefined ? overridePrice : product.price;
     const existingItemIndex = currentItems.findIndex(item => item.id === product.id && item.uom === targetUom);
 
-    const productName = product.title || (product as any).name || product.id;
-    const productImage = product.coverImage || (product as any).image || 'https://placehold.co/400x400';
-    const categoryName = product.categoryName || (product as any).category || 'Umum';
+    const productName = product.title || (product as unknown as Record<string, unknown>)['name'] as string || product.id;
+    const productImage = product.coverImage || (product as unknown as Record<string, unknown>)['image'] as string || 'https://placehold.co/400x400';
+    const categoryName = product.categoryName || (product as unknown as Record<string, unknown>)['category'] as string || 'Umum';
 
     if (existingItemIndex > -1) {
       const updatedItems = [...currentItems];

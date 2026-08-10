@@ -13,7 +13,7 @@ export class PriceComponent {
   readonly currencyCode = input<string>('USD');
   readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
   readonly bold = input<boolean>(true);
-  readonly customClass = input<string>('', { alias: 'class' });
+  readonly customClass = input<string>('');
 
   readonly formattedPrice = computed(() => {
     return 'Rp' + Math.round(this.value()).toLocaleString('id-ID');

@@ -37,7 +37,7 @@ export class ProductStore {
     selectedCategoryId: null,
     selectedProductId: null,
     searchQuery: '',
-    sortBy: (typeof localStorage !== 'undefined' && 'sortBy' in localStorage) ? (localStorage.getItem('sortBy') as any) : 'featured',
+    sortBy: (typeof localStorage !== 'undefined' && 'sortBy' in localStorage) ? (localStorage.getItem('sortBy') as 'featured' | 'price-asc' | 'price-desc' | 'rating') : 'featured',
     loading: false,
     error: null,
     activeProduct: null,
@@ -130,7 +130,7 @@ export class ProductStore {
         this.categoryApi.getCategories()
       ]);
       this.state.update(s => ({ ...s, products, categories, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat produk dan kategori dari server.' }));
       this.alertService.error('Gagal memuat daftar produk dan kategori.');
     }
@@ -141,7 +141,7 @@ export class ProductStore {
     try {
       const products = await this.productApi.getProducts();
       this.state.update(s => ({ ...s, products, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat katalog produk dari server.' }));
       this.alertService.error('Gagal memuat katalog produk.');
     }
@@ -152,7 +152,7 @@ export class ProductStore {
     try {
       const categories = await this.categoryApi.getCategories();
       this.state.update(s => ({ ...s, categories, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar kategori dari server.' }));
     }
   }
@@ -216,7 +216,7 @@ export class ProductStore {
       if (options?.showToast !== false) {
         this.alertService.success(`Category "${saved.name}" saved successfully!`);
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
         this.alertService.error('Failed to save category.');
@@ -239,7 +239,7 @@ export class ProductStore {
           this.alertService.error('Category not found.');
         }
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
         this.alertService.error('Failed to delete category.');

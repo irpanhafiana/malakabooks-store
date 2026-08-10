@@ -17,7 +17,7 @@ export class QuantitySelectorComponent {
   readonly stock = input<number>(9999);
   readonly disabled = input<boolean>(false);
   readonly variant = input<'sm' | 'md'>('md');
-  readonly customClass = input<string>('', { alias: 'class' });
+  readonly customClass = input<string>('');
 
   readonly effectiveMax = computed(() => {
     return Math.min(this.max(), this.stock());

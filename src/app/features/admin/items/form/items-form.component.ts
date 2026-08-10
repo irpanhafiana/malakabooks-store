@@ -26,8 +26,8 @@ import { TooltipDirective } from '../../../../shared/directives/tooltip.directiv
 export class ItemsFormComponent {
   protected readonly isProduction = environment.production;
   readonly item = input<any>(null);
-  readonly onCancel = output<void>();
-  readonly onSave = output<void>();
+  readonly cancel = output<void>();
+  readonly save = output<void>();
   readonly itemTypeChange = output<string>();
 
   private readonly itemStore = inject(ItemStore);
@@ -300,7 +300,7 @@ export class ItemsFormComponent {
 
     const data = this.getPayload();
     await this.itemStore.saveItem(data);
-    this.onSave.emit();
+    this.save.emit();
   }
 
   async bulkInsert() {
@@ -376,7 +376,7 @@ export class ItemsFormComponent {
       await this.itemStore.saveItem(payload);
     }
 
-    this.onSave.emit();
+    this.save.emit();
   }
 
   onCoverUpload(event: Event) {

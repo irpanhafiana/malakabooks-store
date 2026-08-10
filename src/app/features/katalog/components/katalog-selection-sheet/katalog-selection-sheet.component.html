@@ -2,7 +2,7 @@
   <!-- Backdrop -->
   <div class="absolute inset-0 bg-slate-900/30 backdrop-blur-[2px] transition-opacity duration-300 opacity-0"
     [class.opacity-0]="!isVisible()" [class.opacity-100]="isVisible()" [class.pointer-events-none]="!isVisible()"
-    [class.pointer-events-auto]="isVisible()" (click)="initiateClose()"></div>
+    [class.pointer-events-auto]="isVisible()" (click)="initiateClose()" (keydown.escape)="initiateClose()" tabindex="0" role="button" aria-label="Close sheet backdrop"></div>
 
   <!-- Sheet Content -->
   <div

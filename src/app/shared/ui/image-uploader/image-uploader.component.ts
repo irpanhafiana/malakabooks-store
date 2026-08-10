@@ -11,11 +11,14 @@ import { LoggerService } from '../../../core/services/logger.service';
   template: `
     <div class="flex flex-col gap-1.5 w-full">
       @if (label()) {
-        <label class="text-xs font-semibold text-slate-700 font-display">{{ label() }}</label>
+        <span class="text-xs font-semibold text-slate-700 font-display">{{ label() }}</span>
       }
 
       <div
         (click)="fileInput.click()"
+        (keydown.enter)="fileInput.click()"
+        tabindex="0"
+        role="button"
         (dragover)="$event.preventDefault()"
         (drop)="onDrop($event)"
         class="relative flex flex-col items-center justify-center min-h-[140px] p-4 bg-slate-50 hover:bg-slate-100/80 border-2 border-dashed border-slate-200 hover:border-primary-400 rounded-2xl cursor-pointer transition-all group overflow-hidden"

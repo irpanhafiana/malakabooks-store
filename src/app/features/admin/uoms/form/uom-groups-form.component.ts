@@ -18,8 +18,8 @@ import { TooltipDirective } from '../../../../shared/directives/tooltip.directiv
 })
 export class UomGroupsFormComponent {
   readonly uomGroup = input<UomGroup | null>(null);
-  readonly onCancel = output<void>();
-  readonly onSave = output<void>();
+  readonly cancel = output<void>();
+  readonly save = output<void>();
 
   private readonly uomGroupStore = inject(UomGroupStore);
   private readonly alertService = inject(AlertService);
@@ -155,6 +155,6 @@ export class UomGroupsFormComponent {
     };
 
     await this.uomGroupStore.saveUomGroup(data);
-    this.onSave.emit();
+    this.save.emit();
   }
 }

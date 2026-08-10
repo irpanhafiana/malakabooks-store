@@ -11,11 +11,11 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 })
 export class SelectComponent {
   readonly control = input.required<FormControl>();
-  readonly options = input.required<{ value: any; label: string }[]>();
+  readonly options = input.required<{ value: string | number | boolean | unknown; label: string }[]>();
   readonly id = input<string>('select-' + Math.random().toString(36).substring(2, 9));
   readonly label = input<string>('');
   readonly placeholder = input<string>('');
-  readonly customClass = input<string>('', { alias: 'class' });
+  readonly customClass = input<string>('');
 
   readonly selectClass = computed(() => {
     const base = 'block w-full border rounded-xl py-2.5 pl-4 pr-10 text-sm  focus:outline-none focus:ring-2 text-slate-800 bg-white appearance-none cursor-pointer';

@@ -76,7 +76,7 @@
 
   <!-- Add/Edit Modal Form -->
   <app-modal [(isOpen)]="isModalOpen" [title]="editAddress() ? 'Edit Alamat' : 'Tambah Alamat Baru'">
-    <app-home-addresses-form #addrForm [address]="editAddress()" (onCancel)="closeModal()" (onSave)="closeModal()"
+    <app-home-addresses-form #addrForm [address]="editAddress()" (cancel)="closeModal()" (save)="closeModal()"
       class="p-4">
     </app-home-addresses-form>
     <div modal-footer class="flex justify-end gap-3 w-full">

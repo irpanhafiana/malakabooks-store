@@ -29,9 +29,9 @@
         <p class="text-xs text-slate-500 mb-1">Gambar utama yang akan ditampilkan di halaman produk.</p>
         <div
           class="relative border-2 border-dashed border-slate-300 rounded-xl hover:bg-slate-50 hover:border-brand-300 transition-colors flex flex-col items-center justify-center p-6 w-full cursor-pointer overflow-hidden aspect-[3/4]"
-          (click)="coverInput.click()">
+          (click)="coverInput.click()" (keydown.enter)="coverInput.click()" tabindex="0" role="button">
           @if (coverImageControl.value) {
-          <img [src]="coverImageControl.value" class="absolute inset-0 w-full h-full object-cover">
+          <img [src]="coverImageControl.value" alt="Cover Image Preview" class="absolute inset-0 w-full h-full object-cover">
           <div
             class="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
             <span class="text-white text-sm font-medium">Ubah</span>
@@ -72,9 +72,9 @@
           @for (ctrl of additionalImagesControl.controls; track $index) {
           <div
             class="relative border-2 border-dashed border-slate-300 rounded-xl hover:bg-slate-50 hover:border-brand-300 transition-colors flex flex-col items-center justify-center cursor-pointer overflow-hidden aspect-square group"
-            (click)="addInput.click()">
+            (click)="addInput.click()" (keydown.enter)="addInput.click()" tabindex="0" role="button">
             @if (ctrl.value) {
-            <img [src]="ctrl.value" class="absolute inset-0 w-full h-full object-cover">
+            <img [src]="ctrl.value" alt="Gambar Tambahan Preview" class="absolute inset-0 w-full h-full object-cover">
             <div
               class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <span class="text-white text-xs font-medium">Ubah</span>
@@ -145,7 +145,7 @@
       </app-admin-button>
     </div>
     <div class="flex gap-3">
-      <app-admin-button (click)="onCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
+      <app-admin-button (click)="cancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
       <app-admin-button (click)="onSubmitForm()" [disabled]="formGroup.invalid" type="button" variant="primary" size="sm">
         Simpan
       </app-admin-button>

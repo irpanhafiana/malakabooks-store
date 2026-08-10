@@ -1,16 +1,5 @@
 import { User } from '../models';
 
-/**
- * Single source of truth for reading the persisted session out of localStorage.
- *
- * Previously the role/admin check was re-implemented inline at ~6 call sites in
- * ApiService (each doing its own `JSON.parse(localStorage...)`). Centralising it
- * here removes that duplication and decouples callers from the storage shape.
- *
- * NOTE: this is a frontend convenience only — it determines which endpoints the
- * UI calls. It is NOT a security boundary; the backend remains authoritative.
- */
-
 export const SESSION_USER_KEY = 'malakabooks_session_user';
 export const SESSION_TOKEN_KEY = 'malakabooks_session_token';
 export const SESSION_REFRESH_KEY = 'malakabooks_session_refresh';

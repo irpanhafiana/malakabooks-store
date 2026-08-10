@@ -43,7 +43,7 @@ export class ReportsComponent {
 
       downloadCsv(buildCsv(headers, rows), 'sales-revenue-report.csv');
       this.alertService.success('Sales report downloaded successfully!');
-    } catch (e) {
+    } catch {
       this.alertService.error('Failed to generate sales report.');
     } finally {
       this.salesLoading.set(false);
@@ -69,7 +69,7 @@ export class ReportsComponent {
 
       downloadCsv(buildCsv(headers, rows), 'products-inventory-report.csv');
       this.alertService.success('Inventory report downloaded successfully!');
-    } catch (e) {
+    } catch {
       this.alertService.error('Failed to generate inventory report.');
     } finally {
       this.invLoading.set(false);

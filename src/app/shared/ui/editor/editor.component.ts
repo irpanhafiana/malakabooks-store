@@ -139,7 +139,7 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
   }
 
   // --- Rich Text Commands ---
-  execCommand(command: string, value: string = '') {
+  execCommand(command: string, value = '') {
     // Block-level commands need content to work on
     if (['insertUnorderedList', 'insertOrderedList', 'formatBlock'].includes(command)) {
       this.ensureEditorContent();

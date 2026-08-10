@@ -29,12 +29,12 @@ import { readFileAsBase64 } from '../../../../shared/util/image.util';
       </app-admin-input>
 
       <div class="flex flex-col gap-1.5">
-        <label class="font-semibold text-slate-700 text-sm">Biografi</label>
+        <span class="font-semibold text-slate-700 text-sm">Biografi</span>
         <app-editor [formControl]="biographyControl"></app-editor>
       </div>
 
       <div class="flex flex-col gap-2">
-        <label class="font-semibold text-slate-700 text-sm">Foto Penulis</label>
+        <span class="font-semibold text-slate-700 text-sm">Foto Penulis</span>
         <div class="flex items-start gap-4">
           @if (photoUrlControl.value) {
             <img [src]="photoUrlControl.value" alt="Photo Preview" class="w-16 h-16 rounded-lg object-cover border border-slate-200">
@@ -61,8 +61,8 @@ import { readFileAsBase64 } from '../../../../shared/util/image.util';
 })
 export class AuthorsFormComponent {
   readonly author = input<Author | null>(null);
-  readonly onCancel = output<void>();
-  readonly onSave = output<void>();
+  readonly cancel = output<void>();
+  readonly save = output<void>();
 
   readonly authorStore = inject(AuthorStore);
   private readonly alertService = inject(AlertService);
@@ -118,7 +118,7 @@ export class AuthorsFormComponent {
 
     await this.authorStore.saveAuthor(aData, this.selectedPhotoFile || undefined, { showToast: false });
     this.alertService.success('Berhasil!', 'Data penulis berhasil disimpan.');
-    this.onSave.emit();
+    this.save.emit();
   }
 
   async onFileSelected(event: Event) {

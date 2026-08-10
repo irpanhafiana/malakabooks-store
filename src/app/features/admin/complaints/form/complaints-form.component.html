@@ -8,7 +8,7 @@
     @if (complaint()?.additionalImages?.length) {
       <div class="flex flex-wrap gap-2 mt-2">
         @for (img of complaint()?.additionalImages; track img.no) {
-          <img [src]="img.image" (click)="openImagePreview(img.image)" class="w-16 h-16 object-cover rounded-lg border border-slate-200 cursor-pointer hover:opacity-80 transition-opacity">
+          <img [src]="img.image" (click)="openImagePreview(img.image)" (keydown.enter)="openImagePreview(img.image)" tabindex="0" role="button" alt="Foto Komplain" class="w-16 h-16 object-cover rounded-lg border border-slate-200 cursor-pointer hover:opacity-80 transition-opacity">
         }
       </div>
     }
@@ -39,7 +39,7 @@
         @if (msg.additionalImages?.length) {
           <div class="flex flex-wrap gap-2 mt-2">
             @for (img of msg.additionalImages; track img.no) {
-              <img [src]="img.image" (click)="openImagePreview(img.image)" class="w-16 h-16 object-cover rounded-lg border cursor-pointer hover:opacity-80 transition-opacity"
+              <img [src]="img.image" (click)="openImagePreview(img.image)" (keydown.enter)="openImagePreview(img.image)" tabindex="0" role="button" alt="Foto Lampiran" class="w-16 h-16 object-cover rounded-lg border cursor-pointer hover:opacity-80 transition-opacity"
                    [class.border-primary-400]="msg.senderType === 'admin'"
                    [class.border-slate-200]="msg.senderType === 'customer'">
             }
@@ -75,7 +75,7 @@
       <div class="flex flex-wrap gap-2">
         @for (img of replyImages(); track img.no; let i = $index) {
           <div class="relative w-16 h-16 group">
-            <img [src]="img.image" class="w-16 h-16 object-cover rounded-lg border border-slate-200">
+            <img [src]="img.image" alt="Pratinjau Foto Balasan" class="w-16 h-16 object-cover rounded-lg border border-slate-200">
             <button type="button" (click)="removeReplyImage(i)"
                     class="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-red-600">
               ×
@@ -97,7 +97,7 @@
   <app-modal [isOpen]="previewImage() !== null" title="Lihat Foto" (isOpenChange)="!$event ? closeImagePreview() : null" [hasFooter]="false">
     @if (previewImage()) {
       <div class="flex items-center justify-center">
-        <img [src]="previewImage()" class="max-w-full h-auto max-h-[70vh] object-contain rounded-lg">
+        <img [src]="previewImage()" alt="Pratinjau Foto Komplain" class="max-w-full h-auto max-h-[70vh] object-contain rounded-lg">
       </div>
     }
   </app-modal>

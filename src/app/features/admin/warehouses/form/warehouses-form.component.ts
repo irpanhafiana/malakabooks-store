@@ -15,8 +15,8 @@ import { AlertService } from '../../../../core/services/alert.service';
 })
 export class WarehousesFormComponent {
   readonly warehouse = input<Warehouse | null>(null);
-  readonly onCancel = output<void>();
-  readonly onSave = output<void>();
+  readonly cancel = output<void>();
+  readonly save = output<void>();
 
   private readonly warehouseStore = inject(WarehouseStore);
   private readonly alertService = inject(AlertService);
@@ -68,6 +68,6 @@ export class WarehousesFormComponent {
     };
 
     await this.warehouseStore.saveWarehouse(data);
-    this.onSave.emit();
+    this.save.emit();
   }
 }

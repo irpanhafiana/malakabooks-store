@@ -37,7 +37,7 @@ export class OrderStore {
     try {
       const orders = await this.orderApi.getOrdersByUserId(userId);
       this.state.update(s => ({ ...s, orders, loading: false }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
     }
   }
@@ -47,7 +47,7 @@ export class OrderStore {
     try {
       const order = await this.orderApi.getOrderById(orderId);
       this.state.update(s => ({ ...s, currentOrder: order, loading: false }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
     }
   }
@@ -57,7 +57,7 @@ export class OrderStore {
     try {
       const orders = await this.orderApi.getOrders();
       this.state.update(s => ({ ...s, orders, loading: false }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
     }
   }
@@ -84,7 +84,7 @@ export class OrderStore {
         this.alertService.success('Pesanan berhasil dibuat!');
       }
       return placed;
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
         this.alertService.error('Gagal membuat pesanan.');
@@ -116,7 +116,7 @@ export class OrderStore {
         }
         await this.loadAllOrders();
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
         this.alertService.error('Gagal memperbarui status pesanan.');

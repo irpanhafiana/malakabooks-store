@@ -14,9 +14,9 @@ import { IconComponent } from '../icon/icon.component';
 })
 export class SearchBarComponent implements OnInit, OnDestroy {
   readonly placeholder = input<string>('Search books, stationery...');
-  readonly initialValue = input<string>('', { alias: 'value' });
+  readonly value = input<string>('');
   readonly autofocus = input<boolean>(false);
-  readonly search = output<string>();
+  readonly searchSubmit = output<string>();
   readonly inputChange = output<string>();
 
   searchQuery = '';
@@ -24,7 +24,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
   private subscription?: Subscription;
 
   ngOnInit() {
-    this.searchQuery = this.initialValue();
+    this.searchQuery = this.value();
     
     this.subscription = this.searchSubject.pipe(
       debounceTime(300),
@@ -47,14 +47,14 @@ export class SearchBarComponent implements OnInit, OnDestroy {
   onSubmit(event: Event) {
     event.preventDefault();
     const trimmed = this.searchQuery.trim();
-    this.search.emit(trimmed);
+    this.searchSubmit.emit(trimmed);
     this.inputChange.emit(trimmed);
   }
 
   clearSearch() {
     this.searchQuery = '';
     this.searchSubject.next('');
-    this.search.emit('');
+    this.searchSubmit.emit('');
     this.inputChange.emit('');
   }
 }

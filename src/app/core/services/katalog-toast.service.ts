@@ -13,7 +13,7 @@ export class KatalogToastService {
   currentToast = signal<ToastMessage | null>(null);
   visible = signal<boolean>(false);
 
-  show(title: string, message?: string, type: 'success' | 'error' | 'info' = 'info', duration: number = 3000) {
+  show(title: string, message?: string, type: 'success' | 'error' | 'info' = 'info', duration = 3000) {
     this.currentToast.set({ title, message, type });
     this.visible.set(true);
 

@@ -31,7 +31,7 @@ export class ItemStore {
     try {
       const items = await this.itemApi.getItems();
       this.state.update(s => ({ ...s, items, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat produk.' }));
     }
   }
@@ -69,7 +69,7 @@ export class ItemStore {
           this.alertService.error('Item gagal dihapus.');
         }
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
         this.alertService.error('Gagal menghapus item.');

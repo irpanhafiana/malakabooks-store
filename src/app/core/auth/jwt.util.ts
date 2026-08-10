@@ -1,11 +1,5 @@
 import { User } from '../models';
 
-/**
- * Stateless helpers for working with the IdentityServer4 / OAuth access token.
- * Centralised here so the interceptor and the AuthStore share one implementation
- * instead of each re-deriving the decode/expiry logic (DRY / single source of truth).
- */
-
 export interface DecodedJwt {
   sub?: string;
   nameid?: string;
@@ -34,10 +28,6 @@ export function decodeJwt(token: string | null | undefined): DecodedJwt | null {
   }
 }
 
-/**
- * True when the token is missing, malformed, or past its `exp` claim.
- * A token without an `exp` claim is treated as non-expiring (returns false).
- */
 export function isTokenExpired(token: string | null | undefined): boolean {
   const decoded = decodeJwt(token);
   if (!decoded) return true;
@@ -69,11 +59,6 @@ export function jwtHasAdminRole(decoded: DecodedJwt | null): boolean {
   return matches('SSOnline-Admin') || matches('Malaka-Admin') || matches('admin') || containsAdmin();
 }
 
-/**
- * Build the application `User` from a decoded token.
- * Returns null when the token does not carry a usable user id, so callers can
- * reject the session rather than trusting a partially-formed identity.
- */
 export function mapJwtToUser(decoded: DecodedJwt | null): User | null {
   if (!decoded) return null;
   const userId = decoded.sub || decoded.nameid;

@@ -40,7 +40,7 @@ export class ItemsDetailComponent implements OnInit {
       } else {
         this.error.set('Item tidak ditemukan.');
       }
-    } catch (e) {
+    } catch {
       this.error.set('Terjadi kesalahan saat memuat item.');
     } finally {
       this.loading.set(false);

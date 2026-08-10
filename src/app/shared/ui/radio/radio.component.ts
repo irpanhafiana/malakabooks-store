@@ -11,7 +11,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 })
 export class RadioComponent {
   readonly control = input.required<FormControl>();
-  readonly options = input.required<{ value: any; label: string }[]>();
+  readonly options = input.required<{ value: string | number | boolean | unknown; label: string }[]>();
   readonly name = input<string>('radio-group-' + Math.random().toString(36).substring(2, 9));
   readonly label = input<string>('');
   readonly direction = input<'row' | 'col'>('col');

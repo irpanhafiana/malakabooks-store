@@ -25,7 +25,7 @@
 
     <!-- Center: Search Bar -->
     <div class="flex-1 max-w-xl relative">
-      <app-search-bar [placeholder]="'Lagi cari apa? '" [value]="productStore.searchQuery()" (search)="onSearch($event)"
+      <app-search-bar [placeholder]="'Lagi cari apa? '" [value]="productStore.searchQuery()" (searchSubmit)="onSearch($event)"
         (inputChange)="onSearchInput($event)"></app-search-bar>
 
       <!-- Autofill Dropdown -->

@@ -31,7 +31,7 @@ export class PricingStore {
     try {
       const pricings = await this.pricingApi.getPricings();
       this.state.update(s => ({ ...s, pricings, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat pricings.' }));
       this.alertService.error('Gagal memuat daftar harga.');
     }
@@ -43,7 +43,7 @@ export class PricingStore {
       const saved = await this.pricingApi.savePricing(pricing);
       await this.loadPricings();
       this.alertService.success(`Pricing "${saved.name}" berhasil disimpan!`);
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal menyimpan pricing.');
     }
@@ -60,7 +60,7 @@ export class PricingStore {
         this.state.update(s => ({ ...s, loading: false }));
         this.alertService.error('Pricing gagal dihapus.');
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal menghapus pricing.');
     }

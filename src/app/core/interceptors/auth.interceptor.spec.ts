@@ -24,7 +24,7 @@ describe('AuthInterceptor', () => {
   it('should attach Authorization header if token exists', () => {
     localStorage.setItem(SESSION_TOKEN_KEY, 'header.eyJleHAiOjk5OTk5OTk5OTl9.signature');
     
-    let resultReq: HttpRequest<any> | undefined;
+    let resultReq: HttpRequest<unknown> | undefined;
     const next: HttpHandlerFn = (req) => {
       resultReq = req;
       return of(new HttpResponse({ status: 200 }));
@@ -38,7 +38,7 @@ describe('AuthInterceptor', () => {
   });
 
   it('should skip attaching header if no token exists', () => {
-    let resultReq: HttpRequest<any> | undefined;
+    let resultReq: HttpRequest<unknown> | undefined;
     const next: HttpHandlerFn = (req) => {
       resultReq = req;
       return of(new HttpResponse({ status: 200 }));

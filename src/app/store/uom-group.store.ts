@@ -31,7 +31,7 @@ export class UomGroupStore {
     try {
       const uomGroups = await this.uomGroupApi.getUomGroups();
       this.state.update(s => ({ ...s, uomGroups, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat satuan ukuran.' }));
       this.alertService.error('Gagal memuat satuan ukuran.');
     }
@@ -43,7 +43,7 @@ export class UomGroupStore {
       const saved = await this.uomGroupApi.saveUomGroup(uomGroup);
       await this.loadUomGroups();
       this.alertService.success(`Satuan ukuran "${saved.name}" berhasil disimpan!`);
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal menyimpan satuan ukuran.');
     }
@@ -60,7 +60,7 @@ export class UomGroupStore {
         this.state.update(s => ({ ...s, loading: false }));
         this.alertService.error('Satuan ukuran gagal dihapus.');
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal menghapus satuan ukuran.');
     }

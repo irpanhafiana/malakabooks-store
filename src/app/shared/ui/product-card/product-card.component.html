@@ -43,7 +43,7 @@
               <span [class]="'text-slate-500 line-through font-medium leading-none ' + (size() === 'md' ? 'text-[11px]' : 'text-[10px]')">
                 Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }}
               </span>
-              <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'" [class]="'text-primary-600 font-bold leading-none ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
+              <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'" [customClass]="'text-primary-600 font-bold leading-none ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
             </div>
             <!-- Right: Discount Badge -->
             <span class="text-[9px] font-extrabold text-rose-600 bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded-sm shrink-0">
@@ -51,12 +51,12 @@
             </span>
           </div>
           } @else {
-          <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'" [class]="'text-primary-600 font-bold ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
+          <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'" [customClass]="'text-primary-600 font-bold ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
           }
         } @else {
           <!-- Tamu / Belum Login: Tampilkan harga mahal, beri info diskon member jika ada -->
           <div class="flex flex-col items-start gap-1 w-full">
-            <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'" [class]="'text-primary-600 font-bold ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
+            <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'" [customClass]="'text-primary-600 font-bold ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
             @if (prod.compareAtPrice && prod.compareAtPrice! < prod.price) {
             <div class="flex items-center gap-1 text-[9px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded-sm">
               <i class="bx bxs-key text-[10px]"></i>

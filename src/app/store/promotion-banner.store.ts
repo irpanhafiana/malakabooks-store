@@ -31,7 +31,7 @@ export class PromotionBannerStore {
     try {
       const banners = await this.bannerApi.getAdminBanners();
       this.state.update(s => ({ ...s, banners, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar banner dari server.' }));
     }
   }
@@ -41,7 +41,7 @@ export class PromotionBannerStore {
     try {
       const banners = await this.bannerApi.getActiveBanners();
       this.state.update(s => ({ ...s, banners, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat banner aktif.' }));
     }
   }
@@ -59,7 +59,7 @@ export class PromotionBannerStore {
           this.alertService.success(`Banner "${saved.title}" saved successfully!`);
         }
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
         this.alertService.error('Failed to save banner.');
@@ -82,7 +82,7 @@ export class PromotionBannerStore {
           this.alertService.error('Banner not found.');
         }
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
         this.alertService.error('Failed to delete banner.');

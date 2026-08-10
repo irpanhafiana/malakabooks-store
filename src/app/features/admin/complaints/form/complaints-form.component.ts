@@ -25,8 +25,8 @@ import { effect } from '@angular/core';
 })
 export class ComplaintsFormComponent {
   readonly complaint = input<Complaint | null>(null);
-  readonly onCancel = output<void>();
-  readonly onSave = output<void>();
+  readonly cancel = output<void>();
+  readonly save = output<void>();
 
   private readonly complaintStore = inject(ComplaintStore);
   private readonly fb = inject(FormBuilder);
@@ -91,7 +91,7 @@ export class ComplaintsFormComponent {
       this.alertService.success('Berhasil!', 'Respons komplain berhasil dikirim.');
       this.replyImages.set([]);
       this.replyImageFiles.set([]);
-      this.onSave.emit();
+      this.save.emit();
     }
   }
 

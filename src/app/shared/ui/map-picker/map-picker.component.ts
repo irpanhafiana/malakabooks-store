@@ -37,7 +37,7 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
   isLocating = false;
   private readonly logger = inject(LoggerService);
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: object) { }
 
   async ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {

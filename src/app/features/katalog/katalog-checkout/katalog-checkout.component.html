@@ -70,6 +70,10 @@
           [class.opacity-0]="!isPaymentVisible()"
           [class.opacity-100]="isPaymentVisible()"
           (click)="cancelPaymentConfirm()"
+          (keydown.escape)="cancelPaymentConfirm()"
+          tabindex="0"
+          role="button"
+          aria-label="Close modal backdrop"
         ></div>
         <div
           class="relative w-full max-w-sm bg-white rounded-2xl p-8 space-y-6 shadow-2xl transition-all duration-300 ease-out"

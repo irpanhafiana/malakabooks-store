@@ -17,8 +17,8 @@ import { MapPickerComponent } from '../../../../shared/ui/map-picker/map-picker.
 })
 export class HomeAddressesFormComponent implements OnInit {
   readonly address = input<HomeAddress | null>(null);
-  readonly onCancel = output<void>();
-  readonly onSave = output<void>();
+  readonly cancel = output<void>();
+  readonly save = output<void>();
 
   private readonly store = inject(AdminHomeAddressStore);
   private readonly addressApi = inject(AddressApiService);
@@ -227,10 +227,10 @@ export class HomeAddressesFormComponent implements OnInit {
 
     await this.store.saveAddress(payload);
     this.isLoading.set(false);
-    this.onSave.emit();
+    this.save.emit();
   }
 
   handleCancel() {
-    this.onCancel.emit();
+    this.cancel.emit();
   }
 }

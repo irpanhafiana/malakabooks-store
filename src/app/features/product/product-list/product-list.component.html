@@ -11,7 +11,7 @@
       </button>
       <div class="flex-1">
         <app-search-bar [placeholder]="'Cari buku, penulis...'" [value]="productStore.searchQuery()" [autofocus]="false"
-          (search)="onSearchSubmit($event)"></app-search-bar>
+          (searchSubmit)="onSearchSubmit($event)"></app-search-bar>
       </div>
       <button type="button" (click)="openFilters()"
         class="flex items-center justify-center shrink-0 w-11 h-11 border border-slate-200 bg-white rounded-full text-slate-700 hover:text-primary-600 hover:bg-slate-50 cursor-pointer active:scale-95 "

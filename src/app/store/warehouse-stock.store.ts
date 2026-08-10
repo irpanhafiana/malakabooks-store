@@ -31,7 +31,7 @@ export class WarehouseStockStore {
     try {
       const stocks = await this.stockApi.getWarehouseStocks();
       this.state.update(s => ({ ...s, stocks, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat warehouse stocks.' }));
       this.alertService.error('Gagal memuat stok gudang.');
     }
@@ -43,7 +43,7 @@ export class WarehouseStockStore {
       await this.stockApi.saveWarehouseStock(stock);
       await this.loadWarehouseStocks();
       this.alertService.success(`Stok gudang berhasil disimpan!`);
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal menyimpan stok gudang.');
     }
@@ -60,7 +60,7 @@ export class WarehouseStockStore {
         this.state.update(s => ({ ...s, loading: false }));
         this.alertService.error('Stok gudang gagal dihapus.');
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal menghapus stok gudang.');
     }

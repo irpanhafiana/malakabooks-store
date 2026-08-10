@@ -42,7 +42,7 @@ import { AlertService } from '../../../../core/services/alert.service';
       </app-admin-input>
 
       <div class="flex flex-col gap-2">
-        <label class="font-semibold text-slate-700 text-sm">Status</label>
+        <span class="font-semibold text-slate-700 text-sm">Status</span>
         <app-admin-checkbox label="Aktif" [control]="isActiveControl"></app-admin-checkbox>
       </div>
 
@@ -71,7 +71,7 @@ import { AlertService } from '../../../../core/services/alert.service';
       </div>
 
       <div class="flex flex-col gap-2">
-        <label class="font-semibold text-slate-700 text-sm">Banner Image</label>
+        <span class="font-semibold text-slate-700 text-sm">Banner Image</span>
         <div class="flex items-start gap-4">
           @if (imageBase64Control.value) {
             <img [src]="imageBase64Control.value" alt="Banner Preview" class="w-32 h-16 rounded-lg object-cover border border-slate-200">
@@ -98,8 +98,8 @@ import { AlertService } from '../../../../core/services/alert.service';
 })
 export class PromotionBannersFormComponent {
   readonly banner = input<PromotionBanner | null>(null);
-  readonly onCancel = output<void>();
-  readonly onSave = output<void>();
+  readonly cancel = output<void>();
+  readonly save = output<void>();
 
   readonly bannerStore = inject(PromotionBannerStore);
   private readonly alertService = inject(AlertService);
@@ -181,7 +181,7 @@ export class PromotionBannersFormComponent {
       await this.bannerStore.saveBanner(data, undefined, this.selectedImageFile || undefined, { showToast: false });
     }
     this.alertService.success('Berhasil!', 'Data banner berhasil disimpan.');
-    this.onSave.emit();
+    this.save.emit();
   }
 
   onFileSelected(event: Event) {

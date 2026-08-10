@@ -15,8 +15,8 @@ import { AlertService } from '../../../../core/services/alert.service';
 })
 export class CategoriesFormComponent {
   readonly category = input<Category | null>(null);
-  readonly onCancel = output<void>();
-  readonly onSave = output<void>();
+  readonly cancel = output<void>();
+  readonly save = output<void>();
 
   private readonly productStore = inject(ProductStore);
   private readonly alertService = inject(AlertService);
@@ -62,6 +62,6 @@ export class CategoriesFormComponent {
 
     await this.productStore.saveCategory(cData, { showToast: false });
     this.alertService.success('Berhasil!', 'Data kategori berhasil disimpan.');
-    this.onSave.emit();
+    this.save.emit();
   }
 }

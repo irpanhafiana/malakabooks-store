@@ -32,7 +32,7 @@ export class AdminHomeAddressStore {
     try {
       const addresses = await this.api.getHomeAddresses();
       this.state.update(s => ({ ...s, addresses, loading: false }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal memuat alamat.');
     }
@@ -44,7 +44,7 @@ export class AdminHomeAddressStore {
       const saved = await this.api.saveHomeAddress(address);
       await this.loadHomeAddresses(); // Re-seed client list
       this.alertService.success(`Alamat "${saved.label}" berhasil disimpan!`);
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal menyimpan alamat.');
     }
@@ -61,7 +61,7 @@ export class AdminHomeAddressStore {
         this.state.update(s => ({ ...s, loading: false }));
         this.alertService.error('Alamat tidak ditemukan.');
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal menghapus alamat.');
     }

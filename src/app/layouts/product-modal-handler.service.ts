@@ -75,7 +75,7 @@ export class ProductModalHandler {
     this.productStore.setSelectedProductId(null);
   }
 
-  closeQty(fromConfirm: boolean = false) {
+  closeQty(fromConfirm = false) {
     this.productStore.setQtyModalOpen(false);
 
     if (!fromConfirm || this.productStore.qtyAction() === 'cart') {

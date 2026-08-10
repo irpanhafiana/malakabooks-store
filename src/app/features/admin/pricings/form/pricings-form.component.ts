@@ -34,8 +34,8 @@ import {
 export class PricingsFormComponent {
   protected readonly isProduction = environment.production;
   readonly pricing = input<Pricing | null>(null);
-  readonly onCancel = output<void>();
-  readonly onSave = output<void>();
+  readonly cancel = output<void>();
+  readonly save = output<void>();
 
   private readonly pricingStore = inject(PricingStore);
   protected readonly itemStore = inject(ItemStore);
@@ -230,7 +230,7 @@ export class PricingsFormComponent {
     };
 
     await this.pricingStore.savePricing(data);
-    this.onSave.emit();
+    this.save.emit();
   }
 
   async bulkInsert() {
@@ -277,6 +277,6 @@ export class PricingsFormComponent {
       }
     }
 
-    this.onSave.emit();
+    this.save.emit();
   }
 }

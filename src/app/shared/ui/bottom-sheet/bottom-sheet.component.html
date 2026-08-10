@@ -1,6 +1,6 @@
 @if (renderComponent()) {
 <!-- Backdrop overlay -->
-<div class="bottom-sheet-backdrop fixed! inset-0! z-9998!" [class.active]="isAnimating()" (click)="closeSheet()">
+<div class="bottom-sheet-backdrop fixed! inset-0! z-9998!" [class.active]="isAnimating()" (click)="closeSheet()" (keydown.escape)="closeSheet()" tabindex="0" role="button" aria-label="Close bottom sheet backdrop">
 </div>
 
 <!-- Bottom Sheet Content Container -->

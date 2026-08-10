@@ -1,8 +1,3 @@
-/**
- * Standard response envelope returned by the MalakaBooks .NET API.
- * Mirrors `ApiResponse<T>` in `MalakaBooks.API/Controllers/Base/ApiControllerBase.cs`
- * (Newtonsoft camelCase, null values omitted).
- */
 export interface ApiResponse<T> {
   statusCode: number;
   statusMessage: string | null;

@@ -42,7 +42,7 @@ export class B2cOrderStore {
     this.lastOrderId.set(id);
   }
 
-  postB2COrder(payload: any[]): Observable<any> {
+  postB2COrder(payload: Record<string, unknown>[]): Observable<unknown> {
     return this.b2cApi.postB2COrder(payload);
   }
 }

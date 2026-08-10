@@ -262,7 +262,7 @@
   <!-- Sidebar Backdrop overlay for mobile screen sizes -->
   @if (isSidebarOpen()) {
   <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-30 md:hidden transition-opacity"
-    (click)="closeSidebar()"></div>
+    (click)="closeSidebar()" (keydown.escape)="closeSidebar()" tabindex="0" role="button" aria-label="Close sidebar backdrop"></div>
   }
 
   <!-- Main Dashboard Content viewport -->

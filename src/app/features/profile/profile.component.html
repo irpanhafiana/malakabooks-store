@@ -5,7 +5,7 @@
     class="w-full lg:w-72 shrink-0 bg-white border border-slate-100 rounded-lg p-4 flex flex-col gap-6 sticky top-24">
     <!-- Profile Header Badge -->
     <div class="flex flex-col items-center text-center pb-5 border-b border-slate-100">
-      <div class="relative cursor-pointer group" (click)="showEditProfile.set(true)">
+      <div class="relative cursor-pointer group" (click)="showEditProfile.set(true)" (keydown.enter)="showEditProfile.set(true)" tabindex="0" role="button" aria-label="Ubah foto profil">
         @if (authStore.currentUser()?.avatar) {
         <img [src]="authStore.currentUser()!.avatar" alt="Avatar"
           class="w-20 h-20 rounded-full border-4 border-white ring-2 ring-primary-500/20 object-cover shadow-xs group-hover:opacity-90 transition-opacity" />
@@ -199,7 +199,7 @@
     <!-- Profile Card -->
     <div class="rounded-lg p-2 flex flex-row items-center text-center gap-4.5">
       <!-- Avatar with edit button trigger -->
-      <div class="relative cursor-pointer" (click)="showEditProfile.set(true)">
+      <div class="relative cursor-pointer" (click)="showEditProfile.set(true)" (keydown.enter)="showEditProfile.set(true)" tabindex="0" role="button" aria-label="Ubah foto profil">
         @if (authStore.currentUser()?.avatar) {
         <img [src]="authStore.currentUser()!.avatar" alt="Avatar"
           class="w-18 h-18 rounded-full overflow-hidden border-4 border-white ring-2 ring-primary object-cover" />
@@ -240,7 +240,7 @@
           <span class="text-sm text-slate-700 group-hover:text-slate-800 text-start">{{ item.label }}</span>
         </a>
         } @else {
-        <div (click)="item.action ? item.action() : null"
+        <div (click)="item.action ? item.action() : null" (keydown.enter)="item.action ? item.action() : null" tabindex="0" role="button"
           class="flex flex-row items-center justify-start gap-1 px-4 py-2 bg-white border border-slate-200 rounded-lg cursor-pointer group text-center">
           <span
             class="w-10 h-10 flex items-center justify-center text-slate-600 group-hover:text-primary-500 transition-colors">

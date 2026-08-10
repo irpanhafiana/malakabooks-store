@@ -15,7 +15,7 @@ export class TextareaComponent {
   readonly label = input<string>('');
   readonly placeholder = input<string>('');
   readonly rows = input<number>(3);
-  readonly customClass = input<string>('', { alias: 'class' });
+  readonly customClass = input<string>('');
 
   readonly textareaClass = computed(() => {
     const base = 'block w-full border rounded-xl py-2.5 px-4 text-sm  focus:outline-none focus:ring-2 placeholder-slate-400 text-slate-800 bg-white resize-y';

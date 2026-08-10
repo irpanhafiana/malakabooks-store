@@ -63,7 +63,7 @@
           </button>
           <div class="grow">
             <app-search-bar [placeholder]="'Search books...'" [value]="productStore.searchQuery()" [autofocus]="true"
-              (search)="onSearch($event)"></app-search-bar>
+              (searchSubmit)="onSearch($event)"></app-search-bar>
           </div>
         </div>
         } @else {

@@ -1,10 +1,3 @@
-/**
- * Aturan bisnis penetapan harga jual.
- *
- * Nilai-nilai ini sebelumnya berupa literal tanpa nama di dalam
- * `pricings-form.component.ts`. Dipusatkan di sini agar maknanya eksplisit —
- * nilainya sengaja tidak diubah.
- */
 
 /** Kode customer group untuk pembeli kanal online. */
 export const CUSTOMER_GROUP_ONLINE = '103';

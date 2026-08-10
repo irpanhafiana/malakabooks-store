@@ -54,9 +54,9 @@ describe('OrdersListComponent', () => {
 
   it('should toggle selection of an order', () => {
     component.toggleSelectOrder('ORDER1');
-    expect((component as any).selectedOrderIds()).toContain('ORDER1');
+    expect((component as unknown as { selectedOrderIds: () => string[] }).selectedOrderIds()).toContain('ORDER1');
     
     component.toggleSelectOrder('ORDER1');
-    expect((component as any).selectedOrderIds()).not.toContain('ORDER1');
+    expect((component as unknown as { selectedOrderIds: () => string[] }).selectedOrderIds()).not.toContain('ORDER1');
   });
 });

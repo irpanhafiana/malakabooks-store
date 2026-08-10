@@ -80,7 +80,7 @@ export class DashboardComponent implements OnInit {
     try {
       const data = await this.dashboardApi.getDashboardMetrics();
       this.metrics.set(data);
-    } catch (e) {
+    } catch {
       this.error.set(true);
     } finally {
       this.loading.set(false);

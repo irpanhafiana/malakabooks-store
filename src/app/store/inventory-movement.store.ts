@@ -31,7 +31,7 @@ export class InventoryMovementStore {
     try {
       const movements = await this.movementApi.getInventoryMovements(itemId);
       this.state.update(s => ({ ...s, movements, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat riwayat mutasi stok.' }));
     }
   }

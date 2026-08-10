@@ -31,7 +31,7 @@ export class WarehouseStore {
     try {
       const warehouses = await this.warehouseApi.getWarehouses();
       this.state.update(s => ({ ...s, warehouses, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar gudang.' }));
       this.alertService.error('Gagal memuat daftar gudang.');
     }
@@ -43,7 +43,7 @@ export class WarehouseStore {
       const saved = await this.warehouseApi.saveWarehouse(warehouse);
       await this.loadWarehouses();
       this.alertService.success(`Gudang "${saved.name}" berhasil disimpan!`);
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal menyimpan gudang.');
     }
@@ -60,7 +60,7 @@ export class WarehouseStore {
         this.state.update(s => ({ ...s, loading: false }));
         this.alertService.error('Gudang gagal dihapus.');
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       this.alertService.error('Gagal menghapus gudang.');
     }

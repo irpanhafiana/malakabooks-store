@@ -19,7 +19,7 @@ export class AlertService {
     }
   };
 
-  async confirm(title: string, text: string, confirmButtonText: string = 'Ya, Lanjutkan'): Promise<boolean> {
+  async confirm(title: string, text: string, confirmButtonText = 'Ya, Lanjutkan'): Promise<boolean> {
     const res = await Swal.fire({
       ...this.swalConfig,
       title,
@@ -32,7 +32,7 @@ export class AlertService {
     return res.isConfirmed;
   }
 
-  success(titleOrText: string, text: string = '') {
+  success(titleOrText: string, text = '') {
     const finalTitle = text ? titleOrText : 'Berhasil';
     const finalText = text ? text : titleOrText;
     
@@ -45,7 +45,7 @@ export class AlertService {
     });
   }
 
-  error(titleOrText: string, text: string = '') {
+  error(titleOrText: string, text = '') {
     const finalTitle = text ? titleOrText : 'Gagal';
     const finalText = text ? text : titleOrText;
     
@@ -58,7 +58,7 @@ export class AlertService {
     });
   }
 
-  info(titleOrText: string, text: string = '') {
+  info(titleOrText: string, text = '') {
     const finalTitle = text ? titleOrText : 'Informasi';
     const finalText = text ? text : titleOrText;
     
@@ -71,7 +71,7 @@ export class AlertService {
     });
   }
 
-  warning(titleOrText: string, text: string = '') {
+  warning(titleOrText: string, text = '') {
     const finalTitle = text ? titleOrText : 'Peringatan';
     const finalText = text ? text : titleOrText;
     
@@ -84,7 +84,7 @@ export class AlertService {
     });
   }
 
-  async prompt(title: string, inputPlaceholder: string = 'https://', defaultValue: string = ''): Promise<string | null> {
+  async prompt(title: string, inputPlaceholder = 'https://', defaultValue = ''): Promise<string | null> {
     const res = await Swal.fire({
       ...this.swalConfig,
       title,

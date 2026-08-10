@@ -88,7 +88,7 @@
   <!-- Add/Edit Modal Form -->
   <app-modal [(isOpen)]="isModalOpen"
     [title]="editPayment() ? 'Edit Metode Pembayaran' : 'Tambah Metode Pembayaran Baru'">
-    <app-payment-methods-form #pmForm [payment]="editPayment()" (onCancel)="closeModal()" (onSave)="closeModal()"
+    <app-payment-methods-form #pmForm [payment]="editPayment()" (cancel)="closeModal()" (save)="closeModal()"
       class="p-4">
     </app-payment-methods-form>
     <div modal-footer class="flex justify-end gap-3 w-full">

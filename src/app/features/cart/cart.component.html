@@ -15,7 +15,7 @@
         class="card-product flex-row! bg-gray-50 border border-slate-100/80 shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 group flex">
         <!-- Thumbnail Image (matching product-list aspect & styling) -->
         <div class="aspect-square w-32.5 shrink-0 bg-slate-50 overflow-hidden relative cursor-pointer"
-          (click)="productStore.setSelectedProductId(item.product.id)">
+          (click)="productStore.setSelectedProductId(item.product.id)" (keydown.enter)="productStore.setSelectedProductId(item.product.id)" tabindex="0" role="button" aria-label="Lihat detail produk">
           <img [src]="item.product.coverImage" [alt]="item.product.title"
             class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105" />
           <div class="badge-uom">{{ item.uomCode || item.product.categoryName }}</div>
@@ -32,7 +32,7 @@
                 </span>
                 <h3
                   class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 leading-tight cursor-pointer"
-                  (click)="productStore.setSelectedProductId(item.product.id)">
+                  (click)="productStore.setSelectedProductId(item.product.id)" (keydown.enter)="productStore.setSelectedProductId(item.product.id)" tabindex="0" role="button">
                   {{ item.product.title }}</h3>
               </div>
             </div>

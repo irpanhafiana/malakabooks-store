@@ -31,7 +31,7 @@ export class PaymentStore {
     try {
       const payments = await this.paymentApi.getPayments();
       this.state.update(s => ({ ...s, payments, loading: false, error: null }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar payment dari server.' }));
     }
   }
@@ -44,7 +44,7 @@ export class PaymentStore {
       if (options?.showToast !== false) {
         this.alertService.success(`Metode Pembayaran "${saved.name}" berhasil disimpan!`);
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
         this.alertService.error('Gagal menyimpan metode pembayaran.');
@@ -67,7 +67,7 @@ export class PaymentStore {
           this.alertService.error('Metode Pembayaran tidak ditemukan.');
         }
       }
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false }));
       if (options?.showToast !== false) {
         this.alertService.error('Gagal menghapus metode pembayaran.');

@@ -35,7 +35,7 @@
         <span class="text-[10px] font-bold text-primary-600 opacity-60 tracking-tight">{{ products().length }} Ditemukan</span>
       </div>
       @for (product of products(); track product.id) {
-      <div (click)="selectedProductForSheet.set(product)"
+      <div (click)="selectedProductForSheet.set(product)" (keydown.enter)="selectedProductForSheet.set(product)" tabindex="0" role="button"
         class="bg-white p-3 rounded-lg flex gap-4 active:scale-[0.98] transition-all cursor-pointer group">
         <div class="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden border border-gray-100">
           <img [ngSrc]="product.coverImage" [alt]="product.title" fill class="w-full h-full object-cover">

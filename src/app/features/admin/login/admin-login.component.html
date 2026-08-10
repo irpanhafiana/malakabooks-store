@@ -26,13 +26,13 @@
   <!-- Form Section -->
   <form [formGroup]="loginForm" (submit)="onSubmit()" class="flex flex-col gap-5">
     <div class="flex flex-col gap-1.5">
-      <label class="text-sm font-medium text-slate-700">Nama Pengguna</label>
+      <span class="text-sm font-medium text-slate-700">Nama Pengguna</span>
       <app-admin-input type="text" placeholder="Masukkan nama pengguna" icon="user"
         [control]="usernameControl"></app-admin-input>
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <label class="text-sm font-medium text-slate-700">Kata Sandi</label>
+      <span class="text-sm font-medium text-slate-700">Kata Sandi</span>
       <app-admin-input type="password" placeholder="Masukkan kata sandi" icon="cog"
         [control]="passwordControl"></app-admin-input>
     </div>

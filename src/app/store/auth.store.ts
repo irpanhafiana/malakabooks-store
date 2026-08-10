@@ -181,7 +181,7 @@ export class AuthStore {
       }
       this.alertService.error('Email atau password salah.');
       return false;
-    } catch (err) {
+    } catch {
       this.alertService.error('Terjadi kesalahan autentikasi. Silakan coba lagi.');
       return false;
     }
@@ -214,7 +214,7 @@ export class AuthStore {
       await this.userApi.register(payload);
       this.alertService.success('Pendaftaran akun berhasil! Silakan masuk.');
       return true;
-    } catch (err: any) {
+    } catch (err) {
       this.logger.error('AuthStore.register', err);
       return false;
     }

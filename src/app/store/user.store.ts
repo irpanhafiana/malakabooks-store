@@ -32,7 +32,7 @@ export class UserStore {
     try {
       const users = await this.userApi.getUsers();
       this.state.update(s => ({ ...s, users, loading: false }));
-    } catch (e) {
+    } catch {
       this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat daftar pengguna.' }));
       this.alertService.error('Gagal memuat daftar pengguna.');
     }

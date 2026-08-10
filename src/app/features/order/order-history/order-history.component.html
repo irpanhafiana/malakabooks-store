@@ -162,29 +162,29 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Penilaian Anda</label>
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Penilaian Anda</span>
       <div class="flex items-center gap-2 text-3xl">
         @for (star of [1,2,3,4,5]; track star) {
         <i class="bx bxs-star cursor-pointer transition-transform active:scale-90"
           [class.text-amber-400]="reviewRating() >= star" [class.text-slate-200]="reviewRating() < star"
-          (click)="reviewRating.set(star)"></i>
+          (click)="reviewRating.set(star)" (keydown.enter)="reviewRating.set(star)" tabindex="0" role="button" aria-label="Bintang rating"></i>
         }
       </div>
     </div>
 
     <div class="flex flex-col gap-2">
-      <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Komentar</label>
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Komentar</span>
       <textarea [ngModel]="reviewComment()" (input)="updateComment($event)"
         class="w-full p-3 border border-slate-200 rounded-xl focus:ring-primary-500 focus:border-primary-500 text-sm font-sans"
         rows="4" placeholder="Bagaimana pendapat Anda tentang buku ini?"></textarea>
     </div>
 
     <div class="flex flex-col gap-2">
-      <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Foto (Opsional)</label>
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Foto (Opsional)</span>
       <div class="flex flex-wrap gap-3">
         @for (img of reviewImages(); track img.no) {
         <div class="relative w-20 h-20 border border-slate-200 rounded-xl overflow-hidden group shadow-xs">
-          <img [src]="img.image" class="w-full h-full object-cover">
+          <img [src]="img.image" alt="Pratinjau Foto Ulasan" class="w-full h-full object-cover">
           <button (click)="removeImage($index)"
             class="absolute top-1 right-1 bg-white/90 text-rose-500 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-xs cursor-pointer">
             <i class="bx bx-x"></i>
