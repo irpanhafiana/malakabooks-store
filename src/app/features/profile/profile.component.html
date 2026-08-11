@@ -175,6 +175,19 @@
   </div>
 </app-modal>
 
+<!-- Modal Ganti Kata Sandi Desktop -->
+<app-modal [(isOpen)]="showChangePasswordModal" title="Ganti Kata Sandi" maxWidth="max-w-md">
+  <form [formGroup]="passwordForm" (submit)="onChangePasswordSubmit()" class="flex flex-col gap-4 p-4">
+    <app-input label="Kata Sandi Baru" type="password" placeholder="Masukkan kata sandi baru" icon="lock-alt" [control]="newPasswordControl"></app-input>
+    <app-input label="Konfirmasi Kata Sandi Baru" type="password" placeholder="Ulangi kata sandi baru" icon="lock-alt" [control]="confirmPasswordControl"></app-input>
+  </form>
+  <div modal-footer class="flex items-center justify-end gap-3 w-full">
+    <app-button type="button" (click)="showChangePasswordModal.set(false)" variant="outline" size="md">Batal</app-button>
+    <app-button type="button" (click)="onChangePasswordSubmit()" [loading]="isPasswordSaving()" [disabled]="passwordForm.invalid"
+      variant="primary" size="md">Ubah Kata Sandi</app-button>
+  </div>
+</app-modal>
+
 <app-modal [isOpen]="showMockModal() !== null" (isOpenChange)="showMockModal.set(null)"
   [title]="showMockModal() || 'Pengaturan'" maxWidth="max-w-md" [hasFooter]="false">
   <div class="p-6 text-center flex flex-col items-center gap-4">
@@ -297,6 +310,18 @@
       class="flex-1">Batal</app-button>
     <app-button type="button" (click)="onSubmitProfile()" [loading]="isProfileSaving()" [disabled]="profileForm.invalid"
       variant="primary" size="lg" [fullWidth]="true" class="flex-1">Simpan Profil</app-button>
+  </div>
+</app-bottom-sheet>
+
+<!-- Bottom Sheet Ganti Kata Sandi Mobile -->
+<app-bottom-sheet [isOpen]="showChangePasswordModal()" title="Ganti Kata Sandi" (closed)="showChangePasswordModal.set(false)">
+  <form [formGroup]="passwordForm" (submit)="onChangePasswordSubmit()" class="flex flex-col gap-4 p-5">
+    <app-input label="Kata Sandi Baru" type="password" placeholder="Masukkan kata sandi baru" icon="lock-alt" [control]="newPasswordControl"></app-input>
+    <app-input label="Konfirmasi Kata Sandi Baru" type="password" placeholder="Ulangi kata sandi baru" icon="lock-alt" [control]="confirmPasswordControl"></app-input>
+  </form>
+  <div class="sticky bottom-0 bg-white border-t border-slate-100 px-5 py-4 shrink-0 flex items-center gap-3 w-full">
+    <app-button type="button" (click)="showChangePasswordModal.set(false)" variant="outline" size="lg" [fullWidth]="true" class="flex-1">Batal</app-button>
+    <app-button type="button" (click)="onChangePasswordSubmit()" [loading]="isPasswordSaving()" [disabled]="passwordForm.invalid" variant="primary" size="lg" [fullWidth]="true" class="flex-1">Ubah Kata Sandi</app-button>
   </div>
 </app-bottom-sheet>
 

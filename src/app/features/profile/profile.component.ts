@@ -75,7 +75,7 @@ export class ProfileComponent implements OnInit {
     {
       items: [
         { icon: 'bx-map', label: 'Alamat Saya', route: '/profile/addresses' },
-        { icon: 'bx-key', label: 'Ganti Password', action: () => this.showMockModal.set('Change Password') },
+        { icon: 'bx-key', label: 'Ganti Password', action: () => this.openChangePasswordModal() },
         { icon: 'bx-message-square-error', label: 'Komplain', route: '/complaints' },
         { icon: 'bx-package', label: 'Lacak Pesanan', route: '/order-history' }
       ]
@@ -152,9 +152,46 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  showChangePasswordModal = signal<boolean>(false);
+  isPasswordSaving = signal<boolean>(false);
+
+  newPasswordControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
+  confirmPasswordControl = new FormControl('', [Validators.required]);
+
+  passwordForm = new FormGroup({
+    newPassword: this.newPasswordControl,
+    confirmPassword: this.confirmPasswordControl
+  });
+
+  openChangePasswordModal() {
+    this.passwordForm.reset();
+    this.showChangePasswordModal.set(true);
+  }
+
+  async onChangePasswordSubmit() {
+    if (this.passwordForm.invalid) return;
+
+    const newPassword = this.newPasswordControl.value || '';
+    const confirmPassword = this.confirmPasswordControl.value || '';
+
+    if (newPassword !== confirmPassword) {
+      this.alertService.error('Konfirmasi kata sandi tidak cocok.');
+      return;
+    }
+
+    this.isPasswordSaving.set(true);
+    const success = await this.authStore.changePassword(newPassword, confirmPassword);
+    this.isPasswordSaving.set(false);
+
+    if (success) {
+      this.showChangePasswordModal.set(false);
+      this.passwordForm.reset();
+    }
+  }
+
   selectTab(tab: ProfileTab) {
     if (tab === 'password') {
-      this.showMockModal.set('Change Password');
+      this.openChangePasswordModal();
       return;
     }
     this.activeTab.set(tab);

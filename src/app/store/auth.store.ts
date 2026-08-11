@@ -230,6 +230,21 @@ export class AuthStore {
     return success;
   }
 
+  async changePassword(password: string, confirmPassword: string): Promise<boolean> {
+    const user = this.state().user;
+    if (!user?.id) {
+      this.alertService.error('Pengguna tidak terautentikasi.');
+      return false;
+    }
+    const success = await this.userApi.changePassword(user.id, password, confirmPassword);
+    if (success) {
+      this.alertService.success('Kata sandi berhasil diperbarui!');
+    } else {
+      this.alertService.error('Gagal memperbarui kata sandi. Silakan coba lagi.');
+    }
+    return success;
+  }
+
   async updateProfile(updatedUser: User, avatarFile?: File): Promise<boolean> {
     try {
       const savedUser = await this.userApi.saveUser(updatedUser, avatarFile);

@@ -231,4 +231,20 @@ export class UserApiService {
       return false;
     }
   }
+
+  async changePassword(userId: string, password: string, confirmPassword: string): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.http.post('http://192.168.1.15:44304/api/Users/ChangePassword', {
+          userId,
+          password,
+          confirmPassword
+        })
+      );
+      return true;
+    } catch (e) {
+      this.logger.error('UserApiService.changePassword', e);
+      return false;
+    }
+  }
 }
