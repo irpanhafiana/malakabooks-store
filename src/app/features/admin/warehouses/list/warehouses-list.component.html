@@ -86,7 +86,7 @@
 
   <!-- Add/Edit Warehouse Modal Form -->
   <app-modal [(isOpen)]="isModalOpen" [title]="editWarehouse() ? 'Edit Gudang' : 'Tambah Gudang Baru'">
-    <app-warehouses-form #whForm [warehouse]="editWarehouse()" (cancel)="closeModal()" (save)="closeModal()"
+    <app-warehouses-form #whForm [warehouse]="editWarehouse()" (formCancel)="closeModal()" (save)="closeModal()"
       class="p-4">
     </app-warehouses-form>
     <div modal-footer class="flex justify-end gap-3 w-full">

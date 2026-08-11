@@ -13,6 +13,7 @@ export class AdminButtonComponent {
   readonly disabled = input<boolean>(false);
   readonly type = input<'button' | 'submit' | 'reset'>('button');
   readonly fullWidth = input<boolean>(false);
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   readonly customClass = input<string>('', { alias: 'class' });
 
   // Dynamically compute the Tailwind classes for styling (denser than customer button)

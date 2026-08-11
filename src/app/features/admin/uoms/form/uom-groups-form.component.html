@@ -83,7 +83,7 @@
       </div>
     </div>
   <div class="border-t border-slate-100 pt-4 flex justify-end gap-3 mt-6">
-    <app-admin-button (click)="cancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
+    <app-admin-button (click)="formCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
     <app-admin-button (click)="onSubmitForm()" [disabled]="formGroup.invalid" type="button" variant="primary" size="sm">
       Simpan
     </app-admin-button>

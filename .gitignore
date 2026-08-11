@@ -41,6 +41,7 @@ __screenshots__/
 **/bin/
 **/obj/
 *.user
+lint_results.txt
 
 # System files
 .DS_Store

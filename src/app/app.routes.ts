@@ -174,6 +174,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/profile/my-addresses/my-addresses.component').then(c => c.MyAddressesComponent),
         canActivate: [authGuard],
         data: { title: 'Alamat Saya', preload: true }
+      },
+      {
+        path: '404',
+        loadComponent: () => import('./features/not-found/not-found.component').then(c => c.NotFoundComponent),
+        data: { title: 'Halaman Tidak Ditemukan' }
       }
     ]
   },
@@ -195,7 +200,11 @@ export const routes: Routes = [
     ]
   },
 
-  // Catch-all redirection to store home page
-  { path: '**', redirectTo: '' }
+  // Catch-all route to 404 page
+  {
+    path: '**',
+    loadComponent: () => import('./features/not-found/not-found.component').then(c => c.NotFoundComponent)
+  }
 ];
+
 

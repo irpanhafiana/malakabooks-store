@@ -17,6 +17,7 @@ export class AdminSelectComponent implements OnDestroy {
   readonly id = input<string>('admin-select-' + Math.random().toString(36).substring(2, 9));
   readonly label = input<string>('');
   readonly placeholder = input<string>('');
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   readonly customClass = input<string>('', { alias: 'class' });
 
   private readonly elementRef = inject(ElementRef);

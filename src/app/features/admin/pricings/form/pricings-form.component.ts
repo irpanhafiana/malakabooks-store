@@ -34,7 +34,7 @@ import {
 export class PricingsFormComponent {
   protected readonly isProduction = environment.production;
   readonly pricing = input<Pricing | null>(null);
-  readonly cancel = output<void>();
+  readonly formCancel = output<void>();
   readonly save = output<void>();
 
   private readonly pricingStore = inject(PricingStore);

@@ -6,8 +6,9 @@
     <router-outlet></router-outlet>
   </main>
 
-  <app-desktop-footer></app-desktop-footer><app-modal [isOpen]="modalHandler.isDetailOpen()" (isOpenChange)="modalHandler.closeProductDetails()" title="Detail Produk"
-    maxWidth="max-w-4xl" [noScroll]="true" [hasFooter]="false">
+  <app-desktop-footer></app-desktop-footer><app-modal [isOpen]="modalHandler.isDetailOpen()"
+    (isOpenChange)="modalHandler.closeProductDetails()" title="Detail Produk" maxWidth="max-w-4xl" [noScroll]="true"
+    [hasFooter]="false">
     <app-product-detail [productId]="modalHandler.selectedDetailId()"></app-product-detail>
   </app-modal>
 
@@ -26,12 +27,12 @@
         <app-price [value]="(productStore.qtyLookedUpPrice() || 0) * productStore.qtyQuantity()" size="lg"
           class="text-slate-800"></app-price>
       </div>
-      <app-button (click)="qtyDesktop.confirmAddToCart()" variant="primary" size="lg" class="grow max-w-40"
-        [disabled]="productStore.isQtyLookupLoading()">
+      <app-button (click)="qtyDesktop.confirmAddToCart()" variant="primary" size="lg"
+        class="grow max-w-40 flex items-center justify-end" [disabled]="productStore.isQtyLookupLoading()">
         @if (!authStore.isLoggedIn()) {
-          Login untuk Membeli
+        Login untuk Membeli
         } @else {
-          {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+        {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
         }
       </app-button>
       } @else {
@@ -147,7 +148,8 @@
       </nav>
 
       <!-- Global Toasts Alert Overlay --><!-- Product Detail Bottom Sheet (Height ~85%, constrained inside the mobile container) -->
-      <app-bottom-sheet [isOpen]="modalHandler.isDetailOpen()" (closed)="modalHandler.closeProductDetails()" [fullHeight]="true">
+      <app-bottom-sheet [isOpen]="modalHandler.isDetailOpen()" (closed)="modalHandler.closeProductDetails()"
+        [fullHeight]="true">
         <app-product-detail [productId]="modalHandler.selectedDetailId()"></app-product-detail>
       </app-bottom-sheet>
 
@@ -168,9 +170,9 @@
           <app-button (click)="qtyMobile.confirmAddToCart()" variant="primary" size="lg" class="grow max-w-40"
             [disabled]="productStore.isQtyLookupLoading()">
             @if (!authStore.isLoggedIn()) {
-              Login untuk Membeli
+            Login untuk Membeli
             } @else {
-              {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+            {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
             }
           </app-button>
           } @else {
@@ -184,4 +186,4 @@
     </div>
   </div>
   }
-</div>
+</div>

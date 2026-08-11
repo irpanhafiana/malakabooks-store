@@ -87,7 +87,7 @@
   }
 
   <app-modal [(isOpen)]="isModalOpen" [title]="editBanner() ? 'Edit Promosi' : 'Tambah Promosi Baru'">
-    <app-promotion-banners-form #bannerForm [banner]="editBanner()" (cancel)="closeModal()" (save)="closeModal()"
+    <app-promotion-banners-form #bannerForm [banner]="editBanner()" (formCancel)="closeModal()" (save)="closeModal()"
       class="p-4">
     </app-promotion-banners-form>
     <div modal-footer class="flex justify-end gap-3 w-full">

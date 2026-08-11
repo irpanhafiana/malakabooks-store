@@ -1,6 +1,7 @@
-import { Component, input, output, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, OnInit, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { IconComponent } from '../icon/icon.component';
 
@@ -12,7 +13,7 @@ import { IconComponent } from '../icon/icon.component';
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
 })
-export class SearchBarComponent implements OnInit, OnDestroy {
+export class SearchBarComponent implements OnInit {
   readonly placeholder = input<string>('Search books, stationery...');
   readonly value = input<string>('');
   readonly autofocus = input<boolean>(false);
@@ -21,22 +22,19 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 
   searchQuery = '';
   private searchSubject = new Subject<string>();
-  private subscription?: Subscription;
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit() {
     this.searchQuery = this.value();
     
-    this.subscription = this.searchSubject.pipe(
+    this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe((query) => {
       const trimmed = query.trim();
       this.inputChange.emit(trimmed);
     });
-  }
-
-  ngOnDestroy() {
-    this.subscription?.unsubscribe();
   }
 
   onSearchChange(query: string) {

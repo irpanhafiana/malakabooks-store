@@ -33,22 +33,22 @@ export class OrderStore {
   readonly error = computed(() => this.state().error);
 
   async loadUserOrders(userId: string) {
-    this.state.update(s => ({ ...s, loading: true }));
+    this.state.update(s => ({ ...s, loading: true, error: null }));
     try {
       const orders = await this.orderApi.getOrdersByUserId(userId);
-      this.state.update(s => ({ ...s, orders, loading: false }));
+      this.state.update(s => ({ ...s, orders, loading: false, error: null }));
     } catch {
-      this.state.update(s => ({ ...s, loading: false }));
+      this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat data riwayat pesanan. Silakan coba lagi.' }));
     }
   }
 
   async loadOrderDetails(orderId: string) {
-    this.state.update(s => ({ ...s, loading: true }));
+    this.state.update(s => ({ ...s, loading: true, error: null }));
     try {
       const order = await this.orderApi.getOrderById(orderId);
-      this.state.update(s => ({ ...s, currentOrder: order, loading: false }));
+      this.state.update(s => ({ ...s, currentOrder: order, loading: false, error: null }));
     } catch {
-      this.state.update(s => ({ ...s, loading: false }));
+      this.state.update(s => ({ ...s, loading: false, error: 'Gagal memuat detail pesanan. Silakan coba lagi.' }));
     }
   }
 

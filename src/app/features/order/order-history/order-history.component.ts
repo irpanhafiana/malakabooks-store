@@ -46,6 +46,13 @@ export class OrderHistoryComponent implements OnInit {
     this.orderStore.loadUserOrders(user.id);
   }
 
+  retryLoading() {
+    const user = this.authStore.currentUser();
+    if (user) {
+      this.orderStore.loadUserOrders(user.id);
+    }
+  }
+
   async checkPaymentStatus(orderId: string) {
     try {
       const response = await this.externalMessageService.postCheckPaymentDoku(orderId);

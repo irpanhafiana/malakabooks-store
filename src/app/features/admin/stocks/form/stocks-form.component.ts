@@ -19,7 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class StocksFormComponent {
   readonly stock = input<WarehouseStock | null>(null);
-  readonly cancel = output<void>();
+  readonly formCancel = output<void>();
   readonly save = output<void>();
 
   private readonly stockStore = inject(WarehouseStockStore);

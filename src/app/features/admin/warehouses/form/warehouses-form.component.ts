@@ -15,7 +15,7 @@ import { AlertService } from '../../../../core/services/alert.service';
 })
 export class WarehousesFormComponent {
   readonly warehouse = input<Warehouse | null>(null);
-  readonly cancel = output<void>();
+  readonly formCancel = output<void>();
   readonly save = output<void>();
 
   private readonly warehouseStore = inject(WarehouseStore);

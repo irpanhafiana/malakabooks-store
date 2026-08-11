@@ -29,5 +29,4 @@ export interface CreatePromotionBannerRequest {
   endAt?: string | null;
 }
 
-export interface UpdatePromotionBannerRequest extends CreatePromotionBannerRequest {
-}
+export type UpdatePromotionBannerRequest = CreatePromotionBannerRequest;

@@ -10,6 +10,7 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
 export class IconComponent {
   readonly name = input<string>('');
   readonly size = input<number | string>(24);
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   readonly customClass = input<string>('', { alias: 'class' });
 
   // Map containing Lucide names to Boxicons classes

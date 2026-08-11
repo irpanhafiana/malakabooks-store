@@ -15,7 +15,7 @@ import { AlertService } from '../../../../core/services/alert.service';
 })
 export class CategoriesFormComponent {
   readonly category = input<Category | null>(null);
-  readonly cancel = output<void>();
+  readonly formCancel = output<void>();
   readonly save = output<void>();
 
   private readonly productStore = inject(ProductStore);

@@ -73,7 +73,7 @@
 
 <!-- Respond Modal -->
 <app-modal [(isOpen)]="isModalOpen" title="Tindak Lanjut Komplain">
-  <app-complaints-form #complaintsForm [complaint]="selected()" (cancel)="closeModal()" (save)="closeModal()"></app-complaints-form>
+  <app-complaints-form #complaintsForm [complaint]="selected()" (formCancel)="closeModal()" (save)="closeModal()"></app-complaints-form>
   <div modal-footer class="flex justify-end gap-3 w-full">
     <app-admin-button type="button" variant="outline" class="flex-1" (click)="closeModal()">
       Batal

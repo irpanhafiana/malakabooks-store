@@ -156,20 +156,17 @@ export class ItemApiService {
       }
     }
 
-    let savedItem: CatalogItem | null = null;
-
-    try {
-      if (isNew) {
-        const envelope = await firstValueFrom(this.http.post<ApiResponse<CatalogItem>>(`${this.BASE_URL}/admin/Items/with-files`, formData));
-        savedItem = envelope?.data || null;
-      } else {
-        const envelope = await firstValueFrom(this.http.put<ApiResponse<CatalogItem>>(`${this.BASE_URL}/admin/Items/${item.id}/with-files`, formData));
-        savedItem = envelope?.data || null;
+    const savedItem = await (async () => {
+      try {
+        const envelope = isNew
+          ? await firstValueFrom(this.http.post<ApiResponse<CatalogItem>>(`${this.BASE_URL}/admin/Items/with-files`, formData))
+          : await firstValueFrom(this.http.put<ApiResponse<CatalogItem>>(`${this.BASE_URL}/admin/Items/${item.id}/with-files`, formData));
+        return envelope?.data || null;
+      } catch (e) {
+        this.logger.error('ItemApiService.saveItem', 'Gagal menyimpan item:', e);
+        throw e;
       }
-    } catch (e) {
-      this.logger.error('ItemApiService.saveItem', 'Gagal menyimpan item:', e);
-      throw e;
-    }
+    })();
 
     let extractedItemId = savedItem?.id || item.id || '';
 

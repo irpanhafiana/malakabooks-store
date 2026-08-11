@@ -64,7 +64,7 @@
 
   <!-- Selection Sheet -->
   @if (selectedProductForSheet()) {
-  <app-katalog-selection-sheet [product]="selectedProductForSheet()" (close)="selectedProductForSheet.set(null)"
+  <app-katalog-selection-sheet [product]="selectedProductForSheet()" (sheetClose)="selectedProductForSheet.set(null)"
     (confirm)="cartStore.addToCart(selectedProductForSheet()!, $event.quantity, $event.uom, $event.price)"></app-katalog-selection-sheet>
   }
 

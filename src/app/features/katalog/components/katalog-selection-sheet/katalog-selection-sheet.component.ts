@@ -16,7 +16,7 @@ import { KatalogQuantitySelectorComponent } from '../katalog-quantity-selector/k
 })
 export class KatalogSelectionSheetComponent implements OnInit, OnDestroy {
   product = input<Product | null>(null);
-  close = output<void>();
+  sheetClose = output<void>();
   confirm = output<{ uom: string, quantity: number, price: number }>();
 
   private pricingApi = inject(PricingApiService);
@@ -100,7 +100,7 @@ export class KatalogSelectionSheetComponent implements OnInit, OnDestroy {
 
   initiateClose() {
     this.isVisible.set(false);
-    setTimeout(() => this.close.emit(), 200);
+    setTimeout(() => this.sheetClose.emit(), 200);
   }
 
   onConfirm() {

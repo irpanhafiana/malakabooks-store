@@ -25,7 +25,7 @@
       <!-- Cover Image -->
       <div
         class="flex flex-col gap-2 md:col-span-1 border-b md:border-b-0 md:border-r border-slate-100 pb-6 md:pb-0 md:pr-6">
-        <label class="text-sm font-semibold text-slate-800">Cover Image</label>
+        <span class="text-sm font-semibold text-slate-800">Cover Image</span>
         <p class="text-xs text-slate-500 mb-1">Gambar utama yang akan ditampilkan di halaman produk.</p>
         <div
           class="relative border-2 border-dashed border-slate-300 rounded-xl hover:bg-slate-50 hover:border-brand-300 transition-colors flex flex-col items-center justify-center p-6 w-full cursor-pointer overflow-hidden aspect-[3/4]"
@@ -57,7 +57,7 @@
       <div class="flex flex-col gap-2 md:col-span-3">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2">
           <div>
-            <label class="text-sm font-semibold text-slate-800">Gambar Tambahan</label>
+            <span class="text-sm font-semibold text-slate-800">Gambar Tambahan</span>
             <p class="text-xs text-slate-500">Gambar pendukung untuk memperlihatkan detail produk.</p>
           </div>
           <app-admin-button type="button" variant="outline" size="sm" (click)="addAdditionalImage()">
@@ -105,7 +105,7 @@
   </div>
 
   <div class="flex flex-col gap-1.5">
-    <label class="text-sm font-semibold text-slate-700">Deskripsi</label>
+    <span class="text-sm font-semibold text-slate-700">Deskripsi</span>
     <app-editor [formControl]="descriptionControl"></app-editor>
   </div>
 
@@ -116,7 +116,7 @@
       <app-admin-input label="ISBN" placeholder="Contoh: 978-602-03-0221-5" [control]="isbnControl"></app-admin-input>
       
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium text-slate-700">Penulis</label>
+        <span class="text-sm font-medium text-slate-700">Penulis</span>
         <div class="flex flex-wrap gap-2 mb-2">
           @for (authorId of selectedAuthorIds(); track authorId) {
           <div class="bg-brand-50 text-brand-700 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 border border-brand-200">
@@ -145,7 +145,7 @@
       </app-admin-button>
     </div>
     <div class="flex gap-3">
-      <app-admin-button (click)="cancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
+      <app-admin-button (click)="formCancel.emit()" type="button" variant="outline" size="sm">Batal</app-admin-button>
       <app-admin-button (click)="onSubmitForm()" [disabled]="formGroup.invalid" type="button" variant="primary" size="sm">
         Simpan
       </app-admin-button>

@@ -29,6 +29,13 @@
       }
     </div>
 
+    } @else if (orderStore.error()) {
+    <app-empty-state icon="error" title="Gagal Memuat Pesanan"
+      [description]="orderStore.error() || 'Terjadi kesalahan saat memuat data riwayat pesanan.'"
+      actionText="Coba Lagi"
+      (actionClick)="retryLoading()">
+    </app-empty-state>
+
     } @else if (orderStore.orders().length === 0) {
     <app-empty-state icon="shopping-bag" title="Belum Ada Pesanan"
       description="Anda belum pernah melakukan pembelian. Mulai belanja sekarang!" actionText="Mulai Belanja"

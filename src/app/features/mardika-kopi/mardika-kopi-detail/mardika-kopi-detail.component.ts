@@ -34,7 +34,7 @@ import { AlertService } from '../../../core/services/alert.service';
   styleUrl: './mardika-kopi-detail.component.css'
 })
 export class MardikaKopiDetailComponent implements OnInit {
-  readonly productIdInput = input<string | null>(null, { alias: 'productId' });
+  readonly productId = input<string | null>(null);
   readonly closed = output<void>();
 
   private readonly route = inject(ActivatedRoute);
@@ -50,6 +50,7 @@ export class MardikaKopiDetailComponent implements OnInit {
   private readonly location = inject(Location);
 
   loading = signal<boolean>(true);
+  loadError = signal<string | null>(null);
   product = signal<Product | null>(null);
   activeImage = signal<string>('');
   activeTab = signal<'details' | 'reviews'>('details');
@@ -60,10 +61,10 @@ export class MardikaKopiDetailComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const id = this.productIdInput();
+      const id = this.productId();
       if (id) {
         this.activeTab.set('details');
-        this.loadProduct(id);
+        this.fetchProductDetail(id);
       }
     });
 
@@ -76,8 +77,8 @@ export class MardikaKopiDetailComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       const id = params.get('id');
-      if (id && !this.productIdInput()) {
-        this.loadProduct(id);
+      if (id && !this.productId()) {
+        this.fetchProductDetail(id);
       }
     });
   }
@@ -93,8 +94,9 @@ export class MardikaKopiDetailComponent implements OnInit {
     return images;
   }
 
-  async loadProduct(id: string) {
+  private async fetchProductDetail(id: string) {
     this.loading.set(true);
+    this.loadError.set(null);
     try {
       const [prod, revs] = await Promise.all([
         this.productApi.getProductById(id),
@@ -109,17 +111,30 @@ export class MardikaKopiDetailComponent implements OnInit {
       } else {
         this.product.set(null);
       }
-    } catch (err) {
+    } catch {
       this.product.set(null);
+      this.loadError.set('Gagal memuat detail produk kopi. Silakan periksa koneksi Anda dan coba lagi.');
     } finally {
       this.loading.set(false);
     }
   }
 
+  retryLoading() {
+    const id = this.productId() || this.productStore.selectedProductId();
+    if (id) {
+      this.fetchProductDetail(id);
+    }
+  }
+
   setActiveImage(img: string, scrollContainer?: HTMLElement) {
     this.activeImage.set(img);
+
     if (scrollContainer) {
-      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      const images = Array.from(scrollContainer.children) as HTMLElement[];
+      const activeIdx = (this.product()?.additionalImages || []).findIndex(i => i.image === img) + 1;
+      if (images[activeIdx]) {
+        images[activeIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
     }
   }
 
@@ -184,7 +199,7 @@ export class MardikaKopiDetailComponent implements OnInit {
   }
 
   goBack() {
-    if (this.productIdInput()) {
+    if (this.productId()) {
       this.closed.emit();
     } else {
       this.location.back();

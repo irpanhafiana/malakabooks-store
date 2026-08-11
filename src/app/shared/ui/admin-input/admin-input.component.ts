@@ -18,6 +18,7 @@ export class AdminInputComponent {
   readonly type = input<string>('text');
   readonly placeholder = input<string>('');
   readonly icon = input<string | undefined>(undefined);
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   readonly customClass = input<string>('', { alias: 'class' });
   readonly formatNumber = input<boolean>(false);
   readonly readonly = input<boolean>(false);

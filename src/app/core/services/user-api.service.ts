@@ -161,7 +161,7 @@ export class UserApiService {
         }
       }
 
-      for (const [id, _] of backendAddrMap.entries()) {
+      for (const id of backendAddrMap.keys()) {
         try {
           await firstValueFrom(this.http.delete(`${this.BASE_URL}/customer/Addresses/${id}`));
         } catch (e) {

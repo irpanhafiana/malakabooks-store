@@ -33,7 +33,7 @@ export class ShippingLabelService {
 
     // AWB / Order number
     const awb = order.trackingNumber || dr('awb', 'Awb', 'awbNo', 'AWBNo', 'trackingNumber', 'noResi') || '-';
-    const awbClean = awb.replace(/\s+/g, '');
+    const awbClean = awb.replace(/[^a-zA-Z0-9_-]/g, '');
     const orderNo = has(dr('order_id')) ? dr('order_id') : order.id;
 
     // Routing / sorting codes (from detail-resi)
@@ -268,7 +268,8 @@ export class ShippingLabelService {
       background: "#fff"
     });
   } catch(e) {
-    document.querySelector('.barcode').innerHTML = '<p style="font-size:10pt;font-weight:700;">' + "${awbClean}" + '</p>';
+    var el = document.querySelector('.barcode');
+    if (el) { el.textContent = "${awbClean}"; }
   }
   try {
     new QRCode(document.getElementById("qrcode"), {

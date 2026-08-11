@@ -61,7 +61,7 @@ import { readFileAsBase64 } from '../../../../shared/util/image.util';
 })
 export class AuthorsFormComponent {
   readonly author = input<Author | null>(null);
-  readonly cancel = output<void>();
+  readonly formCancel = output<void>();
   readonly save = output<void>();
 
   readonly authorStore = inject(AuthorStore);

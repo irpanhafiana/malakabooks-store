@@ -9,7 +9,7 @@
 
   <!-- Form Container -->
   <div class="bg-white p-6 rounded-2xl border border-slate-200">
-    <app-items-form [item]="editItem()" (cancel)="onCancel()" (save)="onSave()"
+    <app-items-form [item]="editItem()" (formCancel)="onCancel()" (save)="onSave()"
       (itemTypeChange)="onItemTypeChange($event)">
     </app-items-form>
   </div>

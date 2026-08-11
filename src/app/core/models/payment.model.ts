@@ -19,4 +19,4 @@ export interface CreatePaymentPayload {
   fees: PaymentFee[];
 }
 
-export interface UpdatePaymentPayload extends CreatePaymentPayload {}
+export type UpdatePaymentPayload = CreatePaymentPayload;

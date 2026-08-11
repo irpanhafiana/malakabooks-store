@@ -26,7 +26,7 @@ import { TooltipDirective } from '../../../../shared/directives/tooltip.directiv
 export class ItemsFormComponent {
   protected readonly isProduction = environment.production;
   readonly item = input<any>(null);
-  readonly cancel = output<void>();
+  readonly formCancel = output<void>();
   readonly save = output<void>();
   readonly itemTypeChange = output<string>();
 

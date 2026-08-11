@@ -25,7 +25,7 @@ export class ScreenService implements OnDestroy {
       }
     } else {
        this.mediaQueryList = {} as MediaQueryList;
-       this.listener = () => {};
+       this.listener = () => { /* noop */ };
     }
   }
 

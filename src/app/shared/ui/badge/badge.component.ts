@@ -10,6 +10,7 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
 export class BadgeComponent {
   readonly variant = input<'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'danger' | 'info'>('secondary');
   readonly size = input<'sm' | 'md'>('md');
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   readonly customClass = input<string>('', { alias: 'class' });
 
   readonly badgeClass = computed(() => {

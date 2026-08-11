@@ -1,4 +1,5 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 
@@ -32,6 +33,7 @@ export class KatalogCartComponent {
   private pricingApi = inject(PricingApiService);
   private toastService = inject(KatalogToastService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   isProcessing = signal(false);
 
@@ -157,7 +159,9 @@ export class KatalogCartComponent {
       }
     ];
 
-    this.b2cOrderStore.postB2COrder(payload).subscribe({
+    this.b2cOrderStore.postB2COrder(payload).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (res) => {
         this.isProcessing.set(false);
         if (Array.isArray(res) && res.length > 0) {

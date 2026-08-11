@@ -301,12 +301,9 @@ export class MyAddressesComponent implements OnInit {
         : (this.addresses().length === 0)
     };
 
-    let success = false;
-    if (isEdit) {
-      success = await this.authStore.updateAddress(newAddr);
-    } else {
-      success = await this.authStore.addAddress(newAddr);
-    }
+    const success = isEdit
+      ? await this.authStore.updateAddress(newAddr)
+      : await this.authStore.addAddress(newAddr);
 
     this.isAddressSaving.set(false);
 

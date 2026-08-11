@@ -58,7 +58,7 @@ export class UsersListComponent implements OnInit {
     try {
       await this.userStore.saveUser(updatedUser);
       this.alertService.success('Berhasil!', `Peran pengguna "${user.name}" berhasil diubah menjadi ${newRole.toUpperCase()}.`);
-    } catch (e) {
+    } catch {
       this.alertService.error('Gagal!', 'Gagal mengubah peran pengguna.');
     }
   }

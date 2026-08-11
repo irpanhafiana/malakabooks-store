@@ -37,6 +37,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         alertService.error(serverMessage || 'Anda tidak memiliki izin untuk melakukan tindakan ini.');
       } else if (error.status === 404) {
         alertService.error(serverMessage || 'Sumber daya tidak ditemukan (404).');
+      } else if (error.status === 409) {
+        alertService.error(serverMessage || 'Terjadi konflik data atau stok produk telah habis (409).');
+      } else if (error.status === 422) {
+        alertService.error(serverMessage || 'Data yang dikirimkan tidak dapat diproses oleh server (422).');
       } else if (error.status >= 500) {
         alertService.error(serverMessage || 'Terjadi kesalahan pada server. Silakan coba lagi nanti.');
       }

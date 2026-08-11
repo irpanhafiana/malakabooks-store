@@ -54,12 +54,9 @@ export class KatalogProductDetailComponent {
       const p = this.product();
       if (p) {
         untracked(() => {
-          let opts: string[] = [];
-          if (p.uomGroup && p.uomGroup.details && p.uomGroup.details.length > 0) {
-            opts = p.uomGroup.details.map(d => d.code);
-          } else {
-            opts = [p.salesUomCode || p.baseUomCode || 'PCS'];
-          }
+          const opts: string[] = (p.uomGroup && p.uomGroup.details && p.uomGroup.details.length > 0)
+            ? p.uomGroup.details.map(d => d.code)
+            : [p.salesUomCode || p.baseUomCode || 'PCS'];
           this.uomOptions.set(opts);
           this.selectedUom.set(opts[0] || 'PCS');
           this.quantity.set(1);

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, Input, Output, EventEmitter, PLATFORM_ID, Inject, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, Input, Output, EventEmitter, PLATFORM_ID, inject, ChangeDetectionStrategy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { LoggerService } from '../../../core/services/logger.service';
 
@@ -38,8 +38,7 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
 
   isLocating = false;
   private readonly logger = inject(LoggerService);
-
-  constructor(@Inject(PLATFORM_ID) private platformId: object) { }
+  private readonly platformId = inject(PLATFORM_ID);
 
   async ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {

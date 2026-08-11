@@ -18,6 +18,7 @@ export class InputComponent {
   readonly placeholder = input<string>('');
   readonly icon = input<string | undefined>(undefined);
   readonly errorMessage = input<string | undefined>(undefined);
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   readonly customClass = input<string>('', { alias: 'class' });
 
   // Password toggle

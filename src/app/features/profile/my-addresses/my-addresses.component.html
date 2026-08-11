@@ -118,7 +118,7 @@
       <app-input label="Kode Pos" placeholder="e.g. 12730" [control]="postalCodeControl"></app-input>
 
       <div class="sm:col-span-2 mt-2">
-        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Pin Lokasi Peta</label>
+        <span class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Pin Lokasi Peta</span>
         <app-map-picker [initialLat]="selectedLat()" [initialLng]="selectedLng()"
           (locationSelected)="onMapLocationSelected($event)">
         </app-map-picker>

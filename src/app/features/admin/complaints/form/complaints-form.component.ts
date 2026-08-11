@@ -25,7 +25,7 @@ import { effect } from '@angular/core';
 })
 export class ComplaintsFormComponent {
   readonly complaint = input<Complaint | null>(null);
-  readonly cancel = output<void>();
+  readonly formCancel = output<void>();
   readonly save = output<void>();
 
   private readonly complaintStore = inject(ComplaintStore);

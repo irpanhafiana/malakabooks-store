@@ -26,14 +26,16 @@
                             }
                         ],
                         "styles": ["src/styles.css"],
-                        "allowedCommonJsDependencies": ["sweetalert2", "leaflet"],
-                        "security": {
-                            "allowedHosts": []
-                        },
+                        "allowedCommonJsDependencies": ["sweetalert2", "leaflet", "qrcode"],
                         "ssr": false
                     },
                     "configurations": {
                         "production": {
+                            "sourceMap": {
+                                "scripts": false,
+                                "styles": false,
+                                "hidden": true
+                            },
                             "optimization": {
                                 "scripts": true,
                                 "styles": {

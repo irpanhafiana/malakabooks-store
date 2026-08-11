@@ -34,7 +34,7 @@ import { AlertService } from '../../../core/services/alert.service';
   styleUrl: './product-detail.component.css'
 })
 export class ProductDetailComponent implements OnInit {
-  readonly productIdInput = input<string | null>(null, { alias: 'productId' });
+  readonly productId = input<string | null>(null);
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -49,6 +49,7 @@ export class ProductDetailComponent implements OnInit {
   private readonly location = inject(Location);
 
   loading = signal<boolean>(true);
+  loadError = signal<string | null>(null);
   product = signal<Product | null>(null);
   activeImage = signal<string>('');
   activeTab = signal<'details' | 'reviews'>('details');
@@ -59,7 +60,7 @@ export class ProductDetailComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const id = this.productIdInput();
+      const id = this.productId();
       if (id) {
         this.activeTab.set('details');
         this.loadProduct(id);
@@ -76,7 +77,7 @@ export class ProductDetailComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       const id = params.get('id');
-      if (id && !this.productIdInput()) {
+      if (id && !this.productId()) {
         this.loadProduct(id);
       }
     });
@@ -95,6 +96,7 @@ export class ProductDetailComponent implements OnInit {
 
   async loadProduct(id: string) {
     this.loading.set(true);
+    this.loadError.set(null);
     try {
       const [prod, revs] = await Promise.all([
         this.productApi.getProductById(id),
@@ -109,10 +111,18 @@ export class ProductDetailComponent implements OnInit {
       } else {
         this.product.set(null);
       }
-    } catch (err) {
+    } catch {
       this.product.set(null);
+      this.loadError.set('Gagal memuat detail produk. Silakan periksa koneksi Anda dan coba lagi.');
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  retryLoading() {
+    const id = this.productId() || this.productStore.selectedProductId();
+    if (id) {
+      this.loadProduct(id);
     }
   }
 
@@ -183,7 +193,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   goBack() {
-    if (this.productIdInput()) {
+    if (this.productId()) {
       this.productStore.setSelectedProductId(null);
     } else {
       this.location.back();

@@ -62,8 +62,10 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
   readonly activeHiliteColor = signal('');
 
   // ControlValueAccessor Callbacks
-  onChange: (value: string) => void = () => { };
-  onTouched: () => void = () => { };
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onChange: (value: string) => void = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onTouched: () => void = () => {};
   isDisabled = false;
 
   private selectionChangeHandler = () => this.updateToolbarState();
@@ -257,7 +259,9 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
       let back = '';
       try {
         back = document.queryCommandValue('hiliteColor') || document.queryCommandValue('backColor');
-      } catch { }
+      } catch {
+        // ignore command value error
+      }
 
       if (back && back !== 'rgba(0, 0, 0, 0)' && back !== 'transparent') {
         this.activeHiliteColor.set(this.rgbToHex(back));
@@ -266,7 +270,9 @@ export class EditorComponent implements ControlValueAccessor, OnInit, OnDestroy,
       }
 
       this.cdr.markForCheck();
-    } catch { }
+    } catch {
+      // ignore toolbar update error
+    }
   }
 
   private rgbToHex(rgb: string): string {
