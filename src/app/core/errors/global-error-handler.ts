@@ -24,8 +24,8 @@ export class GlobalErrorHandler implements ErrorHandler {
   }
 
   private captureExceptionToSentry(error: unknown): void {
-    const win = typeof window !== 'undefined' ? (window as any) : null;
-    if (win && win.Sentry && typeof win.Sentry.captureException === 'function') {
+    const win = typeof window !== 'undefined' ? (window as unknown as { Sentry?: { captureException: (e: unknown) => void } }) : null;
+    if (win?.Sentry && typeof win.Sentry.captureException === 'function') {
       const sanitizedError = this.sanitizeErrorForPii(error);
       win.Sentry.captureException(sanitizedError);
     }

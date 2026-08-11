@@ -5,8 +5,23 @@ import { AlertService } from './alert.service';
 import { LoggerService } from './logger.service';
 import { AuthStore } from '../../store/auth.store';
 import { User } from '../models';
+import { environment } from '../../../environments/environment';
 
-declare const google: any;
+export interface GoogleCredentialResponse {
+  credential?: string;
+  select_by?: string;
+}
+
+declare const google: {
+  accounts?: {
+    id?: {
+      initialize: (config: Record<string, unknown>) => void;
+      renderButton: (parent: HTMLElement, options: Record<string, unknown>) => void;
+      prompt: (callback: (notification: { isNotDisplayed: () => boolean; isSkippedMoment: () => boolean; getNotDisplayedReason: () => string }) => void) => void;
+      disableAutoSelect: () => void;
+    };
+  };
+};
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +33,14 @@ export class GoogleAuthService {
   private readonly authStore = inject(AuthStore);
   private readonly ngZone = inject(NgZone);
 
-  private readonly clientId = '785241388758-rv7vrb7fu9c011k34ulbcu5sq6uli1hm.apps.googleusercontent.com';
+  private readonly clientId = environment.googleClientId || '785241388758-rv7vrb7fu9c011k34ulbcu5sq6uli1hm.apps.googleusercontent.com';
   private token: string | undefined;
 
-  initializeGsi(callback: (response: any) => void) {
+  initializeGsi(callback: (response: GoogleCredentialResponse | any) => void) {
     if (typeof google !== 'undefined' && google.accounts?.id) {
       google.accounts.id.initialize({
         client_id: this.clientId,
-        callback: (response: any) => {
+        callback: (response: GoogleCredentialResponse) => {
           this.ngZone.run(() => {
             callback(response);
           });
@@ -49,7 +64,7 @@ export class GoogleAuthService {
 
   promptLogin() {
     if (typeof google !== 'undefined' && google.accounts?.id) {
-      google.accounts.id.prompt((notification: any) => {
+      google.accounts.id.prompt((notification) => {
         if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
           this.logger.error('GoogleAuthService.prompt', notification.getNotDisplayedReason());
         }
@@ -57,10 +72,11 @@ export class GoogleAuthService {
     }
   }
 
-  async handleCredentialResponse(response: any): Promise<boolean> {
+  async handleCredentialResponse(response: GoogleCredentialResponse | any): Promise<boolean> {
     if (!response || !response.credential) return false;
-    this.token = response.credential;
-    const responsePayload = decodeJwt(response.credential);
+    const credential = response.credential as string;
+    this.token = credential;
+    const responsePayload = decodeJwt(credential);
 
     try {
       const name = responsePayload?.name || responsePayload?.given_name || responsePayload?.email || 'Google User';
@@ -77,7 +93,7 @@ export class GoogleAuthService {
       };
 
       await this.ngZone.run(async () => {
-        await this.authStore.setGoogleSession(response.credential, user);
+        await this.authStore.setGoogleSession(credential, user);
         this.alertService.success(`Selamat datang, ${name}!`);
         await this.router.navigate(['/']);
       });

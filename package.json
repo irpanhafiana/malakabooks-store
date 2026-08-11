@@ -27,6 +27,7 @@
         "@angular/forms": "^21.2.19",
         "@angular/platform-browser": "^21.2.19",
         "@angular/router": "^21.2.19",
+        "@angular/service-worker": "^21.2.19",
         "@fontsource/fraunces": "^5.2.9",
         "@fontsource/inter": "^5.2.8",
         "@fontsource/plus-jakarta-sans": "^5.2.8",

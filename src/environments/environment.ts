@@ -9,6 +9,7 @@ export const environment = {
   clientSecret: 'MalakaBooks-FE',
   scope: 'Create Update Delete Read offline_access MalakaBooks_Scope General_Scope',
   dokuScriptUrl: 'https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js',
-  dokuStyleUrl: 'https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.css'
+  dokuStyleUrl: 'https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.css',
+  googleClientId: '785241388758-rv7vrb7fu9c011k34ulbcu5sq6uli1hm.apps.googleusercontent.com'
 };
 

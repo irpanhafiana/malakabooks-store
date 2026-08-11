@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit, input, effect, DestroyRef, ChangeDet
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe, Location } from '@angular/common';
+import { Title, Meta } from '@angular/platform-browser';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { ReviewApiService } from '../../../core/services/review-api.service';
 import { CartStore } from '../../../store/cart.store';
@@ -40,6 +41,8 @@ export class ProductDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly productApi = inject(ProductApiService);
   private readonly reviewApi = inject(ReviewApiService);
+  private readonly titleService = inject(Title);
+  private readonly metaService = inject(Meta);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   protected readonly authStore = inject(AuthStore);
@@ -108,6 +111,17 @@ export class ProductDetailComponent implements OnInit {
         this.productStore.setActiveProduct(prod);
         this.activeImage.set(prod.coverImage);
         this.reviews.set(revs || []);
+
+        const pageTitle = `${prod.title || 'Detail Produk'} - Malaka Books Store`;
+        const pageDesc = prod.description || `Beli ${prod.title} di Malaka Books Store. Toko buku online terpercaya.`;
+        this.titleService.setTitle(pageTitle);
+        this.metaService.updateTag({ name: 'description', content: pageDesc });
+        this.metaService.updateTag({ property: 'og:title', content: pageTitle });
+        this.metaService.updateTag({ property: 'og:description', content: pageDesc });
+        if (prod.coverImage) {
+          this.metaService.updateTag({ property: 'og:image', content: prod.coverImage });
+        }
+        this.updateJsonLd(prod);
       } else {
         this.product.set(null);
       }
@@ -217,5 +231,30 @@ export class ProductDetailComponent implements OnInit {
 
   onImageError() {
     this.imageError.set(true);
+  }
+
+  private updateJsonLd(prod: Product) {
+    if (typeof document === 'undefined') return;
+    let script = document.getElementById('json-ld-product') as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'json-ld-product';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.text = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      'name': prod.title,
+      'image': prod.coverImage ? [prod.coverImage] : [],
+      'description': prod.description || '',
+      'sku': prod.id,
+      'offers': {
+        '@type': 'Offer',
+        'priceCurrency': 'IDR',
+        'price': prod.price,
+        'availability': (prod.stock ?? 1) > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
+      }
+    });
   }
 }

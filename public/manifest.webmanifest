@@ -1,0 +1,17 @@
+{
+  "name": "Malaka Books Store",
+  "short_name": "MalakaBooks",
+  "theme_color": "#FE7743",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "logo/ss-logo.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

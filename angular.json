@@ -27,10 +27,12 @@
                         ],
                         "styles": ["src/styles.css"],
                         "allowedCommonJsDependencies": ["sweetalert2", "leaflet", "qrcode"],
-                        "ssr": false
+                        "ssr": false,
+                        "prerender": false
                     },
                     "configurations": {
                         "production": {
+                            "serviceWorker": "ngsw-config.json",
                             "sourceMap": {
                                 "scripts": false,
                                 "styles": false,
@@ -53,8 +55,8 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "1MB",
-                                    "maximumError": "2MB"
+                                    "maximumWarning": "750kB",
+                                    "maximumError": "1.2MB"
                                 },
                                 {
                                     "type": "anyComponentStyle",

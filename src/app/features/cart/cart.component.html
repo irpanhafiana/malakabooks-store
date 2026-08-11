@@ -16,7 +16,7 @@
         <!-- Thumbnail Image (matching product-list aspect & styling) -->
         <div class="aspect-square w-32.5 shrink-0 bg-slate-50 overflow-hidden relative cursor-pointer"
           (click)="productStore.setSelectedProductId(item.product.id)" (keydown.enter)="productStore.setSelectedProductId(item.product.id)" tabindex="0" role="button" aria-label="Lihat detail produk">
-          <img [src]="item.product.coverImage" [alt]="item.product.title"
+          <img [src]="item.product.coverImage" [alt]="item.product.title" loading="lazy" width="130" height="130"
             class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105" />
           <div class="badge-uom">{{ item.uomCode || item.product.categoryName }}</div>
         </div>

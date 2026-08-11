@@ -80,8 +80,7 @@ export const routes: Routes = [
       },
       {
         path: 'mardika-kopi',
-        loadComponent: () => import('./features/mardika-kopi/mardika-kopi.component').then(c => c.MardikaKopiComponent),
-        data: { preload: true }
+        loadComponent: () => import('./features/mardika-kopi/mardika-kopi.component').then(c => c.MardikaKopiComponent)
       }
     ]
   },
@@ -107,7 +106,7 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () => import('./features/profile/profile.component').then(c => c.ProfileComponent),
         canActivate: [authGuard],
-        data: { title: 'Profile', preload: true }
+        data: { title: 'Profile' }
       },
       {
         path: 'auth',
@@ -115,22 +114,22 @@ export const routes: Routes = [
           {
             path: 'welcome',
             loadComponent: () => import('./features/auth/welcome/welcome.component').then(c => c.WelcomeComponent),
-            data: { title: 'Welcome', hideHeader: true, preload: true }
+            data: { title: 'Welcome', hideHeader: true }
           },
           {
             path: 'login',
             loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent),
-            data: { title: 'Login', preload: true }
+            data: { title: 'Login' }
           },
           {
             path: 'register',
             loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent),
-            data: { title: 'Register', preload: true }
+            data: { title: 'Register' }
           },
           {
             path: 'forgot-password',
             loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(c => c.ForgotPasswordComponent),
-            data: { title: 'Lupa Password', preload: true }
+            data: { title: 'Lupa Password' }
           }
         ]
       },
@@ -143,37 +142,37 @@ export const routes: Routes = [
         path: 'checkout',
         loadComponent: () => import('./features/checkout/checkout.component').then(c => c.CheckoutComponent),
         canActivate: [authGuard],
-        data: { title: 'Checkout', preload: true }
+        data: { title: 'Checkout' }
       },
       {
         path: 'order-success',
         loadComponent: () => import('./features/order/order-success/order-success.component').then(c => c.OrderSuccessComponent),
         canActivate: [authGuard],
-        data: { title: 'Order Status', preload: true }
+        data: { title: 'Order Status' }
       },
       {
         path: 'order-history',
         loadComponent: () => import('./features/order/order-history/order-history.component').then(c => c.OrderHistoryComponent),
         canActivate: [authGuard],
-        data: { title: 'Riwayat Pesanan', preload: true }
+        data: { title: 'Riwayat Pesanan' }
       },
       {
         path: 'detail-shipment/:id',
         loadComponent: () => import('./features/order/detail-shipment/detail-shipment.component').then(c => c.DetailShipmentComponent),
         canActivate: [authGuard],
-        data: { title: 'Detail Shipment', preload: true }
+        data: { title: 'Detail Shipment' }
       },
       {
         path: 'complaints',
         loadComponent: () => import('./features/complaint/complaint.component').then(c => c.ComplaintComponent),
         canActivate: [authGuard],
-        data: { title: 'Komplain Saya', preload: true }
+        data: { title: 'Komplain Saya' }
       },
       {
         path: 'profile/addresses',
         loadComponent: () => import('./features/profile/my-addresses/my-addresses.component').then(c => c.MyAddressesComponent),
         canActivate: [authGuard],
-        data: { title: 'Alamat Saya', preload: true }
+        data: { title: 'Alamat Saya' }
       },
       {
         path: '404',

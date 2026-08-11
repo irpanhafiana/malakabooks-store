@@ -1,7 +1,8 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, isDevMode, ErrorHandler } from '@angular/core';
 import { provideRouter, withPreloading } from '@angular/router';
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideServiceWorker } from '@angular/service-worker';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
@@ -10,7 +11,6 @@ import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { SelectivePreloadingStrategy } from './core/strategies/selective-preloading-strategy';
 
 import { GlobalErrorHandler } from './core/errors/global-error-handler';
-import { ErrorHandler } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,7 +27,11 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
       withInterceptors([errorInterceptor, authInterceptor, loadingInterceptor])
     ),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ]
 };
 
