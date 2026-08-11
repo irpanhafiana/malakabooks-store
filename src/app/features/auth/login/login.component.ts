@@ -4,7 +4,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { AuthStore } from '../../../store/auth.store';
-import { GoogleAuthService } from '../../../core/services/google-auth.service';
+import { GoogleAuthService, GoogleCredentialResponse } from '../../../core/services/google-auth.service';
 import { InputComponent } from '../../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.sessionMessage.set('Anda tidak memiliki akses. Silakan masuk kembali.');
     }
 
-    this.googleAuthService.initializeGsi((response: unknown) => {
+    this.googleAuthService.initializeGsi((response: GoogleCredentialResponse) => {
       this.googleAuthService.handleCredentialResponse(response);
     });
   }

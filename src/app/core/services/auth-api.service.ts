@@ -80,4 +80,23 @@ export class AuthApiService {
     const r = typeof role === 'string' ? role.toLowerCase() : '';
     return r === 'malaka-admin' || r === 'admin' ? 'admin' : 'customer';
   }
+
+  async forgotPassword(email: string, callbackUrl: string = 'string'): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.http.post('http://192.168.1.15:44304/api/UserPassword/forgot-password', {
+          email,
+          callbackUrl
+        }, {
+          headers: {
+            [SKIP_AUTH_HEADER]: 'true'
+          }
+        })
+      );
+      return true;
+    } catch (e) {
+      this.logger.error('AuthApiService.forgotPassword', e);
+      return false;
+    }
+  }
 }

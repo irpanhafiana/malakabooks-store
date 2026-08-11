@@ -220,6 +220,16 @@ export class AuthStore {
     }
   }
 
+  async forgotPassword(email: string, callbackUrl: string = 'string'): Promise<boolean> {
+    const success = await this.authApi.forgotPassword(email, callbackUrl);
+    if (success) {
+      this.alertService.success('Tautan pemulihan kata sandi berhasil dikirim.');
+    } else {
+      this.alertService.error('Gagal mengirim tautan pemulihan kata sandi. Silakan coba lagi.');
+    }
+    return success;
+  }
+
   async updateProfile(updatedUser: User, avatarFile?: File): Promise<boolean> {
     try {
       const savedUser = await this.userApi.saveUser(updatedUser, avatarFile);

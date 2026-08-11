@@ -36,7 +36,7 @@ export class GoogleAuthService {
   private readonly clientId = environment.googleClientId || '785241388758-rv7vrb7fu9c011k34ulbcu5sq6uli1hm.apps.googleusercontent.com';
   private token: string | undefined;
 
-  initializeGsi(callback: (response: GoogleCredentialResponse | any) => void) {
+  initializeGsi(callback: (response: GoogleCredentialResponse) => void) {
     if (typeof google !== 'undefined' && google.accounts?.id) {
       google.accounts.id.initialize({
         client_id: this.clientId,
@@ -72,7 +72,7 @@ export class GoogleAuthService {
     }
   }
 
-  async handleCredentialResponse(response: GoogleCredentialResponse | any): Promise<boolean> {
+  async handleCredentialResponse(response: GoogleCredentialResponse): Promise<boolean> {
     if (!response || !response.credential) return false;
     const credential = response.credential as string;
     this.token = credential;
