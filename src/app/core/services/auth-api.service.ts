@@ -24,20 +24,36 @@ export class AuthApiService {
   private readonly AUTH_URL = environment.authUrl;
 
   async loginAndGetToken(username: string, password: string): Promise<{ accessToken: string; refreshToken: string } | null> {
-    const body = new URLSearchParams();
-    body.set('grant_type', 'password');
-    body.set('client_id', environment.clientId || 'MalakaBooks-FE');
-    body.set('username', username);
-    body.set('password', password);
-    body.set('client_secret', environment.clientSecret || 'MalakaBooks-FE');
-    body.set('scope', environment.scope || 'Create Update Delete Read offline_access MalakaBooks_Scope General_Scope');
-
+    const isBff = this.AUTH_URL.includes('/bff/');
     try {
-      const res = await firstValueFrom(
-        this.http.post<OAuthTokenResponse>(this.AUTH_URL, body.toString(), {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-      );
+      let res: OAuthTokenResponse | undefined;
+      if (isBff) {
+        res = await firstValueFrom(
+          this.http.post<OAuthTokenResponse>(this.AUTH_URL, { username, password }, {
+            headers: {
+              'Content-Type': 'application/json',
+              [SKIP_AUTH_HEADER]: 'true'
+            }
+          })
+        );
+      } else {
+        const body = new URLSearchParams();
+        body.set('grant_type', 'password');
+        if (environment.clientId) body.set('client_id', environment.clientId);
+        body.set('username', username);
+        body.set('password', password);
+        if (environment.scope) body.set('scope', environment.scope);
+
+        res = await firstValueFrom(
+          this.http.post<OAuthTokenResponse>(this.AUTH_URL, body.toString(), {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              [SKIP_AUTH_HEADER]: 'true'
+            }
+          })
+        );
+      }
+
       if (!res?.access_token) return null;
       return {
         accessToken: res.access_token,
@@ -50,21 +66,34 @@ export class AuthApiService {
   }
 
   async refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string } | null> {
-    const body = new URLSearchParams();
-    body.set('grant_type', 'refresh_token');
-    body.set('client_id', environment.clientId || 'MalakaBooks-FE');
-    body.set('client_secret', environment.clientSecret || 'MalakaBooks-FE');
-    body.set('refresh_token', refreshToken);
-
+    const isBff = this.AUTH_URL.includes('/bff/');
     try {
-      const res = await firstValueFrom(
-        this.http.post<OAuthTokenResponse>(this.AUTH_URL, body.toString(), {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            [SKIP_AUTH_HEADER]: 'true'
-          }
-        })
-      );
+      let res: OAuthTokenResponse | undefined;
+      if (isBff) {
+        res = await firstValueFrom(
+          this.http.post<OAuthTokenResponse>(`${this.AUTH_URL}/refresh`, { refreshToken }, {
+            headers: {
+              'Content-Type': 'application/json',
+              [SKIP_AUTH_HEADER]: 'true'
+            }
+          })
+        );
+      } else {
+        const body = new URLSearchParams();
+        body.set('grant_type', 'refresh_token');
+        if (environment.clientId) body.set('client_id', environment.clientId);
+        body.set('refresh_token', refreshToken);
+
+        res = await firstValueFrom(
+          this.http.post<OAuthTokenResponse>(this.AUTH_URL, body.toString(), {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              [SKIP_AUTH_HEADER]: 'true'
+            }
+          })
+        );
+      }
+
       if (!res?.access_token) return null;
       return {
         accessToken: res.access_token,
@@ -82,9 +111,14 @@ export class AuthApiService {
   }
 
   async forgotPassword(email: string, callbackUrl: string = 'string'): Promise<boolean> {
+    const userPwdUrl = (environment as unknown as { userPasswordApiUrl?: string }).userPasswordApiUrl;
+    const url = userPwdUrl
+      ? `${userPwdUrl}/forgot-password`
+      : `${environment.apiBaseUrl}/UserPassword/forgot-password`;
+
     try {
       await firstValueFrom(
-        this.http.post('http://192.168.1.15:44304/api/UserPassword/forgot-password', {
+        this.http.post(url, {
           email,
           callbackUrl
         }, {

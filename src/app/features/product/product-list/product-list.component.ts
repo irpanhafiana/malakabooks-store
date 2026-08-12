@@ -1,5 +1,5 @@
 import { Component, inject, signal, effect, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Location, NgTemplateOutlet } from '@angular/common';
+import { Location, NgTemplateOutlet, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProductStore } from '../../../store/product.store';
 import { CartStore } from '../../../store/cart.store';
@@ -15,12 +15,25 @@ import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.
 import { SearchBarComponent } from '../../../shared/ui/search-bar/search-bar.component';
 import { ProductCardComponent } from '../../../shared/ui/product-card/product-card.component';
 import { MasonryGridComponent } from '../../../shared/ui/masonry-grid/masonry-grid.component';
+import { QtyModalContentComponent } from '../../../shared/ui/qty-modal-content/qty-modal-content.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-list',
   standalone: true,
-  imports: [SkeletonComponent, IconComponent, BottomSheetComponent, ModalComponent, EmptyStateComponent, SearchBarComponent, ProductCardComponent, MasonryGridComponent, NgTemplateOutlet],
+  imports: [
+    SkeletonComponent,
+    IconComponent,
+    BottomSheetComponent,
+    ModalComponent,
+    EmptyStateComponent,
+    SearchBarComponent,
+    ProductCardComponent,
+    MasonryGridComponent,
+    QtyModalContentComponent,
+    DecimalPipe,
+    NgTemplateOutlet
+  ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
@@ -115,4 +128,9 @@ export class ProductListComponent implements OnInit {
     this.productStore.setQtyAction('cart');
     this.productStore.setQtyModalOpen(true);
   }
+
+  closeQtyModal() {
+    this.productStore.setQtyModalOpen(false);
+  }
 }
+

@@ -57,13 +57,13 @@
       <header class="sticky top-0 z-40 bg-slate-50 px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
         @if (isSearchActive()) {
         <!-- Active Search Header -->
-        <div class="flex items-center gap-2 w-full ">
+        <div class="flex items-center gap-2.5 w-full">
           <button type="button" (click)="isSearchActive.set(false)"
-            class="p-1 rounded-lg text-slate-500 hover:text-slate-700 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent">
-            <i class="bx bx-left-arrow-alt text-xl"></i>
+            class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent">
+            <i class="bx bx-left-arrow-alt text-2xl"></i>
           </button>
           <div class="grow">
-            <app-search-bar [placeholder]="'Search books...'" [value]="productStore.searchQuery()" [autofocus]="true"
+            <app-search-bar [placeholder]="'Cari produk...'" [value]="productStore.searchQuery()" [autofocus]="true"
               (searchSubmit)="onSearch($event)"></app-search-bar>
           </div>
         </div>
@@ -96,7 +96,7 @@
             <i class="bx bx-shopping-bag text-xl"></i>
             @if (cartStore.itemsCount() > 0) {
             <span
-              class="absolute top-1 right-1 flex items-center justify-center min-w-[14px] h-[14px] px-1 text-[8px] font-bold leading-none text-white bg-rose-500 rounded-full border border-white">
+              class="absolute top-1 right-1 flex items-center justify-center min-w-[15px] h-[15px] px-1 text-[8px] font-bold leading-none text-white bg-rose-500 rounded-full border border-white">
               {{ cartStore.itemsCount() }}
             </span>
             }

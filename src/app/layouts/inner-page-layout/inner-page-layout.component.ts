@@ -5,21 +5,31 @@ import { AlertService } from '../../core/services/alert.service';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-
 import { ScreenService } from '../../core/services/screen.service';
 import { DesktopHeaderComponent } from '../desktop/desktop-header/desktop-header.component';
 import { DesktopFooterComponent } from '../desktop/desktop-footer/desktop-footer.component';
+import { ProductModalHandler } from '../product-modal-handler.service';
+import { ProductStore } from '../../store/product.store';
+import { AuthStore } from '../../store/auth.store';
+import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
+import { ProductDetailComponent } from '../../features/product/product-detail/product-detail.component';
+import { QtyModalContentComponent } from '../../shared/ui/qty-modal-content/qty-modal-content.component';
+import { PriceComponent } from '../../shared/ui/price/price.component';
+import { ButtonComponent } from '../../shared/ui/button/button.component';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-inner-page-layout',
   standalone: true,
-  imports: [RouterOutlet,  DesktopHeaderComponent, DesktopFooterComponent],
+  imports: [RouterOutlet, DesktopHeaderComponent, DesktopFooterComponent, BottomSheetComponent, ProductDetailComponent, QtyModalContentComponent, PriceComponent, ButtonComponent],
   templateUrl: './inner-page-layout.component.html',
   styleUrl: './inner-page-layout.component.css'
 })
 export class InnerPageLayoutComponent {
   protected readonly alertService = inject(AlertService);
   protected readonly screen = inject(ScreenService);
+  protected readonly modalHandler = inject(ProductModalHandler);
+  protected readonly productStore = inject(ProductStore);
+  protected readonly authStore = inject(AuthStore);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
