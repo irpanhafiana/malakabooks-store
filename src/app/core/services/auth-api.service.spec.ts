@@ -9,6 +9,10 @@ describe('AuthApiService', () => {
   let service: AuthApiService;
   let httpMock: HttpTestingController;
 
+  const userUrl = environment.authUrl.includes('/login')
+    ? environment.authUrl.replace('/login', '/user')
+    : `${environment.authUrl}/user`;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -29,31 +33,58 @@ describe('AuthApiService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should send login request to authUrl endpoint', async () => {
-    const loginPromise = service.loginAndGetToken('testuser', 'password123');
+  it('should fetch claims from the BFF user endpoint', async () => {
+    const userPromise = service.getUser();
 
-    const req = httpMock.expectOne(req => req.url === environment.authUrl);
-    expect(req.request.method).toBe('POST');
-    req.flush({
-      access_token: 'mock_access_token',
-      refresh_token: 'mock_refresh_token'
-    });
+    const req = httpMock.expectOne(req => req.url === userUrl);
+    expect(req.request.method).toBe('GET');
+    req.flush([{ type: 'sub', value: 'user-1' }]);
 
-    const res = await loginPromise;
-    expect(res).toEqual({
-      accessToken: 'mock_access_token',
-      refreshToken: 'mock_refresh_token'
-    });
+    expect(await userPromise).toEqual([{ type: 'sub', value: 'user-1' }]);
   });
 
-  it('should handle login error gracefully', async () => {
-    const loginPromise = service.loginAndGetToken('testuser', 'wrongpass');
+  it('should send credentials and the antiforgery header', async () => {
+    const userPromise = service.getUser();
 
-    const req = httpMock.expectOne(req => req.url === environment.authUrl);
-    req.flush({ error: 'invalid_credentials' }, { status: 400, statusText: 'Bad Request' });
+    const req = httpMock.expectOne(req => req.url === userUrl);
+    // Tanpa keduanya Duende.BFF selalu menjawab 401.
+    expect(req.request.withCredentials).toBe(true);
+    expect(req.request.headers.get('X-CSRF')).toBe('1');
+    req.flush([{ type: 'sub', value: 'user-1' }]);
 
-    const res = await loginPromise;
-    expect(res).toBeNull();
+    await userPromise;
+  });
+
+  it('should treat 401 as "not logged in" rather than an error', async () => {
+    const userPromise = service.getUser();
+
+    const req = httpMock.expectOne(req => req.url === userUrl);
+    req.flush({ error: 'unauthorized' }, { status: 401, statusText: 'Unauthorized' });
+
+    expect(await userPromise).toBeNull();
+  });
+
+  it('should return null when the response is not a claims array', async () => {
+    const userPromise = service.getUser();
+
+    const req = httpMock.expectOne(req => req.url === userUrl);
+    req.flush({ access_token: 'unexpected-shape' });
+
+    expect(await userPromise).toBeNull();
+  });
+
+  it('should return null for an empty claims array', async () => {
+    const userPromise = service.getUser();
+
+    const req = httpMock.expectOne(req => req.url === userUrl);
+    req.flush([]);
+
+    expect(await userPromise).toBeNull();
+  });
+
+  it('should derive sibling BFF urls from authUrl', () => {
+    expect(service.bffUrl('user')).toBe(userUrl);
+    expect(service.bffUrl('logout')).toBe(userUrl.replace('/user', '/logout'));
   });
 
   it('should normalize user roles correctly', () => {
@@ -72,7 +103,6 @@ describe('AuthApiService', () => {
     expect(req.request.body).toEqual({ email: 'test@example.com', callbackUrl: 'string' });
     req.flush({});
 
-    const res = await forgotPromise;
-    expect(res).toBe(true);
+    expect(await forgotPromise).toBe(true);
   });
 });

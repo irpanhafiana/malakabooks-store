@@ -5,18 +5,6 @@ import { adminHostGuard } from './core/guards/admin-host.guard';
 import { katalogCheckoutAbandonGuard } from './core/guards/katalog-checkout-abandon.guard';
 
 export const routes: Routes = [
-  // Auth layout viewport routes for Admin Login
-  {
-    path: 'admin/login',
-    canActivate: [adminHostGuard],
-    loadComponent: () => import('./layouts/auth-layout/auth-layout.component').then(c => c.AuthLayoutComponent),
-    children: [
-      {
-        path: '',
-        loadComponent: () => import('./features/admin/login/admin-login.component').then(c => c.AdminLoginComponent)
-      }
-    ]
-  },
 
   // Admin layout dashboard management routes
   {
@@ -24,6 +12,11 @@ export const routes: Routes = [
     loadComponent: () => import('./layouts/admin-layout/admin-layout.component').then(c => c.AdminLayoutComponent),
     canActivate: [adminHostGuard, adminGuard],
     children: [
+      {
+        path: 'login',
+        loadComponent: () => import('./core/components/login-redirect.component').then(c => c.LoginRedirectComponent),
+        canActivate: [adminGuard]
+      },
       {
         path: '',
         loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(c => c.DashboardComponent)
@@ -112,14 +105,19 @@ export const routes: Routes = [
         path: 'auth',
         children: [
           {
+            path: 'login',
+            loadComponent: () => import('./core/components/login-redirect.component').then(c => c.LoginRedirectComponent),
+            canActivate: [authGuard]
+          },
+          {
             path: 'welcome',
             loadComponent: () => import('./features/auth/welcome/welcome.component').then(c => c.WelcomeComponent),
             data: { title: 'Welcome', hideHeader: true }
           },
           {
-            path: 'login',
-            loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent),
-            data: { title: 'Login' }
+            path: 'callback',
+            loadComponent: () => import('./features/auth/callback/callback.component').then(c => c.CallbackComponent),
+            data: { title: 'Authenticating...', hideHeader: true }
           },
           {
             path: 'register',

@@ -6,12 +6,11 @@ import { ProductApiService } from '../core/services/product-api.service';
 import { AlertService } from '../core/services/alert.service';
 import { LoggerService } from '../core/services/logger.service';
 import { CartStore } from './cart.store';
-import { decodeJwt, isTokenExpired, jwtHasAdminRole, mapJwtToUser } from '../core/auth/jwt.util';
-import { SESSION_TOKEN_KEY, SESSION_USER_KEY, SESSION_REFRESH_KEY } from '../core/auth/session.util';
+import { BffClaim, mapClaimsToUser, readLogoutUrl } from '../core/auth/bff-claims.util';
+import { setSessionUser, clearSessionUser } from '../core/auth/session.util';
 
 interface AuthState {
   user: User | null;
-  token: string | null;
   error: string | null;
 }
 
@@ -26,187 +25,123 @@ export class AuthStore {
   private readonly logger = inject(LoggerService);
   private readonly cartStore = inject(CartStore);
 
-  // Private state signal
+  // Private state signal.
+  // Tidak ada access token di sini: dengan pola BFF, token disimpan BFF di sisi
+  // server dan disisipkan sendiri saat mem-proxy panggilan API.
   private readonly state = signal<AuthState>({
     user: null,
-    token: null,
     error: null
   });
 
+  /** URL logout dari klaim `bff:logout_url`; membawa `sid` yang diwajibkan BFF. */
+  private logoutUrl: string | null = null;
+
+  private sessionPromise: Promise<boolean> | null = null;
+  private revalidatePromise: Promise<BffClaim[] | null> | null = null;
+
   // Selectors
   readonly currentUser = computed(() => this.state().user);
-  readonly token = computed(() => this.state().token);
   readonly error = computed(() => this.state().error);
   readonly isLoggedIn = computed(() => this.state().user !== null);
   readonly isAdmin = computed(() => this.state().user?.role === 'admin');
 
-  private _refreshToken: string | null = null;
-  private refreshPromise: Promise<boolean> | null = null;
-
-  constructor() {
-    this.loadSession();
-  }
-
-  getRefreshToken(): string | null {
-    return this._refreshToken;
-  }
-
-  private loadSession() {
-    if (typeof localStorage === 'undefined') return;
-    const savedUser = localStorage.getItem(SESSION_USER_KEY);
-    const savedToken = localStorage.getItem(SESSION_TOKEN_KEY);
-    const savedRefresh = localStorage.getItem(SESSION_REFRESH_KEY);
-    if (!savedUser || !savedToken) return;
-
-    // If token is expired and we have no refresh token, clear session
-    if (isTokenExpired(savedToken) && !savedRefresh) {
-      this.clearPersistedSession();
-      return;
-    }
-
-    // If token is expired but refresh token exists, store refresh token for later use
-    // The interceptor will handle refresh on the next API call
-    if (savedRefresh) {
-      this._refreshToken = savedRefresh;
-    }
-
-    // If token is expired, still restore the user so the UI doesn't flash,
-    // the interceptor will refresh before the first real API call
-    try {
-      const persisted = JSON.parse(savedUser) as User;
-      const decoded = decodeJwt(savedToken);
-      const role: User['role'] = jwtHasAdminRole(decoded) ? 'admin' : 'customer';
-      this.state.set({
-        user: { ...persisted, role, token: savedToken },
-        token: savedToken,
-        error: null
-      });
-    } catch {
-      this.clearPersistedSession();
-    }
-  }
-
-  private persistSession(token: string, userWithToken: User, refreshToken?: string) {
-    localStorage.setItem(SESSION_TOKEN_KEY, token);
-    localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
-    if (refreshToken) {
-      localStorage.setItem(SESSION_REFRESH_KEY, refreshToken);
-      this._refreshToken = refreshToken;
-    }
-  }
-
-  /** DRY helper: merge partial user data into persisted session + state signal */
   private syncUser(partial: Partial<User>) {
     const currentUser = this.state().user;
     if (!currentUser) return;
-    const activeToken = this.token() ?? currentUser.token ?? '';
-    const merged = { ...currentUser, ...partial, token: activeToken };
-    localStorage.setItem(SESSION_USER_KEY, JSON.stringify(merged));
+    const merged = { ...currentUser, ...partial };
     this.state.update(s => ({ ...s, user: merged }));
+    setSessionUser(merged);
   }
 
-  private clearPersistedSession() {
-    localStorage.removeItem(SESSION_USER_KEY);
-    localStorage.removeItem(SESSION_TOKEN_KEY);
-    localStorage.removeItem(SESSION_REFRESH_KEY);
-    this._refreshToken = null;
+  private clearSessionState() {
+    this.state.set({ user: null, error: null });
+    this.logoutUrl = null;
+    clearSessionUser();
   }
 
-  async refreshToken(): Promise<boolean> {
-    if (this.refreshPromise) {
-      return this.refreshPromise;
-    }
-
-    this.refreshPromise = (async () => {
-      const refreshToken = this._refreshToken;
-      if (!refreshToken) return false;
-
-      try {
-        const result = await this.authApi.refreshToken(refreshToken);
-        if (!result) return false;
-
-        // Update the stored token
-        localStorage.setItem(SESSION_TOKEN_KEY, result.accessToken);
-
-        // Update refresh token if a new one was issued
-        if (result.refreshToken) {
-          localStorage.setItem(SESSION_REFRESH_KEY, result.refreshToken);
-          this._refreshToken = result.refreshToken;
-        }
-
-        // Update the user object with the new token
-        const currentUser = this.state().user;
-        if (currentUser) {
-          const userWithToken = { ...currentUser, token: result.accessToken };
-          localStorage.setItem(SESSION_USER_KEY, JSON.stringify(userWithToken));
-          this.state.set({ user: userWithToken, token: result.accessToken, error: null });
-        } else {
-          this.state.update(s => ({ ...s, token: result.accessToken }));
-        }
-
-        return true;
-      } catch {
-        return false;
-      } finally {
-        this.refreshPromise = null;
-      }
-    })();
-
-    return this.refreshPromise;
+  /**
+   * Baca sesi dari BFF. Dipanggil saat bootstrap dan setiap kali API menjawab
+   * 401. Panggilan bersamaan berbagi satu request agar `/bff/user` tidak
+   * ditembak berkali-kali.
+   */
+  initializeSession(): Promise<boolean> {
+    this.sessionPromise ??= this.loadSession().finally(() => {
+      this.sessionPromise = null;
+    });
+    return this.sessionPromise;
   }
 
-  async login(username: string, password: string): Promise<boolean> {
+  private async loadSession(): Promise<boolean> {
     try {
-      const result = await this.authApi.loginAndGetToken(username, password);
-      if (result) {
-        const { accessToken, refreshToken } = result;
-        const user = mapJwtToUser(decodeJwt(accessToken));
-        if (!user) {
-          this.alertService.error('Token tidak valid: User ID tidak ditemukan.');
-          return false;
-        }
+      const claims = await this.authApi.getUser();
+      console.log('[BFF Auth] Klaim mentah /bff/user:', claims);
+      const user = mapClaimsToUser(claims);
+      console.log('[BFF Auth] Data User terpetakan:', user);
 
-        const userWithToken = { ...user, token: accessToken };
-        this.persistSession(accessToken, userWithToken, refreshToken);
-        this.state.set({ user: userWithToken, token: accessToken, error: null });
-
-        // Sync cart guest ke backend hanya untuk customer
-        if (user.role !== 'admin') {
-          const products = await this.productApi.getProducts();
-          await this.cartStore.syncOnLogin(user.id, products);
-        }
-
-        this.alertService.success(`Selamat datang kembali, ${user.name}!`);
-        return true;
+      if (!user) {
+        this.clearSessionState();
+        return false;
       }
-      this.alertService.error('Email atau password salah.');
-      return false;
-    } catch {
-      this.alertService.error('Terjadi kesalahan autentikasi. Silakan coba lagi.');
-      return false;
-    }
-  }
 
-  async setGoogleSession(token: string, user: User): Promise<void> {
-    const userWithToken = { ...user, token };
-    this.persistSession(token, userWithToken);
-    this.state.set({ user: userWithToken, token, error: null });
+      this.logoutUrl = readLogoutUrl(claims);
+      this.state.set({ user, error: null });
+      // Wajib sebelum getProducts(): ProductApiService memilih endpoint
+      // public/customer/admin lewat isAdminSession()/isCustomerSession().
+      setSessionUser(user);
 
-    if (user.role !== 'admin') {
-      try {
+      if (user.role !== 'admin') {
         const products = await this.productApi.getProducts();
         await this.cartStore.syncOnLogin(user.id, products);
-      } catch {
-        // Ignored
       }
+      return true;
+    } catch (err) {
+      this.logger.error('AuthStore.initializeSession', err);
+      this.clearSessionState();
+      return false;
     }
   }
 
-  logout() {
-    this.clearPersistedSession();
+  /**
+   * Dipanggil `authInterceptor` saat API menjawab 401. Diperiksa ulang ke BFF
+   * dulu, karena 401 bisa juga berasal dari otorisasi per-endpoint (role
+   * kurang), bukan dari sesi yang hilang — dan dalam kasus itu user tidak boleh
+   * ikut dikeluarkan.
+   */
+  async handleUnauthorized(): Promise<void> {
+    if (!this.isLoggedIn()) return;
+
+    // Sengaja TIDAK memakai initializeSession(): itu ikut memuat ulang produk
+    // dan menyinkronkan keranjang. Bila banyak endpoint menjawab 401 sekaligus,
+    // efeknya badai request. Di sini cukup pastikan sesinya masih ada.
+    this.revalidatePromise ??= this.authApi.getUser().finally(() => {
+      this.revalidatePromise = null;
+    });
+    const claims = await this.revalidatePromise;
+    if (claims) return;
+
+    this.clearSessionState();
     this.cartStore.clearOnLogout();
-    this.state.set({ user: null, token: null, error: null });
-    this.alertService.info('Anda telah keluar.');
+  }
+
+  async logout() {
+    const returnUrl = encodeURIComponent(window.location.origin + '/');
+    let targetUrl = this.logoutUrl ?? `${this.authApi.bffUrl('logout')}`;
+    if (!targetUrl.includes('returnUrl=')) {
+      const separator = targetUrl.includes('?') ? '&' : '?';
+      targetUrl += `${separator}returnUrl=${returnUrl}`;
+    }
+
+    let redirectUrl: string | null = null;
+    try {
+      redirectUrl = await this.authApi.logout(targetUrl);
+    } catch (e) {
+      this.logger.error('AuthStore.logout', e);
+    } finally {
+      this.clearSessionState();
+      this.cartStore.clearOnLogout();
+      this.alertService.info('Anda telah keluar.');
+      window.location.href = redirectUrl || targetUrl;
+    }
   }
 
   async register(payload: RegisterPayload): Promise<boolean> {
@@ -220,7 +155,7 @@ export class AuthStore {
     }
   }
 
-  async forgotPassword(email: string, callbackUrl: string = 'string'): Promise<boolean> {
+  async forgotPassword(email: string, callbackUrl = 'string'): Promise<boolean> {
     const success = await this.authApi.forgotPassword(email, callbackUrl);
     if (success) {
       this.alertService.success('Tautan pemulihan kata sandi berhasil dikirim.');

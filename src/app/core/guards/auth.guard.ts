@@ -1,16 +1,16 @@
 import { inject } from '@angular/core';
-import { Router, CanActivateFn } from '@angular/router';
+import { CanActivateFn } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
+import { environment } from '../../../environments/environment';
 
 export const authGuard: CanActivateFn = (_route, state) => {
   const authStore = inject(AuthStore);
-  const router = inject(Router);
 
   if (authStore.isLoggedIn()) {
     return true;
   }
 
-  // Redirect to login page with returnUrl preserved
-  router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
+  // Redirect to BFF login page
+  window.location.href = environment.authUrl + '?returnUrl=' + encodeURIComponent(state.url);
   return false;
 };

@@ -1,32 +1,40 @@
+import { signal } from '@angular/core';
 import { User } from '../models';
 
-export const SESSION_USER_KEY = 'malakabooks_session_user';
-export const SESSION_TOKEN_KEY = 'malakabooks_session_token';
-export const SESSION_REFRESH_KEY = 'malakabooks_session_refresh';
 export const SESSION_CART_KEY = 'malakabooks_cart';
 
 type StoredUser = (User & { token?: string }) | null;
 
+/**
+ * Sumber kebenaran sesi untuk kode non-injectable.
+ *
+ * Sengaja berupa signal level-modul, bukan service ber-DI: `AuthStore` sudah
+ * meng-inject `ProductApiService`, sehingga service API yang balik meng-inject
+ * `AuthStore` akan membentuk circular dependency. Ditulis hanya oleh `AuthStore`.
+ */
+const sessionUser = signal<StoredUser>(null);
+
+export function setSessionUser(user: StoredUser): void {
+  sessionUser.set(user);
+}
+
+export function clearSessionUser(): void {
+  sessionUser.set(null);
+}
+
 export function getStoredSessionUser(): StoredUser {
-  if (typeof localStorage === 'undefined') return null;
-  const raw = localStorage.getItem(SESSION_USER_KEY);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as StoredUser;
-  } catch {
-    return null;
-  }
+  return sessionUser();
 }
 
 export function isAdminSession(): boolean {
-  return getStoredSessionUser()?.role === 'admin';
+  return sessionUser()?.role === 'admin';
 }
 
 export function isCustomerSession(): boolean {
-  const user = getStoredSessionUser();
+  const user = sessionUser();
   return user !== null && user.role !== 'admin';
 }
 
 export function getSessionUserId(): string | null {
-  return getStoredSessionUser()?.id ?? null;
+  return sessionUser()?.id ?? null;
 }

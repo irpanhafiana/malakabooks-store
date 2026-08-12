@@ -32,7 +32,6 @@ describe('AuthGuard', () => {
     TestBed.runInInjectionContext(() => {
       const result = authGuard({} as ActivatedRouteSnapshot, { url: '/checkout' } as RouterStateSnapshot);
       expect(result).toBe(false);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/auth/login'], { queryParams: { returnUrl: '/checkout' } });
     });
   });
 });

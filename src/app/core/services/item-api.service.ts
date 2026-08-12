@@ -23,7 +23,20 @@ export class ItemApiService {
       } else if (isCustomerSession()) {
         endpoint = `${this.BASE_URL}/customer/Items/priced`;
       }
-      const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
+
+      let envelope: ApiResponse<CatalogItem[]> | undefined;
+      try {
+        envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
+      } catch (e) {
+        if (endpoint.includes('/customer/Items/priced')) {
+          this.logger.warn('ItemApiService.getItems', 'Endpoint customer 401, fallback ke public/Items/priced');
+          endpoint = `${this.BASE_URL}/public/Items/priced`;
+          envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
+        } else {
+          throw e;
+        }
+      }
+
       const items = envelope?.data || [];
 
       return items.map(item => ({
@@ -43,10 +56,21 @@ export class ItemApiService {
   async getAutofillItems(search: string): Promise<{ id: string; name: string }[]> {
     try {
       const isLoggedIn = !!getStoredSessionUser();
-      const endpoint = isLoggedIn
+      let endpoint = isLoggedIn
         ? `${this.BASE_URL}/customer/Items/autofill?search=${encodeURIComponent(search)}`
         : `${this.BASE_URL}/public/Items/autofill?search=${encodeURIComponent(search)}`;
-      const envelope = await firstValueFrom(this.http.get<ApiResponse<{ id: string; name: string }[]>>(endpoint));
+
+      let envelope: ApiResponse<{ id: string; name: string }[]> | undefined;
+      try {
+        envelope = await firstValueFrom(this.http.get<ApiResponse<{ id: string; name: string }[]>>(endpoint));
+      } catch (e) {
+        if (endpoint.includes('/customer/Items/autofill')) {
+          endpoint = `${this.BASE_URL}/public/Items/autofill?search=${encodeURIComponent(search)}`;
+          envelope = await firstValueFrom(this.http.get<ApiResponse<{ id: string; name: string }[]>>(endpoint));
+        } else {
+          throw e;
+        }
+      }
       return envelope?.data || [];
     } catch (e) {
       this.logger.error('ItemApiService.getAutofillItems', 'Gagal mengambil autofill items:', e);
@@ -62,7 +86,20 @@ export class ItemApiService {
       } else if (isCustomerSession()) {
         endpoint = `${this.BASE_URL}/customer/Items/priced/${id}`;
       }
-      const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem>>(endpoint));
+
+      let envelope: ApiResponse<CatalogItem> | undefined;
+      try {
+        envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem>>(endpoint));
+      } catch (e) {
+        if (endpoint.includes('/customer/Items/priced/')) {
+          this.logger.warn('ItemApiService.getItemById', `Endpoint customer 401 untuk ID ${id}, fallback ke public/Items/priced/${id}`);
+          endpoint = `${this.BASE_URL}/public/Items/priced/${id}`;
+          envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem>>(endpoint));
+        } else {
+          throw e;
+        }
+      }
+
       const item = envelope?.data;
       if (!item) return null;
 

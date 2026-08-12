@@ -1,71 +1,46 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { from, switchMap, catchError, throwError } from 'rxjs';
-import { isTokenExpired } from '../auth/jwt.util';
-import { SESSION_TOKEN_KEY, SESSION_USER_KEY, SESSION_CART_KEY } from '../auth/session.util';
+import { catchError, throwError } from 'rxjs';
+
 import { AuthStore } from '../../store/auth.store';
-import { SKIP_AUTH_HEADER } from '../services/auth-api.service';
+import { SKIP_AUTH_HEADER, BFF_CSRF_HEADER } from '../services/auth-api.service';
+import { environment } from '../../../environments/environment';
 
-function clearSession() {
-  localStorage.removeItem(SESSION_USER_KEY);
-  localStorage.removeItem(SESSION_TOKEN_KEY);
-  localStorage.removeItem(SESSION_CART_KEY);
-}
-
-function handleTokenRefresh(
-  authStore: InstanceType<typeof AuthStore>,
-  router: Router,
-  req: Parameters<HttpInterceptorFn>[0],
-  next: Parameters<HttpInterceptorFn>[1],
-  reason: 'session_expired' | 'unauthorized',
-  fallbackError: unknown
-) {
-  const isBrowser = typeof localStorage !== 'undefined';
-  return from(authStore.refreshToken()).pipe(
-    switchMap(refreshed => {
-      if (refreshed) {
-        const newToken = isBrowser ? localStorage.getItem(SESSION_TOKEN_KEY) : null;
-        const authReq = req.clone({
-          setHeaders: { Authorization: `Bearer ${newToken}` }
-        });
-        return next(authReq);
-      }
-      if (isBrowser) {
-        clearSession();
-      }
-      const loginUrl = router.url.startsWith('/admin') ? '/admin/login' : '/auth/login';
-      router.navigate([loginUrl], { queryParams: { reason } });
-      return throwError(() => fallbackError);
-    })
-  );
+/**
+ * Pola BFF: SPA tidak pernah memegang access token.
+ *
+ * Yang dikirim ke backend hanyalah cookie sesi milik BFF, dan BFF-lah yang
+ * menyisipkan bearer token saat meneruskan permintaan ke API. Karena itu
+ * interceptor ini hanya memasang `withCredentials` + header antiforgery,
+ * bukan header `Authorization`.
+ */
+function isBffRoutedRequest(req: HttpRequest<unknown>): boolean {
+  // Relatif = satu origin dengan SPA, jadi melewati BFF (langsung atau via proxy dev).
+  if (req.url.startsWith('/')) return true;
+  // Absolut hanya diikutkan bila memang menuju API/BFF yang diproxy.
+  // Endpoint pihak ketiga (DOKU, POS) sengaja tidak diberi cookie.
+  return req.url.startsWith(environment.apiBaseUrl) || req.url.startsWith(environment.authUrl);
 }
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // Skip auth intercept for refresh token calls (prevents infinite loop)
+  // Panggilan /bff/* mengurus header-nya sendiri di AuthApiService.
   if (req.headers.has(SKIP_AUTH_HEADER)) {
     return next(req);
   }
 
-  const router = inject(Router);
   const authStore = inject(AuthStore);
-  const isBrowser = typeof localStorage !== 'undefined';
-  const token = isBrowser ? localStorage.getItem(SESSION_TOKEN_KEY) : null;
 
-  // If token exists but is expired, try to refresh first
-  if (token && isTokenExpired(token)) {
-    return handleTokenRefresh(authStore, router, req, next, 'session_expired', new Error('Session expired'));
-  }
-
-  // Attach auth header if token exists
-  const authReq = token
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+  const outbound = isBffRoutedRequest(req)
+    ? req.clone({ withCredentials: true, setHeaders: { [BFF_CSRF_HEADER]: '1' } })
     : req;
 
-  return next(authReq).pipe(
+  return next(outbound).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        return handleTokenRefresh(authStore, router, req, next, 'unauthorized', error);
+      if (error.status === 401 && isBffRoutedRequest(req)) {
+        // Cookie sesi hilang atau kedaluwarsa. BFF memperbarui token sendiri,
+        // jadi 401 di sini berarti sesinya memang sudah tidak ada — konfirmasi
+        // sekali ke /bff/user, lalu bersihkan state bila benar sudah keluar.
+        void authStore.handleUnauthorized();
       }
       return throwError(() => error);
     })

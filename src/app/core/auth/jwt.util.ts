@@ -37,16 +37,23 @@ export function isTokenExpired(token: string | null | undefined): boolean {
 
 /** Returns true when the decoded role claim contains an admin role. */
 export function jwtHasAdminRole(decoded: DecodedJwt | null): boolean {
-  const roles = decoded?.role ?? [];
+  if (!decoded) return false;
+  const roles =
+    decoded.role ??
+    (decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] as string | string[]) ??
+    (decoded['roles'] as string | string[]) ??
+    [];
+
   const matches = (roleName: string) => {
     if (Array.isArray(roles)) {
-      return roles.some(r => r.toLowerCase() === roleName.toLowerCase());
+      return roles.some(r => typeof r === 'string' && r.toLowerCase() === roleName.toLowerCase());
     }
     if (typeof roles === 'string') {
       return roles.toLowerCase() === roleName.toLowerCase();
     }
     return false;
   };
+
   const containsAdmin = () => {
     if (Array.isArray(roles)) {
       return roles.some(r => typeof r === 'string' && r.toLowerCase().includes('admin'));
@@ -56,26 +63,52 @@ export function jwtHasAdminRole(decoded: DecodedJwt | null): boolean {
     }
     return false;
   };
+
   return matches('SSOnline-Admin') || matches('Malaka-Admin') || matches('admin') || containsAdmin();
 }
 
 export function mapJwtToUser(decoded: DecodedJwt | null): User | null {
   if (!decoded) return null;
-  const userId = decoded.sub || decoded.nameid;
+  const userId =
+    decoded.sub ||
+    decoded.nameid ||
+    (decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] as string) ||
+    (decoded['id'] as string) ||
+    (decoded['userId'] as string) ||
+    (decoded['user_id'] as string);
+
   if (!userId) return null;
 
-  const name = decoded.given_name || decoded.name || 'User';
+  const name =
+    decoded.given_name ||
+    decoded.name ||
+    (decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] as string) ||
+    (decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'] as string) ||
+    'User';
+
+  const email =
+    decoded.email ||
+    (decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] as string) ||
+    '';
+
+  const rawName = (decoded.name || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']) as string | undefined;
+
+  const phone =
+    decoded.phone_number ||
+    decoded.phone ||
+    (decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone'] as string) ||
+    (decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/otherphone'] as string) ||
+    (typeof rawName === 'string' && /^\+?\d{8,15}$/.test(rawName.trim()) ? rawName.trim() : '') ||
+    (typeof name === 'string' && !name.includes('@') && /^\+?\d{8,15}$/.test(name.trim()) ? name.trim() : '');
+
   return {
-    id: userId,
-    name,
-    email: decoded.email || '',
+    id: String(userId),
+    name: String(name),
+    email: String(email),
     role: jwtHasAdminRole(decoded) ? 'admin' : 'customer',
-    phone:
-      decoded.phone_number ||
-      decoded.phone ||
-      (decoded.name && !decoded.name.includes('@') ? decoded.name : ''),
-    avatar: decoded.avatar || '',
-    joinedAt: decoded.joined_at || new Date().toISOString(),
+    phone: String(phone),
+    avatar: String(decoded.avatar || ''),
+    joinedAt: String(decoded.joined_at || new Date().toISOString()),
     addresses: []
   };
 }

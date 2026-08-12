@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
+import { environment } from '../../../environments/environment';
 
 export const adminGuard: CanActivateFn = () => {
   const authStore = inject(AuthStore);
@@ -15,7 +16,7 @@ export const adminGuard: CanActivateFn = () => {
     return false;
   }
 
-  // Redirect unauthenticated admin requests to admin login page
-  router.navigate(['/admin/login']);
+  // Redirect unauthenticated admin requests to BFF admin login (with client_type param if needed)
+  window.location.href = environment.authUrl + '?returnUrl=/admin&client_type=admin';
   return false;
 };

@@ -7,6 +7,8 @@ import { SearchBarComponent } from '../../../shared/ui/search-bar/search-bar.com
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 import { Product } from '../../../core/models';
 
+import { environment } from '../../../../environments/environment';
+
 @Component({
   selector: 'app-desktop-header',
   standalone: true,
@@ -21,6 +23,7 @@ export class DesktopHeaderComponent {
   protected readonly authStore = inject(AuthStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly productStore = inject(ProductStore);
+  protected readonly authUrl = environment.authUrl;
   private readonly router = inject(Router);
   private readonly elementRef = inject(ElementRef);
 

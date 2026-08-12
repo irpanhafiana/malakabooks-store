@@ -1,15 +1,12 @@
-saya klik "masuk". aplikasi membawa saya kehalaman login is4. lalu saya login dengan akun yang sudah terdaftar dan berhasil login. lalu halaman is4 redirect kembali ke halaman login angular saya. 
-
-setelah redirect kembali ke halaman saya, angular saya langsung hit endpoint "http://localhost:4200/bff/user" dan mendapatkan response seperti ini: 
 [
     {
         "type": "s_hash",
-        "value": "Zlccs6GlbHiDoiQDLfuqzA",
+        "value": "jS8kIX4mSzmfg-2t5VhgKA",
         "valueType": null
     },
     {
         "type": "sid",
-        "value": "19DC278417AA89ED97CDA99B3AB8B917",
+        "value": "479D22647B76D4D5AFCC883EE2CCB56A",
         "valueType": null
     },
     {
@@ -19,7 +16,7 @@ setelah redirect kembali ke halaman saya, angular saya langsung hit endpoint "ht
     },
     {
         "type": "auth_time",
-        "value": "1786521382",
+        "value": "1786520282",
         "valueType": null
     },
     {
@@ -103,6 +100,11 @@ setelah redirect kembali ke halaman saya, angular saya langsung hit endpoint "ht
         "valueType": null
     },
     {
+        "type": "DEBUG_RAW_JSON",
+        "value": "{\u0022sub\u0022:\u0022801f8202-0019-48a7-8ad8-778151756aa6\u0022,\u0022name\u0022:\u0022085103043630\u0022,\u0022given_name\u0022:\u0022Handover Point Bojong\u0022,\u0022role\u0022:[\u0022Malaka-Admin\u0022,\u0022B2CService-Finance\u0022,\u0022VehicleMaintenance-Admin\u0022,\u0022Administr\u0022,\u0022B2CService-IT\u0022,\u0022B2BLogistic-Driver\u0022,\u0022B2BService-Customer\u0022,\u0022FAQ-IT\u0022,\u0022B2CService-Store\u0022,\u0022Customer\u0022,\u0022B2BService-IT\u0022],\u0022preferred_username\u0022:\u0022dev\u0022}",
+        "valueType": null
+    },
+    {
         "type": "role",
         "value": "Malaka-Admin",
         "valueType": null
@@ -159,57 +161,17 @@ setelah redirect kembali ke halaman saya, angular saya langsung hit endpoint "ht
     },
     {
         "type": "bff:logout_url",
-        "value": "/bff/logout?sid=19DC278417AA89ED97CDA99B3AB8B917",
+        "value": "/bff/logout?sid=479D22647B76D4D5AFCC883EE2CCB56A",
         "valueType": null
     },
     {
         "type": "bff:session_expires_in",
-        "value": 1209599,
+        "value": 1209445,
         "valueType": null
     },
     {
         "type": "bff:session_state",
-        "value": "3gQwlcpb8ACsNd0ZbLKSEDpfliEY4lg1aGN2K7d6hfA.9D04393903BF4ED755898AFA0CA35CEB",
+        "value": "7LtHYoWntksLJBhKdHxIUAUDeld60s-CIcn99_vaIbo.D120BF0E809AA5F644174C78A3C72D92",
         "valueType": null
     }
 ]
-
-header nya ini
-GET /bff/user HTTP/1.1
-Accept: application/json, text/plain, */*
-Accept-Encoding: gzip, deflate, br, zstd
-Accept-Language: en-US,en;q=0.9
-Connection: keep-alive
-Cookie: bff-session=CfDJ8NLFKHvCEYhDozL-HJJYEkPQiExjFV9Vfrh-9a-MdrguKBCcoev9AH4QlPVSm_qQIdcj1R9dAB1SUpApL8krrAkSgbdWrR20w_z5bgla4bMAfc15CuVSLIb-f6Ko5SEF3QhnwvgzuvDqGvto7w0TBYmRl3fS4BRDJm8N0qIxqDrgOZMCseuru1q9JhRK5UF5xjyTBbfO2t8QJ34VuqqTLrwWM2TcHemfL6F2gs803UvynFXzYLMfLa5yKtgkUgwXwdNUyam6jkGa8kL93_Xz6g172oqMKWqmCUqfwoU0n1rEAQMSSDs14Q45Zpbl8amyOSThkCvjTfQT6ErFktAD00E
-Host: localhost:4200
-Referer: http://localhost:4200/
-Sec-Fetch-Dest: empty
-Sec-Fetch-Mode: cors
-Sec-Fetch-Site: same-origin
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36
-X-CSRF: 1
-X-Skip-Auth-Interceptor: true
-X-Skip-Error-Interceptor: true
-sec-ch-ua: "Not=A?Brand";v="99", "Google Chrome";v="151", "Chromium";v="151"
-sec-ch-ua-mobile: ?0
-sec-ch-ua-platform: "Windows"
-
-lalu karena saya harus ambil items berdasarkan customer login, saya harus panggil endpoint ini GET "http://localhost:4200/ssonline/api/v1/admin/Items" tapi 401.
-
-headernya ini 
-GET /ssonline/api/v1/admin/Items HTTP/1.1
-Accept: application/json, text/plain, */*
-Accept-Encoding: gzip, deflate, br, zstd
-Accept-Language: en-US,en;q=0.9
-Connection: keep-alive
-Cookie: bff-session=CfDJ8NLFKHvCEYhDozL-HJJYEkPQiExjFV9Vfrh-9a-MdrguKBCcoev9AH4QlPVSm_qQIdcj1R9dAB1SUpApL8krrAkSgbdWrR20w_z5bgla4bMAfc15CuVSLIb-f6Ko5SEF3QhnwvgzuvDqGvto7w0TBYmRl3fS4BRDJm8N0qIxqDrgOZMCseuru1q9JhRK5UF5xjyTBbfO2t8QJ34VuqqTLrwWM2TcHemfL6F2gs803UvynFXzYLMfLa5yKtgkUgwXwdNUyam6jkGa8kL93_Xz6g172oqMKWqmCUqfwoU0n1rEAQMSSDs14Q45Zpbl8amyOSThkCvjTfQT6ErFktAD00E
-Host: localhost:4200
-Referer: http://localhost:4200/
-Sec-Fetch-Dest: empty
-Sec-Fetch-Mode: cors
-Sec-Fetch-Site: same-origin
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36
-X-CSRF: 1
-sec-ch-ua: "Not=A?Brand";v="99", "Google Chrome";v="151", "Chromium";v="151"
-sec-ch-ua-mobile: ?0
-sec-ch-ua-platform: "Windows"

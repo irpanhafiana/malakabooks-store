@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, isDevMode, ErrorHandler } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, isDevMode, ErrorHandler, inject, provideAppInitializer } from '@angular/core';
 import { provideRouter, withPreloading } from '@angular/router';
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -12,10 +12,16 @@ import { SelectivePreloadingStrategy } from './core/strategies/selective-preload
 
 import { GlobalErrorHandler } from './core/errors/global-error-handler';
 
+import { AuthStore } from './store/auth.store';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
+    provideAppInitializer(() => {
+      const authStore = inject(AuthStore);
+      return authStore.initializeSession();
+    }),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     // Only preload routes marked with data: { preload: true } in app.routes.ts.
     // Admin chunks (dashboard, products, orders, ...) are excluded — they are

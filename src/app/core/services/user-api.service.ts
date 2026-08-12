@@ -233,9 +233,11 @@ export class UserApiService {
   }
 
   async changePassword(userId: string, password: string, confirmPassword: string): Promise<boolean> {
+    const userPwdUrl = (environment as unknown as { userPasswordApiUrl?: string }).userPasswordApiUrl;
+    const url = userPwdUrl ? `${userPwdUrl}/change-password` : `${this.BASE_URL}/customer/Users/ChangePassword`;
     try {
       await firstValueFrom(
-        this.http.post('http://192.168.1.15:44304/api/Users/ChangePassword', {
+        this.http.post(url, {
           userId,
           password,
           confirmPassword

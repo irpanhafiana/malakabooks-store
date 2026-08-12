@@ -87,7 +87,19 @@ export class ProductApiService {
       } else if (isCustomerSession()) {
         endpoint = `${this.BASE_URL}/customer/Items/priced`;
       }
-      const envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
+      let envelope: ApiResponse<CatalogItem[]> | undefined;
+      try {
+        envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
+      } catch (e) {
+        if (endpoint.includes('/customer/Items/priced')) {
+          this.logger.warn('ProductApiService.getProducts', 'Endpoint customer mengembalikan error/401, fallback ke public/Items/priced');
+          endpoint = `${this.BASE_URL}/public/Items/priced`;
+          envelope = await firstValueFrom(this.http.get<ApiResponse<CatalogItem[]>>(endpoint));
+        } else {
+          throw e;
+        }
+      }
+
       const allItems = envelope?.data || [];
       const itemsToProcess = allItems.filter(i => (isAdminSession() || i.isActive !== false));
 

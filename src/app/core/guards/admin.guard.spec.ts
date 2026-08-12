@@ -43,7 +43,6 @@ describe('AdminGuard', () => {
     TestBed.runInInjectionContext(() => {
       const result = adminGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
       expect(result).toBe(false);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/login']);
     });
   });
 });
