@@ -10,6 +10,9 @@ public class ComplaintResponse
     public string ItemId { get; set; } = string.Empty;
     public string Subject { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public string ReasonCategory { get; set; } = string.Empty;
+    public string RequestedResolution { get; set; } = string.Empty;
+    public string ResolutionOutcome { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
@@ -33,6 +36,8 @@ public class CreateComplaintRequest
     public string ItemId { get; set; } = string.Empty;
     public string Subject { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public string ReasonCategory { get; set; } = string.Empty;
+    public string RequestedResolution { get; set; } = string.Empty;
     public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
 }
 
@@ -40,6 +45,7 @@ public class RespondComplaintRequest
 {
     public string Status { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
+    public string ResolutionOutcome { get; set; } = string.Empty;
     public string SenderId { get; set; } = string.Empty;
     public string SenderType { get; set; } = string.Empty;
     public List<AdditionalImageRequest> AdditionalImages { get; set; } = [];
@@ -52,6 +58,8 @@ public class CreateComplaintWithFilesRequest
     public string ItemId { get; set; } = string.Empty;
     public string Subject { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public string ReasonCategory { get; set; } = string.Empty;
+    public string RequestedResolution { get; set; } = string.Empty;
     public List<IFormFile>? AdditionalImages { get; set; } = [];
 }
 
@@ -59,6 +67,7 @@ public class RespondComplaintWithFilesRequest
 {
     public string Status { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
+    public string ResolutionOutcome { get; set; } = string.Empty;
     public string SenderId { get; set; } = string.Empty;
     public string SenderType { get; set; } = string.Empty;
     public List<IFormFile>? AdditionalImages { get; set; } = [];

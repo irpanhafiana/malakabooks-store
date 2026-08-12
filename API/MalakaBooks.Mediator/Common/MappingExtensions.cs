@@ -1083,6 +1083,9 @@ public static class MappingExtensions
         ItemId = entity.ItemId,
         Subject = entity.Subject,
         Description = entity.Description,
+        ReasonCategory = entity.ReasonCategory,
+        RequestedResolution = entity.RequestedResolution,
+        ResolutionOutcome = entity.ResolutionOutcome,
         Status = entity.Status,
         CreatedAt = entity.CreatedAt,
         UpdatedAt = entity.UpdatedAt,
@@ -1097,6 +1100,8 @@ public static class MappingExtensions
         ItemId = (request.ItemId ?? string.Empty).Trim(),
         Subject = (request.Subject ?? string.Empty).Trim(),
         Description = (request.Description ?? string.Empty).Trim(),
+        ReasonCategory = (request.ReasonCategory ?? string.Empty).Trim(),
+        RequestedResolution = (request.RequestedResolution ?? string.Empty).Trim(),
         AdditionalImages = request.AdditionalImages.Select(ToEntity).ToList(),
         Status = "open",
         Messages =
@@ -1121,6 +1126,8 @@ public static class MappingExtensions
         ItemId = (request.ItemId ?? string.Empty).Trim(),
         Subject = (request.Subject ?? string.Empty).Trim(),
         Description = (request.Description ?? string.Empty).Trim(),
+        ReasonCategory = (request.ReasonCategory ?? string.Empty).Trim(),
+        RequestedResolution = (request.RequestedResolution ?? string.Empty).Trim(),
         AdditionalImages = additionalImageUrls.Select((url, index) => new AdditionalImage { No = index + 1, Image = url }).ToList(),
         Status = "open",
         Messages =
@@ -1141,6 +1148,11 @@ public static class MappingExtensions
     public static void UpdateFrom(this ComplaintEntity entity, RespondComplaintRequest request)
     {
         entity.Status = request.Status.Trim();
+        if (entity.Status == "closed" || entity.Status == "resolved")
+        {
+            entity.ResolutionOutcome = (request.ResolutionOutcome ?? string.Empty).Trim();
+        }
+
         entity.Messages.Add(new ComplaintMessageEntity
         {
             SenderType = request.SenderType.Trim(),
@@ -1155,6 +1167,10 @@ public static class MappingExtensions
     public static void UpdateFrom(this ComplaintEntity entity, RespondComplaintWithFilesRequest request, List<string> additionalImageUrls)
     {
         entity.Status = request.Status.Trim();
+        if (entity.Status == "closed" || entity.Status == "resolved")
+        {
+            entity.ResolutionOutcome = (request.ResolutionOutcome ?? string.Empty).Trim();
+        }
         entity.Messages.Add(new ComplaintMessageEntity
         {
             SenderType = request.SenderType.Trim(),
