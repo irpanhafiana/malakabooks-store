@@ -4,7 +4,7 @@
     "CORSPolicies": [
       {
         "PolicyName": "AllowOriginsAngular",
-        "Origins": [ "http://localhost:4200", "http://192.168.1.138:4200" ],
+        "Origins": [ "http://localhost:4200", "http://192.168.1.138:4200", "http://192.168.1.15:9000" ],
         "Methods": [ "GET", "POST", "PUT", "DELETE" ],
         "Headers": [ "Authorization", "Content-Type", "access-control-allow-origin", "IdempotencyKey" ],
         "ExposedHeaders": [],

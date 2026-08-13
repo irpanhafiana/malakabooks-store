@@ -42,7 +42,7 @@
           "Entries": [
             {
               "Name": "client_id",
-              "Values": [ "MalakaBooks-FE" ]
+                "Values": [ "MalakaBooks-FE", "your-bff-client-id" ]
             }
           ]
         }

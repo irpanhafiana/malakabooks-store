@@ -18,6 +18,10 @@ public class ComplaintEntity : BaseObject
     public string Description { get; set; } = string.Empty;
     public string Status { get; set; } = "open";
 
+    public string ReasonCategory { get; set; } = string.Empty;
+    public string RequestedResolution { get; set; } = string.Empty;
+    public string ResolutionOutcome { get; set; } = string.Empty;
+
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

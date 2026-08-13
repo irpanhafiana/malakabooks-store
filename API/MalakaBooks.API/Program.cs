@@ -310,7 +310,7 @@ if (app.Environment.IsDevelopment())
         var descriptions = app.DescribeApiVersions();
         foreach (var description in descriptions)
         {
-            var url = $"/swagger/{description.GroupName}/swagger.json";
+            var url = $"./{description.GroupName}/swagger.json";
             var name = description.GroupName.ToUpperInvariant();
             c.SwaggerEndpoint(url, name);
         }
