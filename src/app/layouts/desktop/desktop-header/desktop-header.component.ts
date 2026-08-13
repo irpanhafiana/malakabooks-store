@@ -23,7 +23,7 @@ export class DesktopHeaderComponent {
   protected readonly authStore = inject(AuthStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly productStore = inject(ProductStore);
-  protected readonly authUrl = environment.authUrl;
+  protected readonly loginUrl = `${environment.authUrl}?returnUrl=%2F&app=ssonline`;
   private readonly router = inject(Router);
   private readonly elementRef = inject(ElementRef);
 

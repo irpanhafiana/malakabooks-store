@@ -24,6 +24,16 @@ describe('claimsToRecord', () => {
     const record = claimsToRecord([{ type: '', value: 'x' }, { type: 'sub', value: 'user-1' }]);
     expect(record['sub']).toBe('user-1');
   });
+
+  it('parses JSON-serialized array claim values', () => {
+    const record = claimsToRecord([
+      { type: 'role', value: '["Malaka-Admin", "B2CService-Finance"]' },
+      { type: 'sub', value: 'user-2' }
+    ]);
+
+    expect(record['role']).toEqual(['Malaka-Admin', 'B2CService-Finance']);
+    expect(record['sub']).toBe('user-2');
+  });
 });
 
 describe('mapClaimsToUser', () => {
@@ -42,6 +52,20 @@ describe('mapClaimsToUser', () => {
   it('detects an admin from any admin-ish role claim', () => {
     expect(mapClaimsToUser([...baseClaims, { type: 'role', value: 'Malaka-Admin' }])?.role).toBe('admin');
     expect(mapClaimsToUser([...baseClaims, { type: 'role', value: 'SSOnline-Admin' }])?.role).toBe('admin');
+  });
+
+  it('detects admin with multiple roles from res.json', () => {
+    const claims: BffClaim[] = [
+      { type: 'sub', value: 'user-123' },
+      { type: 'given_name', value: 'Test Admin' },
+      { type: 'role', value: 'Malaka-Admin' },
+      { type: 'role', value: 'B2CService-Finance' },
+      { type: 'role', value: 'VehicleMaintenance-Admin' },
+      { type: 'role', value: 'Administr' },
+      { type: 'role', value: 'Customer' }
+    ];
+    const user = mapClaimsToUser(claims);
+    expect(user?.role).toBe('admin');
   });
 
   it('returns null without a subject claim', () => {

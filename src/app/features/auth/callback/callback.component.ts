@@ -27,12 +27,13 @@ export class CallbackComponent implements OnInit {
       const success = await this.authStore.initializeSession();
       if (success) {
         const returnUrl = readReturnUrl(this.route.snapshot.queryParamMap);
-        if (returnUrl) {
+        const isGenericReturn = !returnUrl || returnUrl === '/' || returnUrl.includes('/auth/login');
+        if (!isGenericReturn && returnUrl) {
           this.router.navigateByUrl(returnUrl, { replaceUrl: true });
         } else if (this.authStore.isAdmin()) {
           this.router.navigate(['/admin'], { replaceUrl: true });
         } else {
-          this.router.navigate(['/'], { replaceUrl: true });
+          this.router.navigate(['/profile'], { replaceUrl: true });
         }
       } else {
         this.alertService.error('Gagal menyelesaikan autentikasi.');

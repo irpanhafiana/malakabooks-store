@@ -21,6 +21,28 @@ const CLAIM_TYPE_MAP: Record<string, string> = {
 };
 
 /**
+ * Urai nilai klaim. Jika nilai berupa JSON array string (mis. string dengan kurung siku "[...]"),
+ * kita coba parsing menjadi array string. Jika tidak, kembalikan array berisi string tunggal.
+ */
+function extractClaimValues(value: string | number): string[] {
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          return parsed.map(v => String(v));
+        }
+      } catch {
+        // Fallback jika bukan format JSON valid
+      }
+    }
+    return [trimmed];
+  }
+  return [String(value)];
+}
+
+/**
  * Ubah array klaim menjadi bentuk record, sehingga bisa dipetakan lewat
  * `mapJwtToUser` yang sudah ada. Klaim yang muncul lebih dari sekali
  * (mis. `role`) dikumpulkan menjadi array — persis bentuknya di payload JWT.
@@ -32,27 +54,30 @@ export function claimsToRecord(claims: BffClaim[]): DecodedJwt {
     if (!claim?.type) continue;
     const rawType = claim.type;
     const normalizedType = CLAIM_TYPE_MAP[rawType] ?? rawType;
-    const value = claim.value;
 
-    // Simpan di bawah nama ternormalisasi
-    const existingNorm = record[normalizedType];
-    if (existingNorm === undefined) {
-      record[normalizedType] = value;
-    } else if (Array.isArray(existingNorm)) {
-      existingNorm.push(String(value));
-    } else {
-      record[normalizedType] = [String(existingNorm), String(value)];
-    }
+    const values = extractClaimValues(claim.value);
 
-    // Simpan juga di bawah nama asli bila berbeda, agar fallback di tempat lain tetap berjalan
-    if (rawType !== normalizedType) {
-      const existingRaw = record[rawType];
-      if (existingRaw === undefined) {
-        record[rawType] = value;
-      } else if (Array.isArray(existingRaw)) {
-        existingRaw.push(String(value));
+    for (const val of values) {
+      // Simpan di bawah nama ternormalisasi
+      const existingNorm = record[normalizedType];
+      if (existingNorm === undefined) {
+        record[normalizedType] = val;
+      } else if (Array.isArray(existingNorm)) {
+        existingNorm.push(val);
       } else {
-        record[rawType] = [String(existingRaw), String(value)];
+        record[normalizedType] = [String(existingNorm), val];
+      }
+
+      // Simpan juga di bawah nama asli bila berbeda, agar fallback di tempat lain tetap berjalan
+      if (rawType !== normalizedType) {
+        const existingRaw = record[rawType];
+        if (existingRaw === undefined) {
+          record[rawType] = val;
+        } else if (Array.isArray(existingRaw)) {
+          existingRaw.push(val);
+        } else {
+          record[rawType] = [String(existingRaw), val];
+        }
       }
     }
   }

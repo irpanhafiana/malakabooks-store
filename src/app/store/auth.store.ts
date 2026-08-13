@@ -124,7 +124,7 @@ export class AuthStore {
   }
 
   async logout() {
-    const returnUrl = encodeURIComponent(window.location.origin + '/');
+    const returnUrl = encodeURIComponent('/');
     let targetUrl = this.logoutUrl ?? `${this.authApi.bffUrl('logout')}`;
     if (!targetUrl.includes('returnUrl=')) {
       const separator = targetUrl.includes('?') ? '&' : '?';

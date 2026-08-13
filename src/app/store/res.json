@@ -1,12 +1,12 @@
 [
     {
         "type": "s_hash",
-        "value": "jS8kIX4mSzmfg-2t5VhgKA",
+        "value": "8095C32fXPcAIZsMlKKesQ",
         "valueType": null
     },
     {
         "type": "sid",
-        "value": "479D22647B76D4D5AFCC883EE2CCB56A",
+        "value": "45432E9ED7F6C835C8DEFA30A4B76904",
         "valueType": null
     },
     {
@@ -16,7 +16,7 @@
     },
     {
         "type": "auth_time",
-        "value": "1786520282",
+        "value": "1786607651",
         "valueType": null
     },
     {
@@ -35,61 +35,6 @@
         "valueType": null
     },
     {
-        "type": "role",
-        "value": "Malaka-Admin",
-        "valueType": null
-    },
-    {
-        "type": "role",
-        "value": "B2CService-Finance",
-        "valueType": null
-    },
-    {
-        "type": "role",
-        "value": "VehicleMaintenance-Admin",
-        "valueType": null
-    },
-    {
-        "type": "role",
-        "value": "Administr",
-        "valueType": null
-    },
-    {
-        "type": "role",
-        "value": "B2CService-IT",
-        "valueType": null
-    },
-    {
-        "type": "role",
-        "value": "B2BLogistic-Driver",
-        "valueType": null
-    },
-    {
-        "type": "role",
-        "value": "B2BService-Customer",
-        "valueType": null
-    },
-    {
-        "type": "role",
-        "value": "FAQ-IT",
-        "valueType": null
-    },
-    {
-        "type": "role",
-        "value": "B2CService-Store",
-        "valueType": null
-    },
-    {
-        "type": "role",
-        "value": "Customer",
-        "valueType": null
-    },
-    {
-        "type": "role",
-        "value": "B2BService-IT",
-        "valueType": null
-    },
-    {
         "type": "preferred_username",
         "value": "dev",
         "valueType": null
@@ -97,11 +42,6 @@
     {
         "type": "amr",
         "value": "pwd",
-        "valueType": null
-    },
-    {
-        "type": "DEBUG_RAW_JSON",
-        "value": "{\u0022sub\u0022:\u0022801f8202-0019-48a7-8ad8-778151756aa6\u0022,\u0022name\u0022:\u0022085103043630\u0022,\u0022given_name\u0022:\u0022Handover Point Bojong\u0022,\u0022role\u0022:[\u0022Malaka-Admin\u0022,\u0022B2CService-Finance\u0022,\u0022VehicleMaintenance-Admin\u0022,\u0022Administr\u0022,\u0022B2CService-IT\u0022,\u0022B2BLogistic-Driver\u0022,\u0022B2BService-Customer\u0022,\u0022FAQ-IT\u0022,\u0022B2CService-Store\u0022,\u0022Customer\u0022,\u0022B2BService-IT\u0022],\u0022preferred_username\u0022:\u0022dev\u0022}",
         "valueType": null
     },
     {
@@ -161,17 +101,17 @@
     },
     {
         "type": "bff:logout_url",
-        "value": "/bff/logout?sid=479D22647B76D4D5AFCC883EE2CCB56A",
+        "value": "/bff/logout?sid=45432E9ED7F6C835C8DEFA30A4B76904",
         "valueType": null
     },
     {
         "type": "bff:session_expires_in",
-        "value": 1209445,
+        "value": 1209598,
         "valueType": null
     },
     {
         "type": "bff:session_state",
-        "value": "7LtHYoWntksLJBhKdHxIUAUDeld60s-CIcn99_vaIbo.D120BF0E809AA5F644174C78A3C72D92",
+        "value": "XqTognX65fSZaDid4v7krTmOSm3cNtcV0S36Hgklm9Q.57CA250ECC9ADBFEA6928773C122703D",
         "valueType": null
     }
 ]
