@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit, input, output, effect, DestroyRef, C
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe, Location } from '@angular/common';
+import { SeoService } from '../../../core/services/seo.service';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { ReviewApiService } from '../../../core/services/review-api.service';
 import { CartStore } from '../../../store/cart.store';
@@ -46,6 +47,7 @@ export class MardikaKopiDetailComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
   protected readonly productStore = inject(ProductStore);
   private readonly alertService = inject(AlertService);
+  private readonly seoService = inject(SeoService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly location = inject(Location);
 
@@ -108,6 +110,14 @@ export class MardikaKopiDetailComponent implements OnInit {
         this.productStore.setActiveProduct(prod);
         this.activeImage.set(prod.coverImage);
         this.reviews.set(revs || []);
+
+        const pageTitle = `${prod.title || 'Detail Kopi'} - Mardika Kopi`;
+        const pageDesc = prod.description || `Beli ${prod.title} di Mardika Kopi. Kopi premium berkualitas.`;
+        this.seoService.updatePage({
+          title: pageTitle,
+          description: pageDesc,
+          ogImage: prod.coverImage || undefined
+        });
       } else {
         this.product.set(null);
       }
@@ -202,7 +212,7 @@ export class MardikaKopiDetailComponent implements OnInit {
     if (this.productId()) {
       this.closed.emit();
     } else {
-      this.location.back();
+      (this.location as any).back();
     }
   }
 

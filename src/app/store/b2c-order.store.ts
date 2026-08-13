@@ -1,6 +1,9 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { B2cOrderApiService } from '../core/services/b2c-order-api.service';
 import { Observable } from 'rxjs';
+import { safeLocalStorageRead } from '../shared/util/storage.util';
+
+const isString = (val: unknown): val is string => typeof val === 'string';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +13,7 @@ export class B2cOrderStore {
 
   branchCode = signal<string | null>(null);
   lastOrderId = signal<string | null>(
-    typeof localStorage !== 'undefined' ? localStorage.getItem('mk_pending_b2c_order') : null
+    safeLocalStorageRead('mk_pending_b2c_order', isString, false)
   );
 
   constructor() {

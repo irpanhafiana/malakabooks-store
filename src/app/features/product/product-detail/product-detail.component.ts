@@ -2,7 +2,7 @@ import { Component, inject, signal, OnInit, input, effect, DestroyRef, ChangeDet
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe, Location } from '@angular/common';
-import { Title, Meta } from '@angular/platform-browser';
+import { SeoService } from '../../../core/services/seo.service';
 import { ProductApiService } from '../../../core/services/product-api.service';
 import { ReviewApiService } from '../../../core/services/review-api.service';
 import { CartStore } from '../../../store/cart.store';
@@ -41,8 +41,7 @@ export class ProductDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly productApi = inject(ProductApiService);
   private readonly reviewApi = inject(ReviewApiService);
-  private readonly titleService = inject(Title);
-  private readonly metaService = inject(Meta);
+  private readonly seoService = inject(SeoService);
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   protected readonly authStore = inject(AuthStore);
@@ -114,13 +113,11 @@ export class ProductDetailComponent implements OnInit {
 
         const pageTitle = `${prod.title || 'Detail Produk'} - Malaka Books Store`;
         const pageDesc = prod.description || `Beli ${prod.title} di Malaka Books Store. Toko buku online terpercaya.`;
-        this.titleService.setTitle(pageTitle);
-        this.metaService.updateTag({ name: 'description', content: pageDesc });
-        this.metaService.updateTag({ property: 'og:title', content: pageTitle });
-        this.metaService.updateTag({ property: 'og:description', content: pageDesc });
-        if (prod.coverImage) {
-          this.metaService.updateTag({ property: 'og:image', content: prod.coverImage });
-        }
+        this.seoService.updatePage({
+          title: pageTitle,
+          description: pageDesc,
+          ogImage: prod.coverImage || undefined
+        });
         this.updateJsonLd(prod);
       } else {
         this.product.set(null);

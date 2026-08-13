@@ -64,7 +64,7 @@
                                     "maximumError": "8kB"
                                 }
                             ],
-                            "outputHashing": "bundles"
+                            "outputHashing": "all"
                         },
                         "development": {
                             "optimization": false,
@@ -79,7 +79,7 @@
                     "options": {
                         "proxyConfig": "proxy.conf.json",
                         "host": "0.0.0.0",
-                        "allowedHosts": ["localhost", "127.0.0.1", "192.168.1.15", "192.168.1.138"]
+                        "allowedHosts": ["localhost", "127.0.0.1"]
                     },
                     "configurations": {
                         "production": {

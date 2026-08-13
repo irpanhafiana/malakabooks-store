@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, ChangeDetectionStrategy, effect } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { Title, Meta } from '@angular/platform-browser';
+import { SeoService } from '../../core/services/seo.service';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import { ProductStore } from '../../store/product.store';
@@ -30,8 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly bannerStore = inject(PromotionBannerStore);
   protected readonly screen = inject(ScreenService);
   private readonly router = inject(Router);
-  private readonly titleService = inject(Title);
-  private readonly metaService = inject(Meta);
+  private readonly seoService = inject(SeoService);
 
   currentSlide = signal<number>(0);
 
@@ -86,15 +85,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.titleService.setTitle('Malaka Books Store - Toko Buku Online & Retail Terlengkap');
-    this.metaService.updateTag({
-      name: 'description',
-      content: 'Temukan koleksi buku terlengkap, kopi Mardika premium, dan kebutuhan sembako retail terbaik hanya di Malaka Books Store.'
-    });
-    this.metaService.updateTag({ property: 'og:title', content: 'Malaka Books Store - Toko Buku Online & Retail Terlengkap' });
-    this.metaService.updateTag({
-      property: 'og:description',
-      content: 'Temukan koleksi buku terlengkap, kopi Mardika premium, dan kebutuhan sembako retail terbaik hanya di Malaka Books Store.'
+    this.seoService.updatePage({
+      title: 'Malaka Books Store - Toko Buku Online & Retail Terlengkap',
+      description: 'Temukan koleksi buku terlengkap, kopi Mardika premium, dan kebutuhan sembako retail terbaik hanya di Malaka Books Store.'
     });
     this.productStore.loadAll();
     this.bannerStore.loadActiveBanners();

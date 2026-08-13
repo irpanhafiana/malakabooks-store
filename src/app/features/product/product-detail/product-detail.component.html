@@ -54,6 +54,7 @@
         <div class="w-full aspect-square bg-white relative group">
           @if (!imageError()) {
           <img [src]="activeImage()" [alt]="product()!.title" (error)="onImageError()"
+            fetchpriority="high"
             class="object-contain w-full h-full ease-out" />
           } @else {
           <div
@@ -71,7 +72,7 @@
           <button type="button" (click)="setActiveImage(img, scrollContainer)"
             [class.border-primary-500]="activeImage() === img" [class.border-white]="activeImage() !== img"
             class="h-14 w-14 shrink-0 bg-white border-3 overflow-hidden cursor-pointer active:scale-95  relative">
-            <img [src]="img" [alt]="product()!.title + ' thumbnail'" class="object-cover w-full h-full" />
+            <img [src]="img" [alt]="product()!.title + ' thumbnail'" loading="lazy" width="56" height="56" class="object-cover w-full h-full" />
           </button>
           }
         </div>

@@ -54,3 +54,6 @@ Thumbs.db
 /.vs/slnx.sqlite
 /.vs/VSWorkspaceState.json
 /API/.vs
+
+# Local proxy configurations
+proxy.conf.local.json

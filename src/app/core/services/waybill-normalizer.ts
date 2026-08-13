@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export interface WaybillLogEntry {
   date: string;
   description: string;
@@ -47,6 +49,7 @@ export function getWaybillHistory(detailObj: any): WaybillLogEntry[] {
     .sort((a, b) => {
       const da = new Date(a.date).getTime();
       const db = new Date(b.date).getTime();
+      if (isNaN(da) || isNaN(db)) return 0;
       return db - da;
     });
 }

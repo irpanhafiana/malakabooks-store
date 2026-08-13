@@ -1,26 +1,26 @@
 {
     "/bff": {
-        "target": "http://192.168.1.15:9000",
+        "target": "http://localhost:9000",
         "secure": false,
         "changeOrigin": false
     },
     "/signin-oidc": {
-        "target": "http://192.168.1.15:9000",
+        "target": "http://localhost:9000",
         "secure": false,
         "changeOrigin": false
     },
     "/signout-callback-oidc": {
-        "target": "http://192.168.1.15:9000",
+        "target": "http://localhost:9000",
         "secure": false,
         "changeOrigin": false
     },
     "/ssonline": {
-        "target": "http://192.168.1.15:9000",
+        "target": "http://localhost:9000",
         "secure": false,
         "changeOrigin": false
     },
     "/api": {
-        "target": "http://192.168.1.15:9000",
+        "target": "http://localhost:9000",
         "secure": false,
         "changeOrigin": false
     }

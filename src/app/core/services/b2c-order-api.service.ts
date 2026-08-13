@@ -10,7 +10,10 @@ export class B2cOrderApiService {
   private http = inject(HttpClient);
 
   postB2COrder(payload: Record<string, unknown>[]): Observable<unknown> {
-    const baseUrl = (environment as { posApiUrl?: string }).posApiUrl || 'http://192.168.1.15:10100/';
+    const baseUrl = (environment as { posApiUrl?: string }).posApiUrl;
+    if (!baseUrl) {
+      throw new Error('environment.posApiUrl is not configured');
+    }
     const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
     const url = `${cleanBase}pos-api/api/v2/DraftObjects/B2CService`;
     return this.http.post<unknown>(url, payload);
