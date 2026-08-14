@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   appUrl: 'https://tokossonlineshop.com',
   apiBaseUrl: 'https://tokosuburjaya.com:17801/ssonline/api/v1',
-  authUrl: 'https://tokosuburjaya.com:17801/bff/login?app=ssonline',
+  authUrl: 'https://tokosuburjaya.com:17801/bff/login',
   apiUrl: 'https://tokosuburjaya.com:17801/ssonline/api/v1/',
   userPasswordApiUrl: 'https://tokosuburjaya.com:17801/api/UserPassword',
   posApiUrl: 'https://tokosuburjaya.com:17801/pos/',

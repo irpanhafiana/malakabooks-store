@@ -7,7 +7,7 @@ import { SearchBarComponent } from '../../../shared/ui/search-bar/search-bar.com
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 import { Product } from '../../../core/models';
 
-import { environment } from '../../../../environments/environment';
+import { getBffLoginUrl } from '../../../core/auth/login-url.util';
 
 @Component({
   selector: 'app-desktop-header',
@@ -23,7 +23,7 @@ export class DesktopHeaderComponent {
   protected readonly authStore = inject(AuthStore);
   protected readonly cartStore = inject(CartStore);
   protected readonly productStore = inject(ProductStore);
-  protected readonly loginUrl = `${environment.authUrl}?returnUrl=%2F&app=ssonline`;
+  protected readonly loginUrl = getBffLoginUrl('/');
   private readonly router = inject(Router);
   private readonly elementRef = inject(ElementRef);
 

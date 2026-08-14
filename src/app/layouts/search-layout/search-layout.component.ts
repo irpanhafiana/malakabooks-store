@@ -17,6 +17,8 @@ import { ProductModalHandler } from '../product-modal-handler.service';
 import { PriceComponent } from '../../shared/ui/price/price.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 
+import { getBffLoginUrl } from '../../core/auth/login-url.util';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-search-layout',
@@ -27,6 +29,7 @@ import { ButtonComponent } from '../../shared/ui/button/button.component';
 })
 export class SearchLayoutComponent {
   protected readonly authStore = inject(AuthStore);
+  protected readonly loginUrl = getBffLoginUrl('/');
   protected readonly cartStore = inject(CartStore);
   protected readonly productStore = inject(ProductStore);
   protected readonly pricingApi = inject(PricingApiService);

@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
-import { environment } from '../../../environments/environment';
+import { getBffLoginUrl } from '../auth/login-url.util';
 
 export const adminGuard: CanActivateFn = () => {
   const authStore = inject(AuthStore);
@@ -17,8 +17,6 @@ export const adminGuard: CanActivateFn = () => {
   }
 
   // Redirect unauthenticated admin requests to BFF admin login (with client_type param if needed)
-  const returnUrl = encodeURIComponent(environment.appUrl + '/admin');
-  const separator = environment.authUrl.includes('?') ? '&' : '?';
-  window.location.href = environment.authUrl + separator + 'returnUrl=' + returnUrl + '&client_type=admin';
+  window.location.href = getBffLoginUrl('/admin', { client_type: 'admin' });
   return false;
 };

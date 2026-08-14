@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
-import { environment } from '../../../environments/environment';
+import { getBffLoginUrl } from '../auth/login-url.util';
 
 export const authGuard: CanActivateFn = (_route, state) => {
   const authStore = inject(AuthStore);
@@ -11,8 +11,6 @@ export const authGuard: CanActivateFn = (_route, state) => {
   }
 
   // Redirect to BFF login page
-  const returnUrl = encodeURIComponent(environment.appUrl + state.url);
-  const separator = environment.authUrl.includes('?') ? '&' : '?';
-  window.location.href = environment.authUrl + separator + 'returnUrl=' + returnUrl;
+  window.location.href = getBffLoginUrl(state.url);
   return false;
 };
