@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getBffLoginUrl } from './login-url.util';
+import { describe, it, expect, vi } from 'vitest';
+import { getBffLoginUrl, getBffLogoutUrl, resolveBffLogoutUrl } from './login-url.util';
 import * as envModule from '../../../environments/environment';
 
 describe('login-url.util', () => {
@@ -79,5 +79,84 @@ describe('login-url.util', () => {
     expect(url).toBe(
       'https://tokosuburjaya.com:17801/bff/login?returnUrl=%2Fredirect-to-frontend%3FreturnUrl%3Dhttps%3A%2F%2Ftokossonlineshop.com%2Fadmin&app=ssonline&client_type=admin'
     );
+  });
+
+  it('should build identical logout URL differing only by bff/logout', () => {
+    vi.spyOn(envModule, 'environment', 'get').mockReturnValue({
+      production: true,
+      appUrl: 'https://tokossonlineshop.com',
+      authUrl: 'https://tokosuburjaya.com:17801/bff/login',
+      apiBaseUrl: 'https://tokosuburjaya.com:17801/ssonline/api/v1',
+      apiUrl: 'https://tokosuburjaya.com:17801/ssonline/api/v1/',
+      userPasswordApiUrl: 'https://tokosuburjaya.com:17801/api/UserPassword',
+      posApiUrl: 'https://tokosuburjaya.com:17801/pos/',
+      originCode: '32.71.10.8',
+      dokuScriptUrl: '',
+      dokuStyleUrl: ''
+    });
+
+    const logoutUrl = getBffLogoutUrl('/');
+    expect(logoutUrl).toBe(
+      'https://tokosuburjaya.com:17801/bff/logout?returnUrl=%2Fredirect-to-frontend%3FreturnUrl%3Dhttps%3A%2F%2Ftokossonlineshop.com&app=ssonline'
+    );
+  });
+
+  describe('resolveBffLogoutUrl', () => {
+    it('should fallback to default logout URL when claim is missing', () => {
+      vi.spyOn(envModule, 'environment', 'get').mockReturnValue({
+        production: true,
+        appUrl: 'https://tokossonlineshop.com',
+        authUrl: 'https://tokosuburjaya.com:17801/bff/login',
+        apiBaseUrl: 'https://tokosuburjaya.com:17801/ssonline/api/v1',
+        apiUrl: 'https://tokosuburjaya.com:17801/ssonline/api/v1/',
+        userPasswordApiUrl: 'https://tokosuburjaya.com:17801/api/UserPassword',
+        posApiUrl: 'https://tokosuburjaya.com:17801/pos/',
+        originCode: '32.71.10.8',
+        dokuScriptUrl: '',
+        dokuStyleUrl: ''
+      });
+
+      expect(resolveBffLogoutUrl(null)).toBe(
+        'https://tokosuburjaya.com:17801/bff/logout?returnUrl=%2Fredirect-to-frontend%3FreturnUrl%3Dhttps%3A%2F%2Ftokossonlineshop.com&app=ssonline'
+      );
+    });
+
+    it('should resolve relative bff:logout_url to full BFF URL with returnUrl in production', () => {
+      vi.spyOn(envModule, 'environment', 'get').mockReturnValue({
+        production: true,
+        appUrl: 'https://tokossonlineshop.com',
+        authUrl: 'https://tokosuburjaya.com:17801/bff/login',
+        apiBaseUrl: 'https://tokosuburjaya.com:17801/ssonline/api/v1',
+        apiUrl: 'https://tokosuburjaya.com:17801/ssonline/api/v1/',
+        userPasswordApiUrl: 'https://tokosuburjaya.com:17801/api/UserPassword',
+        posApiUrl: 'https://tokosuburjaya.com:17801/pos/',
+        originCode: '32.71.10.8',
+        dokuScriptUrl: '',
+        dokuStyleUrl: ''
+      });
+
+      const url = resolveBffLogoutUrl('/bff/logout?sid=45432E9ED7F6C835C8DEFA30A4B76904', '/');
+      expect(url).toBe(
+        'https://tokosuburjaya.com:17801/bff/logout?sid=45432E9ED7F6C835C8DEFA30A4B76904&returnUrl=%2Fredirect-to-frontend%3FreturnUrl%3Dhttps%3A%2F%2Ftokossonlineshop.com&app=ssonline'
+      );
+    });
+
+    it('should keep relative url with proper returnUrl in development', () => {
+      vi.spyOn(envModule, 'environment', 'get').mockReturnValue({
+        production: false,
+        appUrl: '',
+        authUrl: '/bff/login',
+        apiBaseUrl: '/ssonline/api/v1',
+        apiUrl: '/ssonline/api/v1/',
+        userPasswordApiUrl: '/api/UserPassword',
+        posApiUrl: 'http://localhost:10100/',
+        originCode: '32.71.10.10',
+        dokuScriptUrl: '',
+        dokuStyleUrl: ''
+      });
+
+      const url = resolveBffLogoutUrl('/bff/logout?sid=abc', '/');
+      expect(url).toBe('/bff/logout?sid=abc&returnUrl=%2F&app=ssonline');
+    });
   });
 });

@@ -8,7 +8,7 @@ import { LoggerService } from '../core/services/logger.service';
 import { CartStore } from './cart.store';
 import { BffClaim, mapClaimsToUser, readLogoutUrl } from '../core/auth/bff-claims.util';
 import { setSessionUser, clearSessionUser } from '../core/auth/session.util';
-import { environment } from '../../environments/environment';
+import { resolveBffLogoutUrl } from '../core/auth/login-url.util';
 
 interface AuthState {
   user: User | null;
@@ -125,23 +125,13 @@ export class AuthStore {
   }
 
   async logout() {
-    const returnUrl = encodeURIComponent(environment.appUrl + '/');
-    let targetUrl = this.logoutUrl ?? `${this.authApi.bffUrl('logout')}`;
-    if (!targetUrl.includes('returnUrl=')) {
-      const separator = targetUrl.includes('?') ? '&' : '?';
-      targetUrl += `${separator}returnUrl=${returnUrl}`;
-    }
+    const finalLogoutUrl = resolveBffLogoutUrl(this.logoutUrl, '/?loggedOut=true');
 
-    let redirectUrl: string | null = null;
-    try {
-      redirectUrl = await this.authApi.logout(targetUrl);
-    } catch (e) {
-      this.logger.error('AuthStore.logout', e);
-    } finally {
-      this.clearSessionState();
-      this.cartStore.clearOnLogout();
-      this.alertService.info('Anda telah keluar.');
-      window.location.href = redirectUrl || targetUrl;
+    this.clearSessionState();
+    this.cartStore.clearOnLogout();
+
+    if (typeof window !== 'undefined') {
+      window.location.href = finalLogoutUrl;
     }
   }
 

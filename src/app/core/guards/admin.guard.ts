@@ -17,6 +17,6 @@ export const adminGuard: CanActivateFn = () => {
   }
 
   // Redirect unauthenticated admin requests to BFF admin login (with client_type param if needed)
-  window.location.href = getBffLoginUrl('/admin', { client_type: 'admin' });
+  window.location.href = getBffLoginUrl('/auth/callback');
   return false;
 };

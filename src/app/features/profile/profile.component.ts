@@ -250,8 +250,6 @@ export class ProfileComponent implements OnInit {
 
   logout() {
     this.authStore.logout();
-    this.alertService.success('Logged out successfully.');
-    this.router.navigate(['/auth/login']);
   }
 
   navigateBack() {

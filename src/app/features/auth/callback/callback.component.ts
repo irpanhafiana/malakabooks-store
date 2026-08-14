@@ -1,8 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
 import { AlertService } from '../../../core/services/alert.service';
-import { readReturnUrl } from '../../../core/auth/return-url.util';
 
 @Component({
   selector: 'app-auth-callback',
@@ -19,21 +18,18 @@ import { readReturnUrl } from '../../../core/auth/return-url.util';
 export class CallbackComponent implements OnInit {
   private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
   private readonly alertService = inject(AlertService);
 
   async ngOnInit() {
     try {
       const success = await this.authStore.initializeSession();
       if (success) {
-        const returnUrl = readReturnUrl(this.route.snapshot.queryParamMap);
-        const isGenericReturn = !returnUrl || returnUrl === '/' || returnUrl.includes('/auth/login');
-        if (!isGenericReturn && returnUrl) {
-          this.router.navigateByUrl(returnUrl, { replaceUrl: true });
-        } else if (this.authStore.isAdmin()) {
-          this.router.navigate(['/admin'], { replaceUrl: true });
+        if (this.authStore.isAdmin()) {
+          if (typeof window !== 'undefined') {
+            window.location.href = 'https://adminshop.tokossonlineshop.com/admin/dashboard';
+          }
         } else {
-          this.router.navigate(['/profile'], { replaceUrl: true });
+          this.router.navigate(['/'], { replaceUrl: true });
         }
       } else {
         this.alertService.error('Gagal menyelesaikan autentikasi.');

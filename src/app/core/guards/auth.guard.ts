@@ -3,7 +3,7 @@ import { CanActivateFn } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { getBffLoginUrl } from '../auth/login-url.util';
 
-export const authGuard: CanActivateFn = (_route, state) => {
+export const authGuard: CanActivateFn = (_route, _state) => {
   const authStore = inject(AuthStore);
 
   if (authStore.isLoggedIn()) {
@@ -11,6 +11,6 @@ export const authGuard: CanActivateFn = (_route, state) => {
   }
 
   // Redirect to BFF login page
-  window.location.href = getBffLoginUrl(state.url);
+  window.location.href = getBffLoginUrl('/auth/callback');
   return false;
 };
