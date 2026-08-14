@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  appUrl: '',
   apiBaseUrl: '/ssonline/api/v1',
   authUrl: '/bff/login',
   apiUrl: '/ssonline/api/v1/',

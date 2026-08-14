@@ -17,6 +17,8 @@ export const adminGuard: CanActivateFn = () => {
   }
 
   // Redirect unauthenticated admin requests to BFF admin login (with client_type param if needed)
-  window.location.href = environment.authUrl + '?returnUrl=/admin&client_type=admin';
+  const returnUrl = encodeURIComponent(environment.appUrl + '/admin');
+  const separator = environment.authUrl.includes('?') ? '&' : '?';
+  window.location.href = environment.authUrl + separator + 'returnUrl=' + returnUrl + '&client_type=admin';
   return false;
 };

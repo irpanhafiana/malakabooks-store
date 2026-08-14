@@ -11,6 +11,8 @@ export const authGuard: CanActivateFn = (_route, state) => {
   }
 
   // Redirect to BFF login page
-  window.location.href = environment.authUrl + '?returnUrl=' + encodeURIComponent(state.url);
+  const returnUrl = encodeURIComponent(environment.appUrl + state.url);
+  const separator = environment.authUrl.includes('?') ? '&' : '?';
+  window.location.href = environment.authUrl + separator + 'returnUrl=' + returnUrl;
   return false;
 };

@@ -8,6 +8,7 @@ import { LoggerService } from '../core/services/logger.service';
 import { CartStore } from './cart.store';
 import { BffClaim, mapClaimsToUser, readLogoutUrl } from '../core/auth/bff-claims.util';
 import { setSessionUser, clearSessionUser } from '../core/auth/session.util';
+import { environment } from '../../environments/environment';
 
 interface AuthState {
   user: User | null;
@@ -124,7 +125,7 @@ export class AuthStore {
   }
 
   async logout() {
-    const returnUrl = encodeURIComponent('/');
+    const returnUrl = encodeURIComponent(environment.appUrl + '/');
     let targetUrl = this.logoutUrl ?? `${this.authApi.bffUrl('logout')}`;
     if (!targetUrl.includes('returnUrl=')) {
       const separator = targetUrl.includes('?') ? '&' : '?';
