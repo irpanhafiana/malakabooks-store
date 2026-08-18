@@ -23,7 +23,7 @@ export class App implements OnInit {
       const currentUrl = this.router.url;
       if (user && this.authStore.isAdmin() && !currentUrl.includes('/admin')) {
         console.log('[App Root] Admin terdeteksi di halaman non-admin, mengalihkan ke adminshop');
-        if (typeof window !== 'undefined' && !window.location.hostname.includes('adminshop')) {
+        if (typeof window !== 'undefined' && !window.location.hostname.includes('adminshop') && window.location.hostname !== 'localhost') {
            window.location.href = 'https://adminshop.tokossonlineshop.com/admin/dashboard';
         } else {
            this.router.navigate(['/admin'], { replaceUrl: true });
