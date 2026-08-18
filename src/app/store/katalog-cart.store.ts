@@ -4,6 +4,7 @@ import { KatalogToastService } from '../core/services/katalog-toast.service';
 
 export interface KatalogCartItem {
   id: string;
+  sapCode?: string;
   name: string;
   price: number;
   uom: string;
@@ -55,6 +56,7 @@ export class KatalogCartStore {
     const productName = product.title || (product as unknown as Record<string, unknown>)['name'] as string || product.id;
     const productImage = product.coverImage || (product as unknown as Record<string, unknown>)['image'] as string || 'https://placehold.co/400x400';
     const categoryName = product.categoryName || (product as unknown as Record<string, unknown>)['category'] as string || 'Umum';
+    const sapCode = product.sapCode || product.id;
 
     if (existingItemIndex > -1) {
       const updatedItems = [...currentItems];
@@ -67,6 +69,7 @@ export class KatalogCartStore {
     } else {
       const newItem: KatalogCartItem = {
         id: product.id,
+        sapCode: sapCode,
         name: productName,
         price: finalPrice,
         uom: targetUom,
@@ -77,6 +80,7 @@ export class KatalogCartStore {
       };
       this._cartItems.set([...currentItems, newItem]);
     }
+
 
     this.toastService.success(
       'Berhasil ditambahkan',

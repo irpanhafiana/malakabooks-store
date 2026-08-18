@@ -23,5 +23,11 @@
         "target": "http://192.168.1.15:9000",
         "secure": false,
         "changeOrigin": false
+    },
+    "/pos-api": {
+        "target": "http://192.168.1.15:10100",
+        "secure": false,
+        "changeOrigin": false
     }
 }
+

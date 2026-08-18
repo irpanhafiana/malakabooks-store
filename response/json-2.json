@@ -1,0 +1,126 @@
+// http://192.168.1.15:10100/retail-api/api/Products/1/1/10
+
+{
+    "results": [
+        {
+            "itemGroupId": 1,
+            "itemGroup": {
+                "id": 1,
+                "code": "101",
+                "description": "Kantor"
+            },
+            "productImageUrl": null,
+            "lowestPrice": 12000,
+            "id": 8556,
+            "code": "KAN0049",
+            "name": "ABC ALKALINE A2",
+            "uoMGroupId": 4708,
+            "uoMGroup": {
+                "id": 4708,
+                "code": "ABC ALKALINE",
+                "description": "ABC ALKALINE",
+                "details": [
+                    {
+                        "detailId": 7224,
+                        "baseUoMId": 12,
+                        "baseUoM": "LBR",
+                        "baseQuantity": 144,
+                        "alternateUoMId": 5,
+                        "alternateUoM": "DUS",
+                        "alternateQuantity": 1,
+                        "uoMPackage": 2
+                    },
+                    {
+                        "detailId": 7225,
+                        "baseUoMId": 12,
+                        "baseUoM": "LBR",
+                        "baseQuantity": 24,
+                        "alternateUoMId": 3,
+                        "alternateUoM": "BOX",
+                        "alternateQuantity": 1,
+                        "uoMPackage": 1
+                    },
+                    {
+                        "detailId": 7226,
+                        "baseUoMId": 12,
+                        "baseUoM": "LBR",
+                        "baseQuantity": 1,
+                        "alternateUoMId": 12,
+                        "alternateUoM": "LBR",
+                        "alternateQuantity": 1,
+                        "uoMPackage": 0
+                    }
+                ]
+            },
+            "inStock": 0,
+            "barcode": null,
+            "barcode2": null,
+            "barcode3": null,
+            "barcode4": null,
+            "isRokok": false
+        },
+        {
+            "itemGroupId": 1,
+            "itemGroup": {
+                "id": 1,
+                "code": "101",
+                "description": "Kantor"
+            },
+            "productImageUrl": null,
+            "lowestPrice": 25100,
+            "id": 9676,
+            "code": "KAN0057",
+            "name": "ABC ALKALINE A2 (1LBR ISI 6PCS)",
+            "uoMGroupId": 4742,
+            "uoMGroup": {
+                "id": 4742,
+                "code": "ALKALINE A2 ISI 6PCS",
+                "description": "ALKALINE A2 ISI 6PCS",
+                "details": [
+                    {
+                        "detailId": 7299,
+                        "baseUoMId": 12,
+                        "baseUoM": "LBR",
+                        "baseQuantity": 72,
+                        "alternateUoMId": 5,
+                        "alternateUoM": "DUS",
+                        "alternateQuantity": 1,
+                        "uoMPackage": 2
+                    },
+                    {
+                        "detailId": 7300,
+                        "baseUoMId": 12,
+                        "baseUoM": "LBR",
+                        "baseQuantity": 12,
+                        "alternateUoMId": 3,
+                        "alternateUoM": "BOX",
+                        "alternateQuantity": 1,
+                        "uoMPackage": 1
+                    },
+                    {
+                        "detailId": 7301,
+                        "baseUoMId": 12,
+                        "baseUoM": "LBR",
+                        "baseQuantity": 1,
+                        "alternateUoMId": 12,
+                        "alternateUoM": "LBR",
+                        "alternateQuantity": 1,
+                        "uoMPackage": 0
+                    }
+                ]
+            },
+            "inStock": 0,
+            "barcode": null,
+            "barcode2": null,
+            "barcode3": null,
+            "barcode4": null,
+            "isRokok": false
+        }
+    ],
+    "currentPage": 1,
+    "pageCount": 3,
+    "pageSize": 10,
+    "rowCount": 28,
+    "firstRowOnPage": 1,
+    "lastRowOnPage": 10
+}

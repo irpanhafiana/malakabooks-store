@@ -1,0 +1,154 @@
+// http://localhost:4200/ssonline/api/v1/public/Items/priced
+
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "data": [
+        {
+            "salesUomCode": "JASA",
+            "customerGroupCode": "106",
+            "price": 36000.0,
+            "priceStartDate": "2026-08-05T09:52:12.345+07:00",
+            "priceEndDate": "2037-01-01T06:59:59+07:00",
+            "compareAtPrice": 30000.0,
+            "compareAtPriceStartDate": "2026-08-05T09:52:12.345+07:00",
+            "compareAtPriceEndDate": "2037-01-01T06:59:59+07:00",
+            "id": "6a7293c6572cbb1352ddf828",
+            "name": "BENG BENG KALPA BOX ISI 12 PCS",
+            "sapCode": "2b3dd951-9c51-4699-8d82-b4d4f3e3ef69",
+            "itemType": "ssonline",
+            "categoryId": "6a6974c74913417719d186a1",
+            "coverImage": "/images/items/2b86fa0e-30ce-43ca-a64e-580bc2e829a6.png",
+            "additionalImages": [],
+            "uomGroupId": "6a575f09500f03996c1e3702",
+            "uomGroup": {
+                "id": "6a575f09500f03996c1e3702",
+                "name": "PCS",
+                "baseUomCode": "JASA",
+                "details": [
+                    {
+                        "code": "JASA",
+                        "name": "JASA",
+                        "conversionFactor": 1.0,
+                        "isBaseUom": true,
+                        "isDefaultForSales": true,
+                        "sortOrder": 1,
+                        "isActive": true
+                    }
+                ],
+                "isActive": true,
+                "alias": "46152a71-9035-4a2b-a173-347089a4874c"
+            },
+            "baseUomCode": "JASA",
+            "description": "<p>asd</p>",
+            "weight": 100.0,
+            "stock": 94,
+            "isActive": true,
+            "quantitySold": 5,
+            "rating": 0.0,
+            "averageRating": 0.0,
+            "totalReviews": 0,
+            "createdAt": "2026-08-05T08:37:10.831+07:00",
+            "updatedAt": "2026-08-05T09:47:32.445+07:00"
+        },
+        {
+            "salesUomCode": "JASA",
+            "customerGroupCode": "106",
+            "price": 258000.0,
+            "priceStartDate": "2026-08-05T09:52:12.421+07:00",
+            "priceEndDate": "2037-01-01T06:59:59+07:00",
+            "compareAtPrice": 215000.0,
+            "compareAtPriceStartDate": "2026-08-05T09:52:12.421+07:00",
+            "compareAtPriceEndDate": "2037-01-01T06:59:59+07:00",
+            "id": "6a7293c7572cbb1352ddf829",
+            "name": "BENG BENG KALPA KARTON ISI 8 BOX",
+            "sapCode": "f8961740-ecec-4f2b-9502-0dd3943e2ff4",
+            "itemType": "ssonline",
+            "categoryId": "6a6974c74913417719d186a1",
+            "coverImage": "/images/items/35bb8844-cb70-4df1-95ed-038b8bf83cec.png",
+            "additionalImages": [],
+            "uomGroupId": "6a575f09500f03996c1e3702",
+            "uomGroup": {
+                "id": "6a575f09500f03996c1e3702",
+                "name": "PCS",
+                "baseUomCode": "JASA",
+                "details": [
+                    {
+                        "code": "JASA",
+                        "name": "JASA",
+                        "conversionFactor": 1.0,
+                        "isBaseUom": true,
+                        "isDefaultForSales": true,
+                        "sortOrder": 1,
+                        "isActive": true
+                    }
+                ],
+                "isActive": true,
+                "alias": "46152a71-9035-4a2b-a173-347089a4874c"
+            },
+            "baseUomCode": "JASA",
+            "description": "<p>asd</p>",
+            "weight": 100.0,
+            "stock": 0,
+            "isActive": true,
+            "quantitySold": 0,
+            "rating": 0.0,
+            "averageRating": 0.0,
+            "totalReviews": 0,
+            "createdAt": "2026-08-05T08:37:11.124+07:00",
+            "updatedAt": "2026-08-05T09:47:30.336+07:00"
+        },
+        {
+            "salesUomCode": "JASA",
+            "customerGroupCode": "106",
+            "price": 57480.0,
+            "priceStartDate": "2026-08-05T09:52:12.474+07:00",
+            "priceEndDate": "2037-01-01T06:59:59+07:00",
+            "compareAtPrice": 47900.0,
+            "compareAtPriceStartDate": "2026-08-05T09:52:12.474+07:00",
+            "compareAtPriceEndDate": "2037-01-01T06:59:59+07:00",
+            "id": "6a7293c7572cbb1352ddf82a",
+            "name": "BRAVEN CODE EDP COOL WATER 100ML",
+            "sapCode": "f9e7ef8e-fcbf-438f-8b55-70b8ad78aa70",
+            "itemType": "ssonline",
+            "categoryId": "6a6974c74913417719d186a1",
+            "coverImage": "/images/items/e15c86a6-ea78-47ed-934a-0a596551fe66.png",
+            "additionalImages": [],
+            "uomGroupId": "6a575f09500f03996c1e3702",
+            "uomGroup": {
+                "id": "6a575f09500f03996c1e3702",
+                "name": "PCS",
+                "baseUomCode": "JASA",
+                "details": [
+                    {
+                        "code": "JASA",
+                        "name": "JASA",
+                        "conversionFactor": 1.0,
+                        "isBaseUom": true,
+                        "isDefaultForSales": true,
+                        "sortOrder": 1,
+                        "isActive": true
+                    }
+                ],
+                "isActive": true,
+                "alias": "46152a71-9035-4a2b-a173-347089a4874c"
+            },
+            "baseUomCode": "JASA",
+            "description": "<p>asd</p>",
+            "weight": 100.0,
+            "stock": 0,
+            "isActive": true,
+            "quantitySold": 0,
+            "rating": 0.0,
+            "averageRating": 0.0,
+            "totalReviews": 0,
+            "createdAt": "2026-08-05T08:37:11.269+07:00",
+            "updatedAt": "2026-08-05T09:47:34.166+07:00"
+        }
+    ],
+    "isSuccess": true
+}
+
+
+prod => 17800-pos-api
+dev => 10100-pos-api

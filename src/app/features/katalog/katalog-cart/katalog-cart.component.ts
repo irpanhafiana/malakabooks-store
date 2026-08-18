@@ -134,12 +134,13 @@ export class KatalogCartComponent {
     this.isProcessing.set(true);
 
     const items = this.cartStore.cartItems().map(item => ({
-      code: item.id,
+      code: item.sapCode || item.id,
       name: item.name,
       uom: item.uom,
       quantity: item.quantity,
       price: item.price
     }));
+
 
     const userName = (typeof localStorage !== 'undefined' ? localStorage.getItem('mk_katalog_user_name') : '') || 'Pelanggan';
 
