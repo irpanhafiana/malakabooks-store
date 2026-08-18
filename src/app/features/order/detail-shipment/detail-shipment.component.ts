@@ -108,8 +108,8 @@ export class DetailShipmentComponent implements OnInit {
 
   get shipperName(): string {
     const details = this.trackingDetails;
-    if (!details) return 'SS Online Shop';
-    return details.shipper_name || details.shipper || details.shipperName || 'SS Online Shop';
+    if (!details) return 'MalakaBooks Store';
+    return details.shipper_name || details.shipper || details.shipperName || 'MalakaBooks Store';
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -51,7 +51,7 @@ describe('mapClaimsToUser', () => {
 
   it('detects an admin from any admin-ish role claim', () => {
     expect(mapClaimsToUser([...baseClaims, { type: 'role', value: 'Malaka-Admin' }])?.role).toBe('admin');
-    expect(mapClaimsToUser([...baseClaims, { type: 'role', value: 'SSOnline-Admin' }])?.role).toBe('admin');
+    expect(mapClaimsToUser([...baseClaims, { type: 'role', value: 'Mardika-Admin' }])?.role).toBe('admin');
   });
 
   it('detects admin with multiple roles from res.json', () => {

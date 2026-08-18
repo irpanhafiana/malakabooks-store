@@ -26,7 +26,7 @@ export class CallbackComponent implements OnInit {
       if (success) {
         if (this.authStore.isAdmin()) {
           if (typeof window !== 'undefined') {
-            window.location.href = 'https://adminshop.tokossonlineshop.com/admin/dashboard';
+            window.location.href = 'https://adminshop.malakabooks.com/admin/dashboard';
           }
         } else {
           this.router.navigate(['/'], { replaceUrl: true });

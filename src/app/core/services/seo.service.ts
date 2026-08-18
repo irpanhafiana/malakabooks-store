@@ -43,8 +43,8 @@ export class SeoService {
 
   resetToDefaults(): void {
     this.updatePage({
-      title: 'SS Online Shop - Pusat Belanja & Kebutuhan Terlengkap',
-      description: 'SS Online Shop — Pusat belanja kebutuhan harian, buku, dan kopi terlengkap.',
+      title: 'MalakaBooks Store - Pusat Belanja & Kebutuhan Terlengkap',
+      description: 'MalakaBooks Store — Pusat belanja kebutuhan harian, buku, dan kopi terlengkap.',
     });
   }
 

@@ -34,7 +34,7 @@ describe('AuthInterceptor', () => {
     const { next, seen } = capture();
 
     TestBed.runInInjectionContext(() => {
-      authInterceptor(new HttpRequest('GET', '/ssonline/api/v1/public/Items'), next).subscribe();
+      authInterceptor(new HttpRequest('GET', '/api/v1/public/Items'), next).subscribe();
     });
 
     expect(seen()?.headers.has('Authorization')).toBe(false);
@@ -44,7 +44,7 @@ describe('AuthInterceptor', () => {
     const { next, seen } = capture();
 
     TestBed.runInInjectionContext(() => {
-      authInterceptor(new HttpRequest('GET', '/ssonline/api/v1/public/Items'), next).subscribe();
+      authInterceptor(new HttpRequest('GET', '/api/v1/public/Items'), next).subscribe();
     });
 
     expect(seen()?.withCredentials).toBe(true);
@@ -77,11 +77,11 @@ describe('AuthInterceptor', () => {
 
   it('re-checks the session when an API call returns 401', async () => {
     const next: HttpHandlerFn = () =>
-      throwError(() => new HttpErrorResponse({ status: 401, url: '/ssonline/api/v1/customer/Orders' }));
+      throwError(() => new HttpErrorResponse({ status: 401, url: '/api/v1/customer/Orders' }));
 
     await new Promise<void>(resolve => {
       TestBed.runInInjectionContext(() => {
-        authInterceptor(new HttpRequest('GET', '/ssonline/api/v1/customer/Orders'), next).subscribe({
+        authInterceptor(new HttpRequest('GET', '/api/v1/customer/Orders'), next).subscribe({
           error: () => resolve()
         });
       });

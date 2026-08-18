@@ -54,7 +54,7 @@ export class ShippingLabelService {
     // Sender (from detail-resi, fallback to store)
     const senderName = has(dr('shipper_name', 'shipper', 'shipperName', 'pengirim', 'senderName', 'sender'))
       ? dr('shipper_name', 'shipper', 'shipperName', 'pengirim', 'senderName', 'sender')
-      : 'SS Online Shop';
+      : 'MalakaBooks Store';
     const senderPhone = dr('shipper_phone', 'shipperPhone', 'senderPhone', 'senderPhoneNumber');
     const senderCity = (dr('shipper_city', 'origin', 'originCity', 'kota_pengirim', 'kota_asal') || '').toUpperCase();
 

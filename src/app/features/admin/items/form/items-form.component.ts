@@ -117,7 +117,7 @@ export class ItemsFormComponent {
   itemTypeOptions = [
     { value: 'mardika', label: 'Item Kopi (Mardika)' },
     { value: 'malaka', label: 'Buku (Malaka)' },
-    { value: 'ssonline', label: 'SS Online' }
+    { value: 'malaka', label: 'MalakaBooks' }
   ];
 
   protected readonly coverImageFile = signal<File | null>(null);
@@ -333,7 +333,7 @@ export class ItemsFormComponent {
       const payload: any = {
         name: sku,
         sapCode: crypto.randomUUID(),
-        itemType: 'ssonline',
+        itemType: 'malaka',
         categoryId: '6a75858e154b28c7022892aa',
         uomGroupId: '6a75861e154b28c7022892ab',
         baseUomCode: 'PCS',

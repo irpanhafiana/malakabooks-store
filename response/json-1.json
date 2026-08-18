@@ -1,4 +1,4 @@
-// http://localhost:4200/ssonline/api/v1/public/Items/priced
+// http://localhost:4200/api/v1/public/Items/priced
 
 {
     "statusCode": 200,
@@ -16,7 +16,7 @@
             "id": "6a7293c6572cbb1352ddf828",
             "name": "BENG BENG KALPA BOX ISI 12 PCS",
             "sapCode": "2b3dd951-9c51-4699-8d82-b4d4f3e3ef69",
-            "itemType": "ssonline",
+            "itemType": "malaka",
             "categoryId": "6a6974c74913417719d186a1",
             "coverImage": "/images/items/2b86fa0e-30ce-43ca-a64e-580bc2e829a6.png",
             "additionalImages": [],
@@ -63,7 +63,7 @@
             "id": "6a7293c7572cbb1352ddf829",
             "name": "BENG BENG KALPA KARTON ISI 8 BOX",
             "sapCode": "f8961740-ecec-4f2b-9502-0dd3943e2ff4",
-            "itemType": "ssonline",
+            "itemType": "malaka",
             "categoryId": "6a6974c74913417719d186a1",
             "coverImage": "/images/items/35bb8844-cb70-4df1-95ed-038b8bf83cec.png",
             "additionalImages": [],
@@ -110,7 +110,7 @@
             "id": "6a7293c7572cbb1352ddf82a",
             "name": "BRAVEN CODE EDP COOL WATER 100ML",
             "sapCode": "f9e7ef8e-fcbf-438f-8b55-70b8ad78aa70",
-            "itemType": "ssonline",
+            "itemType": "malaka",
             "categoryId": "6a6974c74913417719d186a1",
             "coverImage": "/images/items/e15c86a6-ea78-47ed-934a-0a596551fe66.png",
             "additionalImages": [],

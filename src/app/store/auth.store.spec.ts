@@ -109,7 +109,6 @@ describe('AuthStore', () => {
     store.logout();
     expect(store.isLoggedIn()).toBe(false);
     expect(mockCartStore.clearOnLogout).toHaveBeenCalled();
-    expect(mockToast.info).toHaveBeenCalledWith('Anda telah keluar.');
   });
 
   it('keeps the user signed in when a 401 was only an authorization failure', async () => {

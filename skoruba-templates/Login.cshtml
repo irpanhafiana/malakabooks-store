@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Masuk - SS Online Shop</title>
+    <title>Masuk - MalakaBooks Store</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,8 +28,8 @@
         <!-- Logo & Title Section -->
         <div class="flex flex-col items-center text-center gap-2">
             <!-- Brand Logo (uses the relative URL mapped through the BFF) -->
-            <img src="/logo-1.webp" alt="SS Online Shop Logo" class="h-16 w-auto object-contain mb-2" onerror="this.src='/logo/logo-1.webp'" />
-            <h1 class="font-display font-bold text-3xl tracking-tight text-slate-900">SS Online Shop</h1>
+            <img src="/logo-1.webp" alt="MalakaBooks Store Logo" class="h-16 w-auto object-contain mb-2" onerror="this.src='/logo/logo-1.webp'" />
+            <h1 class="font-display font-bold text-3xl tracking-tight text-slate-900">MalakaBooks Store</h1>
             <p class="text-sm text-slate-500 font-medium font-sans">Pusat Belanja & Kebutuhan Terlengkap</p>
         </div>
 
@@ -63,7 +63,7 @@
                             <i class="bx bx-user text-lg"></i>
                         </div>
                         <input asp-for="Username" type="text" placeholder="Masukkan username Anda" 
-                               class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#FE7743] focus:ring-2 focus:ring-[#FE7743]/20 focus:outline-none text-sm transition-all duration-200 placeholder:text-slate-400"
+                               class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#B61919] focus:ring-2 focus:ring-[#B61919]/20 focus:outline-none text-sm transition-all duration-200 placeholder:text-slate-400"
                                required autofocus />
                     </div>
                     <span asp-validation-for="Username" class="text-[11px] text-[#B61919] font-medium"></span>
@@ -79,7 +79,7 @@
                             <i class="bx bx-lock-alt text-lg"></i>
                         </div>
                         <input asp-for="Password" type="password" placeholder="••••••••" 
-                               class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-[#FE7743] focus:ring-2 focus:ring-[#FE7743]/20 focus:outline-none text-sm transition-all duration-200 placeholder:text-slate-400"
+                               class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-[#B61919] focus:ring-2 focus:ring-[#B61919]/20 focus:outline-none text-sm transition-all duration-200 placeholder:text-slate-400"
                                required autocomplete="off" />
                         <!-- Toggle Password Viewer -->
                         <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
@@ -95,7 +95,7 @@
                     <div class="flex items-center justify-between mt-1">
                         <label class="flex items-center gap-2 cursor-pointer select-none">
                             <input asp-for="RememberLogin" type="checkbox" 
-                                   class="h-4 w-4 rounded border-slate-300 text-[#FE7743] focus:ring-[#FE7743] focus:ring-offset-0 focus:outline-none" />
+                                   class="h-4 w-4 rounded border-slate-300 text-[#B61919] focus:ring-[#B61919] focus:ring-offset-0 focus:outline-none" />
                             <span class="text-xs text-slate-600 font-medium">Ingat saya di perangkat ini</span>
                         </label>
                     </div>
@@ -104,7 +104,7 @@
                 <!-- Action Buttons -->
                 <div class="flex flex-col gap-2 mt-4">
                     <button type="submit" name="button" value="login" 
-                            class="w-full bg-[#FE7743] hover:bg-[#e6561e] text-white py-3 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-98 shadow-sm flex justify-center items-center gap-2 cursor-pointer">
+                            class="w-full bg-[#B61919] hover:bg-[#9B1515] text-white py-3 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-98 shadow-sm flex justify-center items-center gap-2 cursor-pointer">
                         <span>Masuk Sekarang</span>
                         <i class="bx bx-right-arrow-alt text-lg"></i>
                     </button>
@@ -118,7 +118,7 @@
 
         <!-- Footer Info -->
         <div class="text-center">
-            <p class="text-[11px] text-slate-400 font-medium">&copy; 2026 SS Online Shop. All rights reserved.</p>
+            <p class="text-[11px] text-slate-400 font-medium">&copy; 2026 MalakaBooks Store. All rights reserved.</p>
         </div>
     </div>
 

@@ -1,9 +1,9 @@
 export const environment = {
   production: false,
   appUrl: '',
-  apiBaseUrl: '/ssonline/api/v1',
+  apiBaseUrl: '/api/v1',
   authUrl: '/bff/login',
-  apiUrl: '/ssonline/api/v1/',
+  apiUrl: '/api/v1/',
   userPasswordApiUrl: '/api/UserPassword',
   posApiUrl: 'http://192.168.1.15:10100/',
   originCode: '32.71.10.10',

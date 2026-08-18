@@ -12,7 +12,7 @@ import { AlertService } from './core/services/alert.service';
   styleUrl: './app.css',
 })
 export class App implements OnInit {
-  protected readonly title = signal('SS Online Shop');
+  protected readonly title = signal('MalakaBooks Store');
   private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
   private readonly alertService = inject(AlertService);
@@ -24,7 +24,7 @@ export class App implements OnInit {
       if (user && this.authStore.isAdmin() && !currentUrl.includes('/admin')) {
         console.log('[App Root] Admin terdeteksi di halaman non-admin, mengalihkan ke adminshop');
         if (typeof window !== 'undefined' && !window.location.hostname.includes('adminshop')) {
-           window.location.href = 'https://adminshop.tokossonlineshop.com/admin/dashboard';
+           window.location.href = 'https://adminshop.malakabooks.com/admin/dashboard';
         } else {
            this.router.navigate(['/admin'], { replaceUrl: true });
         }

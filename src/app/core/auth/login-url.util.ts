@@ -40,7 +40,7 @@ export function getBffAuthUrl(
 
   const separator = baseUrl.includes('?') ? '&' : '?';
   
-  let url = `${baseUrl}${separator}returnUrl=${encodedReturnUrl}&app=ssonline`;
+  let url = `${baseUrl}${separator}returnUrl=${encodedReturnUrl}`;
 
   for (const [key, value] of Object.entries(additionalParams)) {
     if (value !== undefined && value !== null) {
@@ -70,7 +70,7 @@ export function getBffLogoutUrl(
  * Jika klaim tersedia:
  * 1. Menjaga query params bawaan BFF (misal `sid=xxx`).
  * 2. Mengubah relative URL menjadi full URL berbasis BFF jika host berbeda.
- * 3. Menambahkan parameter `returnUrl` (dibungkus `/redirect-to-frontend` jika production) & `app=ssonline`.
+ * 3. Menambahkan parameter `returnUrl` (dibungkus `/redirect-to-frontend` jika production).
  * Jika klaim tidak tersedia:
  * Menggunakan fallback URL logout standar melalui `getBffLogoutUrl(targetPath)`.
  */
@@ -107,9 +107,6 @@ export function resolveBffLogoutUrl(
     url += `${separator}returnUrl=${encodeURIComponent(bffReturnPath)}`;
   }
 
-  if (!url.includes('app=')) {
-    url += '&app=ssonline';
-  }
 
   return url;
 }
