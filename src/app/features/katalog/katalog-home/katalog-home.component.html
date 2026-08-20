@@ -7,8 +7,8 @@
         <p class="text-2xl font-bold text-primary-600 tracking-tight uppercase">{{ userName() || 'Tamu' }}
         </p>
       </div>
-      <div class="w-10 h-10 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
-        <i class='bx bx-book-open'></i>
+      <div class="w-auto h-14 flex items-center justify-center overflow-hidden">
+        <img src="/logo-mardika.png" alt="Logo Mardika" class="w-full h-full">
       </div>
     </div>
     <div class="flex gap-1 overflow-x-auto scrollbar-hide pb-0.5">
@@ -27,14 +27,16 @@
     <!-- Left Column -->
     <div class="flex-1 flex flex-col gap-3">
       @for (product of leftColumnProducts(); track product.id) {
-      <app-katalog-product-card [product]="product" [priority]="$index < 2" (clickCard)="selectedProductForSheet.set($event)"></app-katalog-product-card>
+      <app-katalog-product-card [product]="product" [priority]="$index < 2"
+        (clickCard)="selectedProductForSheet.set($event)"></app-katalog-product-card>
       }
     </div>
 
     <!-- Right Column -->
     <div class="flex-1 flex flex-col gap-3">
       @for (product of rightColumnProducts(); track product.id) {
-      <app-katalog-product-card [product]="product" [priority]="$index < 2" (clickCard)="selectedProductForSheet.set($event)"></app-katalog-product-card>
+      <app-katalog-product-card [product]="product" [priority]="$index < 2"
+        (clickCard)="selectedProductForSheet.set($event)"></app-katalog-product-card>
       }
     </div>
   </div>
@@ -48,7 +50,8 @@
       </div>
     </div>
     <h3 class="text-lg font-bold text-gray-800 tracking-tight">Produk tidak ditemukan</h3>
-    <p class="text-xs text-gray-400 max-w-[240px] mx-auto mt-2">Coba pilih kategori lain untuk menemukan produk yang kamu cari.</p>
+    <p class="text-xs text-gray-400 max-w-[240px] mx-auto mt-2">Coba pilih kategori lain untuk menemukan produk yang
+      kamu cari.</p>
   </div>
   }
 
@@ -88,9 +91,11 @@
 
       <div class="space-y-4">
         <input type="text" [ngModel]="tempName()" (ngModelChange)="tempName.set($event)"
-          (keyup.enter)="submitOnboarding()" placeholder="Nama Anda..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-primary-600">
+          (keyup.enter)="submitOnboarding()" placeholder="Nama Anda..."
+          class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-primary-600">
 
-        <button (click)="submitOnboarding()" [disabled]="!tempName().trim()" class="w-full py-3 bg-primary-600 text-white font-bold rounded-xl disabled:opacity-50">
+        <button (click)="submitOnboarding()" [disabled]="!tempName().trim()"
+          class="w-full py-3 bg-primary-600 text-white font-bold rounded-xl disabled:opacity-50">
           Mulai Belanja
         </button>
       </div>
