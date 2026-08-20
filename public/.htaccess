@@ -1,4 +1,4 @@
-# Malakabooks Store - Apache Shared Hosting Configuration (.htaccess)
+# Kopi Mardika - Apache Shared Hosting Configuration (.htaccess)
 
 <IfModule mod_rewrite.c>
   RewriteEngine On

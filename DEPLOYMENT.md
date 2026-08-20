@@ -1,6 +1,6 @@
-# Panduan Deployment — Malakabooks Store Frontend
+# Panduan Deployment — Kopi Mardika Frontend
 
-Dokumen ini menjelaskan langkah-langkah deployment aplikasi frontend Angular (Malakabooks Store) ke lingkungan produksi / staging.
+Dokumen ini menjelaskan langkah-langkah deployment aplikasi frontend Angular (Kopi Mardika) ke lingkungan produksi / staging.
 
 ---
 

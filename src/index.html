@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="id">
+
 <head>
   <meta charset="utf-8">
-  <title>MalakaBooks Store - Pusat Belanja & Kebutuhan Terlengkap</title>
+  <title>Kopi Mardika - Lorem Ipsum Dolor Sit Amet</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="MalakaBooks Store — Pusat belanja kebutuhan harian, buku, dan kopi terlengkap.">
+  <meta name="description" content="Kopi Mardika — Pusat belanja kebutuhan harian, buku, dan kopi terlengkap.">
   <meta name="theme-color" content="#FE7743">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -27,12 +28,19 @@
   <!-- Critical inline styles: paint the brand background + a loader immediately,
        before the Angular JS bundle bootstraps, to eliminate the white FOUC flash. -->
   <style>
-    html, body { margin: 0; height: 100%; background-color: #f9fafb; }
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      background-color: #f9fafb;
+    }
+
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       color: #111827;
       -webkit-font-smoothing: antialiased;
     }
+
     .app-boot-loader {
       position: fixed;
       inset: 0;
@@ -42,18 +50,26 @@
       background-color: #f9fafb;
       z-index: 9999;
     }
+
     .app-boot-loader__spinner {
       width: 40px;
       height: 40px;
       border-radius: 9999px;
       border: 3px solid #cdd5e0;
-      border-top-color: #003049; /* primary-600 */
+      border-top-color: #003049;
+      /* primary-600 */
       animation: app-boot-spin 0.7s linear infinite;
     }
-    @keyframes app-boot-spin { to { transform: rotate(360deg); } }
+
+    @keyframes app-boot-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
   </style>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
+
 <body>
   <app-root>
     <!-- Removed automatically once Angular renders into <app-root>. -->
@@ -62,4 +78,5 @@
     </div>
   </app-root>
 </body>
+
 </html>

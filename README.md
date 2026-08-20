@@ -1,4 +1,4 @@
-# Malakabooks Store 📚
+# Kopi Mardika 📚
 
 Platform E-Commerce Modern untuk Penjualan Buku, dibangun menggunakan **Angular 21**.
 

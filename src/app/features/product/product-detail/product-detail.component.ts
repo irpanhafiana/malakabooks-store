@@ -111,8 +111,8 @@ export class ProductDetailComponent implements OnInit {
         this.activeImage.set(prod.coverImage);
         this.reviews.set(revs || []);
 
-        const pageTitle = `${prod.title || 'Detail Produk'} - Malaka Books Store`;
-        const pageDesc = prod.description || `Beli ${prod.title} di Malaka Books Store. Toko buku online terpercaya.`;
+        const pageTitle = `${prod.title || 'Detail Produk'} - Kopi Mardika`;
+        const pageDesc = prod.description || `Beli ${prod.title} di Kopi Mardika. Toko buku online terpercaya.`;
         this.seoService.updatePage({
           title: pageTitle,
           description: pageDesc,

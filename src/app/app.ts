@@ -12,7 +12,7 @@ import { AlertService } from './core/services/alert.service';
   styleUrl: './app.css',
 })
 export class App implements OnInit {
-  protected readonly title = signal('MalakaBooks Store');
+  protected readonly title = signal('Kopi Mardika');
   private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
   private readonly alertService = inject(AlertService);
@@ -34,7 +34,7 @@ export class App implements OnInit {
       if (urlParams.get('loggedOut') === 'true') {
         // Tampilkan pesan logout sukses dari server
         this.alertService.info('Anda telah keluar.');
-        
+
         // Bersihkan parameter dari URL agar pesan tidak muncul berulang saat refresh
         const newUrl = window.location.pathname;
         window.history.replaceState({}, '', newUrl);
