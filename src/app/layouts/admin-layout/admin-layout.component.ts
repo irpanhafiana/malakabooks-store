@@ -58,7 +58,7 @@ export class AdminLayoutComponent {
 
         if (url.includes('/categories')) {
           this.activeRouteName.set('Kelola Kategori');
-          this.pageDescription.set('Manajemen kategori buku dan produk');
+          this.pageDescription.set('Manajemen kategori kopi dan produk');
         } else if (url.includes('/uoms')) {
           this.activeRouteName.set('Kelola Satuan Ukuran (UoM)');
           this.pageDescription.set('Manajemen satuan ukur produk');
@@ -67,7 +67,7 @@ export class AdminLayoutComponent {
           this.pageDescription.set('Manajemen lokasi gudang penyimpanan');
         } else if (url.includes('/items')) {
           this.activeRouteName.set('Kelola Produk');
-          this.pageDescription.set('Manajemen katalog produk dan buku');
+          this.pageDescription.set('Manajemen katalog produk dan kopi');
         } else if (url.includes('/stocks')) {
           this.activeRouteName.set('Kelola Stok Gudang');
           this.pageDescription.set('Manajemen ketersediaan stok di gudang');
@@ -82,7 +82,7 @@ export class AdminLayoutComponent {
           this.pageDescription.set('Manajemen opsi pembayaran pelanggan');
         } else if (url.includes('/authors')) {
           this.activeRouteName.set('Kelola Penulis');
-          this.pageDescription.set('Manajemen data penulis buku');
+          this.pageDescription.set('Manajemen data penulis (opsional)');
         } else if (url.includes('/orders')) {
           this.activeRouteName.set('Kelola Pesanan');
           this.pageDescription.set('Manajemen transaksi dan pesanan pelanggan');

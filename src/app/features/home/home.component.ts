@@ -86,8 +86,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.seoService.updatePage({
-      title: 'Kopi Mardika - Toko Buku Online & Retail Terlengkap',
-      description: 'Temukan koleksi buku terlengkap, kopi Mardika premium, dan kebutuhan sembako retail terbaik hanya di Kopi Mardika.'
+      title: 'Kopi Mardika - Toko Kopi Online & Retail Terlengkap',
+      description: 'Temukan koleksi kopi Mardika premium, dan kebutuhan sembako retail terbaik hanya di Kopi Mardika.'
     });
     this.productStore.loadAll();
     this.bannerStore.loadActiveBanners();

@@ -1,7 +1,7 @@
 <form [formGroup]="formGroup" class="flex flex-col gap-4 text-slate-700">
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
     <app-admin-input label="Nama Aturan Harga" placeholder="Contoh: Harga VIP Book Fair" [control]="nameControl"></app-admin-input>
-    <app-admin-select label="Item / Buku" [control]="$any(itemIdControl)" [options]="itemOptions()"></app-admin-select>
+    <app-admin-select label="Item / Produk" [control]="$any(itemIdControl)" [options]="itemOptions()"></app-admin-select>
     <app-admin-input label="Kode UoM" [control]="uomGroupControl" [readonly]="true" class="bg-slate-50 cursor-not-allowed text-slate-500"></app-admin-input>
   </div>
 

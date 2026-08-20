@@ -44,7 +44,7 @@ export class SeoService {
   resetToDefaults(): void {
     this.updatePage({
       title: 'Kopi Mardika - Lorem Ipsum Dolor Sit Amet',
-      description: 'Kopi Mardika — Pusat belanja kebutuhan harian, buku, dan kopi terlengkap.',
+      description: 'Kopi Mardika — Pusat belanja kebutuhan harian, dan kopi terlengkap.',
     });
   }
 

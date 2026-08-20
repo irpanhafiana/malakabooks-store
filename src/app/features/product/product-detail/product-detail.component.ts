@@ -112,7 +112,7 @@ export class ProductDetailComponent implements OnInit {
         this.reviews.set(revs || []);
 
         const pageTitle = `${prod.title || 'Detail Produk'} - Kopi Mardika`;
-        const pageDesc = prod.description || `Beli ${prod.title} di Kopi Mardika. Toko buku online terpercaya.`;
+        const pageDesc = prod.description || `Beli ${prod.title} di Kopi Mardika. Toko kopi online terpercaya.`;
         this.seoService.updatePage({
           title: pageTitle,
           description: pageDesc,
