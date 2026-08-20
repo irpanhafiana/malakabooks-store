@@ -59,24 +59,31 @@
       </section>
 
       <!-- Quantity Control -->
-      <section>
-        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Atur Jumlah</h3>
-        <app-katalog-quantity-selector
-          [quantity]="quantity()"
-          (changeQty)="quantity.set($event)">
-        </app-katalog-quantity-selector>
-      </section>
-    </div>
+      @if ((product()?.stock || 0) > 0) {
+        <section>
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Atur Jumlah</h3>
+          <app-katalog-quantity-selector
+            [quantity]="quantity()"
+            [max]="product()?.stock || 0"
+            (changeQty)="quantity.set($event)">
+          </app-katalog-quantity-selector>
+        </section>
 
-    <!-- Add to Cart -->
-    <div class="mt-8">
-      <button
-        (click)="addToCart()"
-        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all"
-      >
-        <i class='bx bx-shopping-bag text-xl'></i>
-        Tambah ke Keranjang
-      </button>
+        <!-- Add to Cart -->
+        <div class="mt-8">
+          <button
+            (click)="addToCart()"
+            class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all"
+          >
+            <i class='bx bx-shopping-bag text-xl'></i>
+            Tambah ke Keranjang
+          </button>
+        </div>
+      } @else {
+        <div class="mt-8 w-full py-4 bg-slate-100 rounded-xl text-center border border-slate-200">
+          <span class="text-sm font-bold text-slate-500">Stok produk ini sedang habis (Stok 0)</span>
+        </div>
+      }
     </div>
   </div>
 } @else {
