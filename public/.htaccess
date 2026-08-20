@@ -8,15 +8,6 @@
   RewriteCond %{HTTPS} off
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-  # 2. BLOKIR /admin dari domain utama (hanya boleh via subdomain adminshop.*)
-  RewriteCond %{HTTP_HOST} !^adminshop\. [NC]
-  RewriteCond %{REQUEST_URI} ^/admin [NC]
-  RewriteRule ^ - [R=404,L]
-
-  # 3. Subdomain adminshop: root (/) redirect ke /admin
-  RewriteCond %{HTTP_HOST} ^adminshop\. [NC]
-  RewriteCond %{REQUEST_URI} ^/$
-  RewriteRule ^$ /admin [R=301,L]
 
   # 4. Serve existing files or directories directly (JS, CSS, images, ngsw files)
   RewriteCond %{REQUEST_FILENAME} -f [OR]

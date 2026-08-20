@@ -25,9 +25,7 @@ export class CallbackComponent implements OnInit {
       const success = await this.authStore.initializeSession();
       if (success) {
         if (this.authStore.isAdmin()) {
-          if (typeof window !== 'undefined') {
-            window.location.href = 'https://adminshop.malakabooks.com/admin/dashboard';
-          }
+          this.router.navigate(['/admin'], { replaceUrl: true });
         } else {
           this.router.navigate(['/'], { replaceUrl: true });
         }

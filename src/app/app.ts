@@ -22,12 +22,8 @@ export class App implements OnInit {
       const user = this.authStore.currentUser();
       const currentUrl = this.router.url;
       if (user && this.authStore.isAdmin() && !currentUrl.includes('/admin')) {
-        console.log('[App Root] Admin terdeteksi di halaman non-admin, mengalihkan ke adminshop');
-        if (typeof window !== 'undefined' && !window.location.hostname.includes('adminshop')) {
-           window.location.href = 'https://adminshop.malakabooks.com/admin/dashboard';
-        } else {
-           this.router.navigate(['/admin'], { replaceUrl: true });
-        }
+        console.log('[App Root] Admin terdeteksi di halaman non-admin, mengalihkan ke halaman admin');
+        this.router.navigate(['/admin'], { replaceUrl: true });
       }
     });
   }

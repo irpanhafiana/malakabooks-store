@@ -8,7 +8,7 @@ Dokumen ini mencatat alur, konsep, dan spesifikasi fitur Offline Store dari pers
 
 1. **Scan QR Toko Fisik:**
    - Customer datang ke toko fisik dan melakukan scan QR Code yang dipajang di area toko/pintu masuk.
-   - QR Code memuat URL katalog toko dengan identitas cabang (`branchCode`), misal: `https://katalog.malakabooks.com/?branch=BR-BDG-01`.
+   - QR Code memuat URL katalog toko dengan identitas cabang (`branchCode`), misal: `https://katalog.mardikakopi.com/?branch=BR-BDG-01`.
 
 2. **Eksplorasi Katalog Offline:**
    - Customer masuk ke katalog tanpa perlu registrasi/login (*Guest Mode*).
