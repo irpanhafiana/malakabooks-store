@@ -4,14 +4,14 @@ import { PromotionBanner, CreatePromotionBannerRequest, UpdatePromotionBannerReq
 import { PromotionBannerStore } from '../../../../store/promotion-banner.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { AdminCheckboxComponent } from '../../../../shared/ui/admin-checkbox/admin-checkbox.component';
-import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-button.component';
+
 import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-promotion-banners-form',
   standalone: true,
-  imports: [ReactiveFormsModule, AdminInputComponent, AdminCheckboxComponent, AdminButtonComponent],
+  imports: [ReactiveFormsModule, AdminInputComponent, AdminCheckboxComponent],
   template: `
     <form [formGroup]="bannerForm" (ngSubmit)="onSubmitForm()" class="flex flex-col gap-5">
       <app-admin-input
@@ -92,11 +92,6 @@ import { AlertService } from '../../../../core/services/alert.service';
             <p class="text-xs text-slate-500 mt-1">Format: JPG, PNG. Max 2MB.</p>
           </div>
         </div>
-      </div>
-
-      <div class="flex justify-end gap-2 mt-4">
-        <app-admin-button type="button" variant="outline" size="sm" (click)="formCancel.emit()">Batal</app-admin-button>
-        <app-admin-button type="submit" variant="primary" size="sm">Simpan</app-admin-button>
       </div>
 
     </form>

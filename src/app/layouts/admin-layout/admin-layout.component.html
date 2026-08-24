@@ -183,6 +183,16 @@
               <span>Promosi</span>
             </a>
 
+            <!-- Penulis -->
+            <a routerLink="/admin/authors"
+              routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
+              (click)="closeSidebar()"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
+              <app-icon name="minus" size="18"
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+              <span>Penulis</span>
+            </a>
+
             <!-- Mtd Pembayaran -->
             <a routerLink="/admin/payment-methods"
               routerLinkActive="!bg-linear-to-br !from-primary-500 !to-primary-600 !text-white active-link"
