@@ -55,7 +55,7 @@ export function getBffLoginUrl(
   targetPath: string = '/',
   additionalParams: Record<string, string> = {}
 ): string {
-  return getBffAuthUrl('login', targetPath, additionalParams);
+  return getBffAuthUrl('login', targetPath, { app: 'mardika', ...additionalParams });
 }
 
 export function getBffLogoutUrl(

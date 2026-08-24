@@ -18,7 +18,7 @@ describe('login-url.util', () => {
     });
 
     const url = getBffLoginUrl('/');
-    expect(url).toBe('/bff/login?returnUrl=%2F');
+    expect(url).toBe('/bff/login?returnUrl=%2F&app=mardika');
   });
 
   it('should build proper production redirect URL matching backend requirements', () => {
@@ -37,7 +37,7 @@ describe('login-url.util', () => {
 
     const url = getBffLoginUrl('/');
     expect(url).toBe(
-      'https://tokosuburjaya.com:17801/bff/login?returnUrl=%2Fredirect-to-frontend%3FreturnUrl%3Dhttps%253A%252F%252Fmardikakopi.com'
+      'https://tokosuburjaya.com:17801/bff/login?returnUrl=%2Fredirect-to-frontend%3FreturnUrl%3Dhttps%253A%252F%252Fmardikakopi.com&app=mardika'
     );
   });
 
@@ -57,7 +57,7 @@ describe('login-url.util', () => {
 
     const url = getBffLoginUrl('/checkout');
     expect(url).toBe(
-      'https://tokosuburjaya.com:17801/bff/login?returnUrl=%2Fredirect-to-frontend%3FreturnUrl%3Dhttps%253A%252F%252Fmardikakopi.com%252Fcheckout'
+      'https://tokosuburjaya.com:17801/bff/login?returnUrl=%2Fredirect-to-frontend%3FreturnUrl%3Dhttps%253A%252F%252Fmardikakopi.com%252Fcheckout&app=mardika'
     );
   });
 
@@ -77,7 +77,7 @@ describe('login-url.util', () => {
 
     const url = getBffLoginUrl('/admin', { client_type: 'admin' });
     expect(url).toBe(
-      'https://tokosuburjaya.com:17801/bff/login?returnUrl=%2Fredirect-to-frontend%3FreturnUrl%3Dhttps%253A%252F%252Fmardikakopi.com%252Fadmin&client_type=admin'
+      'https://tokosuburjaya.com:17801/bff/login?returnUrl=%2Fredirect-to-frontend%3FreturnUrl%3Dhttps%253A%252F%252Fmardikakopi.com%252Fadmin&app=mardika&client_type=admin'
     );
   });
 
