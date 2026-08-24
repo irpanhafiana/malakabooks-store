@@ -103,6 +103,61 @@
     </div>
   </section>
 
+  <!-- Author Slideshow -->
+  <section class="flex flex-col gap-4 mt-2">
+    <div class="flex items-end justify-between">
+      <div>
+        <h2 class="font-display font-extrabold text-slate-800 text-base lg:text-2xl">Penulis dan Kontributor</h2>
+        <p class="text-[12px] lg:text-base text-slate-400 mt-0.5">Mengenal lebih dekat para kreator karya sastra</p>
+      </div>
+      @if (screen.isDesktop()) {
+      <div class="flex items-center gap-3 shrink-0">
+        <button type="button" (click)="authorPrev()" aria-label="Sebelumnya"
+          class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 active:scale-95 transition-colors cursor-pointer"><i
+            class="bx bx-chevron-left text-xl"></i></button>
+        <button type="button" (click)="authorNext()" aria-label="Berikutnya"
+          class="w-9 h-9 rounded-full bg-primary-600 text-white flex items-center justify-center hover:bg-primary-700 active:scale-95 transition-colors cursor-pointer"><i
+            class="bx bx-chevron-right text-xl"></i></button>
+      </div>
+      }
+    </div>
+
+    <div #authorCarouselViewport class="overflow-hidden pl-2 pb-2">
+      <div class="flex -ml-3 items-center h-full lg:cursor-default cursor-grab active:cursor-grabbing">
+        @if (authorStore.loading()) {
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+        <div class="flex-[0_0_170px] lg:flex-[0_0_20%] pl-2 lg:pl-4 h-full flex items-center justify-center">
+          <div class="w-full h-64 lg:h-84 bg-slate-200/60 animate-pulse rounded-xl"></div>
+        </div>
+        }
+        } @else {
+        @for (author of authorStore.authors(); track author.id) {
+        <div class="flex-[0_0_170px] lg:flex-[0_0_20%] pl-2 lg:pl-4 h-full flex items-center justify-center">
+          <div
+            class="relative w-full h-64 lg:h-84 p-3.5 lg:p-4 rounded-xl cursor-pointer overflow-hidden group active:scale-[0.98] bg-slate-950"
+            (click)="openAuthorSheet(author)">
+
+            <!-- Image fading to bottom -->
+            <img [src]="author.photoUrl"
+              class="absolute top-0 left-0 w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-105"
+              style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
+
+            <!-- Bottom Text -->
+            <div class="mt-auto flex flex-col gap-2.5 z-10 relative h-full justify-end pb-1">
+              <h3
+                class="text-xl lg:text-3xl font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
+                {{ author.name }}</h3>
+              <p class="text-white/80 text-[10px] lg:text-xs leading-relaxed line-clamp-3 lg:line-clamp-4 font-medium drop-shadow-md">
+                {{ author.biography || 'Tidak ada biografi' }}</p>
+            </div>
+          </div>
+        </div>
+        }
+        }
+      </div>
+    </div>
+  </section>
+
   <!-- Recommended/Featured Products grid -->
   <section class="flex flex-col gap-4">
     <div class="flex flex-col gap-6">
@@ -165,4 +220,120 @@
     }
   </section>
 
+  @if (screen.isDesktop()) {
+  <app-modal [isOpen]="isAuthorSheetOpen()" (isOpenChange)="closeAuthorSheet()" title="Penulis dan Kontributor"
+    maxWidth="max-w-3xl">
+    @let auth = selectedAuthor();
+    @if (auth) {
+    <div class="flex flex-col gap-6">
+      <div class="flex gap-6 items-start">
+        @if (auth.photoUrl) {
+        <img [src]="auth.photoUrl" [alt]="auth.name" class="w-32 h-40 object-cover rounded-xl shadow-sm shrink-0" />
+        } @else {
+        <div class="w-32 h-40 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
+          <i class="bx bx-user text-4xl"></i>
+        </div>
+        }
+        <div class="flex flex-col gap-2">
+          <h2 class="font-display font-extrabold text-slate-800 text-2xl">{{ auth.name }}</h2>
+          @if (auth.role) {
+          <span class="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold w-fit">{{
+            auth.role }}</span>
+          }
+          @if (auth.biography) {
+          <div class="text-sm text-slate-600 leading-relaxed mt-2" [innerHTML]="auth.biography"></div>
+          }
+        </div>
+      </div>
+
+      <div class="border-t border-slate-100 pt-4">
+        <h3 class="font-display font-bold text-slate-800 text-lg mb-4">Karya Terkait</h3>
+        @let products = selectedAuthorProducts();
+        @if (products.length > 0) {
+        <div class="grid grid-cols-3 gap-4">
+          @for (prod of products; track prod.id) {
+          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+          }
+        </div>
+        } @else {
+        <div class="flex flex-col items-center justify-center py-8 text-slate-400">
+          <i class="bx bx-book-open text-3xl mb-2"></i>
+          <p class="text-sm">Belum ada karya yang tersedia.</p>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </app-modal>
+  } @else {
+  <!-- Bottom Sheet for Author Products -->
+  <app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true">
+    <div class="flex flex-col h-full overflow-hidden bg-white relative">
+      <!-- Top Navigation Header -->
+      <header class="sticky top-0 z-50 bg-white px-4 py-0 flex items-center justify-start h-14 shrink-0">
+        <button type="button" (click)="closeAuthorSheet()"
+          class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0">
+          <i class="bx bx-left-arrow-alt text-2xl"></i>
+        </button>
+        <h1 class="font-display font-extrabold text-slate-800 text-base text-center truncate px-2">Penulis dan Kontributor
+        </h1>
+      </header>
+
+      <!-- Scrollable Content -->
+      <div class="flex-1 overflow-y-auto">
+        @let auth = selectedAuthor();
+
+        @if (auth) {
+        <!-- Author Profile -->
+        <div class="px-4 flex flex-col items-start justify-start gap-4 mt-2">
+          <!-- Photo -->
+          @if (auth.photoUrl) {
+          <img [src]="auth.photoUrl" [alt]="auth.name" class="w-full h-full object-cover" />
+          } @else {
+          <div class="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+            <i class="bx bx-user text-3xl"></i>
+          </div>
+          }
+
+          <div class="flex flex-col justify-between items-start gap-2">
+            <!-- Name & Role -->
+            <div class="flex flex-col items-start">
+              <h2 class="font-display font-extrabold text-slate-800 text-xl text-center">{{ auth.name }}</h2>
+              @if (auth.role) {
+              <p class="text-sm font-medium text-slate-400">{{ auth.role }}</p>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Biography -->
+        @if (auth.biography) {
+        <div class="mt-4 px-4 pb-4 border-b border-slate-100">
+          <h3 class="font-display font-bold text-slate-800 text-sm mb-2">Tentang Penulis</h3>
+          <p class="text-xs text-slate-600 leading-relaxed" [innerHTML]="auth.biography"></p>
+        </div>
+        }
+
+        <!-- Author's Products -->
+        <div class="p-4">
+          <h3 class="font-display font-bold text-slate-800 text-sm mb-4">Karya Terkait</h3>
+          @let products = selectedAuthorProducts();
+          @if (products.length > 0) {
+          <app-masonry-grid [items]="products">
+            <ng-template let-prod>
+              <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+            </ng-template>
+          </app-masonry-grid>
+          } @else {
+          <div class="flex flex-col items-center justify-center py-8 text-slate-400">
+            <i class="bx bx-book-open text-3xl mb-2"></i>
+            <p class="text-xs">Belum ada karya yang tersedia.</p>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+  </app-bottom-sheet>
+  }
 </div>

@@ -64,7 +64,7 @@ export function jwtHasAdminRole(decoded: DecodedJwt | null): boolean {
     return false;
   };
 
-  return matches('Malaka-Admin') || matches('SSOnline-Admin') || matches('admin') || containsAdmin();
+  return matches('SSOnline-Admin') || matches('SSOnline-Admin') || matches('admin') || containsAdmin();
 }
 
 export function mapJwtToUser(decoded: DecodedJwt | null): User | null {

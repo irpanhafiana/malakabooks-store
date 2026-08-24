@@ -14,12 +14,15 @@ import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 import { ScreenService } from '../../core/services/screen.service';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
+import { AuthorStore } from '../../store/author.store';
+import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent],
+  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent, ModalComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -28,19 +31,27 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly userStore = inject(UserStore);
   protected readonly authStore = inject(AuthStore);
   protected readonly bannerStore = inject(PromotionBannerStore);
+  protected readonly authorStore = inject(AuthorStore);
   protected readonly screen = inject(ScreenService);
   private readonly router = inject(Router);
   private readonly seoService = inject(SeoService);
 
   currentSlide = signal<number>(0);
+  currentAuthorSlide = signal<number>(0);
+  isAuthorSheetOpen = signal(false);
+  selectedAuthorName = signal<string>('');
+  selectedAuthorProducts = signal<any[]>([]);
+  selectedAuthor = signal<any | null>(null);
 
   readonly catalogProducts = this.productStore.filteredProducts;
 
   private embla?: EmblaCarouselType;
+  private authorEmbla?: EmblaCarouselType;
   private bestSellerEmbla?: EmblaCarouselType;
   private merchandiseEmbla?: EmblaCarouselType;
 
   @ViewChild('carouselViewport') carouselViewport!: ElementRef<HTMLElement>;
+  @ViewChild('authorCarouselViewport') authorCarouselViewport?: ElementRef<HTMLElement>;
   @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport!: ElementRef<HTMLElement>;
   @ViewChild('merchandiseCarouselViewport') merchandiseCarouselViewport!: ElementRef<HTMLElement>;
 
@@ -82,6 +93,21 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 100);
       }
     });
+
+    effect(() => {
+      if (this.authorStore.authors().length > 0) {
+        setTimeout(() => {
+          if (this.authorEmbla) {
+            this.authorEmbla.reInit();
+            const authAutoplay = this.authorEmbla.plugins()['autoplay'];
+            if (authAutoplay) {
+              authAutoplay.reset();
+              authAutoplay.play();
+            }
+          }
+        }, 100);
+      }
+    });
   }
 
   ngOnInit() {
@@ -91,6 +117,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.productStore.loadAll();
     this.bannerStore.loadActiveBanners();
+    this.authorStore.loadAuthors();
   }
 
   ngAfterViewInit() {
@@ -104,6 +131,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const onSelect = () => this.currentSlide.set(this.embla!.selectedScrollSnap());
     this.embla.on('select', onSelect);
     onSelect();
+
+    if (this.authorCarouselViewport) {
+      this.authorEmbla = EmblaCarousel(
+        this.authorCarouselViewport.nativeElement,
+        { loop: true, align: 'start', duration: 40 },
+        [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
+      );
+      const onAuthorSelect = () => this.currentAuthorSlide.set(this.authorEmbla!.selectedScrollSnap());
+      this.authorEmbla.on('select', onAuthorSelect);
+      onAuthorSelect();
+    }
 
     if (this.merchandiseCarouselViewport) {
       this.merchandiseEmbla = EmblaCarousel(
@@ -124,6 +162,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.embla?.destroy();
+    this.authorEmbla?.destroy();
     this.bestSellerEmbla?.destroy();
     this.merchandiseEmbla?.destroy();
   }
@@ -145,6 +184,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   bestSellerNext() { this.bestSellerEmbla?.scrollNext(); }
   merchandisePrev() { this.merchandiseEmbla?.scrollPrev(); }
   merchandiseNext() { this.merchandiseEmbla?.scrollNext(); }
+  authorPrev() { this.authorEmbla?.scrollPrev(); }
+  authorNext() { this.authorEmbla?.scrollNext(); }
 
   filterByCategory(catId: string | null) {
     this.productStore.setCategoryFilter(catId);
@@ -159,5 +200,25 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.productStore.setQtyQuantity(1);
     this.productStore.setQtyAction('cart');
     this.productStore.setQtyModalOpen(true);
+  }
+
+  openAuthorSheet(author: any) {
+    this.selectedAuthor.set(author);
+    this.selectedAuthorName.set(author.name);
+    
+    const filtered = this.productStore.products().filter(p => {
+      const matchIds = p.authorIds && p.authorIds.some(id => String(id) === String(author.id));
+      const matchAuthors = p.authors && p.authors.some(a => String(a.id) === String(author.id));
+      return matchIds || matchAuthors;
+    });
+
+    console.log('Total products with authors:', this.productStore.products().filter(p => p.authorIds?.length > 0 || p.authors?.length > 0).length);
+    
+    this.selectedAuthorProducts.set(filtered);
+    this.isAuthorSheetOpen.set(true);
+  }
+
+  closeAuthorSheet() {
+    this.isAuthorSheetOpen.set(false);
   }
 }
