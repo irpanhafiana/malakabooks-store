@@ -40,12 +40,12 @@
 
       <!-- Product Detail Bottom Sheet -->
       <app-bottom-sheet [isOpen]="modalHandler.isDetailOpen()" (closed)="modalHandler.closeProductDetails()"
-        [fullHeight]="true">
+        [fullHeight]="true" [zIndex]="10000">
         <app-product-detail [productId]="modalHandler.selectedDetailId()"></app-product-detail>
       </app-bottom-sheet>
 
       <!-- Qty / Add To Cart Bottom Sheet -->
-      <app-bottom-sheet [isOpen]="productStore.isQtyModalOpen()" (closed)="modalHandler.closeQty()">
+      <app-bottom-sheet [isOpen]="productStore.isQtyModalOpen()" (closed)="modalHandler.closeQty()" [zIndex]="10010">
         <app-qty-modal-content #qtyMobile (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
         <div class="border-t border-slate-100 px-5 py-4 flex items-center justify-between gap-4 bg-white shrink-0">
           @if ((productStore.activeProduct()?.stock || 0) > 0) {

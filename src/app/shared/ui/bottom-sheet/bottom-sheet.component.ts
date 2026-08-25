@@ -1,4 +1,4 @@
-import { Component, input, output, effect, signal, ChangeDetectionStrategy, inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, input, output, effect, signal, ChangeDetectionStrategy, inject, ChangeDetectorRef, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { lockBodyScroll, unlockBodyScroll } from '../../util/body-scroll-lock.util';
 
 @Component({
@@ -8,10 +8,11 @@ import { lockBodyScroll, unlockBodyScroll } from '../../util/body-scroll-lock.ut
   templateUrl: './bottom-sheet.component.html',
   styleUrl: './bottom-sheet.component.css'
 })
-export class BottomSheetComponent implements OnDestroy {
+export class BottomSheetComponent implements OnInit, OnDestroy {
   readonly isOpen = input<boolean>(false);
   readonly title = input<string>('');
   readonly fullHeight = input<boolean>(false);
+  readonly zIndex = input<number>(9990);
 
   readonly closed = output<void>();
 
@@ -27,6 +28,19 @@ export class BottomSheetComponent implements OnDestroy {
   private openTimerId: ReturnType<typeof setTimeout> | null = null;
   private isCurrentlyLocked = false;
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly el = inject(ElementRef);
+
+  ngOnInit() {
+    if (typeof document !== 'undefined') {
+      const parentRoot = this.el.nativeElement.closest('.admin-root, .customer-root, .inner-root');
+      if (parentRoot) {
+        if (parentRoot.classList.contains('admin-root')) this.el.nativeElement.classList.add('admin-root');
+        if (parentRoot.classList.contains('customer-root')) this.el.nativeElement.classList.add('customer-root');
+        if (parentRoot.classList.contains('inner-root')) this.el.nativeElement.classList.add('inner-root');
+      }
+      document.body.appendChild(this.el.nativeElement);
+    }
+  }
 
   constructor() {
     effect(() => {
@@ -168,6 +182,7 @@ export class BottomSheetComponent implements OnDestroy {
       document.removeEventListener('mouseup', this.onMouseUp);
       document.removeEventListener('touchmove', this.onTouchMove);
       document.removeEventListener('touchend', this.onTouchEnd);
+      this.el.nativeElement.remove();
     }
   }
 }

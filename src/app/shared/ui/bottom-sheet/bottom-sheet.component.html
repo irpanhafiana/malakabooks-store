@@ -1,10 +1,10 @@
 @if (renderComponent()) {
 <!-- Backdrop overlay -->
-<div class="bottom-sheet-backdrop fixed! inset-0! z-9998!" [class.active]="isAnimating()" (click)="closeSheet()" (keydown.escape)="closeSheet()" tabindex="0" role="button" aria-label="Close bottom sheet backdrop">
+<div class="bottom-sheet-backdrop fixed! inset-0!" [style.zIndex]="zIndex()" [class.active]="isAnimating()" (click)="closeSheet()" (keydown.escape)="closeSheet()" tabindex="0" role="button" aria-label="Close bottom sheet backdrop">
 </div>
 
 <!-- Bottom Sheet Content Container -->
-<div class="bottom-sheet-container fixed! bottom-0! z-9999!" [class.active]="isAnimating()"
+<div class="bottom-sheet-container fixed! bottom-0!" [style.zIndex]="zIndex() + 1" [class.active]="isAnimating()"
   [class.dragging]="isDragging()" [class.full-height]="fullHeight()"
   [style.transform]="isDragging() ? 'translateY(' + dragOffset() + 'px)' : null">
   <!-- Header with drag indicator -->
@@ -15,14 +15,17 @@
       <div class="w-10 h-1.25 rounded-full bg-slate-200/80 hover:bg-slate-300 "></div>
     </div>
     @if (title()) {
-    <div class="shrink-0 px-5 pt-1 pb-4 border-b border-slate-100">
+    <div class="shrink-0 px-5 pt-1 pb-4 border-b border-slate-100 flex items-center justify-between">
       <h2 class="font-display font-extrabold text-slate-800 text-base">{{ title() }}</h2>
+      <button type="button" (click)="closeSheet()" class="p-1 rounded-lg text-slate-400 hover:text-slate-600 active:scale-95 cursor-pointer" aria-label="Close">
+        <i class="bx bx-x text-2xl"></i>
+      </button>
     </div>
     }
   </div>
 
   <!-- Content Viewport -->
-  <div class="grow flex flex-col overflow-hidden w-full relative min-h-0">
+  <div class="bottom-sheet-content w-full relative">
     @if (lazyRenderContent()) {
     <ng-content></ng-content>
     } @else {
