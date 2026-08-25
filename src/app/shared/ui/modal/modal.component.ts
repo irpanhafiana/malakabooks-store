@@ -1,5 +1,6 @@
 import { Component, input, model, ChangeDetectionStrategy, ElementRef, OnInit, OnDestroy, inject, effect } from '@angular/core';
 import { IconComponent } from '../icon/icon.component';
+import { lockBodyScroll, unlockBodyScroll } from '../../util/body-scroll-lock.util';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,15 +17,20 @@ export class ModalComponent implements OnInit, OnDestroy {
   readonly hasFooter = input<boolean>(true);
   readonly maxWidth = input<string>('max-w-lg');
   readonly noScroll = input<boolean>(false);
+  readonly zIndex = input<string>('z-100');
 
   private readonly el = inject(ElementRef);
+  private isCurrentlyLocked = false;
 
   constructor() {
     effect(() => {
-      if (this.isOpen()) {
-        document.body.classList.add('overflow-hidden');
-      } else {
-        document.body.classList.remove('overflow-hidden');
+      const open = this.isOpen();
+      if (open && !this.isCurrentlyLocked) {
+        this.isCurrentlyLocked = true;
+        lockBodyScroll();
+      } else if (!open && this.isCurrentlyLocked) {
+        this.isCurrentlyLocked = false;
+        unlockBodyScroll();
       }
     });
   }
@@ -43,9 +49,12 @@ export class ModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.isCurrentlyLocked) {
+      this.isCurrentlyLocked = false;
+      unlockBodyScroll();
+    }
     // Bersihkan DOM saat komponen dihancurkan
     this.el.nativeElement.remove();
-    document.body.classList.remove('overflow-hidden');
   }
 
   close() {

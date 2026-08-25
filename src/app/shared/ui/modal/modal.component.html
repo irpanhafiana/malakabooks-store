@@ -1,5 +1,5 @@
 @if (isOpen()) {
-<div class="fixed inset-0 z-100 flex items-center justify-center p-4">
+<div [class]="'fixed inset-0 flex items-center justify-center p-4 ' + zIndex()">
   <!-- Backdrop with blurry glass layout -->
   <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" (click)="close()" (keydown.escape)="close()" role="button" tabindex="0" aria-label="Close modal backdrop">
   </div>

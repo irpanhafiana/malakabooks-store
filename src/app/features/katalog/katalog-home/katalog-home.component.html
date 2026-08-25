@@ -11,6 +11,69 @@
         <img src="/logo-mardika.png" alt="Logo Mardika" class="w-full h-full">
       </div>
     </div>
+    
+    <!-- Hero Banner Carousel -->
+    <section class="relative group mb-4">
+      @if (bannerStore.loading()) {
+      <div class="flex items-center h-52 lg:h-[380px] overflow-hidden">
+        <div class="w-full h-full bg-slate-200/60 rounded-2xl animate-pulse"></div>
+      </div>
+      } @else if (bannerStore.banners().length === 0) {
+      <div class="h-52 lg:h-[380px] w-full bg-slate-100 rounded-2xl flex justify-center items-center text-slate-400">
+        <p class="text-sm">Tidak ada banner aktif</p>
+      </div>
+      }
+
+      <!-- Embla viewport -->
+      <div #carouselViewport class="overflow-hidden h-52 lg:h-[380px]"
+        [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
+        <!-- Embla container -->
+        <div class="flex items-center h-full">
+          @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
+          <div class="flex-[0_0_100%] min-w-0 pr-3 last:pr-0">
+            <div
+              class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 px-4 py-3 flex flex-col justify-end transition-all duration-500 ease-in-out h-52 lg:h-[340px]">
+              <!-- Background Image -->
+              <div class="absolute inset-0 bg-cover bg-center pointer-events-none"
+                [style.backgroundImage]="'url(' + (banner.imageUrl || banner.imageBase64) + ')'"></div>
+
+              <!-- Gradient Overlay -->
+              <div class="absolute inset-0 bg-linear-to-t from-slate-900/80 via-slate-900/20 to-transparent pointer-events-none"></div>
+
+              <div class="relative z-10 flex flex-col items-start gap-1 w-full">
+                <h1
+                  class="text-sm font-display font-extrabold tracking-tight leading-tight line-clamp-1 drop-shadow-md">
+                  {{ banner.title }}
+                </h1>
+                <p
+                  class="text-[10px] text-white/90 leading-relaxed line-clamp-1 drop-shadow-md font-medium mb-1">
+                  {{ banner.subtitle }}
+                </p>
+                @if (banner.targetUrl && banner.buttonText) {
+                <a [routerLink]="banner.targetUrl"
+                  class="px-3 py-1 rounded-lg bg-white text-primary-700 font-bold text-[10px] hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm inline-block">
+                  {{ banner.buttonText }}
+                </a>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Dot Indicators -->
+      <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10"
+        [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
+        @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
+        <button type="button" (click)="scrollToSlide(i)"
+          [class]="i === currentSlide() ? 'bg-white w-4 h-1.5 rounded-full' : 'bg-white/40 w-1.5 h-1.5 rounded-full'"
+          class="transition-all duration-500 ease-in-out cursor-pointer hover:bg-white/80"
+          [attr.aria-label]="'Go to slide ' + (i + 1)"></button>
+        }
+      </div>
+    </section>
+
     <div class="flex gap-1 overflow-x-auto scrollbar-hide pb-0.5">
       @for (cat of itemCategories(); track cat.id) {
       <button (click)="selectedCategoryId.set(cat.id)"

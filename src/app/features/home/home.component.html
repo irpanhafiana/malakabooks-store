@@ -83,24 +83,30 @@
     </div>
 
     <!-- Best Seller Carousel -->
-    <div #bestSellerCarouselViewport class="overflow-hidden pl-2">
-      <div class="flex -ml-3 lg:cursor-default cursor-grab active:cursor-grabbing">
-        @if (productStore.loading()) {
+    @if (productStore.loading()) {
+    <div class="overflow-hidden pl-2">
+      <div class="flex -ml-3">
         @for (i of [1, 2, 3, 4]; track i) {
         <div class="flex-[0_0_170px] lg:flex-[0_0_240px] min-w-0 pl-2 lg:pl-4">
           <app-skeleton type="card" [count]="1"></app-skeleton>
         </div>
         }
-        } @else {
-        @for (prod of productStore.products(); track prod.id) {
+      </div>
+    </div>
+    } @else if (displayBestSellers().length === 0) {
+    <div class="p-8 text-center text-slate-400">Belum ada produk terfavorit</div>
+    } @else {
+    <div #bestSellerCarouselViewport class="overflow-hidden pl-2">
+      <div class="flex -ml-3 lg:cursor-default cursor-grab active:cursor-grabbing">
+        @for (prod of displayBestSellers(); track prod.id + '-' + $index) {
         <div class="flex-[0_0_170px] lg:flex-[0_0_240px] min-w-0 pl-2 lg:pl-4">
           <app-product-card [product]="prod" [size]="screen.isDesktop() ? 'md' : 'sm'"
             (addToCart)="openQtyModal($event)"></app-product-card>
         </div>
         }
-        }
       </div>
     </div>
+    }
   </section>
 
   <!-- Author Slideshow -->
@@ -122,40 +128,47 @@
       }
     </div>
 
-    <div #authorCarouselViewport class="overflow-hidden pl-2 pb-2">
-      <div class="flex -ml-3 items-center h-full lg:cursor-default cursor-grab active:cursor-grabbing">
-        @if (authorStore.loading()) {
+    @if (authorStore.loading()) {
+    <div class="overflow-hidden pl-2 pb-2">
+      <div class="flex -ml-3 items-center h-full">
         @for (i of [1, 2, 3, 4, 5]; track i) {
-        <div class="flex-[0_0_170px] lg:flex-[0_0_20%] pl-2 lg:pl-4 h-full flex items-center justify-center">
-          <div class="w-full h-64 lg:h-84 bg-slate-200/60 animate-pulse rounded-xl"></div>
+        <div class="flex-[0_0_44%] sm:flex-[0_0_32%] lg:flex-[0_0_30%] pl-2 lg:pl-4 h-full flex items-center justify-center">
+          <div class="w-full h-52 lg:h-84 bg-slate-200/60 animate-pulse rounded-xl"></div>
         </div>
         }
-        } @else {
-        @for (author of authorStore.authors(); track author.id) {
-        <div class="flex-[0_0_170px] lg:flex-[0_0_20%] pl-2 lg:pl-4 h-full flex items-center justify-center">
+      </div>
+    </div>
+    } @else if (displayAuthors().length === 0) {
+    <div class="p-8 text-center text-slate-400">Belum ada data penulis</div>
+    } @else {
+    <div #authorCarouselViewport class="overflow-hidden pl-2 pb-2">
+      <div class="flex -ml-3 items-center h-full lg:cursor-default cursor-grab active:cursor-grabbing">
+        @for (author of displayAuthors(); track author.id + '-' + $index) {
+        <div class="flex-[0_0_44%] sm:flex-[0_0_32%] lg:flex-[0_0_30%] pl-2 lg:pl-4 h-full flex items-center justify-center">
           <div
-            class="relative w-full h-64 lg:h-84 p-3.5 lg:p-4 rounded-xl cursor-pointer overflow-hidden group active:scale-[0.98] bg-slate-950"
+            class="relative w-full h-52 lg:h-84 p-3 lg:p-4 rounded-xl cursor-pointer overflow-hidden group active:scale-[0.98] bg-slate-950"
             (click)="openAuthorSheet(author)">
 
             <!-- Image fading to bottom -->
             <img [src]="author.photoUrl"
-              class="absolute top-0 left-0 w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-105"
+              class="absolute top-0 left-0 w-full h-full object-cover grayscale-0 lg:grayscale lg:group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
               style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
 
             <!-- Bottom Text -->
-            <div class="mt-auto flex flex-col gap-2.5 z-10 relative h-full justify-end pb-1">
+            <div class="mt-auto flex flex-col gap-1.5 lg:gap-2.5 z-10 relative h-full justify-end pb-1">
               <h3
-                class="text-xl lg:text-3xl font-display font-extrabold text-white leading-none tracking-tight drop-shadow-md">
+                class="text-lg lg:text-3xl font-display font-extrabold text-white leading-tight tracking-tight drop-shadow-md">
                 {{ author.name }}</h3>
-              <p class="text-white/80 text-[10px] lg:text-xs leading-relaxed line-clamp-3 lg:line-clamp-4 font-medium drop-shadow-md">
-                {{ author.biography || 'Tidak ada biografi' }}</p>
+              <p
+                class="text-white/80 text-[11px] lg:text-xs leading-snug line-clamp-2 lg:line-clamp-4 font-medium drop-shadow-md">
+                {{ author.role || 'Tidak ada biografi' }}</p>
             </div>
           </div>
         </div>
         }
-        }
       </div>
     </div>
+    }
   </section>
 
   <!-- Recommended/Featured Products grid -->
@@ -164,7 +177,8 @@
       <div class="flex items-center justify-between">
         <div>
           <h2 class="font-display font-extrabold text-slate-800 text-base lg:text-2xl">Katalog Produk Terlengkap</h2>
-          <p class="text-[12px] lg:text-base text-slate-400 mt-0.5">Pilihan ragam produk dan barang kebutuhan berkualitas</p>
+          <p class="text-[12px] lg:text-base text-slate-400 mt-0.5">Pilihan ragam produk dan barang kebutuhan
+            berkualitas</p>
         </div>
       </div>
 
@@ -196,26 +210,26 @@
     </div>
     } @else {
     @defer (on viewport; prefetch on idle) {
-      <div class="hidden lg:grid grid-cols-4 xl:grid-cols-5 gap-6 gap-y-8">
-        @for (prod of catalogProducts(); track prod.id) {
-        <app-product-card [product]="prod" size="md" (addToCart)="openQtyModal($event)"></app-product-card>
-        }
-      </div>
-      <div class="lg:hidden">
-        <app-masonry-grid [items]="catalogProducts()">
-          <ng-template let-prod>
-            <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
-          </ng-template>
-        </app-masonry-grid>
-      </div>
+    <div class="hidden lg:grid grid-cols-4 xl:grid-cols-5 gap-6 gap-y-8">
+      @for (prod of catalogProducts(); track prod.id) {
+      <app-product-card [product]="prod" size="md" (addToCart)="openQtyModal($event)"></app-product-card>
+      }
+    </div>
+    <div class="lg:hidden">
+      <app-masonry-grid [items]="catalogProducts()">
+        <ng-template let-prod>
+          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
+        </ng-template>
+      </app-masonry-grid>
+    </div>
     } @placeholder {
-      <div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-6">
-        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
-        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
-        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
-        <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
-        <div class="hidden xl:block"><app-skeleton type="card" [count]="1"></app-skeleton></div>
-      </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-6">
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      <div><app-skeleton type="card" [count]="1"></app-skeleton></div>
+      <div class="hidden xl:block"><app-skeleton type="card" [count]="1"></app-skeleton></div>
+    </div>
     }
     }
   </section>
@@ -267,72 +281,59 @@
   </app-modal>
   } @else {
   <!-- Bottom Sheet for Author Products -->
-  <app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true">
-    <div class="flex flex-col h-full overflow-hidden bg-white relative">
-      <!-- Top Navigation Header -->
-      <header class="sticky top-0 z-50 bg-white px-4 py-0 flex items-center justify-start h-14 shrink-0">
-        <button type="button" (click)="closeAuthorSheet()"
-          class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0">
-          <i class="bx bx-left-arrow-alt text-2xl"></i>
-        </button>
-        <h1 class="font-display font-extrabold text-slate-800 text-base text-center truncate px-2">Penulis dan Kontributor
-        </h1>
-      </header>
+  <app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true" title="Penulis dan Kontributor">
+    <div class="overflow-y-auto max-h-[80vh] flex flex-col pb-8">
+      @let auth = selectedAuthor();
 
-      <!-- Scrollable Content -->
-      <div class="flex-1 overflow-y-auto">
-        @let auth = selectedAuthor();
-
-        @if (auth) {
-        <!-- Author Profile -->
-        <div class="px-4 flex flex-col items-start justify-start gap-4 mt-2">
-          <!-- Photo -->
-          @if (auth.photoUrl) {
-          <img [src]="auth.photoUrl" [alt]="auth.name" class="w-full h-full object-cover" />
-          } @else {
-          <div class="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-            <i class="bx bx-user text-3xl"></i>
-          </div>
-          }
-
-          <div class="flex flex-col justify-between items-start gap-2">
-            <!-- Name & Role -->
-            <div class="flex flex-col items-start">
-              <h2 class="font-display font-extrabold text-slate-800 text-xl text-center">{{ auth.name }}</h2>
-              @if (auth.role) {
-              <p class="text-sm font-medium text-slate-400">{{ auth.role }}</p>
-              }
-            </div>
-          </div>
-        </div>
-
-        <!-- Biography -->
-        @if (auth.biography) {
-        <div class="mt-4 px-4 pb-4 border-b border-slate-100">
-          <h3 class="font-display font-bold text-slate-800 text-sm mb-2">Tentang Penulis</h3>
-          <p class="text-xs text-slate-600 leading-relaxed" [innerHTML]="auth.biography"></p>
+      @if (auth) {
+      <!-- Author Profile -->
+      <div class="px-4 flex gap-4 items-start mt-2">
+        <!-- Photo -->
+        @if (auth.photoUrl) {
+        <img [src]="auth.photoUrl" [alt]="auth.name" class="w-28 h-36 object-cover rounded-xl shadow-sm shrink-0" />
+        } @else {
+        <div class="w-28 h-36 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
+          <i class="bx bx-user text-3xl"></i>
         </div>
         }
 
-        <!-- Author's Products -->
-        <div class="p-4">
-          <h3 class="font-display font-bold text-slate-800 text-sm mb-4">Karya Terkait</h3>
-          @let products = selectedAuthorProducts();
-          @if (products.length > 0) {
-          <app-masonry-grid [items]="products">
-            <ng-template let-prod>
-              <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
-            </ng-template>
-          </app-masonry-grid>
-          } @else {
-          <div class="flex flex-col items-center justify-center py-8 text-slate-400">
-            <i class="bx bx-book-open text-3xl mb-2"></i>
-            <p class="text-xs">Belum ada karya yang tersedia.</p>
+        <div class="flex flex-col justify-between items-start gap-2">
+          <!-- Name & Role -->
+          <div class="flex flex-col items-start">
+            <h2 class="font-display font-extrabold text-slate-800 text-xl">{{ auth.name }}</h2>
+            @if (auth.role) {
+            <p class="text-sm font-medium text-slate-400 mt-1">{{ auth.role }}</p>
+            }
           </div>
+        </div>
+      </div>
+
+      <!-- Biography -->
+      @if (auth.biography) {
+      <div class="mt-4 px-4 pb-4 border-b border-slate-100">
+        <h3 class="font-display font-bold text-slate-800 text-sm mb-2">Tentang Penulis</h3>
+        <p class="text-xs text-slate-600 leading-relaxed" [innerHTML]="auth.biography"></p>
+      </div>
+      }
+
+      <!-- Author's Products -->
+      <div class="p-4">
+        <h3 class="font-display font-bold text-slate-800 text-sm mb-4">Karya Terkait</h3>
+        @let products = selectedAuthorProducts();
+        @if (products.length > 0) {
+        <div class="grid grid-cols-2 gap-3">
+          @for (prod of products; track prod.id) {
+          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
           }
+        </div>
+        } @else {
+        <div class="flex flex-col items-center justify-center py-8 text-slate-400">
+          <i class="bx bx-book-open text-3xl mb-2"></i>
+          <p class="text-xs">Belum ada karya yang tersedia.</p>
         </div>
         }
       </div>
+      }
     </div>
   </app-bottom-sheet>
   }

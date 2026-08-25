@@ -103,12 +103,27 @@ export class ProductApiService {
       const allItems = envelope?.data || [];
       const itemsToProcess = allItems.filter(i => (isAdminSession() || i.isActive !== false));
 
+      let booksMap = new Map<string, BookDto>();
+      try {
+        const booksEndpoint = isAdminSession() ? `${this.BASE_URL}/admin/Books` : `${this.BASE_URL}/public/Books`;
+        const booksEnv = await firstValueFrom(this.http.get<ApiResponse<BookDto[]>>(booksEndpoint));
+        if (booksEnv?.data && Array.isArray(booksEnv.data)) {
+          booksEnv.data.forEach(b => {
+            if (b.itemId) booksMap.set(b.itemId, b);
+            if (b.id) booksMap.set(b.id, b);
+          });
+        }
+      } catch {
+        // Fallback jika endpoint Books publik tidak tersedia
+      }
+
       const categories = await this.categoryApi.getCategories();
       const catMap = new Map(categories.map(c => [c.id, c.name]));
 
       const products: Product[] = [];
       for (const item of itemsToProcess) {
-        const product = this.mapToProduct(item, item.price || 0, undefined);
+        const book = booksMap.get(item.id) || (item.bookId ? booksMap.get(item.bookId) : undefined);
+        const product = this.mapToProduct(item, item.price || 0, book);
         if (item.categoryId) {
           product.categoryName = catMap.get(item.categoryId) || 'Lainnya';
         }

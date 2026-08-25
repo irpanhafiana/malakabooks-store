@@ -1,5 +1,5 @@
 <div class="card-product group" (click)="clickCard.emit(product())" (keydown.enter)="clickCard.emit(product())" tabindex="0" role="button">
-  <div class="relative block overflow-hidden cursor-pointer aspect-4/3">
+  <div class="relative block overflow-hidden cursor-pointer aspect-square">
     <img [ngSrc]="product().coverImage" [alt]="product().title" fill [priority]="priority()"
       class="absolute top-0 left-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
     <div class="badge-uom">

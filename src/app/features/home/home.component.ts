@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, ChangeDetectionStrategy, effect } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, signal, ChangeDetectionStrategy, effect, computed } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { SeoService } from '../../core/services/seo.service';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
@@ -39,73 +39,104 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   currentSlide = signal<number>(0);
   currentAuthorSlide = signal<number>(0);
   isAuthorSheetOpen = signal(false);
-  selectedAuthorName = signal<string>('');
-  selectedAuthorProducts = signal<any[]>([]);
   selectedAuthor = signal<any | null>(null);
+  selectedAuthorName = signal<string>('');
+
+  readonly selectedAuthorProducts = computed(() => {
+    const author = this.selectedAuthor();
+    if (!author) return [];
+
+    const targetId = author.id ? String(author.id).trim().toLowerCase() : '';
+    const targetName = author.name ? String(author.name).trim().toLowerCase() : '';
+
+    return this.productStore.products().filter(p => {
+      const matchIds = p.authorIds && Array.isArray(p.authorIds) && p.authorIds.some(id => String(id).trim().toLowerCase() === targetId);
+      const matchAuthors = p.authors && Array.isArray(p.authors) && p.authors.some(a => 
+        (a.id && String(a.id).trim().toLowerCase() === targetId) ||
+        (a.name && String(a.name).trim().toLowerCase() === targetName)
+      );
+      const matchName = p.authorNames && targetName && p.authorNames.toLowerCase().includes(targetName);
+      const matchTitle = targetName.length > 2 && (
+        (p.title && p.title.toLowerCase().includes(targetName)) ||
+        (p.description && p.description.toLowerCase().includes(targetName))
+      );
+
+      return Boolean(matchIds || matchAuthors || matchName || matchTitle);
+    });
+  });
 
   readonly catalogProducts = this.productStore.filteredProducts;
+
+  readonly displayAuthors = computed(() => {
+    const raw = this.authorStore.authors();
+    if (raw.length === 0) return [];
+    if (raw.length < 8) {
+      const times = Math.ceil(8 / raw.length);
+      const result: typeof raw = [];
+      for (let i = 0; i < times; i++) {
+        result.push(...raw);
+      }
+      return result;
+    }
+    return raw;
+  });
+
+  readonly displayBestSellers = computed(() => {
+    const raw = this.productStore.products();
+    if (raw.length === 0) return [];
+    if (raw.length < 8) {
+      const times = Math.ceil(8 / raw.length);
+      const result: typeof raw = [];
+      for (let i = 0; i < times; i++) {
+        result.push(...raw);
+      }
+      return result;
+    }
+    return raw;
+  });
 
   private embla?: EmblaCarouselType;
   private authorEmbla?: EmblaCarouselType;
   private bestSellerEmbla?: EmblaCarouselType;
-  private merchandiseEmbla?: EmblaCarouselType;
 
-  @ViewChild('carouselViewport') carouselViewport!: ElementRef<HTMLElement>;
+  @ViewChild('carouselViewport') carouselViewport?: ElementRef<HTMLElement>;
   @ViewChild('authorCarouselViewport') authorCarouselViewport?: ElementRef<HTMLElement>;
-  @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport!: ElementRef<HTMLElement>;
-  @ViewChild('merchandiseCarouselViewport') merchandiseCarouselViewport!: ElementRef<HTMLElement>;
+  @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport?: ElementRef<HTMLElement>;
 
   constructor() {
     effect(() => {
-      if (this.productStore.products().length > 0) {
+      if (this.displayBestSellers().length > 0) {
         setTimeout(() => {
-          if (this.bestSellerEmbla) {
+          if (!this.bestSellerEmbla) {
+            this.initBestSellerCarousel();
+          } else {
             this.bestSellerEmbla.reInit();
-            const autoplay = this.bestSellerEmbla.plugins()['autoplay'];
-            if (autoplay) {
-              autoplay.reset();
-              autoplay.play();
-            }
           }
-          if (this.merchandiseEmbla) {
-            this.merchandiseEmbla.reInit();
-            const merchAutoplay = this.merchandiseEmbla.plugins()['autoplay'];
-            if (merchAutoplay) {
-              merchAutoplay.reset();
-              merchAutoplay.play();
-            }
-          }
-        }, 100);
+        }, 50);
       }
     });
 
     effect(() => {
       if (this.bannerStore.banners().length > 0) {
         setTimeout(() => {
-          if (this.embla) {
+          if (!this.embla) {
+            this.initHeroCarousel();
+          } else {
             this.embla.reInit();
-            const autoplay = this.embla.plugins()['autoplay'];
-            if (autoplay) {
-              autoplay.reset();
-              autoplay.play();
-            }
           }
-        }, 100);
+        }, 50);
       }
     });
 
     effect(() => {
-      if (this.authorStore.authors().length > 0) {
+      if (this.displayAuthors().length > 0) {
         setTimeout(() => {
-          if (this.authorEmbla) {
+          if (!this.authorEmbla) {
+            this.initAuthorCarousel();
+          } else {
             this.authorEmbla.reInit();
-            const authAutoplay = this.authorEmbla.plugins()['autoplay'];
-            if (authAutoplay) {
-              authAutoplay.reset();
-              authAutoplay.play();
-            }
           }
-        }, 100);
+        }, 50);
       }
     });
   }
@@ -122,49 +153,50 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     if (typeof window === 'undefined') return;
+    this.initHeroCarousel();
+    this.initBestSellerCarousel();
+    this.initAuthorCarousel();
+  }
+
+  private initHeroCarousel() {
+    if (!this.carouselViewport?.nativeElement || this.embla) return;
     this.embla = EmblaCarousel(
       this.carouselViewport.nativeElement,
-      { loop: true, align: 'start', duration: 40 },
+      { loop: true, align: 'start', duration: 25 },
       [Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })]
     );
 
     const onSelect = () => this.currentSlide.set(this.embla!.selectedScrollSnap());
     this.embla.on('select', onSelect);
     onSelect();
+  }
 
-    if (this.authorCarouselViewport) {
-      this.authorEmbla = EmblaCarousel(
-        this.authorCarouselViewport.nativeElement,
-        { loop: true, align: 'start', duration: 40 },
-        [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
-      );
-      const onAuthorSelect = () => this.currentAuthorSlide.set(this.authorEmbla!.selectedScrollSnap());
-      this.authorEmbla.on('select', onAuthorSelect);
-      onAuthorSelect();
-    }
+  private initBestSellerCarousel() {
+    if (!this.bestSellerCarouselViewport?.nativeElement || this.bestSellerEmbla) return;
+    this.bestSellerEmbla = EmblaCarousel(
+      this.bestSellerCarouselViewport.nativeElement,
+      { loop: true, align: 'start', duration: 25 },
+      [Autoplay({ delay: 4000, stopOnInteraction: false, stopOnMouseEnter: true })]
+    );
+  }
 
-    if (this.merchandiseCarouselViewport) {
-      this.merchandiseEmbla = EmblaCarousel(
-        this.merchandiseCarouselViewport.nativeElement,
-        { loop: true, align: 'start', duration: 40 },
-        [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
-      );
-    }
+  private initAuthorCarousel() {
+    if (!this.authorCarouselViewport?.nativeElement || this.authorEmbla) return;
+    this.authorEmbla = EmblaCarousel(
+      this.authorCarouselViewport.nativeElement,
+      { loop: true, align: 'start', duration: 25 },
+      [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
+    );
 
-    if (this.bestSellerCarouselViewport) {
-      this.bestSellerEmbla = EmblaCarousel(
-        this.bestSellerCarouselViewport.nativeElement,
-        { loop: true, align: 'start', duration: 40 },
-        [Autoplay({ delay: 4000, stopOnInteraction: false, stopOnMouseEnter: true })]
-      );
-    }
+    const onAuthorSelect = () => this.currentAuthorSlide.set(this.authorEmbla!.selectedScrollSnap());
+    this.authorEmbla.on('select', onAuthorSelect);
+    onAuthorSelect();
   }
 
   ngOnDestroy() {
     this.embla?.destroy();
     this.authorEmbla?.destroy();
     this.bestSellerEmbla?.destroy();
-    this.merchandiseEmbla?.destroy();
   }
 
   // Invoked when user taps on dot indicators
@@ -180,12 +212,47 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.embla?.scrollNext();
   }
 
-  bestSellerPrev() { this.bestSellerEmbla?.scrollPrev(); }
-  bestSellerNext() { this.bestSellerEmbla?.scrollNext(); }
-  merchandisePrev() { this.merchandiseEmbla?.scrollPrev(); }
-  merchandiseNext() { this.merchandiseEmbla?.scrollNext(); }
-  authorPrev() { this.authorEmbla?.scrollPrev(); }
-  authorNext() { this.authorEmbla?.scrollNext(); }
+  bestSellerPrev() {
+    if (this.bestSellerEmbla) {
+      if (this.bestSellerEmbla.canScrollPrev()) {
+        this.bestSellerEmbla.scrollPrev();
+      } else {
+        const snaps = this.bestSellerEmbla.scrollSnapList();
+        this.bestSellerEmbla.scrollTo(snaps.length - 1);
+      }
+    }
+  }
+
+  bestSellerNext() {
+    if (this.bestSellerEmbla) {
+      if (this.bestSellerEmbla.canScrollNext()) {
+        this.bestSellerEmbla.scrollNext();
+      } else {
+        this.bestSellerEmbla.scrollTo(0);
+      }
+    }
+  }
+
+  authorPrev() {
+    if (this.authorEmbla) {
+      if (this.authorEmbla.canScrollPrev()) {
+        this.authorEmbla.scrollPrev();
+      } else {
+        const snaps = this.authorEmbla.scrollSnapList();
+        this.authorEmbla.scrollTo(snaps.length - 1);
+      }
+    }
+  }
+
+  authorNext() {
+    if (this.authorEmbla) {
+      if (this.authorEmbla.canScrollNext()) {
+        this.authorEmbla.scrollNext();
+      } else {
+        this.authorEmbla.scrollTo(0);
+      }
+    }
+  }
 
   filterByCategory(catId: string | null) {
     this.productStore.setCategoryFilter(catId);
@@ -204,17 +271,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openAuthorSheet(author: any) {
     this.selectedAuthor.set(author);
-    this.selectedAuthorName.set(author.name);
-    
-    const filtered = this.productStore.products().filter(p => {
-      const matchIds = p.authorIds && p.authorIds.some(id => String(id) === String(author.id));
-      const matchAuthors = p.authors && p.authors.some(a => String(a.id) === String(author.id));
-      return matchIds || matchAuthors;
-    });
-
-    console.log('Total products with authors:', this.productStore.products().filter(p => p.authorIds?.length > 0 || p.authors?.length > 0).length);
-    
-    this.selectedAuthorProducts.set(filtered);
+    this.selectedAuthorName.set(author.name || '');
     this.isAuthorSheetOpen.set(true);
   }
 

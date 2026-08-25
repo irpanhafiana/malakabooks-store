@@ -8,12 +8,12 @@
 
   <app-desktop-footer></app-desktop-footer><app-modal [isOpen]="modalHandler.isDetailOpen()"
     (isOpenChange)="modalHandler.closeProductDetails()" title="Detail Produk" maxWidth="max-w-4xl" [noScroll]="true"
-    [hasFooter]="false">
+    [hasFooter]="false" zIndex="z-[150]">
     <app-product-detail [productId]="modalHandler.selectedDetailId()"></app-product-detail>
   </app-modal>
 
   <app-modal [isOpen]="productStore.isQtyModalOpen()" (isOpenChange)="modalHandler.closeQty()" title="Pilihan Pembelian"
-    maxWidth="max-w-md">
+    maxWidth="max-w-md" zIndex="z-[160]">
     <app-qty-modal-content #qtyDesktop (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
     <div modal-footer class="flex items-center justify-between gap-4">
       @if ((productStore.activeProduct()?.stock || 0) > 0) {

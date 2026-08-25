@@ -1,4 +1,5 @@
 import { Component, input, output, effect, signal, ChangeDetectionStrategy, inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { lockBodyScroll, unlockBodyScroll } from '../../util/body-scroll-lock.util';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,12 +25,17 @@ export class BottomSheetComponent implements OnDestroy {
 
   private startY = 0;
   private openTimerId: ReturnType<typeof setTimeout> | null = null;
+  private isCurrentlyLocked = false;
   private readonly cdr = inject(ChangeDetectorRef);
 
   constructor() {
     effect(() => {
       const open = this.isOpen();
       if (open) {
+        if (!this.isCurrentlyLocked) {
+          this.isCurrentlyLocked = true;
+          lockBodyScroll();
+        }
         if (this.openTimerId) {
           clearTimeout(this.openTimerId);
           this.openTimerId = null;
@@ -50,6 +56,10 @@ export class BottomSheetComponent implements OnDestroy {
           this.openTimerId = null;
         }, 420);
       } else {
+        if (this.isCurrentlyLocked) {
+          this.isCurrentlyLocked = false;
+          unlockBodyScroll();
+        }
         if (this.openTimerId) {
           clearTimeout(this.openTimerId);
           this.openTimerId = null;
@@ -145,6 +155,10 @@ export class BottomSheetComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.isCurrentlyLocked) {
+      this.isCurrentlyLocked = false;
+      unlockBodyScroll();
+    }
     if (this.openTimerId) {
       clearTimeout(this.openTimerId);
     }
