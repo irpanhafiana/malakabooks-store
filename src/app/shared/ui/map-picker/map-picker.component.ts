@@ -41,50 +41,68 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
 
   async ngAfterViewInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      // Dynamically import Leaflet so it doesn't break SSR
-      const L = await import('leaflet');
-      // Default to Jakarta if no coords provided
-      const startLat = (this._lat && this._lat !== 0) ? this._lat : -6.200000;
-      const startLng = (this._lng && this._lng !== 0) ? this._lng : 106.816666;
+    if (isPlatformBrowser(this.platformId) && this.mapContainer?.nativeElement) {
+      try {
+        // Dynamically import Leaflet so it doesn't break SSR
+        const leafletModule = await import('leaflet');
+        const L = (leafletModule as any).default || leafletModule;
 
-      this.map = L.map(this.mapContainer.nativeElement).setView([startLat, startLng], 13);
+        if (!L || typeof L.map !== 'function') {
+          this.logger.error('MapPickerComponent', 'Leaflet map function not available in imported module');
+          return;
+        }
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(this.map);
+        if (this.map) {
+          this.map.remove();
+          this.map = null;
+        }
 
-      // Fix missing marker icons in Angular/Webpack
-      const iconDefault = L.icon({
-        iconUrl: '/assets/leaflet/marker-icon.png',
-        iconRetinaUrl: '/assets/leaflet/marker-icon-2x.png',
-        shadowUrl: '/assets/leaflet/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-      });
-      L.Marker.prototype.options.icon = iconDefault;
+        // Default to Jakarta if no coords provided
+        const startLat = (this._lat && this._lat !== 0) ? this._lat : -6.200000;
+        const startLng = (this._lng && this._lng !== 0) ? this._lng : 106.816666;
 
-      if (this._lat && this._lng && this._lat !== 0 && this._lng !== 0) {
-        this.marker = L.marker([this._lat, this._lng], { draggable: true }).addTo(this.map);
-      } else {
-        // Drop a marker at the center anyway
-        this.marker = L.marker([startLat, startLng], { draggable: true }).addTo(this.map);
+        this.map = L.map(this.mapContainer.nativeElement).setView([startLat, startLng], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(this.map);
+
+        // Fix missing marker icons in Angular/Webpack
+        const iconDefault = L.icon({
+          iconUrl: '/assets/leaflet/marker-icon.png',
+          iconRetinaUrl: '/assets/leaflet/marker-icon-2x.png',
+          shadowUrl: '/assets/leaflet/marker-shadow.png',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41]
+        });
+        if (L.Marker && L.Marker.prototype && L.Marker.prototype.options) {
+          L.Marker.prototype.options.icon = iconDefault;
+        }
+
+        if (this._lat && this._lng && this._lat !== 0 && this._lng !== 0) {
+          this.marker = L.marker([this._lat, this._lng], { draggable: true }).addTo(this.map);
+        } else {
+          // Drop a marker at the center anyway
+          this.marker = L.marker([startLat, startLng], { draggable: true }).addTo(this.map);
+        }
+
+        // Handle marker drag
+        this.marker.on('dragend', () => {
+          const position = this.marker.getLatLng();
+          this.emitLocation(position.lat, position.lng);
+        });
+
+        // Handle map click
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.map.on('click', (e: any) => {
+          this.marker.setLatLng(e.latlng);
+          this.emitLocation(e.latlng.lat, e.latlng.lng);
+        });
+      } catch (err) {
+        this.logger.error('MapPickerComponent.ngAfterViewInit', err);
       }
-
-      // Handle marker drag
-      this.marker.on('dragend', () => {
-        const position = this.marker.getLatLng();
-        this.emitLocation(position.lat, position.lng);
-      });
-
-      // Handle map click
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.map.on('click', (e: any) => {
-        this.marker.setLatLng(e.latlng);
-        this.emitLocation(e.latlng.lat, e.latlng.lng);
-      });
     }
   }
 

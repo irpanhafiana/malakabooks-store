@@ -132,7 +132,8 @@
     <div class="overflow-hidden pl-2 pb-2">
       <div class="flex -ml-3 items-center h-full">
         @for (i of [1, 2, 3, 4, 5]; track i) {
-        <div class="flex-[0_0_44%] sm:flex-[0_0_32%] lg:flex-[0_0_30%] pl-2 lg:pl-4 h-full flex items-center justify-center">
+        <div
+          class="flex-[0_0_44%] sm:flex-[0_0_32%] lg:flex-[0_0_30%] pl-2 lg:pl-4 h-full flex items-center justify-center">
           <div class="w-full h-52 lg:h-84 bg-slate-200/60 animate-pulse rounded-xl"></div>
         </div>
         }
@@ -144,7 +145,8 @@
     <div #authorCarouselViewport class="overflow-hidden pl-2 pb-2">
       <div class="flex -ml-3 items-center h-full lg:cursor-default cursor-grab active:cursor-grabbing">
         @for (author of displayAuthors(); track author.id + '-' + $index) {
-        <div class="flex-[0_0_44%] sm:flex-[0_0_32%] lg:flex-[0_0_30%] pl-2 lg:pl-4 h-full flex items-center justify-center">
+        <div
+          class="flex-[0_0_44%] sm:flex-[0_0_32%] lg:flex-[0_0_30%] pl-2 lg:pl-4 h-full flex items-center justify-center">
           <div
             class="relative w-full h-52 lg:h-84 p-3 lg:p-4 rounded-xl cursor-pointer overflow-hidden group active:scale-[0.98] bg-slate-950"
             (click)="openAuthorSheet(author)">
@@ -281,7 +283,8 @@
   </app-modal>
   } @else {
   <!-- Bottom Sheet for Author Products -->
-  <app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true" title="Penulis dan Kontributor">
+  <app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true"
+    title="Penulis dan Kontributor">
     <div class="flex flex-col p-4 pb-12 gap-4">
       @let auth = selectedAuthor();
 

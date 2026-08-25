@@ -61,23 +61,37 @@ export class MyAddressesComponent implements OnInit {
   cities = signal<CityLocation[]>([]);
   districts = signal<DistrictLocation[]>([]);
 
-  provinceOptions = computed(() => this.provinces().map(p => {
-    const val = p.prov_name || '';
-    return { value: val, label: val };
-  }));
-  cityOptions = computed(() => this.cities().map(c => {
-    const val = c.city_name || '';
-    return { value: val, label: val };
-  }));
-  districtOptions = computed(() => this.districts().map(d => {
-    const code = d.region_code || d.address_code || d.district_id || '';
-    const dName = d.district_name || '';
-    const subName = d.subdistrict_name || d.sub_district_name || '';
-    return {
-      value: code,
-      label: subName ? `${dName} - ${subName}` : dName
-    };
-  }));
+  provinceOptions = computed(() => {
+    const list = this.provinces();
+    if (!Array.isArray(list)) return [];
+    return list.map(p => {
+      const val = p?.prov_name || '';
+      return { value: val, label: val };
+    }).filter(opt => Boolean(opt.value));
+  });
+
+  cityOptions = computed(() => {
+    const list = this.cities();
+    if (!Array.isArray(list)) return [];
+    return list.map(c => {
+      const val = c?.city_name || '';
+      return { value: val, label: val };
+    }).filter(opt => Boolean(opt.value));
+  });
+
+  districtOptions = computed(() => {
+    const list = this.districts();
+    if (!Array.isArray(list)) return [];
+    return list.map(d => {
+      const code = d?.region_code || d?.address_code || d?.district_id || '';
+      const dName = d?.district_name || '';
+      const subName = d?.subdistrict_name || d?.sub_district_name || '';
+      return {
+        value: code,
+        label: subName ? `${dName} - ${subName}` : dName
+      };
+    }).filter(opt => Boolean(opt.value));
+  });
 
   recipientControl = new FormControl('', [Validators.required]);
   addrPhoneControl = new FormControl('', [Validators.required, Validators.pattern(/^\+?[0-9]{8,15}$/)]);
@@ -98,63 +112,92 @@ export class MyAddressesComponent implements OnInit {
   });
 
   async ngOnInit() {
-    const user = this.authStore.currentUser();
-    if (!user) {
-      this.router.navigate(['/auth/login']);
-      return;
+    try {
+      const user = this.authStore.currentUser();
+      if (!user) {
+        this.router.navigate(['/auth/login']);
+        return;
+      }
+
+      this.isAddressesLoading.set(true);
+      if (user.id) {
+        try {
+          const freshAddresses = await this.userApi.getAddressesByUserId(user.id);
+          this.addresses.set(Array.isArray(freshAddresses) && freshAddresses.length > 0 ? freshAddresses : (user.addresses || []));
+        } catch {
+          this.addresses.set(user.addresses || []);
+        }
+      } else {
+        this.addresses.set(user.addresses || []);
+      }
+      this.isAddressesLoading.set(false);
+
+      await this.loadProvinces();
+
+      this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (province) => {
+        try {
+          if (province) {
+            const cts = await this.addressApi.getCities(province);
+            this.cities.set(Array.isArray(cts) ? cts : []);
+
+            const currentCityVal = this.cityControl.value;
+            const exists = Array.isArray(cts) && cts.some(c => (c.city_name || '') === currentCityVal);
+            if (!exists) {
+              this.cityControl.setValue('');
+            }
+          } else {
+            this.cities.set([]);
+            this.cityControl.setValue('');
+          }
+        } catch {
+          this.cities.set([]);
+        }
+      });
+
+      this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (city) => {
+        try {
+          if (city) {
+            const dsts = await this.addressApi.getDistricts(this.provinceControl.value || '', city);
+            this.districts.set(Array.isArray(dsts) ? dsts : []);
+
+            const currentDstVal = this.districtControl.value;
+            const exists = Array.isArray(dsts) && dsts.some(d => (d.region_code || d.address_code || d.district_id) === currentDstVal);
+            if (!exists) {
+              this.districtControl.setValue('');
+            }
+          } else {
+            this.districts.set([]);
+            this.districtControl.setValue('');
+          }
+        } catch {
+          this.districts.set([]);
+        }
+      });
+
+      this.districtControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(distCode => {
+        try {
+          const dsts = this.districts();
+          const dist = Array.isArray(dsts) ? dsts.find(d => (d.region_code || d.address_code || d.district_id) === distCode) : undefined;
+          if (dist && dist.latitude && dist.longitude) {
+            this.selectedLat.set(Number(dist.latitude));
+            this.selectedLng.set(Number(dist.longitude));
+          }
+        } catch {
+          // ignore
+        }
+      });
+    } catch {
+      this.isAddressesLoading.set(false);
     }
-
-    this.isAddressesLoading.set(true);
-    const freshAddresses = await this.userApi.getAddressesByUserId(user.id);
-    this.addresses.set(freshAddresses);
-    this.isAddressesLoading.set(false);
-
-    await this.loadProvinces();
-
-    this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (province) => {
-      if (province) {
-        const cts = await this.addressApi.getCities(province);
-        this.cities.set(cts);
-
-        const currentCityVal = this.cityControl.value;
-        const exists = cts.some(c => (c.city_name || '') === currentCityVal);
-        if (!exists) {
-          this.cityControl.setValue('');
-        }
-      } else {
-        this.cities.set([]);
-        this.cityControl.setValue('');
-      }
-    });
-
-    this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (city) => {
-      if (city) {
-        const dsts = await this.addressApi.getDistricts(this.provinceControl.value || '', city);
-        this.districts.set(dsts);
-
-        const currentDstVal = this.districtControl.value;
-        const exists = dsts.some(d => (d.region_code || d.address_code || d.district_id) === currentDstVal);
-        if (!exists) {
-          this.districtControl.setValue('');
-        }
-      } else {
-        this.districts.set([]);
-        this.districtControl.setValue('');
-      }
-    });
-
-    this.districtControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(distCode => {
-      const dist = this.districts().find(d => (d.region_code || d.address_code || d.district_id) === distCode);
-      if (dist && dist.latitude && dist.longitude) {
-        this.selectedLat.set(Number(dist.latitude));
-        this.selectedLng.set(Number(dist.longitude));
-      }
-    });
   }
 
   async loadProvinces() {
-    const provs = await this.addressApi.getProvinces();
-    this.provinces.set(provs);
+    try {
+      const provs = await this.addressApi.getProvinces();
+      this.provinces.set(Array.isArray(provs) ? provs : []);
+    } catch {
+      this.provinces.set([]);
+    }
   }
 
   onMapLocationSelected(loc: { latitude: number; longitude: number }) {
@@ -212,32 +255,32 @@ export class MyAddressesComponent implements OnInit {
     this.streetControl.setValue(addr.street);
     this.postalCodeControl.setValue(addr.postalCode);
 
-    const provObj = this.provinces().find(p => (p.prov_name || '').toLowerCase() === addr.province.toLowerCase());
+    const provObj = this.provinces().find(p => (p.prov_name || '').toLowerCase() === (addr.province || '').toLowerCase());
     const provName = provObj ? (provObj.prov_name || '') : '';
     if (provName) {
       this.provinceControl.setValue(provName);
 
       this.isDropdownLoading.set(true);
       const cts = await this.addressApi.getCities(provName);
-      this.cities.set(cts);
+      this.cities.set(Array.isArray(cts) ? cts : []);
       this.isDropdownLoading.set(false);
 
-      const cityObj = cts.find(c => (c.city_name || '').toLowerCase() === addr.city.toLowerCase());
+      const cityObj = Array.isArray(cts) ? cts.find(c => (c.city_name || '').toLowerCase() === (addr.city || '').toLowerCase()) : undefined;
       const cityName = cityObj ? (cityObj.city_name || '') : '';
 
       if (cityName) {
         this.cityControl.setValue(cityName);
 
         this.isDropdownLoading.set(true);
-        const dsts = await this.addressApi.getDistricts(addr.province, cityName);
-        this.districts.set(dsts);
+        const dsts = await this.addressApi.getDistricts(addr.province || '', cityName);
+        this.districts.set(Array.isArray(dsts) ? dsts : []);
         this.isDropdownLoading.set(false);
 
-        const targetDistrict = addr.district?.toLowerCase();
-        const targetSubDistrict = addr.subDistrict?.toLowerCase();
+        const targetDistrict = (addr.district || '').toLowerCase();
+        const targetSubDistrict = (addr.subDistrict || '').toLowerCase();
 
         let dist = undefined;
-        if (targetDistrict) {
+        if (targetDistrict && Array.isArray(dsts)) {
           dist = dsts.find(d => {
             const dName = (d.district_name || '').toLowerCase();
             const subName = (d.subdistrict_name || d.sub_district_name || '').toLowerCase();

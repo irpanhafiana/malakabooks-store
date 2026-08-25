@@ -24,21 +24,22 @@ export class UserApiService {
   async getAddressesByUserId(userId: string): Promise<Address[]> {
     try {
       const envelope = await firstValueFrom(this.http.get<ApiResponse<AddressResponseDto[]>>(`${this.BASE_URL}/customer/Addresses/user/${userId}`));
-      const list = envelope?.data || [];
-      return list.map((addr): Address => ({
-        id: addr.id,
-        name: addr.label,
-        phone: addr.phone,
-        street: addr.street,
-        city: addr.city,
-        province: addr.province,
-        district: addr.district,
-        subDistrict: addr.subDistrict,
-        postalCode: addr.postalCode,
-        addressCode: addr.addressCode,
-        latitude: addr.latitude,
-        longitude: addr.longitude,
-        isDefault: addr.isDefault
+      const list = envelope?.data;
+      if (!Array.isArray(list)) return [];
+      return list.map((addr: any): Address => ({
+        id: addr.id || addr.Id || '',
+        name: addr.label || addr.Label || addr.recipientName || addr.RecipientName || 'Alamat',
+        phone: addr.phone || addr.Phone || '',
+        street: addr.street || addr.Street || '',
+        city: addr.city || addr.City || '',
+        province: addr.province || addr.Province || '',
+        district: addr.district || addr.District || '',
+        subDistrict: addr.subDistrict || addr.SubDistrict || '',
+        postalCode: addr.postalCode || addr.PostalCode || '',
+        addressCode: addr.addressCode || addr.AddressCode || '',
+        latitude: addr.latitude || addr.Latitude,
+        longitude: addr.longitude || addr.Longitude,
+        isDefault: Boolean(addr.isDefault ?? addr.IsDefault)
       }));
     } catch (e) {
       this.logger.error('UserApiService.getAddressesByUserId', e, { userId });

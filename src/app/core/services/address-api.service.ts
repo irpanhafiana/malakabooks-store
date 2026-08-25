@@ -24,10 +24,14 @@ export class AddressApiService {
   async getProvinces(): Promise<ProvinceLocation[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.get<ApiResponse<{ data: string[] }>>(`${this.BASE_URL}/customer/Simasrim/Province`)
+        this.http.get<any>(`${this.BASE_URL}/customer/Simasrim/Province`)
       );
-      const rawData = envelope?.data?.data || [];
-      return rawData.map(name => ({ prov_name: name }));
+      const raw = envelope?.data?.data ?? envelope?.data ?? envelope ?? [];
+      if (!Array.isArray(raw)) return [];
+      return raw.map((item: any) => {
+        if (typeof item === 'string') return { prov_name: item };
+        return { prov_name: item?.prov_name || item?.name || item?.province || '' };
+      }).filter(p => Boolean(p.prov_name));
     } catch (e) {
       this.logger.error('AddressApiService.getProvinces', 'Failed to load provinces from Simasrim:', e);
       return [];
@@ -37,10 +41,14 @@ export class AddressApiService {
   async getCities(province: string): Promise<CityLocation[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<ApiResponse<{ data: string[] }>>(`${this.BASE_URL}/customer/Simasrim/City`, { prov: province })
+        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/City`, { prov: province })
       );
-      const rawData = envelope?.data?.data || [];
-      return rawData.map(name => ({ city_name: name }));
+      const raw = envelope?.data?.data ?? envelope?.data ?? envelope ?? [];
+      if (!Array.isArray(raw)) return [];
+      return raw.map((item: any) => {
+        if (typeof item === 'string') return { city_name: item };
+        return { city_name: item?.city_name || item?.name || item?.city || '' };
+      }).filter(c => Boolean(c.city_name));
     } catch (e) {
       this.logger.error('AddressApiService.getCities', `Failed to load cities for province ${province} from Simasrim:`, e);
       return [];
@@ -50,9 +58,10 @@ export class AddressApiService {
   async getDistricts(province: string, city: string, district = ''): Promise<DistrictLocation[]> {
     try {
       const envelope = await firstValueFrom(
-        this.http.post<ApiResponse<{ data: DistrictLocation[] }>>(`${this.BASE_URL}/customer/Simasrim/District`, { province, city, district })
+        this.http.post<any>(`${this.BASE_URL}/customer/Simasrim/District`, { province, city, district })
       );
-      return envelope?.data?.data || [];
+      const raw = envelope?.data?.data ?? envelope?.data ?? envelope ?? [];
+      return Array.isArray(raw) ? raw : [];
     } catch (e) {
       this.logger.error('AddressApiService.getDistricts', `Failed to load districts for city ${city} from Simasrim:`, e);
       return [];
