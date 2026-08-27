@@ -241,7 +241,7 @@
     maxWidth="max-w-3xl">
     @let auth = selectedAuthor();
     @if (auth) {
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-6 p-5">
       <div class="flex gap-6 items-start">
         @if (auth.photoUrl) {
         <img [src]="auth.photoUrl" [alt]="auth.name" class="w-32 h-40 object-cover rounded-xl shadow-sm shrink-0" />
