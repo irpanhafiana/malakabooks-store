@@ -37,7 +37,7 @@
         </div>
         <div>
           <span class="text-[10px] font-semibold text-slate-600 block mb-1">Nominal Harga (Rp)</span>
-          <app-admin-input type="number" [control]="detailPrice" placeholder="0"></app-admin-input>
+          <app-admin-input [formatNumber]="true" prefix="Rp" [control]="detailPrice" placeholder="0"></app-admin-input>
         </div>
       </div>
       <div class="mt-3 flex justify-end">

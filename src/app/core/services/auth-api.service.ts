@@ -22,11 +22,36 @@ export class AuthApiService {
   private readonly logger = inject(LoggerService);
   private readonly AUTH_URL = environment.authUrl;
 
-  /** Bangun URL saudara dari authUrl, mis. `/bff/login` -> `/bff/user`. */
-  bffUrl(segment: 'user' | 'login' | 'logout'): string {
+  /** Bangun URL saudara dari authUrl, mis. `/bff/login` -> `/bff/user`, `/bff/profile`. */
+  bffUrl(segment: 'user' | 'login' | 'logout' | 'profile'): string {
     return this.AUTH_URL.includes('/login')
       ? this.AUTH_URL.replace('/login', `/${segment}`)
       : `${this.AUTH_URL}/${segment}`;
+  }
+
+  /**
+   * Panggil endpoint /bff/profile untuk mendapatkan data profil dari BFF.
+   */
+  async getProfile(): Promise<unknown> {
+    const profileUrl = this.bffUrl('profile');
+    try {
+      const rawRes = await firstValueFrom(
+        this.http.get<unknown>(profileUrl, {
+          withCredentials: true,
+          headers: {
+            [BFF_CSRF_HEADER]: '1',
+            [SKIP_AUTH_HEADER]: 'true',
+            [SKIP_ERROR_HEADER]: 'true'
+          }
+        })
+      );
+      console.log('[BFF Profile] Response /bff/profile:', rawRes);
+      return rawRes;
+    } catch (e) {
+      console.error('[BFF Profile] Error memanggil /bff/profile:', e);
+      this.logAuthFailure('AuthApiService.getProfile', profileUrl, e);
+      return null;
+    }
   }
 
   /** 401 = belum login, itu normal. Sisanya menandakan masalah konfigurasi. */

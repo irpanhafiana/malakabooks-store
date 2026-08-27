@@ -7,6 +7,7 @@ import { ItemStore } from '../../../../store/item.store';
 import { AdminInputComponent } from '../../../../shared/ui/admin-input/admin-input.component';
 import { AdminSelectComponent } from '../../../../shared/ui/admin-select/admin-select.component';
 import { AlertService } from '../../../../core/services/alert.service';
+import { parseFormattedNumber } from '../../../../shared/util/number.util';
 import { computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -104,8 +105,8 @@ export class StocksFormComponent {
       warehouseId: this.warehouseIdControl.value || '',
       itemId: this.itemIdControl.value || '',
       baseUomCode: this.baseUomCodeControl.value || '',
-      quantityOnHand: this.quantityOnHandControl.value ?? 0,
-      reservedQuantity: this.reservedQuantityControl.value ?? 0
+      quantityOnHand: parseFormattedNumber(this.quantityOnHandControl.value),
+      reservedQuantity: parseFormattedNumber(this.reservedQuantityControl.value)
     };
 
     await this.stockStore.saveWarehouseStock(data);

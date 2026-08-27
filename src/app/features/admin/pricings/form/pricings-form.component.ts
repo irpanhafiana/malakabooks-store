@@ -15,6 +15,7 @@ import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../../../environments/environment';
+import { parseFormattedNumber } from '../../../../shared/util/number.util';
 import {
   CUSTOMER_GROUP_ONLINE,
   CUSTOMER_GROUP_NON_MEMBER,
@@ -166,7 +167,7 @@ export class PricingsFormComponent {
   addDetail() {
     const customerGroupCode = this.detailCustomerGroupCode.value;
     const uomCode = this.detailUomCode.value?.trim();
-    const price = this.detailPrice.value ?? 0;
+    const price = parseFormattedNumber(this.detailPrice.value);
 
     if (!customerGroupCode || !uomCode) {
       this.alertService.error('Detail Tidak Lengkap!', 'Customer Group dan Kode UoM wajib diisi.');

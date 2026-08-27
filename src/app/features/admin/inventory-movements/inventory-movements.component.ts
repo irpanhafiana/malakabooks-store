@@ -13,6 +13,7 @@ import { AdminInputComponent } from '../../../shared/ui/admin-input/admin-input.
 import { AdminSelectComponent } from '../../../shared/ui/admin-select/admin-select.component';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { parseFormattedNumber } from '../../../shared/util/number.util';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-inventory-movements',
@@ -108,8 +109,12 @@ export class InventoryMovementsComponent implements OnInit {
       return;
     }
 
-    const value = this.mutationForm.value;
-    const success = await this.movementStore.receiveGoods(value);
+    const val = this.mutationForm.value;
+    const payload = {
+      ...val,
+      quantity: parseFormattedNumber(val.quantity)
+    };
+    const success = await this.movementStore.receiveGoods(payload);
     
     if (success) {
       this.closeModal();

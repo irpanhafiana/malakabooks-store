@@ -100,7 +100,7 @@
     </app-admin-select>
 
     <!-- Quantity -->
-    <app-admin-input label="Quantity (Jumlah Mutasi)" type="number" [control]="$any(mutationForm.get('quantity'))"
+    <app-admin-input label="Quantity (Jumlah Mutasi)" [formatNumber]="true" [control]="$any(mutationForm.get('quantity'))"
       placeholder="Masukkan jumlah mutasi">
     </app-admin-input>
 

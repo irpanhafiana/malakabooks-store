@@ -8,6 +8,7 @@ import { InputComponent } from '../../shared/ui/input/input.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { AlertService } from '../../core/services/alert.service';
 import { LoggerService } from '../../core/services/logger.service';
+import { AuthApiService } from '../../core/services/auth-api.service';
 import { UserApiService } from '../../core/services/user-api.service';
 import { OrderApiService } from '../../core/services/order-api.service';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
@@ -59,9 +60,11 @@ export class ProfileComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly logger = inject(LoggerService);
   private readonly userApi = inject(UserApiService);
+  private readonly authApi = inject(AuthApiService);
   private readonly orderApi = inject(OrderApiService);
   private readonly destroyRef = inject(DestroyRef);
 
+  bffProfileResponse = signal<unknown>(null);
   isProfileSaving = signal<boolean>(false);
   avatarPreview = signal<string>('');
 
@@ -140,6 +143,18 @@ export class ProfileComponent implements OnInit {
     // Load user orders
     this.orderStore.loadUserOrders(user.id);
     this.fetchStatusCounts(user.id);
+
+    // Panggil endpoint /bff/profile untuk observasi response
+    this.fetchBffProfile();
+  }
+
+  private async fetchBffProfile() {
+    try {
+      const res = await this.authApi.getProfile();
+      this.bffProfileResponse.set(res);
+    } catch (e) {
+      this.logger.error('ProfileComponent.fetchBffProfile', e);
+    }
   }
 
   private async fetchStatusCounts(userId: string) {

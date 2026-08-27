@@ -8,6 +8,7 @@ import { AdminButtonComponent } from '../../../../shared/ui/admin-button/admin-b
 import { AlertService } from '../../../../core/services/alert.service';
 import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { parseFormattedNumber } from '../../../../shared/util/number.util';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -98,7 +99,7 @@ export class PaymentMethodsFormComponent {
         code: f.code,
         name: f.name,
         type: f.type,
-        value: Number(f.value)
+        value: f.type === 'FIXED' ? parseFormattedNumber(f.value) : (Number(f.value) || 0)
       }))
     };
 

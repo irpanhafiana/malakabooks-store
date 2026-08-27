@@ -1,4 +1,4 @@
-import { Component, input, computed, ViewChild, ElementRef, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, input, computed, ViewChild, ElementRef, ChangeDetectionStrategy, signal, effect } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
 
@@ -18,6 +18,7 @@ export class AdminInputComponent {
   readonly type = input<string>('text');
   readonly placeholder = input<string>('');
   readonly icon = input<string | undefined>(undefined);
+  readonly prefix = input<string | undefined>(undefined);
   // eslint-disable-next-line @angular-eslint/no-input-rename
   readonly customClass = input<string>('', { alias: 'class' });
   readonly formatNumber = input<boolean>(false);
@@ -25,6 +26,24 @@ export class AdminInputComponent {
 
   // Password toggle
   showPassword = signal<boolean>(false);
+
+  constructor() {
+    // Sinkronisasi tampilan formatted saat value awal atau formControl di-set dari luar
+    effect(() => {
+      if (this.formatNumber()) {
+        const val = this.control().value;
+        if (val !== null && val !== undefined && val !== '') {
+          const raw = String(val).replace(/[^0-9]/g, '');
+          if (raw) {
+            const formatted = parseInt(raw, 10).toLocaleString('id-ID');
+            if (this.inputRef?.nativeElement && this.inputRef.nativeElement.value !== formatted) {
+              this.inputRef.nativeElement.value = formatted;
+            }
+          }
+        }
+      }
+    });
+  }
 
   togglePassword() {
     this.showPassword.update(s => !s);
@@ -40,7 +59,7 @@ export class AdminInputComponent {
   // Compute styling based on states
   readonly inputClass = computed(() => {
     const base = 'block w-full border rounded-xl py-2.5 text-sm focus:outline-none focus:ring-1 placeholder-slate-400 text-slate-800 bg-white';
-    let padding = this.icon() ? 'pl-9 pr-3' : 'px-3';
+    let padding = this.icon() || this.prefix() ? 'pl-9 pr-3' : 'px-3';
     if (this.icon() && this.type() === 'password') {
       padding = 'pl-9 pr-10';
     } else if (this.type() === 'password') {
@@ -56,10 +75,20 @@ export class AdminInputComponent {
   });
 
   onFocus() {
+    // Biarkan format tetap rapi saat fokus tanpa menghapus titik
+  }
+
+  onBlur() {
     if (!this.formatNumber()) return;
     const input = this.inputRef?.nativeElement;
     if (!input) return;
-    input.value = input.value.replace(/\./g, '');
+
+    const raw = input.value.replace(/[^0-9]/g, '');
+    if (raw) {
+      const formatted = parseInt(raw, 10).toLocaleString('id-ID');
+      input.value = formatted;
+      this.control().setValue(formatted, { emitEvent: false });
+    }
   }
 
   onInput() {
@@ -68,7 +97,11 @@ export class AdminInputComponent {
     if (!input) return;
 
     const raw = input.value.replace(/[^0-9]/g, '');
-    if (!raw) return;
+    if (!raw) {
+      input.value = '';
+      this.control().setValue('', { emitEvent: false });
+      return;
+    }
 
     const formatted = parseInt(raw, 10).toLocaleString('id-ID');
     if (formatted === input.value) return;
@@ -78,6 +111,7 @@ export class AdminInputComponent {
     const digitsBeforeCursor = input.value.substring(0, cursorPos).replace(/[^0-9]/g, '').length;
 
     input.value = formatted;
+    this.control().setValue(formatted, { emitEvent: false });
 
     // Restore cursor after the same digit position in formatted string
     let newPos = 0;

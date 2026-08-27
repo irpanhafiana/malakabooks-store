@@ -38,7 +38,11 @@
         </div>
 
         <div class="flex flex-col gap-1 w-full sm:w-1/4">
-          <app-admin-input label="Nilai" placeholder="Misal: 5000" type="number"
+          <app-admin-input label="Nilai" 
+            [placeholder]="feeForm.get('type')?.value === 'FIXED' ? 'Misal: 5.000' : 'Misal: 2.5'"
+            [formatNumber]="feeForm.get('type')?.value === 'FIXED'"
+            [prefix]="feeForm.get('type')?.value === 'FIXED' ? 'Rp' : undefined"
+            [type]="feeForm.get('type')?.value === 'FIXED' ? 'text' : 'number'"
             [control]="$any(feeForm.get('value'))"></app-admin-input>
         </div>
 

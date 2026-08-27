@@ -8,9 +8,9 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
     <app-admin-input label="Base UoM Code" placeholder="Contoh: PCS" [control]="baseUomCodeControl"
       [readonly]="true"></app-admin-input>
-    <app-admin-input label="Jumlah Stok Fisik" type="number" placeholder="0"
+    <app-admin-input label="Jumlah Stok Fisik" [formatNumber]="true" placeholder="0"
       [control]="quantityOnHandControl"></app-admin-input>
-    <app-admin-input label="Jumlah Stok Dipesan (Reserved)" type="number" placeholder="0"
+    <app-admin-input label="Jumlah Stok Dipesan (Reserved)" [formatNumber]="true" placeholder="0"
       [control]="reservedQuantityControl"></app-admin-input>
   </div>
 
