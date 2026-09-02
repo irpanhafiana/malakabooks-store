@@ -1,5 +1,5 @@
 import { Component, inject, signal, HostListener, ElementRef } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
 import { CartStore } from '../../../store/cart.store';
 import { ProductStore } from '../../../store/product.store';
@@ -12,7 +12,7 @@ import { getBffLoginUrl } from '../../../core/auth/login-url.util';
 @Component({
   selector: 'app-desktop-header',
   standalone: true,
-  imports: [RouterLink, SearchBarComponent, SpinnerComponent],
+  imports: [RouterLink, RouterLinkActive, SearchBarComponent, SpinnerComponent],
   templateUrl: './desktop-header.component.html',
   styleUrl: './desktop-header.component.css',
   host: {

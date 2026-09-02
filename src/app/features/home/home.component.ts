@@ -9,12 +9,10 @@ import { UserStore } from '../../store/user.store';
 import { AuthStore } from '../../store/auth.store';
 import { Product } from '../../core/models';
 import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
-import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
-import { IconComponent } from '../../shared/ui/icon/icon.component';
-import { MasonryGridComponent } from '../../shared/ui/masonry-grid/masonry-grid.component';
 import { ScreenService } from '../../core/services/screen.service';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
 import { AuthorStore } from '../../store/author.store';
+import { FormsModule } from '@angular/forms';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 
@@ -22,7 +20,7 @@ import { ModalComponent } from '../../shared/ui/modal/modal.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, SkeletonComponent, IconComponent, MasonryGridComponent, BottomSheetComponent, ModalComponent],
+  imports: [RouterLink, FormsModule, ProductCardComponent, BottomSheetComponent, ModalComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -36,11 +34,53 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly router = inject(Router);
   private readonly seoService = inject(SeoService);
 
+  protected readonly Math = Math;
+
   currentSlide = signal<number>(0);
   currentAuthorSlide = signal<number>(0);
   isAuthorSheetOpen = signal(false);
   selectedAuthor = signal<any | null>(null);
   selectedAuthorName = signal<string>('');
+  openFaqIndex = signal<number | null>(0);
+  activeFeatureTab = signal<number>(0);
+  isVideoModalOpen = signal<boolean>(false);
+  testimonialIndex = signal<number>(0);
+  newsletterEmail = signal<string>('');
+  isSubscribed = signal<boolean>(false);
+
+  toggleFaq(index: number) {
+    this.openFaqIndex.update(cur => cur === index ? null : index);
+  }
+
+  setFeatureTab(idx: number) {
+    this.activeFeatureTab.set(idx);
+  }
+
+  openVideoModal() {
+    this.isVideoModalOpen.set(true);
+  }
+
+  closeVideoModal() {
+    this.isVideoModalOpen.set(false);
+  }
+
+  nextTestimonial() {
+    this.testimonialIndex.update(i => (i + 1) % 3);
+  }
+
+  prevTestimonial() {
+    this.testimonialIndex.update(i => (i - 1 + 3) % 3);
+  }
+
+  submitNewsletter(e: Event) {
+    e.preventDefault();
+    if (this.newsletterEmail().trim()) {
+      this.isSubscribed.set(true);
+      setTimeout(() => {
+        this.newsletterEmail.set('');
+      }, 2000);
+    }
+  }
 
   readonly selectedAuthorProducts = computed(() => {
     const author = this.selectedAuthor();
@@ -64,8 +104,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return Boolean(matchIds || matchAuthors || matchName || matchTitle);
     });
   });
-
-  readonly catalogProducts = this.productStore.filteredProducts;
 
   readonly displayAuthors = computed(() => {
     const raw = this.authorStore.authors();
@@ -141,10 +179,40 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  readonly heroProducts = computed(() => {
+    const prods = this.productStore.products();
+    if (prods.length >= 4) return prods.slice(0, 4);
+    if (prods.length > 0) {
+      // Repeat to have 4 cards
+      const res = [...prods];
+      while (res.length < 4) {
+        res.push(...prods);
+      }
+      return res.slice(0, 4);
+    }
+    return [];
+  });
+
+  readonly curatorPick = computed(() => {
+    const prods = this.productStore.products();
+    if (prods.length === 0) return null;
+    const found = prods.find(p => p.coverImage && p.description && p.description.length > 30);
+    return found || prods[0];
+  });
+
+  readonly indieHighlights = computed(() => {
+    const prods = this.productStore.products();
+    const pick = this.curatorPick();
+    if (prods.length <= 1) return prods;
+    return prods.filter(p => p.id !== pick?.id).slice(0, 4);
+  });
+
+  isHeroFanned = signal<boolean>(false);
+
   ngOnInit() {
     this.seoService.updatePage({
-      title: 'Kopi Mardika - Toko Kopi Online & Retail Terlengkap',
-      description: 'Temukan koleksi kopi Mardika premium, dan kebutuhan sembako retail terbaik hanya di Kopi Mardika.'
+      title: 'Malakabooks — Penerbit & Toko Buku Fisik Independen',
+      description: 'Dapatkan buku fisik terbitan independen Malakabooks dan kurasi terpilih. Dirikan gagasan kritis, sentuh kertas berkualitas, dan koleksi karya pemikir terbaik.'
     });
     this.productStore.loadAll();
     this.bannerStore.loadActiveBanners();
@@ -156,6 +224,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.initHeroCarousel();
     this.initBestSellerCarousel();
     this.initAuthorCarousel();
+
+    // Trigger smooth, natural card fan-out reveal animation after short initial stack
+    setTimeout(() => {
+      this.isHeroFanned.set(true);
+    }, 200);
   }
 
   private initHeroCarousel() {
@@ -252,10 +325,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.authorEmbla.scrollTo(0);
       }
     }
-  }
-
-  filterByCategory(catId: string | null) {
-    this.productStore.setCategoryFilter(catId);
   }
 
   openQtyModal(product: Product) {

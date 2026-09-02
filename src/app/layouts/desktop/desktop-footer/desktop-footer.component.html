@@ -1,56 +1,63 @@
-<footer class="bg-white border-t border-slate-200 mt-12 pt-16 pb-8">
-  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+<footer class="bg-white border-t border-slate-200 mt-16 pt-16 pb-12">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
 
-    <!-- Brand -->
-    <div class="flex flex-col gap-4">
-      <a routerLink="/" class="flex items-center gap-3 text-slate-800 font-display select-none">
-        <img src="/logo-mardika.png" alt="MalakaBooks Logo" class="h-18 w-auto object-contain" />
+    <!-- Brand & Mission -->
+    <div class="flex flex-col gap-4 md:col-span-2">
+      <a routerLink="/" class="flex items-center gap-2.5 text-slate-900 select-none group w-fit">
+        <img src="/logo/malakabooks-logo.svg" alt="Malakabooks Logo" class="h-10 w-auto object-contain" />
+        <div class="flex flex-col">
+          <span class="font-display font-black text-xl tracking-tight text-slate-900 leading-none">malakabooks</span>
+          <span class="text-[10px] font-bold tracking-wider text-primary-600 uppercase mt-0.5">Penerbit & Toko Buku Fisik</span>
+        </div>
       </a>
-      <p class="text-sm text-slate-500 leading-relaxed mt-2">
-        Toko online serba ada yang menyediakan berbagai kebutuhan harian, peralatan, aksesoris, dan produk gaya hidup
-        berkualitas.
+      <p class="text-sm text-slate-600 leading-relaxed max-w-md">
+        Malakabooks adalah penerbit independen dan perpustakaan interaktif yang didirikan oleh Cania Citta dan Abigail Limuria. Menyediakan buku fisik berkualitas bagi pembaca yang merayakan pemikiran kritis dan literasi mendalam.
       </p>
-      <div class="flex items-center gap-2 mt-1">
-        <a href="#" aria-label="Instagram"
-          class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:text-primary-600 hover:border-primary-200 transition-colors">
+      <div class="flex items-center gap-3 mt-2">
+        <a href="https://instagram.com/malakaproject" target="_blank" rel="noopener noreferrer" aria-label="Instagram Malaka"
+          class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:text-primary-600 hover:border-primary-300 hover:bg-primary-50/50 transition-colors">
           <i class="bx bxl-instagram text-lg"></i>
         </a>
-        <a href="#" aria-label="WhatsApp"
-          class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:text-primary-600 hover:border-primary-200 transition-colors">
-          <i class="bx bxl-whatsapp text-lg"></i>
+        <a href="https://youtube.com/@MalakaProject" target="_blank" rel="noopener noreferrer" aria-label="YouTube Malaka"
+          class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:text-primary-600 hover:border-primary-300 hover:bg-primary-50/50 transition-colors">
+          <i class="bx bxl-youtube text-lg"></i>
         </a>
-        <a href="#" aria-label="TikTok"
-          class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:text-primary-600 hover:border-primary-200 transition-colors">
-          <i class="bx bxl-tiktok text-lg"></i>
+        <a href="https://twitter.com/malakaproject" target="_blank" rel="noopener noreferrer" aria-label="Twitter Malaka"
+          class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:text-primary-600 hover:border-primary-300 hover:bg-primary-50/50 transition-colors">
+          <i class="bx bxl-twitter text-lg"></i>
         </a>
       </div>
     </div>
 
-    <!-- Quick Links -->
+    <!-- Ecosystem Links -->
     <div class="flex flex-col gap-4">
-
-    </div>
-
-    <!-- Support -->
-    <div class="flex flex-col gap-4">
-      <h3 class="font-display font-bold text-slate-800 text-lg">Bantuan</h3>
-      <nav class="flex flex-col gap-3 text-sm text-slate-500">
-        <a routerLink="/profile" class="hover:text-primary-600 transition-colors">Akun Saya</a>
-        <a routerLink="/cart" class="hover:text-primary-600 transition-colors">Keranjang Belanja</a>
-        <a routerLink="/complaints" class="hover:text-primary-600 transition-colors">Komplain</a>
+      <h3 class="font-display font-bold text-slate-900 text-base">Ekosistem Malaka</h3>
+      <nav class="flex flex-col gap-2.5 text-sm text-slate-600 font-medium">
+        <a href="https://malakabooks.id" target="_blank" rel="noopener noreferrer" class="hover:text-primary-600 transition-colors inline-flex items-center gap-1.5">
+          <span>malakabooks.id (Perpustakaan Digital)</span>
+          <i class="bx bx-link-external text-xs text-slate-400"></i>
+        </a>
+        <a routerLink="/product" class="hover:text-primary-600 transition-colors">Koleksi Buku Fisik</a>
+        <a routerLink="/katalog" class="hover:text-primary-600 transition-colors">Katalog Lengkap</a>
       </nav>
     </div>
 
-    <!-- Contact -->
+    <!-- Layanan & Belanja -->
     <div class="flex flex-col gap-4">
-      <h3 class="font-display font-bold text-slate-800 text-lg">Hubungi Kami</h3>
-      <p class="text-sm text-slate-400 italic">Informasi alamat dan kontak resmi Kopi Mardika.</p>
+      <h3 class="font-display font-bold text-slate-900 text-base">Layanan Belanja</h3>
+      <nav class="flex flex-col gap-2.5 text-sm text-slate-600 font-medium">
+        <a routerLink="/cart" class="hover:text-primary-600 transition-colors">Keranjang Belanja</a>
+        <a routerLink="/profile" class="hover:text-primary-600 transition-colors">Akun & Riwayat Pesanan</a>
+        <a routerLink="/complaints" class="hover:text-primary-600 transition-colors">Pusat Bantuan & Komplain</a>
+      </nav>
     </div>
+
   </div>
 
   <!-- Copyright -->
   <div
     class="max-w-7xl mx-auto px-6 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-    <p class="text-sm text-slate-400 font-medium">&copy; {{ currentYear }} Kopi Mardika. Hak Cipta Dilindungi.</p>
+    <p class="text-xs text-slate-500 font-medium">&copy; {{ currentYear }} Malakabooks. Hak Cipta Dilindungi.</p>
+    <p class="text-xs text-slate-400">Platform Penerbitan & Toko Buku Resmi</p>
   </div>
 </footer>

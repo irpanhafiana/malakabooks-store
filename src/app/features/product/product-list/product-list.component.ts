@@ -1,6 +1,7 @@
 import { Component, inject, signal, effect, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location, NgTemplateOutlet, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { SeoService } from '../../../core/services/seo.service';
 import { ProductStore } from '../../../store/product.store';
 import { CartStore } from '../../../store/cart.store';
 import { UserStore } from '../../../store/user.store';
@@ -14,7 +15,6 @@ import { BottomSheetComponent } from '../../../shared/ui/bottom-sheet/bottom-she
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 import { SearchBarComponent } from '../../../shared/ui/search-bar/search-bar.component';
 import { ProductCardComponent } from '../../../shared/ui/product-card/product-card.component';
-import { MasonryGridComponent } from '../../../shared/ui/masonry-grid/masonry-grid.component';
 import { QtyModalContentComponent } from '../../../shared/ui/qty-modal-content/qty-modal-content.component';
 
 @Component({
@@ -29,7 +29,6 @@ import { QtyModalContentComponent } from '../../../shared/ui/qty-modal-content/q
     EmptyStateComponent,
     SearchBarComponent,
     ProductCardComponent,
-    MasonryGridComponent,
     QtyModalContentComponent,
     DecimalPipe,
     NgTemplateOutlet
@@ -43,27 +42,22 @@ export class ProductListComponent implements OnInit {
   protected readonly cartStore = inject(CartStore);
   protected readonly userStore = inject(UserStore);
   protected readonly authStore = inject(AuthStore);
+  private readonly seoService = inject(SeoService);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
-
-  ngOnInit() {
-    if (this.screen.isDesktop()) {
-      this.router.navigate(['/']);
-      return;
-    }
-    this.productStore.loadAll();
-  }
 
   isFiltersOpen = signal<boolean>(false);
   activeCategoryName = signal<string | null>(null);
 
-  constructor() {
-    effect(() => {
-      if (this.screen.isDesktop()) {
-        this.router.navigate(['/']);
-      }
+  ngOnInit() {
+    this.seoService.updatePage({
+      title: 'Katalog Buku & Produk Fisik — Malakabooks',
+      description: 'Jelajahi seluruh koleksi buku fisik terbitan independen dan kurasi pilihan dengan kertas berkualitas dan jahit benang.'
     });
+    this.productStore.loadAll();
+  }
 
+  constructor() {
     // React to category updates reactively using Angular signal effect
     effect(() => {
       this.updateActiveCategoryName();

@@ -1,7 +1,7 @@
 export interface InventoryMovement {
   id: string;
   itemId: string;
-  itemTitle: string;
+  itemName: string;
   movementType: string;
   quantityDelta: number;
   stockBefore: number;

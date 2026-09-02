@@ -5,16 +5,28 @@
     <div class="flex items-center gap-8 shrink-0">
       <!-- Logo -->
       <a routerLink="/" (click)="resetFilters()"
-        class="flex items-center gap-3 text-slate-800 font-display select-none">
-        <img src="/logo-mardika.png" alt="MalakaBooks Logo" class="h-12 w-auto object-contain" />
+        class="flex items-center gap-2.5 text-slate-900 select-none group">
+        <img src="/logo/malakabooks-logo.svg" alt="Malakabooks Logo" class="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
+        <div class="flex flex-col">
+          <span class="font-display font-black text-lg tracking-tight text-slate-900 leading-none">malakabooks</span>
+          <span class="text-[9px] font-semibold tracking-wider text-primary-600 uppercase leading-tight">Toko Buku Fisik</span>
+        </div>
       </a>
 
       <!-- Navigation Links -->
-      <!-- <nav class="flex items-center gap-1 font-medium text-sm text-slate-600">
+      <nav class="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-600">
         <a routerLink="/" routerLinkActive="text-primary-600 font-bold bg-slate-50"
           [routerLinkActiveOptions]="{exact: true}" (click)="resetFilters()"
-          class="px-4 py-2 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-colors">Beranda</a>
-      </nav> -->
+          class="px-3 py-1.5 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-colors">Beranda</a>
+        <a routerLink="/product" routerLinkActive="text-primary-600 font-bold bg-slate-50"
+          (click)="resetFilters()"
+          class="px-3 py-1.5 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-colors">Koleksi Buku</a>
+        <a href="https://malakabooks.id" target="_blank" rel="noopener noreferrer"
+          class="px-3 py-1.5 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-colors inline-flex items-center gap-1 text-slate-500">
+          <span>malakabooks.id</span>
+          <i class="bx bx-link-external text-[11px] text-slate-400"></i>
+        </a>
+      </nav>
     </div>
 
     <!-- Center: Search Bar -->
