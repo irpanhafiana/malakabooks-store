@@ -3,26 +3,26 @@
   <!-- Hero Banner Carousel (Swipeable, looping, with dot indicators) -->
   <section class="relative group">
     @if (bannerStore.loading()) {
-    <div class="flex -ml-3 items-center h-45 lg:h-[380px] overflow-hidden">
+    <div class="flex -ml-3 items-center h-45 lg:h-95 overflow-hidden">
       <div class="flex-[0_0_100%] min-w-0 pl-3">
-        <div class="h-42 lg:h-[360px] w-full bg-slate-200/60 rounded-2xl animate-pulse"></div>
+        <div class="h-42 lg:h-90 w-full bg-slate-200/60 rounded-2xl animate-pulse"></div>
       </div>
     </div>
     } @else if (bannerStore.banners().length === 0) {
-    <div class="h-45 lg:h-[380px] w-full bg-slate-100 rounded-2xl flex justify-center items-center text-slate-400">
+    <div class="h-45 lg:h-95 w-full bg-slate-100 rounded-2xl flex justify-center items-center text-slate-400">
       <p>Tidak ada banner aktif</p>
     </div>
     }
 
     <!-- Embla viewport -->
-    <div #carouselViewport class="overflow-hidden h-45 lg:h-[380px]"
+    <div #carouselViewport class="overflow-hidden h-45 lg:h-95"
       [class.hidden]="bannerStore.loading() || bannerStore.banners().length === 0">
       <!-- Embla container -->
       <div class="flex -ml-3 items-center h-full">
         @for (banner of bannerStore.banners(); track banner.id; let i = $index) {
         <div class="flex-[0_0_100%] min-w-0 pl-3">
           <div
-            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 px-6 py-6 lg:px-12 lg:py-10 flex flex-col justify-between transition-all duration-500 ease-in-out h-42 lg:h-[360px]">
+            class="relative text-white overflow-hidden rounded-2xl border border-primary-500/10 px-6 py-6 lg:px-12 lg:py-10 flex flex-col justify-between transition-all duration-500 ease-in-out h-42 lg:h-90">
             <!-- Background Image -->
             <div class="absolute inset-0 bg-cover bg-center pointer-events-none"
               [style.backgroundImage]="'url(' + (banner.imageUrl || banner.imageBase64) + ')'"></div>
@@ -33,14 +33,14 @@
                 class="text-base lg:text-3xl font-display font-extrabold tracking-tight leading-tight line-clamp-2 drop-shadow-md">
                 {{ banner.title }}
               </h1>
-              <p class="text-[10px] lg:text-sm text-white max-w-sm lg:max-w-md leading-relaxed line-clamp-2 drop-shadow-md font-medium">
+              <p class="text-2xs lg:text-sm text-white max-w-sm lg:max-w-md leading-relaxed line-clamp-2 drop-shadow-md font-medium">
                 {{ banner.subtitle }}
               </p>
             </div>
 
             <div class="relative z-10 flex items-center justify-between gap-3 mt-2 w-full">
               <a [routerLink]="banner.targetUrl"
-                class="px-4 py-2 rounded-xl bg-white text-primary-700 font-bold text-[10px] lg:text-sm hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
+                class="px-4 py-2 rounded-xl bg-white text-primary-700 font-bold text-2xs lg:text-sm hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer active:scale-95 shadow-sm">
                 {{ banner.buttonText }}
               </a>
             </div>
