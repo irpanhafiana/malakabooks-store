@@ -1,1132 +1,770 @@
-<div class="flex flex-col gap-12 lg:gap-24 pb-28 lg:pb-24">
+<div class="flex flex-col gap-16 lg:gap-24 pb-20 w-full max-w-7xl mx-auto px-4 sm:px-6">
 
-  <!-- 1. HERO SECTION (REFERENCE MATCH: TWO-COLUMN SPLIT + FLOATING GLASS METRICS + AVATARS SOCIAL PROOF) -->
-  <section class="relative pt-6 sm:pt-12 pb-6 sm:pb-8">
-    <!-- Ambient Subtle Background Glow -->
-    <div
-      class="absolute top-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[400px] bg-gradient-to-tr from-primary-200/30 via-amber-100/30 to-rose-200/20 rounded-full blur-3xl -z-10 pointer-events-none">
-    </div>
+  <!-- ========================================================================= -->
+  <!-- 1. HERO SECTION: DUAL MASTERPIECE BOOKS SHOWCASE & MODERN COPY -->
+  <!-- ========================================================================= -->
+  <section class="pt-6 sm:pt-12 pb-4 lg:pb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-      <!-- Left Column: Copy, CTAs, Social Proof -->
-      <div class="lg:col-span-6 flex flex-col items-start gap-6">
-        <!-- Eyebrow Badge -->
-        <div
-          class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-50 border border-primary-200/80 text-primary-700 text-xs font-bold shadow-xs">
-          <i class="bx bx-book-bookmark text-sm"></i>
-          <span>Penerbit & Toko Buku Fisik Independen</span>
+      <!-- Left Column: Modern Dual Books Showcase (Makanya Mikir & Prinsipil Ekonomi) -->
+
+      <div class="lg:col-span-6 flex items-center justify-center relative order-2 lg:order-1">
+        <!-- Ambient Glow -->
+        <div class="absolute w-72 h-72 sm:w-96 sm:h-96 bg-slate-700/25 rounded-full blur-3xl pointer-events-none -z-10">
         </div>
 
-        <!-- Headline -->
+        <!-- Books Container Platform -->
+        <div class="relative w-full max-w-lg sm:max-w-xl lg:max-w-2xl flex items-center justify-center py-6">
+
+          <!-- Book 1: Makanya, Mikir! (Left overlapping book) -->
+          <div role="button" tabindex="0"
+            class="relative block text-left w-52 sm:w-72 aspect-[3/4.2] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/30 border-8 border-red-700 -rotate-6 focus:outline-none focus:ring-4 focus:ring-slate-700 transition-shadow duration-300 z-10 cursor-pointer bg-white"
+            (click)="buyDirect('mikir')" (keyup.enter)="buyDirect('mikir')" (keyup.space)="buyDirect('mikir')">
+            <img src="/images/books/makanya-mikir.jpg" alt="Cover Buku Makanya Mikir"
+              class="w-full h-full object-cover" />
+          </div>
+
+          <!-- Book 2: Prinsipil Ekonomi (Right overlapping book) -->
+          <div role="button" tabindex="0"
+            class="relative block text-left w-52 sm:w-72 aspect-[3/4.2] rounded-2xl overflow-hidden shadow-2xl shadow-slate-950/40 border-8 border-slate-700 -ml-16 sm:-ml-24 mt-8 sm:mt-12 rotate-6 focus:outline-none focus:ring-4 focus:ring-slate-700 transition-shadow duration-300 z-20 cursor-pointer bg-slate-900"
+            (click)="buyDirect('ekonomi')" (keyup.enter)="buyDirect('ekonomi')" (keyup.space)="buyDirect('ekonomi')">
+            <img src="/images/books/prinsipil-ekonomi.jpg" alt="Cover Buku Prinsipil Ekonomi"
+              class="w-full h-full object-cover" />
+          </div>
+
+          <!-- Floating Badge 1: 100% Jahit Benang (Top Left) -->
+          <div
+            class="absolute -top-1 sm:top-0 -left-2 sm:-left-6 bg-white rounded-2xl p-2.5 sm:p-3 shadow-xl border border-slate-200/90 flex items-center gap-2.5 z-30">
+            <div
+              class="w-8 h-8 rounded-xl bg-slate-700 text-white flex items-center justify-center text-base font-bold shadow-xs">
+              <i class="bx bx-check-shield"></i>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-900">100% Jahit Benang</p>
+              <p class="text-[9px] text-slate-500">Rebah 180° Tanpa Rusak</p>
+            </div>
+          </div>
+
+          <!-- Floating Badge 2: Ekstra Karton Sudut (Bottom Right) -->
+          <div
+            class="absolute -bottom-2 sm:bottom-0 -right-2 sm:-right-6 bg-[#0F1115] text-white rounded-2xl p-3 sm:p-3.5 shadow-xl border border-neutral-800 flex items-center gap-3 z-30">
+            <div
+              class="w-8 h-8 rounded-xl bg-slate-700 text-white flex items-center justify-center text-base font-bold">
+              <i class="bx bx-package"></i>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-white">Ekstra Karton Sudut</p>
+              <p class="text-[9px] text-slate-400">Pengiriman Aman Seluruh RI</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right Column: Big Modern Headline, Narrative, CTA Buttons & Social Proof -->
+      <div class="lg:col-span-6 flex flex-col items-start gap-6 order-1 lg:order-2">
+
+        <!-- Top Pill Badge -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200/80">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Edisi Fisik Resmi Malakabooks</span>
+        </div>
+
+        <!-- Main Headline -->
         <h1
-          class="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.12]">
-          Buku Fisik untuk Pikiran yang Menolak Dangkal.
+          class="font-display text-3xl sm:text-5xl lg:text-[46px] font-extrabold tracking-tight text-slate-950 leading-[1.15] max-w-xl">
+          Tingkatkan nalar & kuasai seni mengambil keputusan hidup.
         </h1>
 
-        <!-- Narrative Subtitle -->
-        <p class="text-slate-600 text-sm sm:text-base lg:text-lg leading-relaxed max-w-xl font-normal">
-          Terbitan independen orisinal dan kurasi judul terpilih dengan kertas bookpaper premium ramah mata dan jahit
-          benang yang kokoh. Dirancang untuk dibaca mendalam dan dikoleksi selamanya.
+        <!-- Subtitle -->
+        <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-lg font-normal">
+          Bukan sekadar buku motivasi klise. Pelajari instrumen berpikir logis dan kalkulasi hidup dalam dua karya
+          masterpiece pergerakan literasi: <strong class="text-slate-900 font-semibold">"Makanya, Mikir!"</strong> oleh Abigail Limuria & Cania Citta serta
+          <strong class="text-slate-900 font-semibold">"Prinsipil Ekonomi"</strong> oleh Ferry Irwandi.
         </p>
 
         <!-- CTA Action Buttons -->
-        <div class="flex flex-wrap items-center gap-3.5 pt-1 w-full sm:w-auto">
-          <a routerLink="/product"
-            class="px-7 py-3.5 rounded-full bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-primary-600/25 active:scale-95 transition-all inline-flex items-center gap-2 cursor-pointer">
-            <span>JELAJAHI KATALOG BUKU</span>
-            <i class="bx bx-right-arrow-alt text-lg"></i>
-          </a>
-          <a routerLink="/mardika-kopi"
-            class="px-7 py-3.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 font-bold text-xs sm:text-sm uppercase tracking-wider shadow-xs active:scale-95 transition-all inline-flex items-center gap-2 cursor-pointer">
-            <span>KUNJUNGI MARDIKA KOPI</span>
-            <i class="bx bx-coffee text-lg"></i>
+        <div class="flex flex-wrap items-center gap-3.5 pt-2 w-full sm:w-auto">
+          <button type="button" (click)="buyDirect('bundle')"
+            class="px-7 py-3.5 rounded-full bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-slate-700/25 active:scale-95 transition-all inline-flex items-center gap-2 cursor-pointer">
+            <i class="bx bx-shopping-bag text-lg"></i>
+            <span>Pesan Paket Bundling (Hemat 20rb)</span>
+          </button>
+          <a href="#bedah-buku"
+            class="px-6 py-3.5 rounded-full bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs sm:text-sm uppercase tracking-wider border border-slate-200 shadow-xs active:scale-95 transition-all inline-flex items-center gap-2 cursor-pointer">
+            <span>Bedah Kedua Buku</span>
+            <i class="bx bx-down-arrow-alt text-lg"></i>
           </a>
         </div>
 
-        <!-- Social Proof Avatars & Metric -->
-        <div class="flex items-center gap-4 pt-4 border-t border-slate-200/70 w-full sm:w-auto">
-          <!-- Stacked Avatars -->
+        <!-- Social Proof Avatar Stack & Metric -->
+        <div class="flex items-center gap-4 pt-4 border-t border-slate-200/80 w-full max-w-md">
           <div class="flex -space-x-2.5 overflow-hidden">
-            <img class="inline-block h-9 w-9 rounded-full ring-2 ring-white object-cover"
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
-              alt="Pembaca Malakabooks" />
-            <img class="inline-block h-9 w-9 rounded-full ring-2 ring-white object-cover"
+            <img class="inline-block h-10 w-10 rounded-full ring-2 ring-white object-cover"
+              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80"
+              alt="Pembaca 1" />
+            <img class="inline-block h-10 w-10 rounded-full ring-2 ring-white object-cover"
+              src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80"
+              alt="Pembaca 2" />
+            <img class="inline-block h-10 w-10 rounded-full ring-2 ring-white object-cover"
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
-              alt="Penulis Malakabooks" />
-            <img class="inline-block h-9 w-9 rounded-full ring-2 ring-white object-cover"
-              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80"
-              alt="Komunitas Malakabooks" />
+              alt="Pembaca 3" />
             <div
-              class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary-600 text-white text-xs font-bold ring-2 ring-white">
-              +54K
+              class="inline-flex h-10 w-10 items-center justify-center rounded-full ring-2 ring-white bg-slate-700 text-white text-xs font-bold font-mono">
+              +35k
             </div>
           </div>
-
-          <div class="flex flex-col">
-            <div class="flex items-center gap-1 text-amber-500 text-xs">
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-              <span class="font-bold text-slate-800 ml-1 text-xs">4.9 / 5.0</span>
-            </div>
-            <span class="text-slate-500 text-xs mt-0.5">Dari 35.000+ ulasan pembaca aktif nasional</span>
+          <div>
+            <span class="font-display font-extrabold text-slate-900 text-sm block">35.000+ Eksemplar Beredar</span>
+            <span class="text-xs text-slate-500">Membuka wawasan pembaca kritis di seluruh Indonesia</span>
           </div>
         </div>
+
       </div>
 
-      <!-- Right Column: Hero Visual with Glassmorphic Floating Metric Badges -->
-      <div class="lg:col-span-6 relative flex items-center justify-center p-3 sm:p-6 lg:p-8">
-        <!-- Main Portrait Visual Container -->
-        <div
-          class="relative w-full max-w-sm sm:max-w-md aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 group">
-          <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1000&q=80"
-            alt="Membaca Buku Fisik Malakabooks"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent"></div>
+    </div>
+  </section>
 
-          <!-- Caption inside Image -->
-          <div class="absolute bottom-5 left-5 right-5 text-white">
-            <span class="text-[11px] font-bold uppercase tracking-widest text-primary-300 block mb-1">Kurasi Terbitan
-              Independen</span>
-            <p class="font-display font-bold text-base sm:text-lg leading-snug">
-              &ldquo;Membaca buku fisik adalah bentuk perlawanan terhadap kedangkalan informasi digital.&rdquo;
+
+  <!-- ========================================================================= -->
+  <!-- 2. DEEP DIVE: BEDAH MENDALAM DUA BUKU MASTERPIECE -->
+  <!-- ========================================================================= -->
+  <section id="bedah-buku" class="scroll-mt-24 flex flex-col gap-10">
+
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto flex flex-col items-center gap-3">
+      <span class="px-3.5 py-1 rounded-full bg-slate-200/80 text-slate-700 text-xs font-bold uppercase tracking-wider">
+        Bedah Karya & Muatan Gagasan
+      </span>
+      <h2
+        class="font-display font-extrabold text-3xl sm:text-4xl lg:text-[42px] text-slate-950 tracking-tight leading-tight">
+        Dua Instrumen Berpikir: Fondasi Logika & Kacamata Ekonomi
+      </h2>
+      <p class="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl">
+        Keduanya dirancang untuk masyarakat umum: ditulis dengan gaya bahasa tongkrongan yang segar, analogi budaya populer, dan studi kasus nyata tanpa beban jargon akademis yang membingungkan.
+      </p>
+    </div>
+
+    <!-- 2-Column Book Spotlight Cards -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+
+      <!-- CARD 1: MAKANYA, MIKIR! -->
+      <div
+        class="bg-[#F8F9FA] rounded-[32px] p-6 sm:p-8 border border-slate-200 flex flex-col justify-between relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+        <div class="flex flex-col gap-6">
+
+          <!-- Top Meta Row -->
+          <div class="flex items-center justify-between gap-4">
+            <span class="px-3.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-xs font-extrabold tracking-wide uppercase">
+              Logika & Mental Models
+            </span>
+            <span class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+              <i class="bx bx-star text-amber-500 text-sm"></i> 4.9 / 5.0 (Goodreads)
+            </span>
+          </div>
+
+          <!-- Book Title & Authors -->
+          <div>
+            <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-950 leading-tight">
+              Makanya, Mikir!
+            </h3>
+            <p class="text-sm font-semibold text-slate-500 mt-1">
+              Panduan Berpikir untuk Hidup Lebih Bahagia
+            </p>
+            <p class="text-xs text-slate-700 mt-1.5 font-medium">
+              Karya: <strong class="text-slate-900">Abigail Limuria & Cania Citta</strong>
             </p>
           </div>
+
+          <!-- Premise / Summary Quote -->
+          <div class="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed italic">
+              &ldquo;Banyak masalah besar dalam hidup—entah hubungan kusut, karier buntu, atau gampang overthinking—bukan karena orang jahat atau nasib sial, melainkan karena kita malas mikir atau cara berpikir kita yang sesat.&rdquo;
+            </p>
+          </div>
+
+          <!-- 4 Core Chapters / Takeaways -->
+          <div class="flex flex-col gap-3">
+            <span class="text-xs uppercase font-bold text-slate-400 tracking-wider">
+              Apa yang Kamu Pelajari di Buku Ini:
+            </span>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-700">
+              <li class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/80 border border-slate-200/60">
+                <i class="bx bx-check-circle text-slate-700 text-base shrink-0 mt-0.5"></i>
+                <span><strong>Peta Realitas vs Ilusi:</strong> Menilai fakta objektif tanpa bias delusi emosional.</span>
+              </li>
+              <li class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/80 border border-slate-200/60">
+                <i class="bx bx-check-circle text-slate-700 text-base shrink-0 mt-0.5"></i>
+                <span><strong>Objective-Oriented:</strong> Menimbang cost & benefit sebelum ambil langkah besar.</span>
+              </li>
+              <li class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/80 border border-slate-200/60">
+                <i class="bx bx-check-circle text-slate-700 text-base shrink-0 mt-0.5"></i>
+                <span><strong>Bongkar Sesat Pikir:</strong> Kebal hoaks, fitnah, dan manipulasi debat di internet.</span>
+              </li>
+              <li class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/80 border border-slate-200/60">
+                <i class="bx bx-check-circle text-slate-700 text-base shrink-0 mt-0.5"></i>
+                <span><strong>Kecerdasan Sosial:</strong> Cara bersikap kritis dan cerdas tanpa menyebalkan orang lain.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Specs Info Pill -->
+          <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-slate-500 font-medium">
+            <span class="px-2.5 py-1 rounded-lg bg-slate-200/70">📖 296 Halaman</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-200/70">🧵 Jahit Benang 180°</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-200/70">📄 Bookpaper 55gr</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-200/70">🔖 Bonus Bookmark</span>
+          </div>
+
         </div>
 
-        <!-- Floating Badge 1: Top Right (34K+ Buku Terkirim) -->
-        <div
-          class="absolute top-4 sm:top-4 right-0 sm:right-0 lg:-right-2 bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3 z-20 transition-transform hover:scale-105">
-          <div
-            class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center text-lg sm:text-xl shrink-0 font-bold">
-            <i class="bx bx-package"></i>
+        <!-- Bottom Action & Price -->
+        <div class="mt-8 pt-6 border-t border-slate-200/90 flex items-center justify-between gap-4">
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Harga Buku Fisik</span>
+            <div class="flex items-baseline gap-2">
+              <span class="font-display font-black text-2xl text-slate-950">Rp 119.000</span>
+              <span class="text-xs text-slate-400 line-through">Rp 139.000</span>
+            </div>
           </div>
-          <div class="flex flex-col">
-            <span class="font-display text-sm sm:text-base font-extrabold text-slate-900 leading-tight">34K+ Buku</span>
-            <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium">Terkirim ke Seluruh Indonesia</span>
-          </div>
+          <button type="button" (click)="buyDirect('mikir')"
+            class="px-5 py-3 rounded-full bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm active:scale-95 transition-all cursor-pointer flex items-center gap-2">
+            <i class="bx bx-cart-add text-base"></i>
+            <span>Beli Sekarang</span>
+          </button>
         </div>
 
-        <!-- Floating Badge 2: Bottom Left (100% Jahit Benang) -->
-        <div
-          class="absolute bottom-2 sm:bottom-4 left-0 sm:left-0 lg:-left-2 bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3 z-20 transition-transform hover:scale-105">
-          <div
-            class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg sm:text-xl shrink-0 font-bold">
-            <i class="bx bx-check-shield"></i>
-          </div>
-          <div class="flex flex-col">
-            <span class="font-display text-sm sm:text-base font-extrabold text-slate-900 leading-tight">100% Jahit
-              Benang</span>
-            <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium">Bookpaper Ramah Mata Bebas Silau</span>
-          </div>
-        </div>
       </div>
+
+
+      <!-- CARD 2: PRINSIPIL EKONOMI -->
+      <div
+        class="bg-[#F8F9FA] rounded-[32px] p-6 sm:p-8 border border-slate-200 flex flex-col justify-between relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+        <div class="flex flex-col gap-6">
+
+          <!-- Top Meta Row -->
+          <div class="flex items-center justify-between gap-4">
+            <span class="px-3.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-extrabold tracking-wide uppercase">
+              Ekonomi & Seni Memilih
+            </span>
+            <span class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+              <i class="bx bx-star text-amber-500 text-sm"></i> 4.9 / 5.0 (National Bestseller)
+            </span>
+          </div>
+
+          <!-- Book Title & Authors -->
+          <div>
+            <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-950 leading-tight">
+              Prinsipil Ekonomi
+            </h3>
+            <p class="text-sm font-semibold text-slate-500 mt-1">
+              Memahami Pilihan, Scarcity, dan Keputusan Hidup
+            </p>
+            <p class="text-xs text-slate-700 mt-1.5 font-medium">
+              Karya: <strong class="text-slate-900">Ferry Irwandi</strong>
+            </p>
+          </div>
+
+          <!-- Premise / Summary Quote -->
+          <div class="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed italic">
+              &ldquo;Ekonomi sejatinya bukan tentang rumus kaku atau grafik ruwet, melainkan seni mengalokasikan sumber daya yang terbatas—seperti waktu, energi, dan uang—dalam menentukan setiap pilihan hidup.&rdquo;
+            </p>
+          </div>
+
+          <!-- 4 Core Chapters / Takeaways -->
+          <div class="flex flex-col gap-3">
+            <span class="text-xs uppercase font-bold text-slate-400 tracking-wider">
+              Apa yang Kamu Pelajari di Buku Ini:
+            </span>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-700">
+              <li class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/80 border border-slate-200/60">
+                <i class="bx bx-check-circle text-slate-700 text-base shrink-0 mt-0.5"></i>
+                <span><strong>Realitas Scarcity:</strong> Mengapa kelangkaan waktu dan umur memaksa kita selalu memilih.</span>
+              </li>
+              <li class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/80 border border-slate-200/60">
+                <i class="bx bx-check-circle text-slate-700 text-base shrink-0 mt-0.5"></i>
+                <span><strong>Opportunity Cost:</strong> Menghitung nilai hal berharga yang kamu korbankan saat berkata "Ya".</span>
+              </li>
+              <li class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/80 border border-slate-200/60">
+                <i class="bx bx-check-circle text-slate-700 text-base shrink-0 mt-0.5"></i>
+                <span><strong>Struktur Insentif:</strong> Membaca motivasi tersembunyi di balik tindakan orang dan sistem.</span>
+              </li>
+              <li class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/80 border border-slate-200/60">
+                <i class="bx bx-check-circle text-slate-700 text-base shrink-0 mt-0.5"></i>
+                <span><strong>Pisau Analisis Finansial:</strong> Menolak FOMO, waspada jebakan pinjol, dan melek kebijakan.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Specs Info Pill -->
+          <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-slate-500 font-medium">
+            <span class="px-2.5 py-1 rounded-lg bg-slate-200/70">📖 267 Halaman</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-200/70">🧵 Jahit Benang 180°</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-200/70">📄 Bookpaper 55gr</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-200/70">🔖 Bonus Bookmark</span>
+          </div>
+
+        </div>
+
+        <!-- Bottom Action & Price -->
+        <div class="mt-8 pt-6 border-t border-slate-200/90 flex items-center justify-between gap-4">
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Harga Buku Fisik</span>
+            <div class="flex items-baseline gap-2">
+              <span class="font-display font-black text-2xl text-slate-950">Rp 125.000</span>
+              <span class="text-xs text-slate-400 line-through">Rp 145.000</span>
+            </div>
+          </div>
+          <button type="button" (click)="buyDirect('ekonomi')"
+            class="px-5 py-3 rounded-full bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm active:scale-95 transition-all cursor-pointer flex items-center gap-2">
+            <i class="bx bx-cart-add text-base"></i>
+            <span>Beli Sekarang</span>
+          </button>
+        </div>
+
+      </div>
+
     </div>
+
   </section>
 
-  <!-- 2. HERO HIGHLIGHTS BENTO (REFERENCE MATCH: 3 CARDS BENTO GRID BELOW HERO) -->
-  <section class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-    <!-- Bento Card 1: Solid Primary Violet/Red -->
-    <div
-      class="rounded-3xl bg-primary-600 text-white p-6 sm:p-8 flex flex-col justify-between shadow-xl shadow-primary-600/20 relative overflow-hidden group">
-      <div class="absolute -top-10 -right-10 w-36 h-36 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-      <div>
-        <div
-          class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-white text-xl mb-6">
-          <i class="bx bx-feather"></i>
-        </div>
-        <h3 class="font-display font-extrabold text-xl sm:text-2xl text-white leading-tight">
-          Gagasan Orisinal yang Abadi
-        </h3>
-        <p class="text-xs sm:text-sm text-primary-100 mt-2.5 leading-relaxed font-normal">
-          Terbitan independen yang dirancang untuk dibaca mendalam, dicatat di margin, dan disimpan di rak bukumu
-          selamanya.
-        </p>
-      </div>
 
-      <div class="mt-6 pt-4 border-t border-white/20 flex items-center justify-between">
-        <span class="text-xs font-semibold text-white/90">Cania Citta & Abigail Limuria</span>
-        <i class="bx bx-right-arrow-alt text-xl text-white group-hover:translate-x-1 transition-transform"></i>
-      </div>
+  <!-- ========================================================================= -->
+  <!-- 3. BENTO GRID: STANDAR KUALITAS FISIK & PENGALAMAN MEMBACA -->
+  <!-- ========================================================================= -->
+  <section id="fitur-utama" class="scroll-mt-20 flex flex-col gap-8">
+
+    <!-- Section Header -->
+    <div class="text-center max-w-2xl mx-auto flex flex-col items-center gap-2">
+      <h2
+        class="font-display font-extrabold text-3xl sm:text-4xl lg:text-[42px] text-slate-950 tracking-tight leading-tight">
+        Standar Mutu Cetak & Layanan Malakabooks
+      </h2>
+      <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+        Mengapa puluhan ribu pembaca memilih edisi fisik orisinal jahit benang dibanding format digital.
+      </p>
     </div>
 
-    <!-- Bento Card 2: Deep Slate Card with Trend Waveform -->
-    <div
-      class="rounded-3xl bg-slate-900 text-white p-6 sm:p-8 flex flex-col justify-between shadow-xl border border-slate-800 relative overflow-hidden group">
-      <div>
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Pertumbuhan Pembaca</span>
-          <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-xs font-bold">+128% Thn ini</span>
-        </div>
-        <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight">
-          54,200+
-        </h3>
-        <p class="text-xs text-slate-400 mt-1">Pembaca aktif di seluruh komunitas literasi daerah</p>
+    <!-- 6-Grid Bento Container -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
 
-        <!-- Mini SVG Trend Wave Graphic -->
-        <div class="h-16 w-full mt-4 flex items-end">
-          <svg class="w-full h-14 overflow-visible" viewBox="0 0 200 60" fill="none" preserveAspectRatio="none">
-            <path d="M0,45 C30,40 50,55 80,30 C110,10 130,35 160,15 C180,5 190,20 200,8 L200,60 L0,60 Z"
-              fill="url(#trendGrad)" opacity="0.4"></path>
-            <path d="M0,45 C30,40 50,55 80,30 C110,10 130,35 160,15 C180,5 190,20 200,8" stroke="#FE7743"
-              stroke-width="3" stroke-linecap="round"></path>
-            <defs>
-              <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#FE7743"></stop>
-                <stop offset="100%" stop-color="#FE7743" stop-opacity="0"></stop>
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-      </div>
-
-      <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-        <span>Arsip Cetak Berkualitas</span>
-        <span class="text-primary-400 font-bold">Terbitan Resmi</span>
-      </div>
-    </div>
-
-    <!-- Bento Card 3: Clean White Curated Accessories / Special Edition -->
-    <div
-      class="rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow group">
-      <div>
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center text-xl">
-            <i class="bx bx-bookmark-star"></i>
+      <!-- Bento 1: Kurasi buku orisinal, cetak jahit benang bermutu tinggi (Top Left - 6 cols) -->
+      <div
+        class="lg:col-span-6 bg-[#F4F5F7] rounded-4xl p-6 sm:p-8 border border-slate-200/70 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+        <div class="flex flex-col gap-4">
+          <!-- Icon Circle -->
+          <div
+            class="w-11 h-11 rounded-full bg-slate-700 text-white flex items-center justify-center text-xl font-bold shadow-xs">
+            <i class="bx bx-book-bookmark"></i>
           </div>
-          <span
-            class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-colors">
-            <i class="bx bx-up-arrow-alt rotate-45 text-lg"></i>
+          <h3 class="font-display font-extrabold text-xl sm:text-2xl text-slate-950 leading-snug">
+            Jilid Jahit Benang Kokoh — Rebah Rata 180°
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal max-w-md">
+            Dicetak di atas kertas bookpaper ramah mata dengan jilid jahit benang yang kokoh. Buku dapat dibuka rata 180° di atas meja tanpa risiko punggung buku patah atau lem halaman terlepas.
+          </p>
+        </div>
+
+        <div class="mt-6 flex items-center gap-3 text-xs font-semibold text-slate-700">
+          <span class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200">
+            <i class="bx bx-check text-emerald-600"></i> Buka Rata di Meja
+          </span>
+          <span class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200">
+            <i class="bx bx-check text-emerald-600"></i> Tahan Bertahun-tahun
           </span>
         </div>
-        <h3 class="font-display font-extrabold text-xl sm:text-2xl text-slate-900 leading-tight">
-          Edisi Spesial & Aksesori Baca
-        </h3>
-        <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-normal">
-          Setiap rilisan cetak dilengkapi bookmark tematik khusus, pembatas buku kulit sintetis, dan lembar bertanda
-          tangan penulis.
-        </p>
       </div>
 
-      <div class="mt-6 flex items-center gap-2">
-        <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">Hardcover</span>
-        <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">Bookpaper</span>
-        <span class="px-2.5 py-1 rounded-lg bg-primary-50 text-primary-700 text-xs font-semibold">Jahit Benang</span>
+      <!-- Bento 2: Mental models & nalar kritis (Top Right - 6 cols) -->
+      <div
+        class="lg:col-span-6 bg-[#F4F5F7] rounded-4xl p-6 sm:p-8 border border-slate-200/70 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+        <div class="flex flex-col gap-4">
+          <!-- Icon Circle -->
+          <div
+            class="w-11 h-11 rounded-full bg-slate-700 text-white flex items-center justify-center text-xl font-bold shadow-xs">
+            <i class="bx bx-brain"></i>
+          </div>
+          <h3 class="font-display font-extrabold text-xl sm:text-2xl text-slate-950 leading-snug">
+            Kerangka Berpikir Aplikatif & Teruji
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal max-w-md">
+            Membongkar bias kognitif, mengurai kalkulasi biaya peluang (opportunity cost), dan membantu keputusan hidup secara rasional di dunia nyata.
+          </p>
+        </div>
+
+        <!-- Visual: Modern Minimal Graph & Insight Widget -->
+        <div class="mt-8 pt-4 flex flex-col gap-3">
+          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-2xs uppercase font-bold text-slate-400 tracking-wider">Tingkat Kepuasan & Retensi Pembaca</span>
+                <p class="font-display font-extrabold text-xl sm:text-2xl text-slate-950 mt-0.5">99.2% Rekomendasi Positif</p>
+              </div>
+              <div
+                class="w-8 h-8 rounded-full bg-slate-700/20 text-slate-950 flex items-center justify-center font-bold text-xs">
+                <i class="bx bx-bar-chart-alt-2"></i>
+              </div>
+            </div>
+
+            <!-- Mini Chart Bars Mockup -->
+            <div class="flex items-end gap-2 h-20 pt-2 px-1">
+              <div class="flex-1 bg-slate-100 rounded-t-md h-[40%] hover:bg-slate-700 transition-colors"></div>
+              <div class="flex-1 bg-slate-100 rounded-t-md h-[65%] hover:bg-slate-700 transition-colors"></div>
+              <div class="flex-1 bg-slate-100 rounded-t-md h-[50%] hover:bg-slate-700 transition-colors"></div>
+              <div class="flex-1 bg-slate-100 rounded-t-md h-[80%] hover:bg-slate-700 transition-colors"></div>
+              <div class="flex-1 bg-slate-700 rounded-t-md h-full shadow-xs"></div>
+              <div class="flex-1 bg-slate-100 rounded-t-md h-[70%] hover:bg-slate-700 transition-colors"></div>
+              <div class="flex-1 bg-slate-100 rounded-t-md h-[85%] hover:bg-slate-700 transition-colors"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bento 3: Pengiriman aman ke seluruh nusantara (Middle - 12 cols Full Width) -->
+      <div
+        class="lg:col-span-12 bg-[#F4F5F7] rounded-4xl p-6 sm:p-10 border border-slate-200/70 flex flex-col lg:flex-row items-center justify-between gap-8 group hover:shadow-md transition-shadow">
+        <div class="flex flex-col gap-4 max-w-xl">
+          <div
+            class="w-11 h-11 rounded-full bg-slate-700 text-white flex items-center justify-center text-xl font-bold shadow-xs">
+            <i class="bx bx-shield-quarter"></i>
+          </div>
+          <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-950 leading-snug">
+            Pengiriman Aman & Proteksi Karton Sudut ke Seluruh Indonesia
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+            Buku dikemas menggunakan pelindung siku karton tebal dan bubble wrap berlapis. Menjamin sudut buku tidak penyok dan tiba dalam kondisi mulus seperti baru keluar dari percetakan.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <span class="px-3 py-1 rounded-full bg-white text-slate-800 text-xs font-semibold border border-slate-200">
+              ⚡ Multi-Warehouse Delivery
+            </span>
+            <span class="px-3 py-1 rounded-full bg-white text-slate-800 text-xs font-semibold border border-slate-200">
+              📦 Ekstra Karton Sudut Anti-Penyok
+            </span>
+            <span class="px-3 py-1 rounded-full bg-white text-slate-800 text-xs font-semibold border border-slate-200">
+              🛡️ Garansi Rusak Ganti Baru
+            </span>
+          </div>
+        </div>
+
+        <!-- Visual: Delivery Route Mockup -->
+        <div
+          class="w-full lg:w-auto lg:min-w-95 bg-white rounded-2xl p-5 border border-slate-200/90 shadow-md flex flex-col gap-4">
+          <div
+            class="flex items-center justify-between text-xs font-bold text-slate-900 border-b border-slate-100 pb-3">
+            <span>Rute Distribusi Buku Fisik</span>
+            <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-2xs">Aktif • Ekspedisi Resmi</span>
+          </div>
+
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <div
+                class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-sm font-bold text-slate-800">
+                🏢
+              </div>
+              <div>
+                <span class="text-2xs text-slate-400 font-medium block">Pusat Distribusi</span>
+                <span class="text-xs font-bold text-slate-900">Warehouse Malakabooks</span>
+              </div>
+            </div>
+
+            <i class="bx bx-right-arrow-alt text-xl text-slate-400"></i>
+
+            <div class="flex items-center gap-2.5">
+              <div
+                class="w-9 h-9 rounded-full bg-slate-700/20 flex items-center justify-center text-sm font-bold text-slate-950">
+                📍
+              </div>
+              <div>
+                <span class="text-2xs text-slate-400 font-medium block">Alamat Penerima</span>
+                <span class="text-xs font-bold text-slate-900">Seluruh Kota / Kabupaten</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-500 font-medium">Estimasi Waktu Tiba:</span>
+            <span class="font-bold text-slate-900">1 - 3 Hari Kerja</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bento 4: Bahasa Lugas Tongkrongan (Bottom Col 1 - 4 cols) -->
+      <div
+        class="lg:col-span-4 bg-[#F4F5F7] rounded-4xl p-6 sm:p-8 border border-slate-200/70 flex flex-col justify-between group hover:shadow-md transition-shadow">
+        <div class="flex flex-col gap-3">
+          <div
+            class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center text-lg font-bold shadow-xs">
+            <i class="bx bx-message-rounded-dots"></i>
+          </div>
+          <h4 class="font-display font-extrabold text-lg sm:text-xl text-slate-950 leading-snug">
+            Bahasa Tongkrongan yang Lugas
+          </h4>
+          <p class="text-xs text-slate-600 leading-relaxed font-normal">
+            Bebas dari kalimat kaku dan berbelit. Konsep filsafat dan ekonomi diurai dengan analogi populer yang bikin kamu mengangguk paham.
+          </p>
+        </div>
+
+        <div class="mt-6 flex items-center gap-2">
+          <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800">
+            ☕ Santai & Mengalir
+          </span>
+          <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800">
+            💡 Bebas Jargon Elitis
+          </span>
+        </div>
+      </div>
+
+      <!-- Bento 5: Transaksi Praktis (Bottom Col 2 - 4 cols) -->
+      <div
+        class="lg:col-span-4 bg-[#F4F5F7] rounded-4xl p-6 sm:p-8 border border-slate-200/70 flex flex-col justify-between group hover:shadow-md transition-shadow">
+        <div class="flex flex-col gap-3">
+          <div
+            class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center text-lg font-bold shadow-xs">
+            <i class="bx bx-credit-card-front"></i>
+          </div>
+          <h4 class="font-display font-extrabold text-lg sm:text-xl text-slate-950 leading-snug">
+            Pemesanan Praktis & Aman
+          </h4>
+          <p class="text-xs text-slate-600 leading-relaxed font-normal">
+            Pilihan pembayaran otomatis (QRIS, BCA, Mandiri, BRI, GoPay, OVO) dengan notifikasi status pesanan langsung.
+          </p>
+        </div>
+
+        <div
+          class="mt-6 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div
+              class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold">
+              <i class="bx bx-check"></i>
+            </div>
+            <span class="text-xs font-bold text-slate-800">Pembayaran Terverifikasi</span>
+          </div>
+          <span class="font-display font-extrabold text-sm text-slate-950">Instan & Otomatis</span>
+        </div>
+      </div>
+
+      <!-- Bento 6: Explore All (Bottom Col 3 - 4 cols - Dark Card) -->
+      <div
+        class="lg:col-span-4 bg-[#0F1115] text-white rounded-4xl p-6 sm:p-8 border border-neutral-800 flex flex-col justify-between relative overflow-hidden group hover:shadow-xl transition-shadow">
+        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-slate-700/10 rounded-full blur-2xl pointer-events-none">
+        </div>
+
+        <div class="flex flex-col gap-3 relative z-10">
+          <h4 class="font-display font-extrabold text-xl text-white leading-snug">
+            Jelajahi Katalog Lengkap Malakabooks
+          </h4>
+          <p class="text-xs text-slate-400 leading-relaxed font-normal">
+            Temukan koleksi buku pemikiran independen lainnya, rilisan karya penulis terkurasi, dan paket bundling eksklusif.
+          </p>
+        </div>
+
+        <div class="mt-6 relative z-10">
+          <a routerLink="/product"
+            class="w-full py-3 rounded-full bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider text-center block shadow-md active:scale-95 transition-all cursor-pointer">
+            Buka Katalog Lengkap
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 4. MEDIA & COMMUNITY RECOGNITION (Replacing FinTech / Finsy logos) -->
+  <!-- ========================================================================= -->
+  <section class="py-6 flex flex-col items-center gap-8">
+    <div class="text-center max-w-xl mx-auto">
+      <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-950 leading-tight">
+        Disorot & Diapresiasi Komunitas Literasi Nasional
+      </h3>
+      <p class="text-xs sm:text-sm text-slate-500 mt-2">
+        Karya-karya terbitan Malakabooks telah menjadi rujukan diskusi, bahan bedah buku lintas kampus, dan topik obrolan wacana publik.
+      </p>
+    </div>
+
+    <!-- 2-Row Brand Pill Logos Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full max-w-4xl">
+      <div
+        class="p-4 rounded-2xl bg-[#F4F5F7] border border-slate-200/70 flex items-center justify-center gap-2 text-slate-800 font-display font-bold text-sm hover:bg-white hover:shadow-xs transition-all">
+        <i class="bx bx-bulb text-xl text-slate-700"></i>
+        <span>Malaka Project</span>
+      </div>
+      <div
+        class="p-4 rounded-2xl bg-[#F4F5F7] border border-slate-200/70 flex items-center justify-center gap-2 text-slate-800 font-display font-bold text-sm hover:bg-white hover:shadow-xs transition-all">
+        <i class="bx bx-check-double text-xl text-slate-700"></i>
+        <span>Bijak Memilih</span>
+      </div>
+      <div
+        class="p-4 rounded-2xl bg-[#F4F5F7] border border-slate-200/70 flex items-center justify-center gap-2 text-slate-800 font-display font-bold text-sm hover:bg-white hover:shadow-xs transition-all">
+        <i class="bx bx-conversation text-xl text-slate-700"></i>
+        <span>Total Politik</span>
+      </div>
+      <div
+        class="p-4 rounded-2xl bg-[#F4F5F7] border border-slate-200/70 flex items-center justify-center gap-2 text-slate-800 font-display font-bold text-sm hover:bg-white hover:shadow-xs transition-all">
+        <i class="bx bx-news text-xl text-slate-700"></i>
+        <span>Narasi</span>
+      </div>
+      <div
+        class="p-4 rounded-2xl bg-[#F4F5F7] border border-slate-200/70 flex items-center justify-center gap-2 text-slate-800 font-display font-bold text-sm hover:bg-white hover:shadow-xs transition-all">
+        <i class="bx bx-podcast text-xl text-slate-700"></i>
+        <span>Asumsi</span>
+      </div>
+      <div
+        class="p-4 rounded-2xl bg-[#F4F5F7] border border-slate-200/70 flex items-center justify-center gap-2 text-slate-800 font-display font-bold text-sm hover:bg-white hover:shadow-xs transition-all">
+        <i class="bx bx-group text-xl text-slate-700"></i>
+        <span>Bapak2ID</span>
+      </div>
+      <div
+        class="p-4 rounded-2xl bg-[#F4F5F7] border border-slate-200/70 flex items-center justify-center gap-2 text-slate-800 font-display font-bold text-sm hover:bg-white hover:shadow-xs transition-all">
+        <i class="bx bx-book-reader text-xl text-slate-700"></i>
+        <span>Goodreads ID</span>
+      </div>
+      <div
+        class="p-4 rounded-2xl bg-[#F4F5F7] border border-slate-200/70 flex items-center justify-center gap-2 text-slate-800 font-display font-bold text-sm hover:bg-white hover:shadow-xs transition-all">
+        <i class="bx bx-bookmark-heart text-xl text-slate-700"></i>
+        <span>Ruang Baca</span>
       </div>
     </div>
   </section>
 
-  <!-- 3. PARTNERS / PUBLISHERS STRIP (REFERENCE MATCH: MONOCHROME LOGOS ROW) -->
-  <section class="py-4 border-y border-slate-200/80">
-    <div class="flex flex-col items-center gap-3">
-      <span class="text-[11px] font-bold uppercase tracking-widest text-slate-400">
-        Jaringan Penerbitan & Kolaborasi Komunitas Literasi
+
+  <!-- ========================================================================= -->
+  <!-- 5. TESTIMONIAL SHOWCASE SECTION (Accurate Book Reviews) -->
+  <!-- ========================================================================= -->
+  <section class="bg-[#F4F5F7] rounded-[36px] p-6 sm:p-10 lg:p-12 border border-slate-200/70 relative overflow-hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
+      <!-- Left Column: Reader Photo -->
+      <div class="lg:col-span-5 flex items-center justify-center">
+        <div class="relative w-full max-w-sm aspect-4/4.5 rounded-3xl overflow-hidden bg-slate-200 shadow-md">
+          <img [src]="currentTestimonial().photoUrl" [alt]="currentTestimonial().name"
+            class="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500" />
+          <div class="absolute inset-0 bg-linear-to-t from-slate-900/40 via-transparent to-transparent"></div>
+        </div>
+      </div>
+
+      <!-- Right Column: Big Trust Statement, Quote, Name & Navigation -->
+      <div class="lg:col-span-7 flex flex-col justify-between gap-6">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white text-slate-700 text-xs font-bold border border-slate-200 mb-3">
+            <i class="bx bxs-quote-left text-slate-700"></i>
+            <span>Ulasan Pembaca Nyata</span>
+          </div>
+          <h3 class="font-display font-extrabold text-2xl sm:text-4xl text-slate-950 leading-tight">
+            Apa Kata Mereka yang Telah Membaca?
+          </h3>
+          <p class="text-slate-700 text-sm sm:text-base mt-4 leading-relaxed italic">
+            &ldquo;{{ currentTestimonial().quote }}&rdquo;
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between pt-4 border-t border-slate-200/80">
+          <div>
+            <h4 class="font-display font-bold text-slate-950 text-base sm:text-lg">
+              {{ currentTestimonial().name }}
+            </h4>
+            <p class="text-xs text-slate-500 mt-0.5">
+              {{ currentTestimonial().role }} • {{ currentTestimonial().company }}
+            </p>
+          </div>
+
+          <!-- Circular Navigation Arrow Controls -->
+          <div class="flex items-center gap-2">
+            <button type="button" (click)="prevTestimonial()" aria-label="Ulasan Sebelumnya"
+              class="w-10 h-10 rounded-full bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 flex items-center justify-center text-lg active:scale-95 transition-all cursor-pointer">
+              <i class="bx bx-chevron-left"></i>
+            </button>
+            <button type="button" (click)="nextTestimonial()" aria-label="Ulasan Selanjutnya"
+              class="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-800 text-white flex items-center justify-center text-lg font-bold shadow-xs active:scale-95 transition-all cursor-pointer">
+              <i class="bx bx-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 6. DUAL BOOKS SHOWCASE / BUNDLING BANNER -->
+  <!-- ========================================================================= -->
+  <section id="paket-bundling"
+    class="scroll-mt-24 bg-[#F8F9FA] rounded-[36px] p-8 sm:p-12 lg:p-16 border border-slate-200/70 flex flex-col items-center text-center relative overflow-hidden">
+    <!-- Subtle Pattern Accent -->
+    <div class="absolute -top-16 -right-16 w-64 h-64 bg-slate-700/15 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-xl mx-auto flex flex-col items-center gap-3 relative z-10 mb-8">
+      <span class="px-3.5 py-1 rounded-full bg-slate-200/80 text-slate-700 text-xs font-bold uppercase tracking-wider">
+        Penawaran Spesial Pembaca
       </span>
-      <div
-        class="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
-        <span
-          class="font-display font-extrabold text-slate-800 text-base sm:text-lg tracking-wider">MALAKABOOKS.ID</span>
-        <span class="font-display font-extrabold text-slate-800 text-base sm:text-lg tracking-wider">MARDIKA KOPI</span>
-        <span class="font-display font-extrabold text-slate-800 text-base sm:text-lg tracking-wider">KOMUNITAS
-          BACA</span>
-        <span class="font-display font-extrabold text-slate-800 text-base sm:text-lg tracking-wider">ARSIP
-          PEMIKIRAN</span>
-        <span class="font-display font-extrabold text-slate-800 text-base sm:text-lg tracking-wider">LITERASI
-          INDEPENDEN</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. INTERACTIVE SHOWCASE REEL / VIDEO SHOWCASE (REFERENCE MATCH: CENTERED HEADLINE + LARGE MEDIA PREVIEW + PLAY BUTTON) -->
-  <section class="flex flex-col items-center text-center gap-6">
-    <div class="max-w-2xl flex flex-col items-center gap-3">
-      <div
-        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-50 border border-primary-200/80 text-primary-700 text-xs font-bold shadow-xs">
-        <i class="bx bx-play-circle text-base"></i>
-        <span>PROSES CETAK & KERAJINAN BUKU</span>
-      </div>
-
-      <h2
-        class="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl text-slate-900 leading-[1.15] tracking-tight">
-        Dedikasi di Setiap Lembar Kertas Berkualitas
-      </h2>
-
-      <p class="text-xs sm:text-sm lg:text-base text-slate-600 leading-relaxed font-normal max-w-xl">
-        Lihat bagaimana setiap buku dicetak, dijahit benang secara presisi, dan dikemas berlapis proteksi ekstra sebelum
-        dikirimkan ke tangan Anda.
+      <h3 class="font-display font-extrabold text-3xl sm:text-4xl text-slate-950 leading-tight">
+        Lengkapi Koleksi Dua Masterpiece Malakabooks.
+      </h3>
+      <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+        Dapatkan buku fisik orisinal jilid jahit benang dengan kemasan proteksi karton sudut dan bonus 2 bookmark tematik eksklusif. Lebih hemat dengan paket bundling!
       </p>
 
-      <div class="flex items-center gap-3 pt-2">
-        <a routerLink="/product"
-          class="px-6 py-3 rounded-full bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-primary-600/25 active:scale-95 transition-all cursor-pointer">
-          Jelajahi Judul Buku
-        </a>
-        <button type="button" (click)="openVideoModal()"
-          class="px-6 py-3 rounded-full bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs uppercase tracking-wider active:scale-95 transition-all cursor-pointer">
-          Tonton Video Proses
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <button type="button" (click)="buyDirect('mikir')"
+          class="px-5 py-3 rounded-full bg-white text-slate-900 border border-slate-300 hover:bg-slate-100 text-xs font-bold flex items-center gap-2 shadow-xs active:scale-95 transition-all cursor-pointer">
+          <i class="bx bx-cart-add text-lg text-slate-700"></i>
+          <span>Beli "Makanya, Mikir!"</span>
+        </button>
+        <button type="button" (click)="buyDirect('ekonomi')"
+          class="px-5 py-3 rounded-full bg-white text-slate-900 border border-slate-300 hover:bg-slate-100 text-xs font-bold flex items-center gap-2 shadow-xs active:scale-95 transition-all cursor-pointer">
+          <i class="bx bx-cart-add text-lg text-slate-700"></i>
+          <span>Beli "Prinsipil Ekonomi"</span>
+        </button>
+        <button type="button" (click)="buyDirect('bundle')"
+          class="px-6 py-3 rounded-full bg-slate-700 text-white hover:bg-slate-800 text-xs font-bold flex items-center gap-2 shadow-md active:scale-95 transition-all cursor-pointer">
+          <i class="bx bx-package text-lg"></i>
+          <span>Beli Paket Bundling (Hemat Rp 20.000)</span>
         </button>
       </div>
     </div>
 
-    <!-- Video Reel / Showcase Frame Container -->
-    <div
-      class="w-full max-w-4xl aspect-[16/9] sm:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl relative border-4 border-white bg-slate-950 group cursor-pointer"
-      (click)="openVideoModal()">
-      <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1400&q=80"
-        alt="Proses Percetakan Buku Malakabooks"
-        class="w-full h-full object-cover opacity-85 group-hover:scale-105 group-hover:opacity-95 transition-all duration-700" />
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-
-      <!-- Centered Pulsing Play Button -->
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-        <div
-          class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-primary-600/90 text-white flex items-center justify-center text-3xl shadow-2xl shadow-primary-600/50 group-hover:scale-110 transition-transform">
-          <i class="bx bx-play ml-1"></i>
-        </div>
-      </div>
-
-      <div class="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white text-xs">
-        <span class="font-semibold">Standar Cetak Jahit Benang & Bookpaper Ramah Mata</span>
-        <span class="bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">02:15 Min HD</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. THREE-COLUMN FEATURE CARDS (REFERENCE MATCH: 3 CARDS WITH IMAGE AT BOTTOM + CIRCULAR ARROW TAG) -->
-  <section class="flex flex-col gap-8">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-      <div class="max-w-xl">
-        <span class="text-primary-600 text-xs font-bold uppercase tracking-wider block mb-1">Pilar Kualitas</span>
-        <h2 class="font-display font-extrabold text-2xl sm:text-4xl text-slate-900 leading-tight">
-          Fondasi Mutu Penerbitan Malakabooks
-        </h2>
-      </div>
-      <p class="text-xs sm:text-sm text-slate-500 max-w-md leading-relaxed">
-        Setiap karya yang lahir melalui kurasi independen, proses pracetak yang cermat, dan komitmen royalti yang
-        berkeadilan.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Feature Card 1 -->
+    <!-- Dual Book Floating Showcase -->
+    <div class="relative w-full max-w-2xl mt-4 flex items-center justify-center">
       <div
-        class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between shadow-sm hover:shadow-lg transition-all group overflow-hidden">
-        <div>
-          <div class="flex items-center justify-between mb-4">
-            <span
-              class="px-3 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-bold border border-primary-100">
-              Kurasi Naskah
-            </span>
-            <div
-              class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-colors">
-              <i class="bx bx-up-arrow-alt rotate-45 text-lg"></i>
-            </div>
-          </div>
-          <h3 class="font-display font-bold text-slate-900 text-xl">Kurasi Ketat & Independen</h3>
-          <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-normal">
-            Setiap naskah ditinjau berdasarkan bobot argumen dan kedalaman riset, bukan sekadar mengikuti tren pasar
-            sesaat.
-          </p>
+        class="relative w-full aspect-16/10 max-w-xl rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 bg-white group">
+        <div class="w-full h-full flex flex-row">
+          <img src="/images/books/makanya-mikir.jpg" alt="Makanya Mikir - Abigail Limuria & Cania Citta"
+            class="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-700 origin-right border-r border-slate-200/50" />
+          <img src="/images/books/prinsipil-ekonomi.jpg" alt="Prinsipil Ekonomi - Ferry Irwandi"
+            class="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-700 origin-left" />
         </div>
 
-        <div class="mt-6 rounded-2xl overflow-hidden aspect-[16/10] bg-slate-100 relative">
-          <img src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=600&q=80"
-            alt="Kurasi Naskah"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-        </div>
-      </div>
-
-      <!-- Feature Card 2 -->
-      <div
-        class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between shadow-sm hover:shadow-lg transition-all group overflow-hidden">
-        <div>
-          <div class="flex items-center justify-between mb-4">
-            <span
-              class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100">
-              Material Fisik
-            </span>
-            <div
-              class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-colors">
-              <i class="bx bx-up-arrow-alt rotate-45 text-lg"></i>
-            </div>
-          </div>
-          <h3 class="font-display font-bold text-slate-900 text-xl">Kertas Ramah Mata & Jahit Benang</h3>
-          <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-normal">
-            Bookpaper premium anti pantul silau dengan penjilidan jahit benang kuat agar buku nyaman dibuka 180 derajat.
-          </p>
-        </div>
-
-        <div class="mt-6 rounded-2xl overflow-hidden aspect-[16/10] bg-slate-100 relative">
-          <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80"
-            alt="Material Cetak Premium"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-        </div>
-      </div>
-
-      <!-- Feature Card 3 -->
-      <div
-        class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between shadow-sm hover:shadow-lg transition-all group overflow-hidden">
-        <div>
-          <div class="flex items-center justify-between mb-4">
-            <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100">
-              Pengiriman Nasional
-            </span>
-            <div
-              class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-colors">
-              <i class="bx bx-up-arrow-alt rotate-45 text-lg"></i>
-            </div>
-          </div>
-          <h3 class="font-display font-bold text-slate-900 text-xl">Proteksi Paket & Garansi Retur</h3>
-          <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-normal">
-            Kemasan berlapis bubble wrap tebal dan karton sudut dengan jaminan ganti baru 100% jika terjadi cacat
-            pengiriman.
-          </p>
-        </div>
-
-        <div class="mt-6 rounded-2xl overflow-hidden aspect-[16/10] bg-slate-100 relative">
-          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80"
-            alt="Proteksi Pengiriman"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. TWO-COLUMN SPLIT SECTION (REFERENCE MATCH: LEFT CHECKLIST CONTENT + RIGHT PHOTO WITH FLOATING METRICS) -->
-  <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-    <!-- Left Column: Copy & Checklist -->
-    <div class="lg:col-span-6 flex flex-col gap-6">
-      <div class="inline-flex items-center gap-2">
-        <span class="px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider">
-          PENGALAMAN MEMBACA NYATA
-        </span>
-      </div>
-
-      <h2
-        class="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl text-slate-900 leading-[1.15] tracking-tight">
-        Fokus Membaca Tanpa Notifikasi & Distraksi Layar
-      </h2>
-
-      <p class="text-xs sm:text-sm lg:text-base text-slate-600 leading-relaxed font-normal">
-        Di tengah banjir konten kilat media sosial, buku fisik memberikan ketenangan untuk meresapi argumen secara utuh.
-        Dirancang untuk menemani waktu heningmu di pagi hari atau malam sebelum beristirahat.
-      </p>
-
-      <!-- Checklist Items -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-        <div class="flex items-center gap-3">
-          <div
-            class="w-6 h-6 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center text-sm shrink-0">
-            <i class="bx bx-check"></i>
-          </div>
-          <span class="text-xs sm:text-sm font-semibold text-slate-800">Format Kertas Nyaman</span>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <div
-            class="w-6 h-6 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center text-sm shrink-0">
-            <i class="bx bx-check"></i>
-          </div>
-          <span class="text-xs sm:text-sm font-semibold text-slate-800">Bebas Kelelahan Mata</span>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <div
-            class="w-6 h-6 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center text-sm shrink-0">
-            <i class="bx bx-check"></i>
-          </div>
-          <span class="text-xs sm:text-sm font-semibold text-slate-800">Bisa Dicatat di Margin</span>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <div
-            class="w-6 h-6 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center text-sm shrink-0">
-            <i class="bx bx-check"></i>
-          </div>
-          <span class="text-xs sm:text-sm font-semibold text-slate-800">Aset Arsip Pribadi</span>
-        </div>
-      </div>
-
-      <div class="pt-2">
-        <a routerLink="/product"
-          class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary-600/25 active:scale-95 transition-all cursor-pointer">
-          <span>Koleksi Sekarang</span>
-          <i class="bx bx-right-arrow-alt text-lg"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- Right Column: Visual with Floating Card -->
-    <div class="lg:col-span-6 relative flex justify-center">
-      <div
-        class="relative w-full max-w-md aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 group">
-        <img src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=800&q=80"
-          alt="Membaca Santai dengan Kopi"
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-      </div>
-
-      <!-- Floating Stat Card on Right Image -->
-      <div
-        class="absolute bottom-6 -right-2 sm:-right-4 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex flex-col gap-1 z-20">
-        <div class="flex items-center gap-1.5 text-amber-500 text-sm">
-          <i class="bx bxs-star"></i>
-          <i class="bx bxs-star"></i>
-          <i class="bx bxs-star"></i>
-          <i class="bx bxs-star"></i>
-          <i class="bx bxs-star"></i>
-        </div>
-        <span class="font-display font-extrabold text-slate-900 text-sm">100% Kepuasan Pembaca</span>
-        <span class="text-[11px] text-slate-500">Berdasarkan ulasan terverifikasi</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 7. REVERSED SPLIT SECTION (REFERENCE MATCH: LEFT DASHBOARD/METRIC CARD + RIGHT EDITORIAL COPY) -->
-  <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-    <!-- Left Column: Readers Dashboard Graphic Card -->
-    <div class="lg:col-span-6 order-2 lg:order-1 relative">
-      <div
-        class="rounded-3xl bg-slate-900 text-white p-6 sm:p-8 shadow-2xl border border-slate-800 flex flex-col gap-6">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-          <div class="flex items-center gap-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary-600/30 text-primary-400 flex items-center justify-center text-xl font-bold">
-              <i class="bx bx-group"></i>
-            </div>
-            <div>
-              <h4 class="font-display font-bold text-white text-base">Komunitas Pembaca Malaka</h4>
-              <span class="text-xs text-slate-400">Distribusi Nasional 2026</span>
-            </div>
-          </div>
-          <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">Aktif</span>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-          <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60">
-            <span class="text-xs text-slate-400 block mb-1">Rata-rata Waktu Baca</span>
-            <span class="font-display text-2xl font-extrabold text-white">45 Min/Hari</span>
-          </div>
-          <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60">
-            <span class="text-xs text-slate-400 block mb-1">Tingkat Retensi</span>
-            <span class="font-display text-2xl font-extrabold text-white">96.4%</span>
-          </div>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-primary-600/20 border border-primary-500/30 flex items-center gap-3.5">
-          <i class="bx bx-badge-check text-2xl text-primary-400"></i>
-          <p class="text-xs text-slate-200 leading-relaxed">
-            Mendukung ekosistem royalti berkeadilan bagi seluruh penulis dan peneliti independen di Indonesia.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Column: Editorial Copy -->
-    <div class="lg:col-span-6 order-1 lg:order-2 flex flex-col gap-6">
-      <div class="inline-flex items-center gap-2">
-        <span
-          class="px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider border border-blue-200">
-          GAGASAN DI BALIK HALAMAN
-        </span>
-      </div>
-
-      <h2
-        class="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl text-slate-900 leading-[1.15] tracking-tight">
-        Sebuah Kultur yang Mendorong Pemikiran Kritis
-      </h2>
-
-      <p class="text-xs sm:text-sm lg:text-base text-slate-600 leading-relaxed font-normal">
-        &ldquo;Kami mendirikan Malakabooks agar percakapan dan analisis bernas tidak menguap begitu saja sebagai cuitan
-        sesaat, tetapi terdokumentasikan dalam jilidan buku cetak yang bermutu.&rdquo;
-      </p>
-
-      <div class="flex items-center gap-3">
-        <div
-          class="w-11 h-11 rounded-full bg-primary-100 flex items-center justify-center font-display font-bold text-primary-700">
-          CC
-        </div>
-        <div class="flex flex-col">
-          <span class="font-display font-bold text-slate-900 text-sm">Cania Citta & Abigail Limuria</span>
-          <span class="text-xs text-slate-500">Pendiri Malakabooks</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. FEATURE ACCORDION / TABS SHOWCASE (REFERENCE MATCH: LEFT INTERACTIVE ACCORDION LIST + RIGHT INTERACTIVE VISUAL) -->
-  <section class="bg-white rounded-3xl p-6 sm:p-10 lg:p-12 border border-slate-200/90 shadow-sm flex flex-col gap-8">
-    <div class="max-w-2xl flex flex-col gap-2">
-      <span class="text-primary-600 text-xs font-bold uppercase tracking-wider block">Standar Produksi Fisik</span>
-      <h2 class="font-display font-extrabold text-2xl sm:text-4xl text-slate-900 leading-tight">
-        Spesifikasi yang Dirancang untuk Kenyamanan Membaca
-      </h2>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-      <!-- Left Accordion Switcher -->
-      <div class="lg:col-span-6 flex flex-col gap-3">
-        <!-- Item 0 -->
-        <button type="button" (click)="setFeatureTab(0)"
-          class="w-full text-left p-5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between"
-          [class]="activeFeatureTab() === 0 ? 'bg-primary-50/70 border-primary-300 shadow-xs' : 'bg-slate-50/70 border-slate-200 hover:bg-slate-100/70'">
-          <div class="flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold"
-              [class]="activeFeatureTab() === 0 ? 'bg-primary-600 text-white' : 'bg-white text-slate-600 border border-slate-200'">
-              <i class="bx bx-sun"></i>
-            </div>
-            <div>
-              <h4 class="font-display font-bold text-slate-900 text-sm sm:text-base">Kertas Bookpaper Bebas Pantul</h4>
-              <p class="text-xs text-slate-500 mt-0.5">Warna ivory alami yang ramah di mata untuk membaca lama</p>
-            </div>
-          </div>
-          <i class="bx bx-chevron-right text-xl"
-            [class]="activeFeatureTab() === 0 ? 'text-primary-600 rotate-90' : 'text-slate-400'"></i>
-        </button>
-
-        <!-- Item 1 -->
-        <button type="button" (click)="setFeatureTab(1)"
-          class="w-full text-left p-5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between"
-          [class]="activeFeatureTab() === 1 ? 'bg-primary-50/70 border-primary-300 shadow-xs' : 'bg-slate-50/70 border-slate-200 hover:bg-slate-100/70'">
-          <div class="flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold"
-              [class]="activeFeatureTab() === 1 ? 'bg-primary-600 text-white' : 'bg-white text-slate-600 border border-slate-200'">
-              <i class="bx bx-book-open"></i>
-            </div>
-            <div>
-              <h4 class="font-display font-bold text-slate-900 text-sm sm:text-base">Penjilidan Jahit Benang Kuat</h4>
-              <p class="text-xs text-slate-500 mt-0.5">Buku dapat dibuka rata 180° tanpa risiko lem terlepas</p>
-            </div>
-          </div>
-          <i class="bx bx-chevron-right text-xl"
-            [class]="activeFeatureTab() === 1 ? 'text-primary-600 rotate-90' : 'text-slate-400'"></i>
-        </button>
-
-        <!-- Item 2 -->
-        <button type="button" (click)="setFeatureTab(2)"
-          class="w-full text-left p-5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between"
-          [class]="activeFeatureTab() === 2 ? 'bg-primary-50/70 border-primary-300 shadow-xs' : 'bg-slate-50/70 border-slate-200 hover:bg-slate-100/70'">
-          <div class="flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold"
-              [class]="activeFeatureTab() === 2 ? 'bg-primary-600 text-white' : 'bg-white text-slate-600 border border-slate-200'">
-              <i class="bx bx-shield-quarter"></i>
-            </div>
-            <div>
-              <h4 class="font-display font-bold text-slate-900 text-sm sm:text-base">Proteksi Kemasan Berlapis</h4>
-              <p class="text-xs text-slate-500 mt-0.5">Bubble wrap tebal + pelindung siku karton saat pengiriman</p>
-            </div>
-          </div>
-          <i class="bx bx-chevron-right text-xl"
-            [class]="activeFeatureTab() === 2 ? 'text-primary-600 rotate-90' : 'text-slate-400'"></i>
-        </button>
-      </div>
-
-      <!-- Right Dynamic Preview Visual -->
-      <div class="lg:col-span-6 relative flex justify-center">
-        <div class="w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border-4 border-slate-100 bg-slate-900">
-          @if (activeFeatureTab() === 0) {
-          <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80"
-            alt="Kertas Bookpaper" class="w-full h-full object-cover animate-fade-in" />
-          } @else if (activeFeatureTab() === 1) {
-          <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80"
-            alt="Jahit Benang" class="w-full h-full object-cover animate-fade-in" />
-          } @else {
-          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80"
-            alt="Proteksi Pengiriman" class="w-full h-full object-cover animate-fade-in" />
-          }
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 9. 4-GRID MATRIX (REFERENCE MATCH: LEFT STRATEGIC CHOICE + RIGHT 2x2 FEATURE MATRIX) -->
-  <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-    <!-- Left Column -->
-    <div class="lg:col-span-5 flex flex-col gap-6">
-      <div class="inline-flex items-center gap-2">
-        <span
-          class="px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold uppercase tracking-wider">
-          KEUNGGULAN UTAMA
-        </span>
-      </div>
-
-      <h2 class="font-display font-extrabold text-2xl sm:text-4xl text-slate-900 leading-[1.15] tracking-tight">
-        Pilihan Tepat untuk Koleksi Buku Fisik Anda
-      </h2>
-
-      <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-        Kami menghargai setiap rupiah yang Anda investasikan untuk ilmu pengetahuan dengan memberikan layanan prima dari
-        kurasi naskah hingga pengiriman ke rumah Anda.
-      </p>
-
-      <div>
-        <a routerLink="/product"
-          class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary-600/25 active:scale-95 transition-all cursor-pointer">
-          <span>Lihat Semua Produk</span>
-          <i class="bx bx-right-arrow-alt text-lg"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- Right Column: 2x2 Matrix -->
-    <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-      <!-- Item 1 -->
-      <div class="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col gap-3">
-        <div
-          class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center text-xl font-bold">
-          <i class="bx bx-search-alt"></i>
-        </div>
-        <h4 class="font-display font-bold text-slate-900 text-base">Kurasi Ketat & Independen</h4>
-        <p class="text-xs text-slate-600 leading-relaxed">Naskah ditinjau berdasarkan kedalaman argumen dan bobot ilmiah
-          orisinal.</p>
-      </div>
-
-      <!-- Item 2 -->
-      <div class="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col gap-3">
-        <div
-          class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center text-xl font-bold">
-          <i class="bx bx-truck"></i>
-        </div>
-        <h4 class="font-display font-bold text-slate-900 text-base">Pengiriman Cepat Nasional</h4>
-        <p class="text-xs text-slate-600 leading-relaxed">Proses 1x24 jam dengan ekspedisi tepercaya ke seluruh pelosok
-          Nusantara.</p>
-      </div>
-
-      <!-- Item 3 -->
-      <div class="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col gap-3">
-        <div
-          class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center text-xl font-bold">
-          <i class="bx bx-refresh"></i>
-        </div>
-        <h4 class="font-display font-bold text-slate-900 text-base">Garansi Retur 100%</h4>
-        <p class="text-xs text-slate-600 leading-relaxed">Penggantian buku baru tanpa biaya jika terjadi cacat cetak
-          atau rusak saat kirim.</p>
-      </div>
-
-      <!-- Item 4 -->
-      <div class="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col gap-3">
-        <div
-          class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center text-xl font-bold">
-          <i class="bx bx-heart"></i>
-        </div>
-        <h4 class="font-display font-bold text-slate-900 text-base">Royalti Penulis yang Adil</h4>
-        <p class="text-xs text-slate-600 leading-relaxed">Mendukung ekosistem apresiasi sehat bagi penulis dan peneliti
-          lokal.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 10. CURATOR'S SPOTLIGHT & BEST SELLERS CAROUSEL -->
-  <section class="flex flex-col gap-4">
-    <div class="flex items-end justify-between">
-      <div>
-        <span class="text-primary-600 text-xs font-bold uppercase tracking-wider block mb-1">Rekomendasi Utama</span>
-        <h2 class="font-display font-extrabold text-slate-900 text-xl lg:text-3xl">Buku Terfavorit Pembaca</h2>
-        <p class="text-xs lg:text-sm text-slate-500 mt-0.5">Judul-judul cetak paling banyak dikoleksi dan
-          diperbincangkan</p>
-      </div>
-      @if (screen.isDesktop()) {
-      <div class="flex items-center gap-2 shrink-0">
-        <button type="button" (click)="bestSellerPrev()" aria-label="Sebelumnya"
-          class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-300 active:scale-95 transition-colors cursor-pointer">
-          <i class="bx bx-chevron-left text-xl"></i>
-        </button>
-        <button type="button" (click)="bestSellerNext()" aria-label="Berikutnya"
-          class="w-9 h-9 rounded-xl bg-primary-600 text-white flex items-center justify-center hover:bg-primary-700 active:scale-95 transition-colors cursor-pointer">
-          <i class="bx bx-chevron-right text-xl"></i>
-        </button>
-      </div>
-      }
-    </div>
-
-    <!-- Best Seller Carousel -->
-    @if (productStore.loading()) {
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      @for (i of [1, 2, 3, 4]; track i) {
-      <div class="h-64 bg-slate-200 animate-pulse rounded-2xl"></div>
-      }
-    </div>
-    } @else if (displayBestSellers().length === 0) {
-    <div class="p-8 text-center text-slate-400 bg-white rounded-2xl border border-slate-200/80">
-      Belum ada produk terfavorit
-    </div>
-    } @else {
-    <div #bestSellerCarouselViewport class="overflow-hidden pl-1">
-      <div class="flex -ml-3 lg:cursor-default cursor-grab active:cursor-grabbing">
-        @for (prod of displayBestSellers(); track prod.id + '-' + $index) {
-        <div class="flex-[0_0_180px] sm:flex-[0_0_220px] lg:flex-[0_0_240px] min-w-0 pl-3">
-          <app-product-card [product]="prod" [size]="screen.isDesktop() ? 'md' : 'sm'"
-            (addToCart)="openQtyModal($event)"></app-product-card>
-        </div>
-        }
-      </div>
-    </div>
-    }
-  </section>
-
-  <!-- 11. READER & COMMUNITY REVIEWS (REFERENCE MATCH: BANNER + 3 TESTIMONIAL CARDS + CONTROLS) -->
-  <section class="flex flex-col gap-8">
-    <div
-      class="rounded-3xl bg-primary-600 text-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl shadow-primary-600/20">
-      <div>
-        <span class="text-xs font-bold uppercase tracking-wider text-primary-200">Suara Pembaca Terverifikasi</span>
-        <h3 class="font-display font-bold text-xl sm:text-2xl text-white mt-0.5">Apa Kata Komunitas Pembaca Malakabooks?
-        </h3>
-      </div>
-      <a routerLink="/product"
-        class="px-5 py-2.5 rounded-full bg-white text-primary-700 font-bold text-xs uppercase tracking-wider shadow-sm hover:bg-primary-50 transition-colors whitespace-nowrap">
-        Beli & Ulas Buku
-      </a>
-    </div>
-
-    <!-- 3 Testimonial Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Review 1 -->
-      <div
-        class="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-sm flex flex-col justify-between gap-4 hover:border-slate-300 transition-colors">
-        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-          &ldquo;Kualitas bookpaper dan jilid jahit benangnya luar biasa rapi. Membaca ratusan halaman naskah berat
-          terasa sangat nyaman tanpa membuat mata lelah.&rdquo;
-        </p>
-        <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
-          <div
-            class="w-10 h-10 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-sm font-display">
-            RS
-          </div>
-          <div class="flex flex-col">
-            <span class="font-display font-bold text-slate-900 text-sm">Rian Setiawan</span>
-            <span class="text-[11px] text-slate-400">Pembaca Kritis • Jakarta</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Review 2 -->
-      <div
-        class="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-sm flex flex-col justify-between gap-4 hover:border-slate-300 transition-colors">
-        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-          &ldquo;Pengiriman ke luar Jawa super aman. Kemasan karton pelindung sudutnya membuat buku tiba dalam kondisi
-          sudut tajam tanpa cacat sedikitpun.&rdquo;
-        </p>
-        <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
-          <div
-            class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-sm font-display">
-            AP
-          </div>
-          <div class="flex flex-col">
-            <span class="font-display font-bold text-slate-900 text-sm">Anisa Putri</span>
-            <span class="text-[11px] text-slate-400">Pustakawan Komunitas • Surabaya</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Review 3 -->
-      <div
-        class="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-sm flex flex-col justify-between gap-4 hover:border-slate-300 transition-colors">
-        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-          &ldquo;Kurasi judulnya berani dan mendalam. Malakabooks membuktikan bahwa penerbit independen bisa
-          menghadirkan buku cetak berkelas internasional.&rdquo;
-        </p>
-        <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
-          <div
-            class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm font-display">
-            DK
-          </div>
-          <div class="flex flex-col">
-            <span class="font-display font-bold text-slate-900 text-sm">Dimas Kurniawan</span>
-            <span class="text-[11px] text-slate-400">Peneliti Independen • Yogyakarta</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 12. FAQ (PERTANYAAN YANG SERING DIAJUKAN - REFERENCE MATCH: ACCORDION LIST) -->
-  <section class="bg-white rounded-3xl p-6 sm:p-10 lg:p-12 border border-slate-200/90 shadow-sm flex flex-col gap-8">
-    <div class="max-w-2xl flex flex-col gap-3">
-      <div class="inline-flex items-center gap-2">
-        <div
-          class="w-7 h-7 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold shadow-xs">
-          <i class="bx bx-help-circle"></i>
-        </div>
-        <span class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-primary-600">
-          FAQ & INFORMASI
-        </span>
-      </div>
-
-      <h2 class="font-display font-extrabold text-2xl sm:text-4xl text-slate-900 leading-[1.15] tracking-tight">
-        Pertanyaan yang Sering Diajukan
-      </h2>
-
-      <p class="text-xs sm:text-sm lg:text-base text-slate-600 leading-relaxed font-normal">
-        Temukan jawaban lengkap seputar spesifikasi buku fisik, garansi retur, opsi pembayaran, dan pengiriman nasional.
-      </p>
-    </div>
-
-    <!-- Accordion FAQ Items -->
-    <div class="flex flex-col gap-3.5">
-      <!-- FAQ 1 -->
-      <div class="rounded-2xl border transition-all duration-200 overflow-hidden"
-        [class]="openFaqIndex() === 0 ? 'border-primary-300 bg-primary-50/40 shadow-xs' : 'border-slate-200 bg-white hover:border-slate-300'">
-        <button type="button" (click)="toggleFaq(0)"
-          class="w-full px-5 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between gap-4 cursor-pointer">
-          <div class="flex items-center gap-3.5">
-            <span
-              class="w-7 h-7 rounded-lg bg-primary-100 text-primary-700 flex items-center justify-center text-xs font-bold shrink-0 font-mono">01</span>
-            <span class="font-display font-bold text-slate-900 text-sm sm:text-base">Bagaimana standar kualitas cetak
-              buku fisik di Mardikabooks?</span>
-          </div>
-          <i class="bx text-xl text-primary-600 transition-transform duration-300 shrink-0"
-            [class]="openFaqIndex() === 0 ? 'bx-chevron-up rotate-180' : 'bx-chevron-down'"></i>
-        </button>
-        @if (openFaqIndex() === 0) {
-        <div
-          class="px-5 sm:px-6 pb-5 sm:pb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-primary-100/60 pt-3">
-          Setiap buku dicetak menggunakan kertas bookpaper premium berkualitas tinggi yang bebas pantulan cahaya
-          sehingga nyaman dibaca berjam-jam. Jilid menggunakan teknik jahit benang yang kuat dan fleksibel, memungkinkan
-          buku dibuka rata hingga 180° tanpa risiko lem lepas.
-        </div>
-        }
-      </div>
-
-      <!-- FAQ 2 -->
-      <div class="rounded-2xl border transition-all duration-200 overflow-hidden"
-        [class]="openFaqIndex() === 1 ? 'border-primary-300 bg-primary-50/40 shadow-xs' : 'border-slate-200 bg-white hover:border-slate-300'">
-        <button type="button" (click)="toggleFaq(1)"
-          class="w-full px-5 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between gap-4 cursor-pointer">
-          <div class="flex items-center gap-3.5">
-            <span
-              class="w-7 h-7 rounded-lg bg-primary-100 text-primary-700 flex items-center justify-center text-xs font-bold shrink-0 font-mono">02</span>
-            <span class="font-display font-bold text-slate-900 text-sm sm:text-base">Berapa lama estimasi pengiriman dan
-              bagaimana proteksi kemasannya?</span>
-          </div>
-          <i class="bx text-xl text-primary-600 transition-transform duration-300 shrink-0"
-            [class]="openFaqIndex() === 1 ? 'bx-chevron-up rotate-180' : 'bx-chevron-down'"></i>
-        </button>
-        @if (openFaqIndex() === 1) {
-        <div
-          class="px-5 sm:px-6 pb-5 sm:pb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-primary-100/60 pt-3">
-          Pesanan diproses dan dikirim dalam waktu 1x24 jam kerja. Estimasi tiba untuk area Jabodetabek/Pulau Jawa
-          adalah 1–3 hari, dan untuk luar Pulau Jawa berkisar antara 3–5 hari kerja. Setiap paket dibungkus dengan
-          plastik pelindung, bubble wrap berlapis tebal, dan karton pelindung sudut untuk memastikan buku tiba mulus.
-        </div>
-        }
-      </div>
-
-      <!-- FAQ 3 -->
-      <div class="rounded-2xl border transition-all duration-200 overflow-hidden"
-        [class]="openFaqIndex() === 2 ? 'border-primary-300 bg-primary-50/40 shadow-xs' : 'border-slate-200 bg-white hover:border-slate-300'">
-        <button type="button" (click)="toggleFaq(2)"
-          class="w-full px-5 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between gap-4 cursor-pointer">
-          <div class="flex items-center gap-3.5">
-            <span
-              class="w-7 h-7 rounded-lg bg-primary-100 text-primary-700 flex items-center justify-center text-xs font-bold shrink-0 font-mono">03</span>
-            <span class="font-display font-bold text-slate-900 text-sm sm:text-base">Apakah ada jaminan garansi jika
-              buku rusak saat diterima?</span>
-          </div>
-          <i class="bx text-xl text-primary-600 transition-transform duration-300 shrink-0"
-            [class]="openFaqIndex() === 2 ? 'bx-chevron-up rotate-180' : 'bx-chevron-down'"></i>
-        </button>
-        @if (openFaqIndex() === 2) {
-        <div
-          class="px-5 sm:px-6 pb-5 sm:pb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-primary-100/60 pt-3">
-          Ya, kami memberikan Garansi Retur 100%. Apabila Anda menerima buku dengan cacat cetak atau kerusakan
-          ekspedisi, hubungi kami via WhatsApp atau menu Komplain dengan bukti video unboxing, dan kami akan mengirimkan
-          gantinya secara gratis.
-        </div>
-        }
-      </div>
-
-      <!-- FAQ 4 -->
-      <div class="rounded-2xl border transition-all duration-200 overflow-hidden"
-        [class]="openFaqIndex() === 3 ? 'border-primary-300 bg-primary-50/40 shadow-xs' : 'border-slate-200 bg-white hover:border-slate-300'">
-        <button type="button" (click)="toggleFaq(3)"
-          class="w-full px-5 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between gap-4 cursor-pointer">
-          <div class="flex items-center gap-3.5">
-            <span
-              class="w-7 h-7 rounded-lg bg-primary-100 text-primary-700 flex items-center justify-center text-xs font-bold shrink-0 font-mono">04</span>
-            <span class="font-display font-bold text-slate-900 text-sm sm:text-base">Metode pembayaran apa saja yang
-              tersedia?</span>
-          </div>
-          <i class="bx text-xl text-primary-600 transition-transform duration-300 shrink-0"
-            [class]="openFaqIndex() === 3 ? 'bx-chevron-up rotate-180' : 'bx-chevron-down'"></i>
-        </button>
-        @if (openFaqIndex() === 3) {
-        <div
-          class="px-5 sm:px-6 pb-5 sm:pb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-primary-100/60 pt-3">
-          Kami mendukung QRIS (GoPay, OVO, Dana, ShopeePay, LinkAja), Virtual Account bank nasional (BCA, Mandiri, BNI,
-          BRI, Permata), dan Transfer Bank resmi dengan verifikasi instan.
-        </div>
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- 13. PRE-FOOTER CALL TO ACTION & NEWSLETTER (REFERENCE MATCH: HIGH IMPACT BANNER + NEWSLETTER INPUT) -->
-  <section
-    class="rounded-3xl bg-[#0B1E3B] text-white p-8 sm:p-12 lg:p-16 relative overflow-hidden border border-slate-800 shadow-2xl">
-    <!-- Ambient Glow Decoration -->
-    <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-600/20 rounded-full blur-3xl pointer-events-none -z-0">
-    </div>
-    <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none -z-0">
-    </div>
-
-    <div class="relative z-10 max-w-3xl mx-auto text-center flex flex-col items-center gap-6">
-      <span
-        class="px-3.5 py-1.5 rounded-full bg-primary-500/20 text-primary-300 text-xs font-bold border border-primary-500/30 uppercase tracking-widest">
-        MULAI PERJALANAN LITERASIMU
-      </span>
-
-      <h2 class="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white leading-[1.15] tracking-tight">
-        Siap Mengisi Rak Bukumu dengan Gagasan Bermutu?
-      </h2>
-
-      <p class="text-xs sm:text-sm lg:text-base text-slate-300 leading-relaxed font-normal max-w-2xl">
-        Dapatkan buku fisik terbitan orisinal dan nikmati pengalaman membaca nyata di lembaran kertas berkualitas hari
-        ini.
-      </p>
-
-      <!-- Newsletter Pill Input Form -->
-      <form (submit)="submitNewsletter($event)"
-        class="w-full max-w-md flex flex-col sm:flex-row items-center gap-2 pt-2">
-        <input type="email" [(ngModel)]="newsletterEmail" name="newsletterEmail"
-          placeholder="Masukkan alamat email Anda..."
-          class="w-full px-5 py-3.5 rounded-full bg-white/10 text-white placeholder:text-slate-400 border border-white/20 focus:outline-none focus:border-primary-400 text-xs sm:text-sm backdrop-blur-xs" />
-        <button type="submit"
-          class="w-full sm:w-auto px-7 py-3.5 rounded-full bg-primary-600 hover:bg-primary-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary-600/30 transition-all shrink-0 cursor-pointer">
-          Langganan
-        </button>
-      </form>
-
-      @if (isSubscribed()) {
-      <p class="text-emerald-400 text-xs font-semibold animate-fade-in">
-        ✓ Terima kasih! Anda telah terdaftar untuk menerima rilis judul buku terbaru.
-      </p>
-      }
-    </div>
-  </section>
-
-  <!-- VIDEO PREVIEW MODAL -->
-  @if (isVideoModalOpen()) {
-  <app-modal [isOpen]="isVideoModalOpen()" (isOpenChange)="closeVideoModal()" title="Proses Pembuatan Buku Malakabooks"
-    maxWidth="max-w-2xl">
-    <div class="p-6 flex flex-col gap-4">
-      <div class="aspect-video w-full rounded-2xl overflow-hidden bg-black relative">
-        <iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1"
-          title="Malakabooks Crafts"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen></iframe>
-      </div>
-      <p class="text-xs text-slate-600 leading-relaxed">
-        Video dokumenter pendek proses pracetak, pemilihan kertas bookpaper ramah mata, dan penjilidan jahit benang di
-        percetakan Malakabooks.
-      </p>
-    </div>
-  </app-modal>
-  }
-
-  <!-- AUTHOR MODAL (DESKTOP) -->
-  @if (screen.isDesktop()) {
-  <app-modal [isOpen]="isAuthorSheetOpen()" (isOpenChange)="closeAuthorSheet()" title="Profil Penulis & Kontributor"
-    maxWidth="max-w-3xl">
-    @let auth = selectedAuthor();
-    @if (auth) {
-    <div class="flex flex-col gap-6 p-6">
-      <div class="flex gap-6 items-start">
-        @if (auth.photoUrl) {
-        <img [src]="auth.photoUrl" [alt]="auth.name"
-          class="w-32 h-44 object-cover rounded-xl shadow-sm shrink-0 border border-slate-200" />
-        } @else {
-        <div class="w-32 h-44 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
-          <i class="bx bx-user text-4xl"></i>
-        </div>
-        }
-        <div class="flex flex-col gap-2">
-          <h2 class="font-display font-extrabold text-slate-900 text-2xl">{{ auth.name }}</h2>
-          @if (auth.role) {
+        <!-- Overlay Badges -->
+        <div class="absolute top-4 left-4 flex items-center gap-2">
           <span
-            class="inline-block px-3 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-bold border border-primary-100 w-fit">
-            {{ auth.role }}
+            class="px-3 py-1 rounded-full bg-slate-950/85 backdrop-blur-xs text-slate-200 text-xs font-bold border border-white/10 shadow-xs">
+            ⭐ Paket Bundling Orisinal
           </span>
-          }
-          @if (auth.biography) {
-          <div class="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2" [innerHTML]="auth.biography"></div>
-          }
+          <span class="px-3 py-1 rounded-full bg-slate-700 text-white text-xs font-extrabold shadow-xs">
+            Hemat Rp 20.000
+          </span>
         </div>
-      </div>
 
-      <div class="border-t border-slate-100 pt-5">
-        <h3 class="font-display font-bold text-slate-900 text-lg mb-4">Buku oleh {{ auth.name }}</h3>
-        @let products = selectedAuthorProducts();
-        @if (products.length > 0) {
-        <div class="grid grid-cols-3 gap-4">
-          @for (prod of products; track prod.id) {
-          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
-          }
+        <div
+          class="absolute bottom-4 left-4 right-4 bg-slate-950/85 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-white/10 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Total Paket 2 Buku Masterpiece</span>
+            <span class="font-display font-black text-white text-base sm:text-lg">Rp 224.000 <span
+                class="text-xs text-slate-400 line-through font-normal">Rp 244.000</span></span>
+          </div>
+          <button type="button" (click)="buyDirect('bundle')"
+            class="px-5 py-2.5 rounded-full bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm active:scale-95 transition-all cursor-pointer">
+            Pesan Sekarang
+          </button>
         </div>
-        } @else {
-        <div class="flex flex-col items-center justify-center py-8 text-slate-400">
-          <i class="bx bx-book-open text-3xl mb-2"></i>
-          <p class="text-xs">Belum ada karya yang tersedia.</p>
-        </div>
-        }
       </div>
     </div>
-    }
-  </app-modal>
-  } @else {
-  <!-- AUTHOR BOTTOM SHEET (MOBILE) -->
-  <app-bottom-sheet [isOpen]="isAuthorSheetOpen()" (closed)="closeAuthorSheet()" [fullHeight]="true"
-    title="Profil Penulis & Kontributor">
-    <div class="flex flex-col p-4 pb-12 gap-4">
-      @let auth = selectedAuthor();
-      @if (auth) {
-      <div class="flex gap-4 items-start">
-        @if (auth.photoUrl) {
-        <img [src]="auth.photoUrl" [alt]="auth.name"
-          class="w-24 h-32 object-cover rounded-xl shadow-sm shrink-0 border border-slate-200" />
-        } @else {
-        <div class="w-24 h-32 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
-          <i class="bx bx-user text-3xl"></i>
-        </div>
-        }
-        <div class="flex flex-col justify-between items-start gap-1">
-          <h2 class="font-display font-extrabold text-slate-900 text-xl">{{ auth.name }}</h2>
-          @if (auth.role) {
-          <span
-            class="px-2 py-0.5 rounded-md bg-primary-50 text-primary-700 text-[11px] font-bold border border-primary-100">
-            {{ auth.role }}
-          </span>
-          }
-        </div>
-      </div>
+  </section>
 
-      @if (auth.biography) {
-      <div class="pb-4 border-b border-slate-100">
-        <h3 class="font-display font-bold text-slate-900 text-sm mb-1.5">Tentang Penulis</h3>
-        <div class="text-xs text-slate-600 leading-relaxed" [innerHTML]="auth.biography"></div>
-      </div>
-      }
-
-      <div>
-        <h3 class="font-display font-bold text-slate-900 text-sm mb-3">Buku Terkait</h3>
-        @let products = selectedAuthorProducts();
-        @if (products.length > 0) {
-        <div class="grid grid-cols-2 gap-3">
-          @for (prod of products; track prod.id) {
-          <app-product-card [product]="prod" (addToCart)="openQtyModal($event)"></app-product-card>
-          }
-        </div>
-        } @else {
-        <div class="flex flex-col items-center justify-center py-6 text-slate-400">
-          <i class="bx bx-book-open text-2xl mb-1"></i>
-          <p class="text-xs">Belum ada karya yang tersedia.</p>
-        </div>
-        }
-      </div>
-      }
-    </div>
-  </app-bottom-sheet>
-  }
 
 </div>

@@ -1,63 +1,83 @@
-<footer class="bg-white border-t border-slate-200 mt-16 pt-16 pb-12">
-  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-
-    <!-- Brand & Mission -->
-    <div class="flex flex-col gap-4 md:col-span-2">
-      <a routerLink="/" class="flex items-center gap-2.5 text-slate-900 select-none group w-fit">
-        <img src="/logo/malakabooks-logo.svg" alt="Malakabooks Logo" class="h-10 w-auto object-contain" />
-        <div class="flex flex-col">
-          <span class="font-display font-black text-xl tracking-tight text-slate-900 leading-none">malakabooks</span>
-          <span class="text-[10px] font-bold tracking-wider text-primary-600 uppercase mt-0.5">Penerbit & Toko Buku Fisik</span>
-        </div>
-      </a>
-      <p class="text-sm text-slate-600 leading-relaxed max-w-md">
-        Malakabooks adalah penerbit independen dan perpustakaan interaktif yang didirikan oleh Cania Citta dan Abigail Limuria. Menyediakan buku fisik berkualitas bagi pembaca yang merayakan pemikiran kritis dan literasi mendalam.
-      </p>
-      <div class="flex items-center gap-3 mt-2">
-        <a href="https://instagram.com/malakaproject" target="_blank" rel="noopener noreferrer" aria-label="Instagram Malaka"
-          class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:text-primary-600 hover:border-primary-300 hover:bg-primary-50/50 transition-colors">
-          <i class="bx bxl-instagram text-lg"></i>
-        </a>
-        <a href="https://youtube.com/@MalakaProject" target="_blank" rel="noopener noreferrer" aria-label="YouTube Malaka"
-          class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:text-primary-600 hover:border-primary-300 hover:bg-primary-50/50 transition-colors">
-          <i class="bx bxl-youtube text-lg"></i>
-        </a>
-        <a href="https://twitter.com/malakaproject" target="_blank" rel="noopener noreferrer" aria-label="Twitter Malaka"
-          class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:text-primary-600 hover:border-primary-300 hover:bg-primary-50/50 transition-colors">
-          <i class="bx bxl-twitter text-lg"></i>
-        </a>
+<div
+  class="bg-[#0F1115] text-white p-8 sm:p-12 lg:p-14 border border-neutral-800 flex flex-col gap-12 relative overflow-hidden">
+  <div class="grow max-w-7xl w-full mx-auto px-4">
+    <div class="absolute -top-20 -right-20 w-80 h-80 bg-[#FFD028]/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center border-b border-neutral-800 pb-10">
+      <div class="lg:col-span-6 flex flex-col gap-3">
+        <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-white leading-tight"> Keep up with the latest
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-400"> Dapatkan kurasi buku pemikiran mingguan, rilisan edisi terbatas,
+          dan
+          promo spesial. </p>
+      </div>
+      <div class="lg:col-span-6 flex flex-col items-start lg:items-end"><!---->
+        <form novalidate="" class="w-full max-w-md relative flex items-center ng-untouched ng-pristine ng-invalid">
+          <input type="email" name="email" required="" placeholder="Masukkan alamat email kamu..."
+            class="w-full bg-[#181A1F] text-white text-xs sm:text-sm placeholder-slate-500 rounded-full pl-5 pr-32 py-3.5 border border-neutral-700 focus:outline-hidden focus:border-[#FFD028] transition-colors ng-untouched ng-pristine ng-invalid"><button
+            type="submit"
+            class="absolute right-1.5 px-5 py-2.5 rounded-full bg-[#FFD028] hover:bg-[#ffc914] text-slate-950 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-xs active:scale-95">
+            Subscribe </button>
+        </form><!---->
       </div>
     </div>
-
-    <!-- Ecosystem Links -->
-    <div class="flex flex-col gap-4">
-      <h3 class="font-display font-bold text-slate-900 text-base">Ekosistem Malaka</h3>
-      <nav class="flex flex-col gap-2.5 text-sm text-slate-600 font-medium">
-        <a href="https://malakabooks.id" target="_blank" rel="noopener noreferrer" class="hover:text-primary-600 transition-colors inline-flex items-center gap-1.5">
-          <span>malakabooks.id (Perpustakaan Digital)</span>
-          <i class="bx bx-link-external text-xs text-slate-400"></i>
-        </a>
-        <a routerLink="/product" class="hover:text-primary-600 transition-colors">Koleksi Buku Fisik</a>
-        <a routerLink="/katalog" class="hover:text-primary-600 transition-colors">Katalog Lengkap</a>
-      </nav>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 text-xs py-6">
+      <div class="col-span-2 sm:col-span-3 lg:col-span-2 flex flex-col gap-3 pr-4">
+        <div class="flex items-center gap-2 text-white">
+          <div
+            class="w-7 h-7 rounded-full bg-[#FFD028] text-slate-950 flex items-center justify-center text-sm font-bold">
+            <i class="bx bx-book"></i>
+          </div><span class="font-display font-black text-base tracking-tight text-white">Malakabooks</span>
+        </div>
+        <p class="text-slate-400 text-xs leading-relaxed max-w-xs"> Penerbit independen dan toko buku fisik untuk
+          pembaca
+          yang merayakan pemikiran kritis dan literasi mendalam. </p>
+      </div>
+      <div class="flex flex-col gap-3">
+        <h4 class="font-display font-bold text-white uppercase tracking-wider text-[11px]">Buku Masterpiece</h4>
+        <nav class="flex flex-col gap-2 text-slate-400"><a routerLink="/product"
+            class="hover:text-[#FFD028] transition-colors">Makanya, Mikir!</a><a routerLink="/product"
+            class="hover:text-[#FFD028] transition-colors">Prinsipil Ekonomi</a><a routerLink="/product"
+            class="hover:text-[#FFD028] transition-colors">Paket Bundling</a></nav>
+      </div>
+      <div class="flex flex-col gap-3">
+        <h4 class="font-display font-bold text-white uppercase tracking-wider text-[11px]">Ekosistem</h4>
+        <nav class="flex flex-col gap-2 text-slate-400"><a routerLink="/product"
+            class="hover:text-[#FFD028] transition-colors">Koleksi Buku Fisik</a><a
+            routerLink="/mardika-kopi" class="hover:text-[#FFD028] transition-colors">Mardika
+            Kopi</a><a routerLink="/product" class="hover:text-[#FFD028] transition-colors">Sembako
+            Retail</a></nav>
+      </div>
+      <div class="flex flex-col gap-3">
+        <h4 class="font-display font-bold text-white uppercase tracking-wider text-[11px]">Penulis</h4>
+        <nav class="flex flex-col gap-2 text-slate-400"><a href="https://instagram.com/malakaproject" target="_blank"
+            class="hover:text-[#FFD028] transition-colors">Cania Citta</a><a href="https://instagram.com/malakaproject"
+            target="_blank" class="hover:text-[#FFD028] transition-colors">Abigail Limuria</a><a
+            href="https://instagram.com/malakaproject" target="_blank"
+            class="hover:text-[#FFD028] transition-colors">Ferry Irwandi</a></nav>
+      </div>
+      <div class="flex flex-col gap-3">
+        <h4 class="font-display font-bold text-white uppercase tracking-wider text-[11px]">Bantuan</h4>
+        <nav class="flex flex-col gap-2 text-slate-400"><a routerLink="/complaints"
+            class="hover:text-[#FFD028] transition-colors">Pusat Komplain</a><a routerLink="/cart"
+            class="hover:text-[#FFD028] transition-colors">Status Pesanan</a><a routerLink="/profile"
+            class="hover:text-[#FFD028] transition-colors">Akun Saya</a></nav>
+      </div>
     </div>
-
-    <!-- Layanan & Belanja -->
-    <div class="flex flex-col gap-4">
-      <h3 class="font-display font-bold text-slate-900 text-base">Layanan Belanja</h3>
-      <nav class="flex flex-col gap-2.5 text-sm text-slate-600 font-medium">
-        <a routerLink="/cart" class="hover:text-primary-600 transition-colors">Keranjang Belanja</a>
-        <a routerLink="/profile" class="hover:text-primary-600 transition-colors">Akun & Riwayat Pesanan</a>
-        <a routerLink="/complaints" class="hover:text-primary-600 transition-colors">Pusat Bantuan & Komplain</a>
-      </nav>
+    <div
+      class="pt-6 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <p>© 2026 Malakabooks. Hak Cipta Dilindungi.</p>
+      <div class="flex items-center gap-3"><a href="https://instagram.com/malakaproject" target="_blank"
+          aria-label="Instagram"
+          class="w-8 h-8 rounded-full bg-[#181A1F] hover:bg-[#FFD028] text-slate-400 hover:text-slate-950 flex items-center justify-center transition-colors"><i
+            class="bx bxl-instagram text-base"></i></a><a href="https://youtube.com/@MalakaProject" target="_blank"
+          aria-label="YouTube"
+          class="w-8 h-8 rounded-full bg-[#181A1F] hover:bg-[#FFD028] text-slate-400 hover:text-slate-950 flex items-center justify-center transition-colors"><i
+            class="bx bxl-youtube text-base"></i></a><a href="https://twitter.com/malakaproject" target="_blank"
+          aria-label="Twitter"
+          class="w-8 h-8 rounded-full bg-[#181A1F] hover:bg-[#FFD028] text-slate-400 hover:text-slate-950 flex items-center justify-center transition-colors"><i
+            class="bx bxl-twitter text-base"></i></a><a href="https://tiktok.com" target="_blank" aria-label="TikTok"
+          class="w-8 h-8 rounded-full bg-[#181A1F] hover:bg-[#FFD028] text-slate-400 hover:text-slate-950 flex items-center justify-center transition-colors"><i
+            class="bx bxl-tiktok text-base"></i></a></div>
     </div>
-
   </div>
-
-  <!-- Copyright -->
-  <div
-    class="max-w-7xl mx-auto px-6 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-    <p class="text-xs text-slate-500 font-medium">&copy; {{ currentYear }} Malakabooks. Hak Cipta Dilindungi.</p>
-    <p class="text-xs text-slate-400">Platform Penerbitan & Toko Buku Resmi</p>
-  </div>
-</footer>
+</div>
