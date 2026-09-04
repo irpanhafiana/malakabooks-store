@@ -2,7 +2,7 @@
   @if (screen.isDesktop()) {
   <app-desktop-header></app-desktop-header>
 
-  <main class="grow w-full pt-16 pb-0 min-h-[60vh] relative">
+  <main class="grow w-full pt-8 pb-0 min-h-[60vh] relative">
     <router-outlet></router-outlet>
   </main>
 
@@ -45,137 +45,129 @@
 
   } @else {
   <!-- MOBILE SHELL -->
-  <div class="h-dvh w-full bg-slate-50 flex justify-center overflow-hidden customer-root"
+  <div class="h-dvh w-full bg-slate-50 flex flex-col relative overflow-hidden customer-root"
     style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
 
-    <!-- Mobile App Frame Container (Constrained width, clamp scaling, with simulator borders) -->
-    <div
-      class="w-full max-w-[480px] bg-slate-50 relative flex flex-col md:border-x md:border-slate-200/60 md:shadow-2xl md:shadow-[0_0_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden"
-      style="height: calc(100% / clamp(0.5, 100vw / 480, 1)); transform: scale(clamp(0.5, 100vw / 480, 1)); transform-origin: center top;">
-
-      <!-- Mobile-style Header -->
-      <header class="sticky top-0 z-40 bg-slate-50 px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
-        @if (isSearchActive()) {
-        <!-- Active Search Header -->
-        <div class="flex items-center gap-2.5 w-full">
-          <button type="button" (click)="isSearchActive.set(false)"
-            class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent">
-            <i class="bx bx-left-arrow-alt text-2xl"></i>
-          </button>
-          <div class="grow">
-            <app-search-bar [placeholder]="'Cari produk...'" [value]="productStore.searchQuery()" [autofocus]="true"
-              (searchSubmit)="onSearch($event)"></app-search-bar>
-          </div>
+    <!-- Mobile-style Header -->
+    <header class="sticky top-0 z-40 bg-slate-50 px-4 py-3 flex items-center justify-between gap-3 h-14 shrink-0">
+      @if (isSearchActive()) {
+      <!-- Active Search Header -->
+      <div class="flex items-center gap-2.5 w-full">
+        <button type="button" (click)="isSearchActive.set(false)"
+          class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent">
+          <i class="bx bx-left-arrow-alt text-2xl"></i>
+        </button>
+        <div class="grow">
+          <app-search-bar [placeholder]="'Cari produk...'" [value]="productStore.searchQuery()" [autofocus]="true"
+            (searchSubmit)="onSearch($event)"></app-search-bar>
         </div>
-        } @else {
-        <!-- Left: Brand Logo -->
-        <a routerLink="/" (click)="resetFilters()"
-          class="flex items-center gap-2 text-slate-900 select-none">
-          <img src="/logo/malakabooks-logo.svg" class="h-8 w-auto object-contain shrink-0" alt="Malakabooks Logo">
-          <span class="font-display font-black text-base tracking-tight text-slate-900 leading-none">malakabooks</span>
+      </div>
+      } @else {
+      <!-- Left: Brand Logo -->
+      <a routerLink="/" (click)="resetFilters()" class="flex items-center gap-2 text-slate-900 select-none">
+        <img src="/logo/malakabooks-logo.svg" class="h-8 w-auto object-contain shrink-0" alt="Malakabooks Logo">
+        <span class="font-display font-black text-base tracking-tight text-slate-900 leading-none">malakabooks</span>
+      </a>
+
+      <!-- Right: Search and Cart -->
+      <div class="flex items-center gap-1">
+        <a routerLink="/product" aria-label="Cari produk"
+          class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent transition-colors">
+          <i class="bx bx-search text-xl"></i>
         </a>
 
-        <!-- Right: Search and Cart -->
-        <div class="flex items-center gap-1">
-          <a routerLink="/product" aria-label="Cari produk"
-            class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent transition-colors">
-            <i class="bx bx-search text-xl"></i>
-          </a>
-
-          @if (authStore.isLoggedIn()) {
-          <a routerLink="/cart" aria-label="Keranjang"
-            class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent transition-colors relative">
-            <i class="bx bx-shopping-bag text-xl"></i>
-            @if (cartStore.itemsCount() > 0) {
-            <span
-              class="absolute top-1 right-1 flex items-center justify-center min-w-[15px] h-[15px] px-1 text-[8px] font-bold leading-none text-white bg-rose-500 rounded-full border border-white">
-              {{ cartStore.itemsCount() }}
-            </span>
-            }
-          </a>
-          }
-        </div>
-        }
-      </header>
-
-      <!-- Scrollable Contents Area -->
-      <main class="grow overflow-y-auto overflow-x-hidden px-4 pt-0 pb-24 no-scrollbar bg-gray-50">
-        <div #routeContainer class="w-full h-full relative">
-          <router-outlet></router-outlet>
-        </div>
-      </main>
-
-      <!-- Pinned Bottom Navigation Menu (Floating, rounded, matching bottom-navbar.md) -->
-      <nav
-        class="absolute bottom-6 left-1/2 -translate-x-1/2 w-fit z-45 bg-white/95 backdrop-blur-md flex items-center justify-center gap-2.5 p-1.5 rounded-full overflow-hidden border border-gray-200/80 whitespace-nowrap">
-
-        <!-- Home Item -->
-        <a routerLink="/" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}" aria-label="Beranda"
-          (click)="resetFilters()"
-          class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
-          <i
-            class="bx bx-home-alt-2 text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
-          <span
-            class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Beranda</span>
-        </a>
-
-        <!-- Profile/Login Item -->
         @if (authStore.isLoggedIn()) {
-        <a routerLink="/profile" routerLinkActive="active-item" aria-label="Profil"
-          class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
-          <i
-            class="bx bx-user text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
+        <a routerLink="/cart" aria-label="Keranjang"
+          class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent transition-colors relative">
+          <i class="bx bx-shopping-bag text-xl"></i>
+          @if (cartStore.itemsCount() > 0) {
           <span
-            class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Akun</span>
-        </a>
-        } @else {
-        <a [href]="loginUrl" aria-label="Masuk"
-          class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group hover:bg-slate-100 cursor-pointer">
-          <i
-            class="bx bx-log-in text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-hover:text-primary-600"></i>
-          <span
-            class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-hover:text-primary-600">Masuk</span>
+            class="absolute top-1 right-1 flex items-center justify-center min-w-[15px] h-[15px] px-1 text-[8px] font-bold leading-none text-white bg-rose-500 rounded-full border border-white">
+            {{ cartStore.itemsCount() }}
+          </span>
+          }
         </a>
         }
-      </nav>
+      </div>
+      }
+    </header>
 
-      <!-- Global Toasts Alert Overlay --><!-- Product Detail Bottom Sheet (Height ~85%, constrained inside the mobile container) -->
-      <app-bottom-sheet [isOpen]="modalHandler.isDetailOpen()" (closed)="modalHandler.closeProductDetails()"
-        [fullHeight]="true" [zIndex]="10000">
-        <app-product-detail [productId]="modalHandler.selectedDetailId()"></app-product-detail>
-      </app-bottom-sheet>
+    <!-- Scrollable Contents Area -->
+    <main class="grow overflow-y-auto overflow-x-hidden px-0 pt-0 pb-28 no-scrollbar bg-slate-50">
+      <div #routeContainer class="w-full h-full relative">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
 
-      <app-bottom-sheet [isOpen]="productStore.isQtyModalOpen()" (closed)="modalHandler.closeQty()" [zIndex]="10010">
-        <app-qty-modal-content #qtyMobile (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
-        <div class="border-t border-slate-100 px-5 py-4 flex items-center justify-between gap-4 bg-white shrink-0">
-          @if ((productStore.activeProduct()?.stock || 0) > 0) {
-          <div class="flex flex-col">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 flex items-center gap-1">
-              Total Harga
-              @if (productStore.isQtyLookupLoading()) {
-              <i class="bx bx-loader-alt animate-spin text-primary-500"></i>
-              }
-            </span>
-            <app-price [value]="(productStore.qtyLookedUpPrice() || 0) * productStore.qtyQuantity()" size="lg"
-              class="text-slate-800"></app-price>
-          </div>
-          <app-button (click)="qtyMobile.confirmAddToCart()" variant="primary" size="lg" class="grow max-w-40"
-            [disabled]="productStore.isQtyLookupLoading()">
-            @if (!authStore.isLoggedIn()) {
-            Login untuk Membeli
-            } @else {
-            {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+    <!-- Pinned Bottom Navigation Menu (Floating, rounded, matching bottom-navbar.md) -->
+    <nav
+      class="absolute bottom-6 left-1/2 -translate-x-1/2 w-fit z-45 bg-white/95 backdrop-blur-md flex items-center justify-center gap-2.5 p-1.5 rounded-full overflow-hidden border border-gray-200/80 whitespace-nowrap">
+
+      <!-- Home Item -->
+      <a routerLink="/" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}" aria-label="Beranda"
+        (click)="resetFilters()"
+        class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
+        <i
+          class="bx bx-home-alt-2 text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
+        <span
+          class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Beranda</span>
+      </a>
+
+      <!-- Profile/Login Item -->
+      @if (authStore.isLoggedIn()) {
+      <a routerLink="/profile" routerLinkActive="active-item" aria-label="Profil"
+        class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group [&.active-item]:bg-primary-600 [&.active-item]:text-white [&.active-item]:border [&.active-item]:border-primary-700 cursor-pointer">
+        <i
+          class="bx bx-user text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-[.active-item]:text-white"></i>
+        <span
+          class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-[.active-item]:text-white">Akun</span>
+      </a>
+      } @else {
+      <a [href]="loginUrl" aria-label="Masuk"
+        class="bg-gray-50 border border-gray-100/50 w-14 h-14 flex flex-col items-center justify-center   rounded-full group hover:bg-slate-100 cursor-pointer">
+        <i
+          class="bx bx-log-in text-[18px]  group-[.active-item]:scale-95 text-gray-400 group-hover:text-primary-600"></i>
+        <span
+          class="text-[8px] font-medium tracking-tight mt-0.5 leading-none text-gray-400 group-hover:text-primary-600">Masuk</span>
+      </a>
+      }
+    </nav>
+
+    <!-- Global Toasts Alert Overlay --><!-- Product Detail Bottom Sheet (Height ~85%, constrained inside the mobile container) -->
+    <app-bottom-sheet [isOpen]="modalHandler.isDetailOpen()" (closed)="modalHandler.closeProductDetails()"
+      [fullHeight]="true" [zIndex]="10000">
+      <app-product-detail [productId]="modalHandler.selectedDetailId()"></app-product-detail>
+    </app-bottom-sheet>
+
+    <app-bottom-sheet [isOpen]="productStore.isQtyModalOpen()" (closed)="modalHandler.closeQty()" [zIndex]="10010">
+      <app-qty-modal-content #qtyMobile (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
+      <div class="border-t border-slate-100 px-5 py-4 flex items-center justify-between gap-4 bg-white shrink-0">
+        @if ((productStore.activeProduct()?.stock || 0) > 0) {
+        <div class="flex flex-col">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+            Total Harga
+            @if (productStore.isQtyLookupLoading()) {
+            <i class="bx bx-loader-alt animate-spin text-primary-500"></i>
             }
-          </app-button>
-          } @else {
-          <div class="w-full py-3 bg-slate-100 rounded-xl text-center">
-            <span class="text-sm font-bold text-slate-500">Stok produk ini sedang habis (Stok 0)</span>
-          </div>
-          }
+          </span>
+          <app-price [value]="(productStore.qtyLookedUpPrice() || 0) * productStore.qtyQuantity()" size="lg"
+            class="text-slate-800"></app-price>
         </div>
-      </app-bottom-sheet>
-
-    </div>
+        <app-button (click)="qtyMobile.confirmAddToCart()" variant="primary" size="lg" class="grow max-w-40"
+          [disabled]="productStore.isQtyLookupLoading()">
+          @if (!authStore.isLoggedIn()) {
+          Login untuk Membeli
+          } @else {
+          {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+          }
+        </app-button>
+        } @else {
+        <div class="w-full py-3 bg-slate-100 rounded-xl text-center">
+          <span class="text-sm font-bold text-slate-500">Stok produk ini sedang habis (Stok 0)</span>
+        </div>
+        }
+      </div>
+    </app-bottom-sheet>
   </div>
   }
 </div>

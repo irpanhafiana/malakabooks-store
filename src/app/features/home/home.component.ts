@@ -231,13 +231,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isVideoModalOpen.set(false);
   }
 
-  nextTestimonial() {
-    this.testimonialIndex.update(i => (i + 1) % 3);
-  }
-
-  prevTestimonial() {
-    this.testimonialIndex.update(i => (i - 1 + 3) % 3);
-  }
 
   submitNewsletter(e: Event) {
     e.preventDefault();
@@ -354,6 +347,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isHeroFanned = signal<boolean>(false);
 
+  private testimonialInterval: any;
+
   ngOnInit() {
     this.seoService.updatePage({
       title: 'Malakabooks — Eksplorasi Buku "Makanya, Mikir!" & "Prinsipil Ekonomi"',
@@ -362,6 +357,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.productStore.loadAll();
     this.bannerStore.loadActiveBanners();
     this.authorStore.loadAuthors();
+
+    // Auto-scroll testimonials every 5 seconds
+    if (typeof window !== 'undefined') {
+      this.testimonialInterval = setInterval(() => {
+        this.nextTestimonial(true);
+      }, 5000);
+    }
   }
 
   ngAfterViewInit() {
@@ -414,6 +416,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.embla?.destroy();
     this.authorEmbla?.destroy();
     this.bestSellerEmbla?.destroy();
+    if (this.testimonialInterval) {
+      clearInterval(this.testimonialInterval);
+    }
   }
 
   scrollToSlide(index: number) {
@@ -426,6 +431,27 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   scrollNext() {
     this.embla?.scrollNext();
+  }
+
+  private resetTestimonialTimer() {
+    if (typeof window !== 'undefined' && this.testimonialInterval) {
+      clearInterval(this.testimonialInterval);
+      this.testimonialInterval = setInterval(() => {
+        this.nextTestimonial(true);
+      }, 5000);
+    }
+  }
+
+  nextTestimonial(isAuto = false) {
+    const len = this.testimonials().length;
+    this.testimonialIndex.update(i => (i + 1) % len);
+    if (!isAuto) this.resetTestimonialTimer();
+  }
+
+  prevTestimonial() {
+    const len = this.testimonials().length;
+    this.testimonialIndex.update(i => (i - 1 + len) % len);
+    this.resetTestimonialTimer();
   }
 
   bestSellerPrev() {
