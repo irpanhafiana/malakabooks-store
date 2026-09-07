@@ -8,7 +8,7 @@
     "start_url": "/",
     "icons": [
         {
-            "src": "logo/malakabooks-logo.svg",
+            "src": "malaka-books.svg",
             "sizes": "192x192 512x512",
             "type": "image/svg+xml",
             "purpose": "any maskable"

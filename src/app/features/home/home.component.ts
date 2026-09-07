@@ -30,6 +30,16 @@ export interface KeyAuthor {
   quote: string;
 }
 
+export interface KopiCard {
+  title: string;
+  tag: string;
+  subtag: string;
+  price: string;
+  image: string;
+  description: string;
+  link: string;
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
@@ -52,6 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   currentSlide = signal<number>(0);
   currentAuthorSlide = signal<number>(0);
+  currentKopiSlide = signal<number>(0);
   isAuthorSheetOpen = signal(false);
   selectedAuthor = signal<KeyAuthor | null>(null);
   selectedAuthorName = signal<string>('');
@@ -61,6 +72,64 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   testimonialIndex = signal<number>(0);
   newsletterEmail = signal<string>('');
   isSubscribed = signal<boolean>(false);
+
+  // Dedicated data for Mardika Kopi Showcase Cards
+  readonly mardikaKopiCards = signal<KopiCard[]>([
+    {
+      title: 'Mardika Signature Blend',
+      tag: 'Signature Roastery',
+      subtag: '100% Arabica & Robusta',
+      price: 'Mulai Rp 45.000',
+      image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
+      description: 'Karakter rasa cokelat karamel dan aftertaste manis seimbang. Pilihan utama peneman baca harian.',
+      link: '/mardika-kopi'
+    },
+    {
+      title: 'Arabica Gayo Single Origin',
+      tag: 'Single Origin',
+      subtag: '100% Arabica Full Wash',
+      price: 'Mulai Rp 65.000',
+      image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=800&q=80',
+      description: 'Aroma floral jeruk dengan keasaman segar dan body medium. Pas untuk seduhan manual pour over V60.',
+      link: '/mardika-kopi'
+    },
+    {
+      title: 'Robusta Temanggung Roastery',
+      tag: 'Fine Robusta',
+      subtag: '100% Robusta Natural',
+      price: 'Mulai Rp 35.000',
+      image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&w=800&q=80',
+      description: 'Body tebal mantap dengan notes dark chocolate dan rempah gurih tanpa rasa pahit berlebih.',
+      link: '/mardika-kopi'
+    },
+    {
+      title: 'Mardika Cold Brew Concentrate',
+      tag: 'Cold Brew Series',
+      subtag: 'Ready to Drink 500ml',
+      price: 'Mulai Rp 55.000',
+      image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80',
+      description: 'Ekstraksi dingin 16 jam menghasilkan kopi pekat yang lembut di lambung dan menyegarkan.',
+      link: '/mardika-kopi'
+    },
+    {
+      title: 'Drip Bag Coffee Box (5 Sachet)',
+      tag: 'Drip Bag Praktis',
+      subtag: 'Travel Friendly',
+      price: 'Mulai Rp 48.000',
+      image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80',
+      description: 'Nikmati kopi filter artisan di mana saja tanpa alat seduh khusus. Cukup tuang air panas.',
+      link: '/mardika-kopi'
+    },
+    {
+      title: 'Mardika Aren Espresso Latte',
+      tag: 'Signature Milk Base',
+      subtag: 'Fresh Brew 250ml',
+      price: 'Mulai Rp 28.000',
+      image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=800&q=80',
+      description: 'Perpaduan espresso mantap, susu creamy, dan gula aren organik asli yang legit dan pas.',
+      link: '/mardika-kopi'
+    }
+  ]);
 
   // Tabs for Book 1 ("Makanya, Mikir!") and Book 2 ("Prinsipil Ekonomi")
   mikirActiveTab = signal<number>(0);
@@ -298,10 +367,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private embla?: EmblaCarouselType;
   private authorEmbla?: EmblaCarouselType;
   private bestSellerEmbla?: EmblaCarouselType;
+  private kopiEmbla?: EmblaCarouselType;
 
   @ViewChild('carouselViewport') carouselViewport?: ElementRef<HTMLElement>;
   @ViewChild('authorCarouselViewport') authorCarouselViewport?: ElementRef<HTMLElement>;
   @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport?: ElementRef<HTMLElement>;
+  @ViewChild('kopiCarouselViewport') kopiCarouselViewport?: ElementRef<HTMLElement>;
 
   constructor() {
     effect(() => {
@@ -371,6 +442,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.initHeroCarousel();
     this.initBestSellerCarousel();
     this.initAuthorCarousel();
+    this.initKopiCarousel();
 
     setTimeout(() => {
       this.isHeroFanned.set(true);
@@ -412,10 +484,24 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     onAuthorSelect();
   }
 
+  private initKopiCarousel() {
+    if (!this.kopiCarouselViewport?.nativeElement || this.kopiEmbla) return;
+    this.kopiEmbla = EmblaCarousel(
+      this.kopiCarouselViewport.nativeElement,
+      { loop: true, align: 'start', duration: 25 },
+      [Autoplay({ delay: 4000, stopOnInteraction: false, stopOnMouseEnter: true })]
+    );
+
+    const onKopiSelect = () => this.currentKopiSlide.set(this.kopiEmbla!.selectedScrollSnap());
+    this.kopiEmbla.on('select', onKopiSelect);
+    onKopiSelect();
+  }
+
   ngOnDestroy() {
     this.embla?.destroy();
     this.authorEmbla?.destroy();
     this.bestSellerEmbla?.destroy();
+    this.kopiEmbla?.destroy();
     if (this.testimonialInterval) {
       clearInterval(this.testimonialInterval);
     }
@@ -494,6 +580,31 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.authorEmbla.scrollTo(0);
       }
     }
+  }
+
+  kopiPrev() {
+    if (this.kopiEmbla) {
+      if (this.kopiEmbla.canScrollPrev()) {
+        this.kopiEmbla.scrollPrev();
+      } else {
+        const snaps = this.kopiEmbla.scrollSnapList();
+        this.kopiEmbla.scrollTo(snaps.length - 1);
+      }
+    }
+  }
+
+  kopiNext() {
+    if (this.kopiEmbla) {
+      if (this.kopiEmbla.canScrollNext()) {
+        this.kopiEmbla.scrollNext();
+      } else {
+        this.kopiEmbla.scrollTo(0);
+      }
+    }
+  }
+
+  scrollKopiToSlide(index: number) {
+    this.kopiEmbla?.scrollTo(index);
   }
 
   openQtyModal(product: Product) {

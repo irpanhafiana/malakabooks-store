@@ -1,3 +1,4 @@
+@if (screen.isDesktop()) {
 <div class="flex flex-col w-full">
 
   <!-- ========================================================================= -->
@@ -28,7 +29,7 @@
 
             <!-- Book 1: Makanya, Mikir! (Left overlapping book) -->
             <div role="button" tabindex="0"
-              class="relative block text-left w-36 xs:w-44 sm:w-56 lg:w-72 aspect-[3/4.2] rounded-xl sm:rounded-2xl overflow-hidden shadow-xl sm:shadow-2xl shadow-slate-900/30 border-4 sm:border-8 border-red-700 -rotate-6 focus:outline-none focus:ring-4 focus:ring-slate-700 transition-all duration-300 z-10 cursor-pointer bg-white shrink-0"
+              class="relative block text-left w-36 xs:w-44 sm:w-56 lg:w-72 aspect-[3/4.2] rounded-xl sm:rounded-2xl overflow-hidden -rotate-6 focus:outline-none focus:ring-4 focus:ring-slate-700 transition-all duration-300 z-10 cursor-pointer bg-white shrink-0"
               (click)="buyDirect('mikir')" (keyup.enter)="buyDirect('mikir')" (keyup.space)="buyDirect('mikir')">
               <img src="/images/books/makanya-mikir.jpg" alt="Cover Buku Makanya Mikir"
                 class="w-full h-full object-cover" />
@@ -36,7 +37,7 @@
 
             <!-- Book 2: Prinsipil Ekonomi (Right overlapping book) -->
             <div role="button" tabindex="0"
-              class="relative block text-left w-36 xs:w-44 sm:w-56 lg:w-72 aspect-[3/4.2] rounded-xl sm:rounded-2xl overflow-hidden shadow-xl sm:shadow-2xl shadow-slate-950/40 border-4 sm:border-8 border-slate-700 -ml-12 xs:-ml-16 sm:-ml-20 lg:-ml-24 mt-6 sm:mt-10 lg:mt-12 rotate-6 focus:outline-none focus:ring-4 focus:ring-slate-700 transition-all duration-300 z-20 cursor-pointer bg-slate-900 shrink-0"
+              class="relative block text-left w-36 xs:w-44 sm:w-56 lg:w-72 aspect-[3/4.2] rounded-xl overflow-hidden -ml-12 xs:-ml-16 sm:-ml-20 lg:-ml-24 mt-6 sm:mt-10 lg:mt-12 rotate-6 focus:outline-none transition-all duration-300 z-20 cursor-pointer shrink-0"
               (click)="buyDirect('ekonomi')" (keyup.enter)="buyDirect('ekonomi')" (keyup.space)="buyDirect('ekonomi')">
               <img src="/images/books/prinsipil-ekonomi.jpg" alt="Cover Buku Prinsipil Ekonomi"
                 class="w-full h-full object-cover" />
@@ -44,7 +45,7 @@
 
             <!-- Desktop Floating Badge 1: 100% Jahit Benang (Top Left - Tablet/Desktop only) -->
             <div
-              class="hidden sm:flex absolute -top-1 sm:top-0 -left-2 sm:-left-6 bg-white rounded-2xl p-3 sm:p-3.5 shadow-xl border border-slate-200/90 items-center gap-3 z-30">
+              class="hidden sm:flex absolute -top-1 sm:top-0 -left-2 sm:-left-6 bg-white rounded-2xl p-3 sm:p-3.5 shadow-xl items-center gap-3 z-30">
               <div
                 class="w-9 h-9 rounded-xl bg-slate-700 text-white flex items-center justify-center text-lg font-bold shadow-xs">
                 <i class="bx bx-check-shield"></i>
@@ -57,9 +58,9 @@
 
             <!-- Desktop Floating Badge 2: Ekstra Karton Sudut (Bottom Right - Tablet/Desktop only) -->
             <div
-              class="hidden sm:flex absolute -bottom-2 sm:bottom-0 -right-2 sm:-right-6 bg-slate-900 text-white rounded-2xl p-3 sm:p-3.5 shadow-xl border border-slate-800 items-center gap-3 z-30">
+              class="hidden sm:flex absolute -bottom-2 sm:bottom-0 -right-2 sm:-right-6 bg-slate-700 text-white rounded-2xl p-3 sm:p-3.5 shadow-xl items-center gap-3 z-30">
               <div
-                class="w-9 h-9 rounded-xl bg-slate-700 text-white flex items-center justify-center text-lg font-bold">
+                class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-lg font-bold">
                 <i class="bx bx-package"></i>
               </div>
               <div>
@@ -108,7 +109,7 @@
             <button type="button" (click)="buyDirect('bundle')"
               class="w-full sm:w-auto px-12 py-4 rounded-full bg-slate-700 hover:bg-slate-800 text-white font-bold text-base uppercase tracking-wider active:scale-95 transition-all inline-flex items-center justify-center gap-2 cursor-pointer">
               <span>Beli Sekarang!</span>
-              <i class="bx bx-shopping-bag text-xl"></i>
+              <i class="bx bx-chevron-right text-xl"></i>
             </button>
           </div>
 
@@ -423,7 +424,7 @@
 
         <!-- Bento 1: Jilid Jahit Benang & Kertas Bookpaper (White Theme) -->
         <div
-          class="lg:col-span-6 bg-white rounded-3xl sm:rounded-4xl p-5 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden">
+          class="lg:col-span-6 bg-white rounded-3xl sm:rounded-4xl p-5 sm:p-8 flex flex-col justify-between relative overflow-hidden">
           <div class="flex flex-col gap-3 sm:gap-4">
             <!-- Icon Circle -->
             <div
@@ -460,7 +461,7 @@
 
         <!-- Bento 2: Mental models & nalar kritis (Modern Editorial White Theme) -->
         <div
-          class="lg:col-span-6 bg-white rounded-3xl sm:rounded-4xl p-5 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden">
+          class="lg:col-span-6 bg-white rounded-3xl sm:rounded-4xl p-5 sm:p-8  flex flex-col justify-between relative overflow-hidden">
           <div class="flex flex-col gap-3 sm:gap-4">
             <!-- Icon Circle -->
             <div
@@ -584,8 +585,7 @@
         </div>
 
         <!-- Bento 4: Bahasa Lugas Tongkrongan (White Theme) -->
-        <div
-          class="lg:col-span-4 bg-white rounded-3xl sm:rounded-4xl p-5 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="lg:col-span-4 bg-white rounded-3xl sm:rounded-4xl p-5 sm:p-8 flex flex-col justify-between">
           <div class="flex flex-col gap-3">
             <div
               class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-rose-600 text-white flex items-center justify-center text-lg sm:text-xl font-bold shadow-xs">
@@ -613,8 +613,7 @@
         </div>
 
         <!-- Bento 5: Transaksi Praktis (White Theme) -->
-        <div
-          class="lg:col-span-4 bg-white rounded-3xl sm:rounded-4xl p-5 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="lg:col-span-4 bg-white rounded-3xl sm:rounded-4xl p-5 sm:p-8  flex flex-col justify-between">
           <div class="flex flex-col gap-3">
             <div
               class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-emerald-600 text-white flex items-center justify-center text-lg sm:text-xl font-bold shadow-xs">
@@ -729,18 +728,15 @@
   <!-- ========================================================================= -->
   <!-- 5. MARDIKA KOPI HERO CTA (Teman Membaca & Diskusi Kritis - Red Theme) -->
   <!-- ========================================================================= -->
-  <section class="w-full bg-linear-to-br from-red-950 via-stone-950 to-red-950 text-white py-14 sm:py-20 relative overflow-hidden">
-    <!-- Ambient Red Glow Accent -->
-    <div class="absolute top-0 right-0 w-96 h-96 bg-red-600/15 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute bottom-0 left-0 w-80 h-80 bg-rose-600/15 rounded-full blur-3xl pointer-events-none"></div>
-
+  <section class="w-full bg-red-700 text-white py-14 sm:py-20 relative overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col gap-8 sm:gap-12">
       <!-- Section Header -->
       <div class="text-center max-w-2xl mx-auto flex flex-col items-center gap-2.5">
         <span class="text-xs sm:text-sm font-bold uppercase tracking-widest text-red-400">
           Ekosistem Malakabooks
         </span>
-        <h2 class="font-display font-extrabold text-2xl sm:text-4xl lg:text-[42px] text-white tracking-tight leading-tight">
+        <h2
+          class="font-display font-extrabold text-2xl sm:text-4xl lg:text-[42px] text-white tracking-tight leading-tight">
           Mardika Kopi Roastery
         </h2>
         <p class="text-rose-100/80 text-base sm:text-lg leading-relaxed font-normal">
@@ -748,31 +744,35 @@
         </p>
       </div>
 
-      <div class="bg-stone-900/90 backdrop-blur-md rounded-3xl sm:rounded-4xl border border-red-500/30 p-6 sm:p-10 lg:p-12 shadow-2xl">
+      <div class="bg-red-800 backdrop-blur-md rounded-3xl sm:rounded-4xl p-6 sm:p-10 lg:p-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
           <!-- Left Content: Brand, Story, Bullet points, Action Button -->
           <div class="lg:col-span-7 flex flex-col items-start gap-4 sm:gap-6">
             <!-- Badge -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-xs sm:text-sm font-semibold">
+            <div
+              class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-xs sm:text-sm font-semibold">
               <i class="bx bx-coffee-togo text-base text-red-400"></i>
               <span>Ekosistem Malakabooks • Roastery & Artisan Coffee</span>
             </div>
 
             <!-- Title -->
-            <h3 class="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[1.15]">
+            <h3
+              class="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[1.15]">
               Secangkir Kopi Mardika untuk Menemani Nalar Kritis Anda.
             </h3>
 
             <!-- Description -->
             <p class="text-stone-300 text-base sm:text-lg leading-relaxed max-w-xl font-normal">
-              Membaca buku pemikiran mendalam terasa lebih hidup ditemani aroma biji kopi pilihan nusantara. Disangrai segar dengan profil rasa seimbang untuk menjaga fokus dan kejernihan berpikir Anda sepanjang hari.
+              Membaca buku pemikiran mendalam terasa lebih hidup ditemani aroma biji kopi pilihan nusantara. Disangrai
+              segar dengan profil rasa seimbang untuk menjaga fokus dan kejernihan berpikir Anda sepanjang hari.
             </p>
 
             <!-- Feature Pills -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl pt-1">
               <div class="flex items-center gap-2.5 p-3 rounded-2xl bg-stone-800/80 border border-stone-700/60">
-                <div class="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg shrink-0">
+                <div
+                  class="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg shrink-0">
                   <i class="bx bxs-badge-check"></i>
                 </div>
                 <div class="text-xs">
@@ -782,7 +782,8 @@
               </div>
 
               <div class="flex items-center gap-2.5 p-3 rounded-2xl bg-stone-800/80 border border-stone-700/60">
-                <div class="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg shrink-0">
+                <div
+                  class="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg shrink-0">
                   <i class="bx bx-flame"></i>
                 </div>
                 <div class="text-xs">
@@ -792,7 +793,8 @@
               </div>
 
               <div class="flex items-center gap-2.5 p-3 rounded-2xl bg-stone-800/80 border border-stone-700/60">
-                <div class="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg shrink-0">
+                <div
+                  class="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg shrink-0">
                   <i class="bx bx-package"></i>
                 </div>
                 <div class="text-xs">
@@ -817,40 +819,81 @@
 
           </div>
 
-          <!-- Right Showcase Card / Visual -->
-          <div class="lg:col-span-5 flex flex-col items-center justify-center">
-            <div class="relative w-full max-w-sm rounded-3xl overflow-hidden bg-linear-to-b from-stone-800 to-stone-900 border border-red-500/30 p-6 shadow-2xl flex flex-col gap-5">
-              <!-- Visual Mockup Card -->
-              <div class="relative w-full aspect-4/3 rounded-2xl overflow-hidden bg-stone-950 flex items-center justify-center group">
-                <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"
-                  alt="Mardika Kopi Artisan"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div class="absolute inset-0 bg-linear-to-t from-stone-950 via-stone-950/30 to-transparent"></div>
-                <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                  <span class="px-2.5 py-1 rounded-lg bg-red-600 text-white text-xs font-bold">
-                    Signature Roastery
-                  </span>
-                  <span class="text-xs text-stone-300 font-medium">
-                    100% Arabica & Robusta
-                  </span>
+          <!-- Right Showcase Card Carousel / Visual (Embla 4-6 Cards) -->
+          <div class="lg:col-span-5 flex flex-col items-center justify-center w-full min-w-0">
+            <div class="relative w-full max-w-sm sm:max-w-md mx-auto">
+              <!-- Embla Viewport -->
+              <div class="overflow-hidden w-full rounded-3xl" #kopiCarouselViewport>
+                <div class="flex touch-pan-y -ml-4">
+                  @for (kopi of mardikaKopiCards(); track kopi.title) {
+                    <div class="flex-[0_0_100%] min-w-0 pl-4">
+                      <div
+                        class="relative w-full max-w-sm mx-auto rounded-3xl overflow-hidden bg-linear-to-b from-stone-800 to-stone-900 border border-red-500/30 p-6 shadow-2xl flex flex-col gap-5">
+                        <!-- Visual Mockup Card -->
+                        <div
+                          class="relative w-full aspect-4/3 rounded-2xl overflow-hidden bg-stone-950 flex items-center justify-center group">
+                          <img [src]="kopi.image" [alt]="kopi.title"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          <div class="absolute inset-0 bg-linear-to-t from-stone-950 via-stone-950/30 to-transparent"></div>
+                          <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                            <span class="px-2.5 py-1 rounded-lg bg-red-600 text-white text-xs font-bold shadow-xs">
+                              {{ kopi.tag }}
+                            </span>
+                            <span class="text-xs text-stone-300 font-medium">
+                              {{ kopi.subtag }}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                          <div class="flex items-center justify-between">
+                            <h4 class="font-display font-bold text-lg text-white">{{ kopi.title }}</h4>
+                            <span class="text-red-400 font-extrabold text-sm sm:text-base">{{ kopi.price }}</span>
+                          </div>
+                          <p class="text-xs sm:text-sm text-stone-400 leading-relaxed">
+                            {{ kopi.description }}
+                          </p>
+                        </div>
+
+                        <a [routerLink]="kopi.link"
+                          class="w-full py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-red-300 hover:text-red-200 border border-red-500/30 text-xs sm:text-sm font-bold text-center flex items-center justify-center gap-2 transition-colors cursor-pointer">
+                          <i class="bx bx-shopping-bag"></i>
+                          <span>Pesan Kopi Online</span>
+                        </a>
+                      </div>
+                    </div>
+                  }
                 </div>
               </div>
 
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center justify-between">
-                  <h4 class="font-display font-bold text-lg text-white">Edisi Kopi Mardika</h4>
-                  <span class="text-red-400 font-extrabold text-sm sm:text-base">Mulai Rp 25.000</span>
+              <!-- Carousel Controls (Navigation Buttons & Dots) -->
+              <div class="flex items-center justify-between mt-4 px-2">
+                <!-- Prev / Next Navigation -->
+                <div class="flex items-center gap-2">
+                  <button type="button" (click)="kopiPrev()" aria-label="Koleksi Kopi Sebelumnya"
+                    class="w-9 h-9 rounded-full bg-stone-800/90 hover:bg-stone-700 text-stone-200 border border-stone-700/80 flex items-center justify-center text-lg active:scale-95 transition-all cursor-pointer shadow-xs">
+                    <i class="bx bx-chevron-left"></i>
+                  </button>
+                  <button type="button" (click)="kopiNext()" aria-label="Koleksi Kopi Selanjutnya"
+                    class="w-9 h-9 rounded-full bg-stone-800/90 hover:bg-stone-700 text-stone-200 border border-stone-700/80 flex items-center justify-center text-lg active:scale-95 transition-all cursor-pointer shadow-xs">
+                    <i class="bx bx-chevron-right"></i>
+                  </button>
                 </div>
-                <p class="text-xs sm:text-sm text-stone-400 leading-relaxed">
-                  Tersedia dalam bentuk beans (biji utuh), bubuk gilingan halus/kasar, serta botolan siap minum.
-                </p>
-              </div>
 
-              <a routerLink="/mardika-kopi"
-                class="w-full py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-red-300 hover:text-red-200 border border-red-500/30 text-xs sm:text-sm font-bold text-center flex items-center justify-center gap-2 transition-colors">
-                <i class="bx bx-shopping-bag"></i>
-                <span>Pesan Kopi Online</span>
-              </a>
+                <!-- Slide Indicator Dots -->
+                <div class="flex items-center gap-1.5">
+                  @for (kopi of mardikaKopiCards(); track $index) {
+                    <button type="button" (click)="scrollKopiToSlide($index)"
+                      [attr.aria-label]="'Pindah ke varian ' + ($index + 1)"
+                      class="h-2 rounded-full transition-all duration-300 cursor-pointer"
+                      [class.w-6]="currentKopiSlide() === $index"
+                      [class.bg-red-500]="currentKopiSlide() === $index"
+                      [class.w-2]="currentKopiSlide() !== $index"
+                      [class.bg-stone-600]="currentKopiSlide() !== $index">
+                    </button>
+                  }
+                </div>
+              </div>
             </div>
           </div>
 
@@ -923,3 +966,349 @@
 
 
 </div>
+} @else {
+<!-- ========================================================================= -->
+<!-- MOBILE & TABLET APP VIEW (Native App-Like Experience) -->
+<!-- ========================================================================= -->
+<div class="flex flex-col w-full px-4 pt-3 pb-28 gap-5 bg-slate-50">
+
+  <!-- 1. APP HERO SPOTLIGHT CARD -->
+  <section class="relative overflow-hidden rounded-3xl bg-linear-to-br from-slate-900 via-slate-950 to-red-950 text-white p-5 shadow-xl border border-slate-800">
+    <!-- Ambient Glow -->
+    <div class="absolute -right-12 -top-12 w-48 h-48 bg-rose-600/25 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-sky-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col gap-4">
+      <!-- Tag / Badge -->
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-xs font-bold border border-white/10">
+          <i class="bx bxs-star text-amber-400"></i>
+          <span>Official Masterpiece Release</span>
+        </span>
+      </div>
+
+      <!-- Headline -->
+      <div>
+        <h1 class="font-display font-extrabold text-2xl text-white tracking-tight leading-snug">
+          Tingkatkan Nalar & Kuasai Seni Memilih.
+        </h1>
+        <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+          Dua buku panduan berpikir jernih dan kalkulasi hidup oleh Abigail Limuria, Cania Citta, dan Ferry Irwandi.
+        </p>
+      </div>
+
+      <!-- Dual Overlapping Books Showcase -->
+      <div class="flex items-center justify-center py-3 relative">
+        <!-- Book 1: Makanya, Mikir! -->
+        <div role="button" tabindex="0" (click)="buyDirect('mikir')" (keyup.enter)="buyDirect('mikir')"
+          class="relative w-32 aspect-[3/4.2] rounded-xl overflow-hidden -rotate-6 shadow-2xl border-2 border-white/20 active:scale-95 transition-transform cursor-pointer bg-white shrink-0 z-10">
+          <img src="/images/books/makanya-mikir.jpg" alt="Makanya Mikir" class="w-full h-full object-cover" />
+          <span class="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-md bg-rose-600 text-white text-[9px] font-bold shadow-xs">
+            Logika
+          </span>
+        </div>
+
+        <!-- Book 2: Prinsipil Ekonomi -->
+        <div role="button" tabindex="0" (click)="buyDirect('ekonomi')" (keyup.enter)="buyDirect('ekonomi')"
+          class="relative w-32 aspect-[3/4.2] rounded-xl overflow-hidden -ml-10 mt-6 rotate-6 shadow-2xl border-2 border-white/20 active:scale-95 transition-transform cursor-pointer bg-white shrink-0 z-20">
+          <img src="/images/books/prinsipil-ekonomi.jpg" alt="Prinsipil Ekonomi" class="w-full h-full object-cover" />
+          <span class="absolute bottom-1.5 right-1.5 px-2 py-0.5 rounded-md bg-sky-600 text-white text-[9px] font-bold shadow-xs">
+            Ekonomi
+          </span>
+        </div>
+      </div>
+
+      <!-- CTA Buttons Row -->
+      <div class="flex items-center gap-2.5 pt-1">
+        <button type="button" (click)="buyDirect('bundle')"
+          class="flex-1 py-3 px-4 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-lg shadow-primary-600/30 cursor-pointer">
+          <i class="bx bx-package text-base"></i>
+          <span>Beli Bundling Hemat</span>
+        </button>
+        <a routerLink="/product"
+          class="py-3 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs text-center border border-white/10 active:scale-95 transition-transform cursor-pointer">
+          Katalog
+        </a>
+      </div>
+
+      <!-- Guarantee Badges Strip -->
+      <div class="flex items-center justify-between pt-2 border-t border-white/10 text-[10px] text-slate-300 font-medium">
+        <span class="flex items-center gap-1">
+          <i class="bx bx-check-shield text-emerald-400 text-xs"></i> 100% Jahit Benang
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="bx bx-box text-amber-400 text-xs"></i> Ekstra Karton Sudut
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="bx bx-badge-check text-sky-400 text-xs"></i> 35.000+ Eksemplar
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. QUICK ACTION SHORTCUTS (App-Style Menu Icons) -->
+  <section class="grid grid-cols-4 gap-2 py-1">
+    <a routerLink="/product"
+      class="flex flex-col items-center gap-1.5 p-2.5 bg-white rounded-2xl border border-slate-200/70 shadow-xs active:scale-95 transition-all text-center cursor-pointer">
+      <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl shadow-xs">
+        <i class="bx bx-book-open"></i>
+      </div>
+      <span class="text-[11px] font-bold text-slate-800 leading-tight">Buku Fisik</span>
+    </a>
+
+    <a routerLink="/mardika-kopi"
+      class="flex flex-col items-center gap-1.5 p-2.5 bg-white rounded-2xl border border-slate-200/70 shadow-xs active:scale-95 transition-all text-center cursor-pointer">
+      <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shadow-xs">
+        <i class="bx bx-coffee-togo"></i>
+      </div>
+      <span class="text-[11px] font-bold text-slate-800 leading-tight">Kopi Mardika</span>
+    </a>
+
+    <button type="button" (click)="buyDirect('bundle')"
+      class="flex flex-col items-center gap-1.5 p-2.5 bg-white rounded-2xl border border-slate-200/70 shadow-xs active:scale-95 transition-all text-center cursor-pointer">
+      <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-xs">
+        <i class="bx bx-gift"></i>
+      </div>
+      <span class="text-[11px] font-bold text-slate-800 leading-tight">Bundling</span>
+    </button>
+
+    <a routerLink="/product"
+      class="flex flex-col items-center gap-1.5 p-2.5 bg-white rounded-2xl border border-slate-200/70 shadow-xs active:scale-95 transition-all text-center cursor-pointer">
+      <div class="w-11 h-11 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-xl shadow-xs">
+        <i class="bx bx-category-alt"></i>
+      </div>
+      <span class="text-[11px] font-bold text-slate-800 leading-tight">Kategori</span>
+    </a>
+  </section>
+
+  <!-- 3. MASTERPIECE BOOK 1: MAKANYA, MIKIR! (App Product Card) -->
+  <section class="flex flex-col gap-2.5">
+    <div class="flex items-center justify-between px-1">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+        <h2 class="font-display font-extrabold text-base text-slate-900">Fondasi Logika</h2>
+      </div>
+      <span class="text-[11px] font-bold text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-100">
+        ★ 4.9 (18k+ Pembaca)
+      </span>
+    </div>
+
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
+      <!-- Book Thumbnail -->
+      <div role="button" tabindex="0" (click)="buyDirect('mikir')"
+        class="w-24 aspect-[3/4.2] rounded-xl overflow-hidden bg-slate-100 shrink-0 shadow-sm border border-slate-100 relative cursor-pointer active:scale-95 transition-transform">
+        <img src="/images/books/makanya-mikir.jpg" alt="Makanya, Mikir!" class="w-full h-full object-cover" />
+      </div>
+
+      <!-- Book Info & Actions -->
+      <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
+        <div>
+          <span class="text-[10px] font-bold text-rose-600 uppercase tracking-wider block">LOGIKA & MENTAL MODELS</span>
+          <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
+            Makanya, Mikir!: Panduan Berpikir Bahagia
+          </h3>
+          <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
+            Kuasai instrumen berpikir logis, membongkar fallacy, dan kalkulasi cost-benefit hidup.
+          </p>
+          <span class="text-[10px] text-slate-400 font-medium block mt-1">Oleh Abigail Limuria & Cania Citta</span>
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
+          <div class="flex flex-col">
+            <span class="text-[10px] text-slate-400 line-through">Rp 139.000</span>
+            <span class="font-display font-extrabold text-sm text-slate-900">Rp 119.000</span>
+          </div>
+
+          <button type="button" (click)="buyDirect('mikir')"
+            class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
+            Beli Buku
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. MASTERPIECE BOOK 2: PRINSIPIL EKONOMI (App Product Card) -->
+  <section class="flex flex-col gap-2.5">
+    <div class="flex items-center justify-between px-1">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-sky-600"></span>
+        <h2 class="font-display font-extrabold text-base text-slate-900">Kacamata Ekonomi</h2>
+      </div>
+      <span class="text-[11px] font-bold text-sky-600 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-100">
+        Bestseller Nasional
+      </span>
+    </div>
+
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
+      <!-- Book Thumbnail -->
+      <div role="button" tabindex="0" (click)="buyDirect('ekonomi')"
+        class="w-24 aspect-[3/4.2] rounded-xl overflow-hidden bg-slate-100 shrink-0 shadow-sm border border-slate-100 relative cursor-pointer active:scale-95 transition-transform">
+        <img src="/images/books/prinsipil-ekonomi.jpg" alt="Prinsipil Ekonomi" class="w-full h-full object-cover" />
+      </div>
+
+      <!-- Book Info & Actions -->
+      <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
+        <div>
+          <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider block">EKONOMI & SENI MEMILIH</span>
+          <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
+            Prinsipil Ekonomi: Memahami Pilihan Hidup
+          </h3>
+          <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
+            Membongkar konsep scarcity, opportunity cost, dan insentif dengan bahasa tongkrongan santai.
+          </p>
+          <span class="text-[10px] text-slate-400 font-medium block mt-1">Oleh Ferry Irwandi</span>
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
+          <div class="flex flex-col">
+            <span class="text-[10px] text-slate-400 line-through">Rp 145.000</span>
+            <span class="font-display font-extrabold text-sm text-slate-900">Rp 125.000</span>
+          </div>
+
+          <button type="button" (click)="buyDirect('ekonomi')"
+            class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
+            Beli Buku
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PROMO BANNER BUNDLING CARD -->
+  <section class="rounded-2xl bg-linear-to-r from-red-900 to-slate-900 text-white p-4 shadow-md flex items-center justify-between gap-3 border border-red-800/60">
+    <div class="flex flex-col gap-1">
+      <span class="text-[10px] font-extrabold uppercase text-amber-400 tracking-wider">PAKET HEMAT LITERASI</span>
+      <h3 class="font-display font-extrabold text-sm text-white">Bundling 2 Buku Masterpiece</h3>
+      <p class="text-[11px] text-slate-300">Dapatkan boxset proteksi + pembatas buku.</p>
+    </div>
+    <button type="button" (click)="buyDirect('bundle')"
+      class="px-4 py-2.5 rounded-xl bg-white text-slate-950 font-bold text-xs uppercase tracking-wider shrink-0 active:scale-95 transition-transform cursor-pointer shadow-xs">
+      Beli Paket
+    </button>
+  </section>
+
+  <!-- 6. STANDAR MUTU CETAK (App Snap Chips) -->
+  <section class="flex flex-col gap-2">
+    <div class="px-1">
+      <h2 class="font-display font-extrabold text-base text-slate-900">Standar Mutu Malakabooks</h2>
+      <p class="text-[11px] text-slate-500">Kualitas cetak fisik orisinal standar tertinggi.</p>
+    </div>
+
+    <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-1 snap-x snap-mandatory">
+      <div class="snap-start shrink-0 w-64 bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex flex-col gap-2">
+        <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg">
+          <i class="bx bx-book-bookmark"></i>
+        </div>
+        <div>
+          <h4 class="font-display font-bold text-xs text-slate-900">Jahit Benang 180°</h4>
+          <p class="text-[11px] text-slate-500 leading-relaxed mt-0.5">Buku dapat dibuka rebah rata di atas meja tanpa punggung patah.</p>
+        </div>
+      </div>
+
+      <div class="snap-start shrink-0 w-64 bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex flex-col gap-2">
+        <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-lg">
+          <i class="bx bx-package"></i>
+        </div>
+        <div>
+          <h4 class="font-display font-bold text-xs text-slate-900">Ekstra Karton Sudut</h4>
+          <p class="text-[11px] text-slate-500 leading-relaxed mt-0.5">Proteksi siku ganda menjamin sudut buku tiba mulus anti-penyok.</p>
+        </div>
+      </div>
+
+      <div class="snap-start shrink-0 w-64 bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex flex-col gap-2">
+        <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg">
+          <i class="bx bx-shield-quarter"></i>
+        </div>
+        <div>
+          <h4 class="font-display font-bold text-xs text-slate-900">Garansi Ganti Baru</h4>
+          <p class="text-[11px] text-slate-500 leading-relaxed mt-0.5">Jaminan 100% kirim ulang jika ada cacat cetak atau kerusakan pengiriman.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. MARDIKA KOPI ROASTERY (Horizontal Snap List) -->
+  <section class="flex flex-col gap-2.5">
+    <div class="flex items-center justify-between px-1">
+      <div>
+        <h2 class="font-display font-extrabold text-base text-slate-900">Mardika Kopi Roastery</h2>
+        <p class="text-[11px] text-slate-500">Teman membaca & diskusi kritis Anda.</p>
+      </div>
+      <a routerLink="/mardika-kopi" class="text-xs font-bold text-primary-600 hover:underline">
+        Lihat Semua →
+      </a>
+    </div>
+
+    <div class="flex gap-3 overflow-x-auto no-scrollbar py-1 snap-x snap-mandatory">
+      @for (kopi of mardikaKopiCards(); track kopi.title) {
+      <div class="snap-start shrink-0 w-52 bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs flex flex-col justify-between">
+        <div class="relative w-full aspect-4/3 bg-slate-100 overflow-hidden">
+          <img [src]="kopi.image" [alt]="kopi.title" class="w-full h-full object-cover" />
+          <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-red-600 text-white text-[9px] font-bold shadow-xs">
+            {{ kopi.tag }}
+          </span>
+        </div>
+        <div class="p-3 flex flex-col gap-1.5 flex-1 justify-between">
+          <div>
+            <h4 class="font-display font-bold text-xs text-slate-900 line-clamp-1">{{ kopi.title }}</h4>
+            <p class="text-[10px] text-slate-400 line-clamp-1">{{ kopi.subtag }}</p>
+            <span class="font-display font-extrabold text-xs text-primary-600 mt-1 block">{{ kopi.price }}</span>
+          </div>
+          <a [routerLink]="kopi.link"
+            class="w-full py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] font-bold text-center block mt-1 transition-colors">
+            Pesan Kopi
+          </a>
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+
+  <!-- 8. TESTIMONI PEMBACA (Compact App Testimonial Card) -->
+  <section class="flex flex-col gap-2">
+    <div class="flex items-center justify-between px-1">
+      <h2 class="font-display font-extrabold text-base text-slate-900">Kata Pembaca</h2>
+      <div class="flex items-center gap-1.5">
+        <button type="button" (click)="prevTestimonial()" aria-label="Sebelumnya"
+          class="w-7 h-7 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 active:scale-95 transition-transform shadow-2xs">
+          <i class="bx bx-chevron-left text-base"></i>
+        </button>
+        <button type="button" (click)="nextTestimonial()" aria-label="Selanjutnya"
+          class="w-7 h-7 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 active:scale-95 transition-transform shadow-2xs">
+          <i class="bx bx-chevron-right text-base"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex flex-col gap-3">
+      <div class="flex items-center gap-3">
+        <img [src]="currentTestimonial().photoUrl" [alt]="currentTestimonial().name"
+          class="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-2xs" />
+        <div class="flex flex-col">
+          <h4 class="font-display font-bold text-xs text-slate-900">{{ currentTestimonial().name }}</h4>
+          <span class="text-[10px] text-slate-400">{{ currentTestimonial().role }} • {{ currentTestimonial().company }}</span>
+        </div>
+      </div>
+      <p class="text-xs text-slate-600 italic leading-relaxed font-serif">
+        &ldquo;{{ currentTestimonial().quote }}&rdquo;
+      </p>
+    </div>
+  </section>
+
+  <!-- 9. MEDIA RECOGNITION (Minimal App Strip) -->
+  <section class="py-2 flex flex-col items-center gap-2 border-t border-slate-200/60 pt-4 text-center">
+    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Diapresiasi Oleh Komunitas Literasi</span>
+    <div class="flex flex-wrap items-center justify-center gap-4 opacity-70">
+      <span class="text-xs font-bold text-slate-600">Malaka Project</span>
+      <span class="text-xs text-slate-300">•</span>
+      <span class="text-xs font-bold text-slate-600">Bijak Memilih</span>
+      <span class="text-xs text-slate-300">•</span>
+      <span class="text-xs font-bold text-slate-600">Total Politik</span>
+      <span class="text-xs text-slate-300">•</span>
+      <span class="text-xs font-bold text-slate-600">Narasi</span>
+    </div>
+  </section>
+
+</div>
+}

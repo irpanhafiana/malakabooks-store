@@ -11,10 +11,9 @@
   <div class="h-dvh w-full bg-slate-50 flex justify-center overflow-hidden inner-root"
     style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
 
-    <!-- Mobile App Frame Container (Constrained width, clamp scaling, with simulator borders) -->
+    <!-- Mobile & Tablet App Frame Container -->
     <div
-      class="w-full max-w-[480px] bg-slate-50 relative flex flex-col md:border-x md:border-slate-200/60 md:shadow-2xl md:shadow-[0_0_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden"
-      style="height: calc(100% / clamp(0.5, 100vw / 480, 1)); transform: scale(clamp(0.5, 100vw / 480, 1)); transform-origin: center top;">
+      class="w-full md:max-w-2xl bg-slate-50 relative flex flex-col md:border-x md:border-slate-200/60 md:shadow-xl overflow-hidden h-full mobile-app-shell">
 
       <!-- Header with Back Button -->
       @if (!hideHeader()) {

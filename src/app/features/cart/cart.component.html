@@ -1,37 +1,37 @@
-<div class="relative w-full flex flex-col lg:flex-row lg:gap-8 lg:p-4 items-center justify-center">
+<div class="relative w-full h-full flex flex-col lg:flex-row lg:items-start lg:justify-center lg:gap-8 lg:p-4">
 
   @if (cartStore.itemsCount() === 0) {
-  <div class="px-4 py-4">
+  <div class="grow flex flex-col items-center justify-center px-4 py-12">
     <app-empty-state icon="shopping-cart" title="Keranjang Belanja Kosong"
-      description="Sepertinya Anda belum menambahkan produk apapun ke keranjang. Jelajahi koleksi kopi kami untuk menemukan bacaan menarik berikutnya!"
+      description="Sepertinya Anda belum menambahkan produk apapun ke keranjang. Jelajahi katalog buku atau kopi kami!"
       actionText="Mulai Belanja" routerLink="/product"></app-empty-state>
   </div>
   } @else {
   <!-- Scrollable Items Area -->
-  <div class="grow overflow-y-auto lg:overflow-visible lg:flex-2 px-4 lg:px-0 pb-4 pt-2 no-scrollbar">
-    <div class="flex flex-col gap-1.5 lg:gap-4">
+  <div class="flex-1 overflow-y-auto lg:overflow-visible lg:flex-2 px-4 lg:px-0 pb-4 pt-2 no-scrollbar">
+    <div class="flex flex-col gap-2.5 lg:gap-4">
       @for (item of cartStore.items(); track item.product.id) {
       <div
-        class="card-product flex-row! bg-gray-50 border border-slate-100/80 shadow-slate-100/50 hover:shadow-md hover:border-slate-200/80 group flex">
-        <!-- Thumbnail Image (matching product-list aspect & styling) -->
-        <div class="aspect-square w-32.5 shrink-0 bg-slate-50 overflow-hidden relative cursor-pointer"
+        class="card-product flex-row! bg-white border border-slate-200/70 rounded-2xl shadow-xs hover:shadow-md hover:border-slate-300 transition-all group flex overflow-hidden">
+        <!-- Thumbnail Image -->
+        <div class="aspect-square w-28 sm:w-32 shrink-0 bg-slate-50 overflow-hidden relative cursor-pointer"
           (click)="productStore.setSelectedProductId(item.product.id)" (keydown.enter)="productStore.setSelectedProductId(item.product.id)" tabindex="0" role="button" aria-label="Lihat detail produk">
           <img [src]="item.product.coverImage" [alt]="item.product.title" loading="lazy" width="130" height="130"
-            class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105" />
+            class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform" />
           <div class="badge-uom">{{ item.uomCode || item.product.categoryName }}</div>
         </div>
 
         <!-- Info Section -->
-        <div class="flex flex-col flex-1 min-w-0 justify-between px-3 py-3">
+        <div class="flex flex-col flex-1 min-w-0 justify-between p-3">
           <!-- Top: Category, Title, Price -->
           <div>
             <div class="flex justify-between items-start gap-2">
               <div class="flex-1 min-w-0">
-                <span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide block mb-1">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wide block mb-0.5">
                   {{ item.product.categoryName }}@if (item.uomCode) { • Satuan: {{ item.uomCode }} }
                 </span>
                 <h3
-                  class="text-[13px] font-semibold text-slate-800 line-clamp-2 mb-1.5 group-hover:text-primary-600 leading-tight cursor-pointer"
+                  class="text-xs sm:text-sm font-bold text-slate-900 line-clamp-2 mb-1 group-hover:text-primary-600 leading-tight cursor-pointer"
                   (click)="productStore.setSelectedProductId(item.product.id)" (keydown.enter)="productStore.setSelectedProductId(item.product.id)" tabindex="0" role="button">
                   {{ item.product.title }}</h3>
               </div>
@@ -40,12 +40,12 @@
             <!-- Price -->
             <div class="flex flex-col mt-0.5">
               <app-price [value]="(item.price ?? item.product.price) * item.quantity" size="md"
-                class="text-primary-600 font-bold"></app-price>
+                class="text-primary-600 font-extrabold"></app-price>
             </div>
           </div>
 
-          <!-- Bottom: Quantity & Delete (matches product pricing row style) -->
-          <div class="flex items-center justify-between gap-2">
+          <!-- Bottom: Quantity & Delete -->
+          <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-slate-100">
             <app-quantity-selector [quantity]="item.quantity"
               (quantityChange)="cartStore.updateQuantity(item.product.id, $event)" [stock]="item.product.stock"
               [disabled]="cartStore.loading()" variant="sm"></app-quantity-selector>
@@ -62,19 +62,15 @@
     </div>
   </div>
 
-  <!-- Checkout Summary Card (Natural fixed bottom via flex) -->
+  <!-- Checkout Summary Card (Mobile Sticky App Bottom Bar / Desktop Sticky Card) -->
   <div
-    class="shrink-0 lg:flex-1 lg:self-start lg:sticky lg:top-4 bg-white border-t lg:border border-slate-100 p-4 rounded-t-3xl lg:rounded-lg flex flex-col gap-4 z-40">
-    <div class="flex flex-col gap-3.5 text-xs text-slate-500">
-      <div class="flex justify-between items-center">
-        <h3 class="font-display font-extrabold text-slate-800 text-xs uppercase tracking-wider">Subtotal</h3>
-        <app-price [value]="cartStore.subtotal()" [bold]="true" size="md"></app-price>
-      </div>
-
+    class="shrink-0 w-full lg:w-80 lg:self-start lg:sticky lg:top-4 bg-white border-t lg:border border-slate-200/80 p-4 lg:p-5 lg:rounded-2xl shadow-lg lg:shadow-xs flex flex-row lg:flex-col justify-between items-center lg:items-stretch gap-4 z-30">
+    <div class="flex flex-col">
+      <span class="text-[10px] lg:text-xs font-semibold uppercase tracking-wider text-slate-400">Subtotal</span>
+      <app-price [value]="cartStore.subtotal()" [bold]="true" size="lg" class="text-primary-600 font-extrabold"></app-price>
     </div>
 
-
-    <app-button routerLink="/checkout" variant="primary" size="lg" [fullWidth]="true" class="">
+    <app-button routerLink="/checkout" variant="primary" size="lg" [fullWidth]="false" class="grow lg:grow-0 lg:w-full">
       Lanjut ke Pembayaran
     </app-button>
   </div>
