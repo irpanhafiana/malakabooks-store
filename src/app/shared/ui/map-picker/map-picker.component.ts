@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, Input, Output, EventEmitter, PLATFORM_ID, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, Input, Output, EventEmitter, PLATFORM_ID, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { LoggerService } from '../../../core/services/logger.service';
 
@@ -36,7 +36,7 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private marker: any;
 
-  isLocating = false;
+  readonly isLocating = signal<boolean>(false);
   private readonly logger = inject(LoggerService);
   private readonly platformId = inject(PLATFORM_ID);
 
@@ -108,17 +108,17 @@ export class MapPickerComponent implements AfterViewInit, OnDestroy {
 
   useCurrentLocation() {
     if (isPlatformBrowser(this.platformId) && navigator.geolocation) {
-      this.isLocating = true;
+      this.isLocating.set(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          this.isLocating = false;
+          this.isLocating.set(false);
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           this.updateMarker(lat, lng);
           this.emitLocation(lat, lng);
         },
         (error) => {
-          this.isLocating = false;
+          this.isLocating.set(false);
           this.logger.error('Error getting location', error);
           alert('Tidak dapat mengakses lokasi saat ini. Pastikan izin lokasi diberikan pada browser Anda.');
         },

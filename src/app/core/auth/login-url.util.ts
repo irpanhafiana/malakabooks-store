@@ -13,7 +13,7 @@ import { environment } from '../../../environments/environment';
  */
 export function getBffAuthUrl(
   action: 'login' | 'logout',
-  targetPath: string = '/',
+  targetPath = '/',
   additionalParams: Record<string, string> = {}
 ): string {
   // Format URL tujuan akhir
@@ -52,14 +52,14 @@ export function getBffAuthUrl(
 }
 
 export function getBffLoginUrl(
-  targetPath: string = '/',
+  targetPath = '/',
   additionalParams: Record<string, string> = {}
 ): string {
   return getBffAuthUrl('login', targetPath, { app: 'mardika', ...additionalParams });
 }
 
 export function getBffLogoutUrl(
-  targetPath: string = '/',
+  targetPath = '/',
   additionalParams: Record<string, string> = {}
 ): string {
   return getBffAuthUrl('logout', targetPath, additionalParams);
@@ -76,7 +76,7 @@ export function getBffLogoutUrl(
  */
 export function resolveBffLogoutUrl(
   claimLogoutUrl?: string | null,
-  targetPath: string = '/'
+  targetPath = '/'
 ): string {
   if (!claimLogoutUrl) {
     return getBffLogoutUrl(targetPath);

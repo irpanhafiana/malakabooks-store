@@ -103,7 +103,7 @@ export class ProductApiService {
       const allItems = envelope?.data || [];
       const itemsToProcess = allItems.filter(i => (isAdminSession() || i.isActive !== false));
 
-      let booksMap = new Map<string, BookDto>();
+      const booksMap = new Map<string, BookDto>();
       try {
         const booksEndpoint = isAdminSession() ? `${this.BASE_URL}/admin/Books` : `${this.BASE_URL}/public/Books`;
         const booksEnv = await firstValueFrom(this.http.get<ApiResponse<BookDto[]>>(booksEndpoint));

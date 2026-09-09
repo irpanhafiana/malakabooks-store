@@ -1,16 +1,4 @@
 /* Self-hosted fonts (bundled, no external CDN round-trip) */
-@import '@fontsource/inter/300.css';
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/inter/700.css';
-
-@import '@fontsource/plus-jakarta-sans/400.css';
-@import '@fontsource/plus-jakarta-sans/500.css';
-@import '@fontsource/plus-jakarta-sans/600.css';
-@import '@fontsource/plus-jakarta-sans/700.css';
-@import '@fontsource/plus-jakarta-sans/800.css';
-
 @import '@fontsource/poppins/300.css';
 @import '@fontsource/poppins/400.css';
 @import '@fontsource/poppins/500.css';
@@ -26,8 +14,8 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-sans: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-display: 'Fraunces', serif;
 
   /* Custom Color Tokens - Dark Red Primary */
   --color-primary-50: #fdf2f2;

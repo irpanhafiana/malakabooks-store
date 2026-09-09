@@ -75,9 +75,7 @@ export class AuthStore {
   private async loadSession(): Promise<boolean> {
     try {
       const claims = await this.authApi.getUser();
-      console.log('[BFF Auth] Klaim mentah /bff/user:', claims);
       const user = mapClaimsToUser(claims);
-      console.log('[BFF Auth] Data User terpetakan:', user);
 
       if (!user) {
         this.clearSessionState();

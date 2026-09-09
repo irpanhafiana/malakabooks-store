@@ -58,4 +58,20 @@ describe('CartStore', () => {
     expect(store.items().length).toBe(0);
     expect(mockToast.error).toHaveBeenCalledWith('Maaf, produk ini kehabisan stok!');
   });
+
+  it('should sync with backend when user is authenticated via session', async () => {
+    const { setSessionUser, clearSessionUser } = await import('../core/auth/session.util');
+    setSessionUser({ id: 'user-99', name: 'Test User', email: 'test@mail.com', role: 'customer', addresses: [], joinedAt: '2026-01-01' });
+    mockCartApi.addCartItem.mockResolvedValue(true);
+
+    const product = {
+      id: 'prod-1', title: 'Test Book', price: 50000, stock: 5,
+      authors: [], categoryId: 'C', coverImage: 'img', description: 'desc', pages: 100,
+      isbn: '123', publisher: 'P', publishedYear: 2023, weight: 1
+    } as unknown as Product;
+
+    await store.addItem(product, 1);
+    expect(mockCartApi.addCartItem).toHaveBeenCalledWith('user-99', 'prod-1', 1, undefined);
+    clearSessionUser();
+  });
 });

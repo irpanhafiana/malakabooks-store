@@ -22,7 +22,6 @@ export class App implements OnInit {
       const user = this.authStore.currentUser();
       const currentUrl = this.router.url;
       if (user && this.authStore.isAdmin() && !currentUrl.includes('/admin')) {
-        console.log('[App Root] Admin terdeteksi di halaman non-admin, mengalihkan ke halaman admin');
         this.router.navigate(['/admin'], { replaceUrl: true });
       }
     });

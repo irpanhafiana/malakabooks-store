@@ -2,7 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { CartItem, Product } from '../core/models';
 import { CartApiService } from '../core/services/cart-api.service';
 import { AlertService } from '../core/services/alert.service';
-import { SESSION_CART_KEY } from '../core/auth/session.util';
+import { SESSION_CART_KEY, getSessionUserId } from '../core/auth/session.util';
 
 interface CartState {
   items: CartItem[];
@@ -60,9 +60,7 @@ export class CartStore {
   }
 
   private getCurrentUserId(): string | null {
-    if (typeof localStorage === 'undefined') return null;
-    const saved = localStorage.getItem('malakabooks_session_user');
-    return saved ? JSON.parse(saved)?.id ?? null : null;
+    return getSessionUserId();
   }
 
   private loadCart() {

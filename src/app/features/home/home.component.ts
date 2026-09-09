@@ -63,6 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   currentSlide = signal<number>(0);
   currentAuthorSlide = signal<number>(0);
   currentKopiSlide = signal<number>(0);
+  currentTestimonialSlide = signal<number>(0);
   isAuthorSheetOpen = signal(false);
   selectedAuthor = signal<KeyAuthor | null>(null);
   selectedAuthorName = signal<string>('');
@@ -368,11 +369,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private authorEmbla?: EmblaCarouselType;
   private bestSellerEmbla?: EmblaCarouselType;
   private kopiEmbla?: EmblaCarouselType;
+  private testimonialEmbla?: EmblaCarouselType;
 
   @ViewChild('carouselViewport') carouselViewport?: ElementRef<HTMLElement>;
   @ViewChild('authorCarouselViewport') authorCarouselViewport?: ElementRef<HTMLElement>;
   @ViewChild('bestSellerCarouselViewport') bestSellerCarouselViewport?: ElementRef<HTMLElement>;
   @ViewChild('kopiCarouselViewport') kopiCarouselViewport?: ElementRef<HTMLElement>;
+  @ViewChild('testimonialCarouselViewport') testimonialCarouselViewport?: ElementRef<HTMLElement>;
 
   constructor() {
     effect(() => {
@@ -410,6 +413,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 50);
       }
     });
+
+    effect(() => {
+      if (!this.screen.isDesktop()) {
+        setTimeout(() => {
+          if (!this.testimonialEmbla) {
+            this.initTestimonialCarousel();
+          } else {
+            this.testimonialEmbla.reInit();
+          }
+        }, 60);
+      }
+    });
   }
 
   readonly heroProducts = computed(() => {
@@ -443,6 +458,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.initBestSellerCarousel();
     this.initAuthorCarousel();
     this.initKopiCarousel();
+    this.initTestimonialCarousel();
 
     setTimeout(() => {
       this.isHeroFanned.set(true);
@@ -497,11 +513,25 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     onKopiSelect();
   }
 
+  private initTestimonialCarousel() {
+    if (!this.testimonialCarouselViewport?.nativeElement || this.testimonialEmbla) return;
+    this.testimonialEmbla = EmblaCarousel(
+      this.testimonialCarouselViewport.nativeElement,
+      { loop: true, align: 'start', duration: 25 },
+      [Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })]
+    );
+
+    const onTestiSelect = () => this.currentTestimonialSlide.set(this.testimonialEmbla!.selectedScrollSnap());
+    this.testimonialEmbla.on('select', onTestiSelect);
+    onTestiSelect();
+  }
+
   ngOnDestroy() {
     this.embla?.destroy();
     this.authorEmbla?.destroy();
     this.bestSellerEmbla?.destroy();
     this.kopiEmbla?.destroy();
+    this.testimonialEmbla?.destroy();
     if (this.testimonialInterval) {
       clearInterval(this.testimonialInterval);
     }
@@ -605,6 +635,35 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   scrollKopiToSlide(index: number) {
     this.kopiEmbla?.scrollTo(index);
+  }
+
+  testimonialPrev() {
+    if (this.testimonialEmbla) {
+      if (this.testimonialEmbla.canScrollPrev()) {
+        this.testimonialEmbla.scrollPrev();
+      } else {
+        const snaps = this.testimonialEmbla.scrollSnapList();
+        this.testimonialEmbla.scrollTo(snaps.length - 1);
+      }
+    } else {
+      this.prevTestimonial();
+    }
+  }
+
+  testimonialNext() {
+    if (this.testimonialEmbla) {
+      if (this.testimonialEmbla.canScrollNext()) {
+        this.testimonialEmbla.scrollNext();
+      } else {
+        this.testimonialEmbla.scrollTo(0);
+      }
+    } else {
+      this.nextTestimonial();
+    }
+  }
+
+  scrollTestimonialToSlide(index: number) {
+    this.testimonialEmbla?.scrollTo(index);
   }
 
   openQtyModal(product: Product) {

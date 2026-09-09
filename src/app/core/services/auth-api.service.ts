@@ -45,10 +45,9 @@ export class AuthApiService {
           }
         })
       );
-      console.log('[BFF Profile] Response /bff/profile:', rawRes);
+      this.logger.log('BFF Profile', 'Response /bff/profile:', rawRes);
       return rawRes;
     } catch (e) {
-      console.error('[BFF Profile] Error memanggil /bff/profile:', e);
       this.logAuthFailure('AuthApiService.getProfile', profileUrl, e);
       return null;
     }

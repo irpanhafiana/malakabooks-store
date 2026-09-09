@@ -2,6 +2,7 @@ import { Component, inject, signal, computed, OnInit, DestroyRef, ChangeDetectio
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { switchMap, from, of } from 'rxjs';
 import { DecimalPipe } from '@angular/common';
 import { AuthStore } from '../../store/auth.store';
 import { CartStore } from '../../store/cart.store';
@@ -192,44 +193,54 @@ export class CheckoutComponent implements OnInit {
     ]);
 
     // Listen to province changes
-    this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (province) => {
-      if (province) {
-        this.cityControl.disable({ emitEvent: false });
-        try {
-          await this.shippingService.loadCities(province);
-        } finally {
-          this.cityControl.enable({ emitEvent: false });
+    this.provinceControl.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      switchMap((province) => {
+        if (!province) {
+          this.shippingService.clearCities();
+          this.cityControl.setValue('', { emitEvent: false });
+          return of(null);
         }
-
+        this.cityControl.disable({ emitEvent: false });
+        return from(
+          this.shippingService.loadCities(province).finally(() => {
+            this.cityControl.enable({ emitEvent: false });
+          })
+        );
+      })
+    ).subscribe((res) => {
+      if (res !== null) {
         const currentCityVal = this.cityControl.value;
         const exists = this.cities().some(c => c === currentCityVal);
         if (!exists) {
           this.cityControl.setValue('', { emitEvent: false });
         }
-      } else {
-        this.shippingService.clearCities();
-        this.cityControl.setValue('', { emitEvent: false });
       }
     });
 
     // Listen to city changes
-    this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (city) => {
-      if (city) {
-        this.districtControl.disable({ emitEvent: false });
-        try {
-          await this.shippingService.loadDistricts(this.provinceControl.value || '', city);
-        } finally {
-          this.districtControl.enable({ emitEvent: false });
+    this.cityControl.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      switchMap((city) => {
+        if (!city) {
+          this.shippingService.clearDistricts();
+          this.districtControl.setValue('', { emitEvent: false });
+          return of(null);
         }
-
+        this.districtControl.disable({ emitEvent: false });
+        return from(
+          this.shippingService.loadDistricts(this.provinceControl.value || '', city).finally(() => {
+            this.districtControl.enable({ emitEvent: false });
+          })
+        );
+      })
+    ).subscribe((res) => {
+      if (res !== null) {
         const currentDstVal = this.districtControl.value;
         const exists = this.districts().some(d => d.region_code === currentDstVal);
         if (!exists) {
           this.districtControl.setValue('', { emitEvent: false });
         }
-      } else {
-        this.shippingService.clearDistricts();
-        this.districtControl.setValue('', { emitEvent: false });
       }
     });
 

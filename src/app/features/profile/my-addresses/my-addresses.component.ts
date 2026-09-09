@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, computed, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { switchMap, from, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
 import { Address, ProvinceLocation, CityLocation, DistrictLocation } from '../../../core/models';
@@ -134,43 +135,53 @@ export class MyAddressesComponent implements OnInit {
 
       await this.loadProvinces();
 
-      this.provinceControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (province) => {
-        try {
-          if (province) {
-            const cts = await this.addressApi.getCities(province);
-            this.cities.set(Array.isArray(cts) ? cts : []);
-
-            const currentCityVal = this.cityControl.value;
-            const exists = Array.isArray(cts) && cts.some(c => (c.city_name || '') === currentCityVal);
-            if (!exists) {
-              this.cityControl.setValue('');
-            }
-          } else {
+      this.provinceControl.valueChanges.pipe(
+        takeUntilDestroyed(this.destroyRef),
+        switchMap((province) => {
+          if (!province) {
             this.cities.set([]);
             this.cityControl.setValue('');
+            return of(null);
           }
-        } catch {
-          this.cities.set([]);
+          return from(
+            this.addressApi.getCities(province).catch(() => [])
+          );
+        })
+      ).subscribe((cts) => {
+        if (cts !== null) {
+          const list = Array.isArray(cts) ? cts : [];
+          this.cities.set(list);
+
+          const currentCityVal = this.cityControl.value;
+          const exists = list.some(c => (c.city_name || '') === currentCityVal);
+          if (!exists) {
+            this.cityControl.setValue('');
+          }
         }
       });
 
-      this.cityControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (city) => {
-        try {
-          if (city) {
-            const dsts = await this.addressApi.getDistricts(this.provinceControl.value || '', city);
-            this.districts.set(Array.isArray(dsts) ? dsts : []);
-
-            const currentDstVal = this.districtControl.value;
-            const exists = Array.isArray(dsts) && dsts.some(d => (d.region_code || d.address_code || d.district_id) === currentDstVal);
-            if (!exists) {
-              this.districtControl.setValue('');
-            }
-          } else {
+      this.cityControl.valueChanges.pipe(
+        takeUntilDestroyed(this.destroyRef),
+        switchMap((city) => {
+          if (!city) {
             this.districts.set([]);
             this.districtControl.setValue('');
+            return of(null);
           }
-        } catch {
-          this.districts.set([]);
+          return from(
+            this.addressApi.getDistricts(this.provinceControl.value || '', city).catch(() => [])
+          );
+        })
+      ).subscribe((dsts) => {
+        if (dsts !== null) {
+          const list = Array.isArray(dsts) ? dsts : [];
+          this.districts.set(list);
+
+          const currentDstVal = this.districtControl.value;
+          const exists = list.some(d => (d.region_code || d.address_code || d.district_id) === currentDstVal);
+          if (!exists) {
+            this.districtControl.setValue('');
+          }
         }
       });
 
