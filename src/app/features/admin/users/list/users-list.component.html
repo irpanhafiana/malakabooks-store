@@ -13,7 +13,7 @@
       </app-admin-button>
 
       <span
-        class="text-xs text-slate-400 font-semibold bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 shrink-0">Total
+        class="text-xs text-slate-400 font-semibold bg-slate-100 px-3 py-2 rounded-xl border border-slate-200 shrink-0">Total
         Accounts: {{ userStore.users().length }}</span>
     </div>
   </div>
@@ -35,7 +35,7 @@
 
     <ng-container table-rows>
       @for (user of pagination.paged(); track user.id) {
-      <tr class="hover:bg-slate-50/50 transition-colors text-xs">
+      <tr class="hover:bg-slate-100/50 transition-colors text-xs">
         <td class="px-5 py-4">
           <div class="flex items-center gap-3">
             <div
@@ -69,7 +69,7 @@
       }
     </ng-container>
 
-    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-100/50 text-xs text-slate-500 font-medium">
       Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
     </div>
   </app-table>

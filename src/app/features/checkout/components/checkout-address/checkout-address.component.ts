@@ -34,7 +34,7 @@ import { MapPickerComponent } from '../../../../shared/ui/map-picker/map-picker.
                 (keydown.enter)="selectAddress.emit(addr.id)"
                 tabindex="0"
                 role="button"
-                class="flex items-start gap-3.5 p-4 border rounded-lg cursor-pointer hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                class="flex items-start gap-3.5 p-4 border rounded-lg cursor-pointer hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 [class.border-primary-500]="selectedAddressId() === addr.id"
                 [class.border-slate-200]="selectedAddressId() !== addr.id">
                 <app-radio-indicator [checked]="selectedAddressId() === addr.id" class="mt-1"></app-radio-indicator>

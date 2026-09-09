@@ -39,8 +39,8 @@
         @for (opt of filteredOptions(); track opt.value) {
         <button type="button"
                 (click)="selectOption(opt)"
-                class="w-full text-left px-4 py-2 hover:bg-slate-50 transition-colors flex items-center justify-between cursor-pointer"
-                [class.bg-slate-50]="controlValue() === opt.value"
+                class="w-full text-left px-4 py-2 hover:bg-slate-100 transition-colors flex items-center justify-between cursor-pointer"
+                [class.bg-slate-100]="controlValue() === opt.value"
                 [class.text-primary-600]="controlValue() === opt.value"
                 [class.font-semibold]="controlValue() === opt.value">
           <span>{{ opt.label }}</span>

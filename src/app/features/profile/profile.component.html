@@ -32,35 +32,35 @@
     <!-- Navigation Links -->
     <nav class="flex flex-col gap-1.5">
       <button type="button" (click)="selectTab('info')"
-        [class]="activeTab() === 'info' ? 'bg-primary-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'"
+        [class]="activeTab() === 'info' ? 'bg-primary-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'"
         class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs transition-colors cursor-pointer">
         <i class="bx bxs-user-detail text-lg"></i>
         <span>Informasi Akun</span>
       </button>
 
       <button type="button" (click)="selectTab('addresses')"
-        [class]="activeTab() === 'addresses' ? 'bg-primary-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'"
+        [class]="activeTab() === 'addresses' ? 'bg-primary-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'"
         class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs transition-colors cursor-pointer">
         <i class="bx bxs-map text-lg"></i>
         <span>Alamat Saya</span>
       </button>
 
       <button type="button" (click)="selectTab('orders')"
-        [class]="activeTab() === 'orders' ? 'bg-primary-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'"
+        [class]="activeTab() === 'orders' ? 'bg-primary-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'"
         class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs transition-colors cursor-pointer">
         <i class="bx bxs-package text-lg"></i>
         <span>Lacak & Riwayat Pesanan</span>
       </button>
 
       <button type="button" (click)="selectTab('complaints')"
-        [class]="activeTab() === 'complaints' ? 'bg-primary-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'"
+        [class]="activeTab() === 'complaints' ? 'bg-primary-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'"
         class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs transition-colors cursor-pointer">
         <i class="bx bxs-message-square-error text-lg"></i>
         <span>Komplain Saya</span>
       </button>
 
       <button type="button" (click)="selectTab('password')"
-        [class]="activeTab() === 'password' ? 'bg-primary-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'"
+        [class]="activeTab() === 'password' ? 'bg-primary-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'"
         class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs transition-colors cursor-pointer">
         <i class="bx bxs-key text-lg"></i>
         <span>Ganti Kata Sandi</span>
@@ -93,26 +93,26 @@
 
       <!-- User Quick Stats Cards -->
       <div class="grid grid-cols-4 gap-4">
-        <div class="p-4 rounded-lg bg-slate-50/50 border border-slate-100 flex flex-col gap-1">
+        <div class="p-4 rounded-lg bg-slate-100/50 border border-slate-100 flex flex-col gap-1">
           <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Menunggu Pembayaran</span>
           <span class="text-2xl font-extrabold text-amber-600 font-display">{{ pendingCount() }}</span>
         </div>
-        <div class="p-4 rounded-lg bg-slate-50/50 border border-slate-100 flex flex-col gap-1">
+        <div class="p-4 rounded-lg bg-slate-100/50 border border-slate-100 flex flex-col gap-1">
           <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sedang Diproses</span>
           <span class="text-2xl font-extrabold text-blue-600 font-display">{{ processingCount() }}</span>
         </div>
-        <div class="p-4 rounded-lg bg-slate-50/50 border border-slate-100 flex flex-col gap-1">
+        <div class="p-4 rounded-lg bg-slate-100/50 border border-slate-100 flex flex-col gap-1">
           <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Dalam Pengiriman</span>
           <span class="text-2xl font-extrabold text-indigo-600 font-display">{{ shippedCount() }}</span>
         </div>
-        <div class="p-4 rounded-lg bg-slate-50/50 border border-slate-100 flex flex-col gap-1">
+        <div class="p-4 rounded-lg bg-slate-100/50 border border-slate-100 flex flex-col gap-1">
           <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Pesanan Selesai</span>
           <span class="text-2xl font-extrabold text-emerald-600 font-display">{{ completedCount() }}</span>
         </div>
       </div>
 
       <!-- Profile Info Details Grid -->
-      <div class="grid grid-cols-2 gap-6 bg-slate-50/50 p-4 rounded-lg border border-slate-100 mt-2">
+      <div class="grid grid-cols-2 gap-6 bg-slate-100/50 p-4 rounded-lg border border-slate-100 mt-2">
         <div>
           <span class="text-xs text-slate-400 font-medium block mb-1">Nama Lengkap</span>
           <span class="text-sm font-bold text-slate-800">{{ authStore.currentUser()?.name || '-' }}</span>
@@ -301,7 +301,7 @@
 
       <app-input label="Nama Lengkap" placeholder="e.g. Hadi Jafri" [control]="nameControl"></app-input>
       <app-input label="Alamat Email" placeholder="e.g. customer@example.com" type="email" [control]="emailControl"
-        class="bg-slate-50 opacity-70 pointer-events-none"></app-input>
+        class="bg-slate-100 opacity-70 pointer-events-none"></app-input>
       <app-input label="Nomor Telepon" placeholder="e.g. +628123456789" [control]="phoneControl"></app-input>
     </div>
   </form>

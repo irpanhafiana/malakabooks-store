@@ -37,7 +37,7 @@
 
     <ng-container table-rows>
       @for (banner of pagination.paged(); track banner.id) {
-      <tr class="hover:bg-slate-50/50 transition-colors">
+      <tr class="hover:bg-slate-100/50 transition-colors">
         <td class="px-5 py-4">
           <img [src]="banner.imageUrl || banner.imageBase64" alt="{{ banner.title }}"
             class="w-24 h-12 object-cover rounded-md border border-slate-200">
@@ -48,7 +48,7 @@
         </td>
         <td class="px-5 py-4">
           <span class="px-2 py-1 text-[10px] font-bold rounded-md"
-            [ngClass]="banner.isActive ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-50 text-slate-500 border border-slate-200'">
+            [ngClass]="banner.isActive ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-500 border border-slate-200'">
             {{ banner.isActive ? 'Active' : 'Inactive' }}
           </span>
         </td>
@@ -75,7 +75,7 @@
       }
     </ng-container>
 
-    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-100/50 text-xs text-slate-500 font-medium">
       Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
     </div>
   </app-table>

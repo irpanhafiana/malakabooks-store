@@ -39,10 +39,10 @@
 
     <ng-container table-rows>
       @for (item of pagination.paged(); track item.id) {
-      <tr class="hover:bg-slate-50/50 transition-colors">
+      <tr class="hover:bg-slate-100/50 transition-colors">
         <td class="px-5 py-4 text-xs font-semibold text-slate-500">
           <code
-            class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-primary-600 font-mono">{{ item.sapCode }}</code>
+            class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-100 text-primary-600 font-mono">{{ item.sapCode }}</code>
         </td>
         <td class="px-5 py-4 font-bold text-slate-800 text-xs">
           {{ item.name }}
@@ -51,7 +51,7 @@
         <td class="px-5 py-4 text-xs text-slate-500">{{ uomMap().get(item.uomGroupId || '') || '-' }}</td>
         <td class="px-5 py-4 text-xs font-semibold text-slate-500">
           <code
-            class="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-slate-600 font-mono">{{ item.baseUomCode }}</code>
+            class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-100 text-slate-600 font-mono">{{ item.baseUomCode }}</code>
         </td>
         <td class="px-5 py-4 text-xs">
           @if (item.isActive) {
@@ -99,7 +99,7 @@
       }
     </ng-container>
 
-    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-100/50 text-xs text-slate-500 font-medium">
       Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
     </div>
   </app-table>

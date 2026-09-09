@@ -49,7 +49,7 @@
 
     <ng-container table-rows>
       @for (order of pagination.paged(); track order.id) {
-      <tr class="hover:bg-slate-50/30 text-xs">
+      <tr class="hover:bg-slate-100/30 text-xs">
         <td class="px-5 py-4 w-10 text-center">
           <input type="checkbox" [checked]="selectedOrderIds().includes(order.id)"
             (change)="toggleSelectOrder(order.id)"
@@ -96,7 +96,7 @@
       </tr>
       }
     </ng-container>
-    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-100/50 text-xs text-slate-500 font-medium">
       Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
     </div>
   </app-table>
@@ -225,7 +225,7 @@
     </div>
     } @else {
     <div
-      class="bg-slate-50 rounded-2xl p-4 text-center text-xs text-slate-500 py-6 border border-dashed border-slate-200">
+      class="bg-slate-100 rounded-2xl p-4 text-center text-xs text-slate-500 py-6 border border-dashed border-slate-200">
       <i class="bx bx-package text-slate-400 text-2xl mb-1.5 block"></i>
       Riwayat pengiriman belum tersedia.
     </div>
@@ -234,7 +234,7 @@
     } @else {
     <!-- Respons kurir tidak berbentuk objek terstruktur -->
     <div
-      class="bg-slate-50 rounded-2xl p-4 text-center text-xs text-slate-500 py-6 border border-dashed border-slate-200">
+      class="bg-slate-100 rounded-2xl p-4 text-center text-xs text-slate-500 py-6 border border-dashed border-slate-200">
       <i class="bx bx-info-circle text-slate-400 text-2xl mb-1.5 block"></i>
       Detail pengiriman tidak tersedia dalam format yang dapat ditampilkan.
     </div>

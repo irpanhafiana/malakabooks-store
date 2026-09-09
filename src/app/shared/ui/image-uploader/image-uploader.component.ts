@@ -21,7 +21,7 @@ import { LoggerService } from '../../../core/services/logger.service';
         role="button"
         (dragover)="$event.preventDefault()"
         (drop)="onDrop($event)"
-        class="relative flex flex-col items-center justify-center min-h-[140px] p-4 bg-slate-50 hover:bg-slate-100/80 border-2 border-dashed border-slate-200 hover:border-primary-400 rounded-2xl cursor-pointer transition-all group overflow-hidden"
+        class="relative flex flex-col items-center justify-center min-h-[140px] p-4 bg-slate-100 hover:bg-slate-100/80 border-2 border-dashed border-slate-200 hover:border-primary-400 rounded-2xl cursor-pointer transition-all group overflow-hidden"
       >
         <input
           #fileInput

@@ -1,6 +1,6 @@
 <div class="h-full overflow-y-auto px-4 lg:px-0 pb-28 pt-1 flex flex-col gap-6">
   <!-- Search Bar & Filter Button (Mobile Only Sticky Header) -->
-  <div class="lg:hidden sticky top-0 z-30 -mx-4 px-4 bg-slate-50 flex items-center gap-3 h-14 shrink-0 border-b border-slate-200/60">
+  <div class="lg:hidden sticky top-0 z-30 -mx-4 px-4 bg-slate-100 flex items-center gap-3 h-14 shrink-0 border-b border-slate-200/60">
     <button type="button" (click)="goBack()"
       class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0 shrink-0"
       aria-label="Kembali">
@@ -41,7 +41,7 @@
             (searchSubmit)="onSearchSubmit($event)"></app-search-bar>
         </div>
         <button type="button" (click)="openFilters()"
-          class="flex items-center gap-2 px-4 py-2.5 border border-slate-200 bg-white rounded-xl text-slate-700 hover:text-primary-600 hover:bg-slate-50 cursor-pointer active:scale-95 text-xs font-bold shadow-xs transition-all shrink-0"
+          class="flex items-center gap-2 px-4 py-2.5 border border-slate-200 bg-white rounded-xl text-slate-700 hover:text-primary-600 hover:bg-slate-100 cursor-pointer active:scale-95 text-xs font-bold shadow-xs transition-all shrink-0"
           aria-label="More Filters">
           <app-icon name="filter" size="16"></app-icon>
           <span>Urutkan & Filter</span>
@@ -52,14 +52,14 @@
     <!-- Category Pills Filter -->
     <div class="flex gap-2 overflow-x-auto no-scrollbar -mx-4 lg:mx-0 px-4 lg:px-0 py-1">
       <button type="button" (click)="onCategorySelect(null)"
-        [class]="productStore.selectedCategoryId() === null ? 'bg-slate-900 text-white font-bold border-slate-900' : 'bg-white text-slate-700 font-semibold border-slate-200 hover:bg-slate-50'"
+        [class]="productStore.selectedCategoryId() === null ? 'bg-slate-900 text-white font-bold border-slate-900' : 'bg-white text-slate-700 font-semibold border-slate-200 hover:bg-slate-100'"
         class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs border transition-colors whitespace-nowrap cursor-pointer shadow-xs active:scale-95">
         <i class="bx bx-grid-alt text-base"></i>
         <span>Semua Judul</span>
       </button>
       @for (cat of productStore.categories(); track cat.id) {
       <button type="button" (click)="onCategorySelect(cat.id)"
-        [class]="productStore.selectedCategoryId() === cat.id ? 'bg-primary-600 text-white font-bold border-primary-600' : 'bg-white text-slate-700 font-semibold border-slate-200 hover:bg-slate-50'"
+        [class]="productStore.selectedCategoryId() === cat.id ? 'bg-primary-600 text-white font-bold border-primary-600' : 'bg-white text-slate-700 font-semibold border-slate-200 hover:bg-slate-100'"
         class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs border transition-colors whitespace-nowrap cursor-pointer shadow-xs active:scale-95">
         <app-icon [name]="cat.icon || 'book'" size="16"></app-icon>
         <span>{{ cat.name }}</span>
@@ -183,7 +183,7 @@
         <!-- Featured -->
         <button type="button" (click)="onSortChange('featured'); closeFilters()"
           class="flex items-center justify-between w-full py-2.5 px-4 rounded-2xl transition-all duration-200 cursor-pointer active:scale-[0.98]"
-          [class]="productStore.sortBy() === 'featured' ? 'text-primary-700 bg-primary-50/50 font-bold' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-50'">
+          [class]="productStore.sortBy() === 'featured' ? 'text-primary-700 bg-primary-50/50 font-bold' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-100'">
           <div class="flex items-center gap-3">
             <div class="flex items-center justify-center w-8 h-8 rounded-full"
               [class]="productStore.sortBy() === 'featured' ? 'bg-primary-100 text-primary-600' : 'bg-slate-100 text-slate-500'">
@@ -199,7 +199,7 @@
         <!-- Price Low to High -->
         <button type="button" (click)="onSortChange('price-asc'); closeFilters()"
           class="flex items-center justify-between w-full py-2.5 px-4 rounded-2xl transition-all duration-200 cursor-pointer active:scale-[0.98]"
-          [class]="productStore.sortBy() === 'price-asc' ? 'text-primary-700 bg-primary-50/50 font-bold' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-50'">
+          [class]="productStore.sortBy() === 'price-asc' ? 'text-primary-700 bg-primary-50/50 font-bold' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-100'">
           <div class="flex items-center gap-3">
             <div class="flex items-center justify-center w-8 h-8 rounded-full"
               [class]="productStore.sortBy() === 'price-asc' ? 'bg-primary-100 text-primary-600' : 'bg-slate-100 text-slate-500'">
@@ -215,7 +215,7 @@
         <!-- Price High to Low -->
         <button type="button" (click)="onSortChange('price-desc'); closeFilters()"
           class="flex items-center justify-between w-full py-2.5 px-4 rounded-2xl transition-all duration-200 cursor-pointer active:scale-[0.98]"
-          [class]="productStore.sortBy() === 'price-desc' ? 'text-primary-700 bg-primary-50/50 font-bold' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-50'">
+          [class]="productStore.sortBy() === 'price-desc' ? 'text-primary-700 bg-primary-50/50 font-bold' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-100'">
           <div class="flex items-center gap-3">
             <div class="flex items-center justify-center w-8 h-8 rounded-full"
               [class]="productStore.sortBy() === 'price-desc' ? 'bg-primary-100 text-primary-600' : 'bg-slate-100 text-slate-500'">
@@ -231,7 +231,7 @@
         <!-- Top Rated -->
         <button type="button" (click)="onSortChange('rating'); closeFilters()"
           class="flex items-center justify-between w-full py-2.5 px-4 rounded-2xl transition-all duration-200 cursor-pointer active:scale-[0.98]"
-          [class]="productStore.sortBy() === 'rating' ? 'text-primary-700 bg-primary-50/50 font-bold' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-50'">
+          [class]="productStore.sortBy() === 'rating' ? 'text-primary-700 bg-primary-50/50 font-bold' : 'bg-white border-slate-200 text-slate-700 hover:border-primary-200 hover:bg-slate-100'">
           <div class="flex items-center gap-3">
             <div class="flex items-center justify-center w-8 h-8 rounded-full"
               [class]="productStore.sortBy() === 'rating' ? 'bg-primary-100 text-primary-600' : 'bg-slate-100 text-slate-500'">

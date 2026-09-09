@@ -28,7 +28,7 @@
         <span class="text-sm font-semibold text-slate-800">Cover Image</span>
         <p class="text-xs text-slate-500 mb-1">Gambar utama yang akan ditampilkan di halaman produk.</p>
         <div
-          class="relative border-2 border-dashed border-slate-300 rounded-xl hover:bg-slate-50 hover:border-brand-300 transition-colors flex flex-col items-center justify-center p-6 w-full cursor-pointer overflow-hidden aspect-[3/4]"
+          class="relative border-2 border-dashed border-slate-300 rounded-xl hover:bg-slate-100 hover:border-brand-300 transition-colors flex flex-col items-center justify-center p-6 w-full cursor-pointer overflow-hidden aspect-[3/4]"
           (click)="coverInput.click()" (keydown.enter)="coverInput.click()" tabindex="0" role="button">
           @if (coverImageControl.value) {
           <img [src]="coverImageControl.value" alt="Cover Image Preview" class="absolute inset-0 w-full h-full object-cover">
@@ -71,7 +71,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           @for (ctrl of additionalImagesControl.controls; track $index) {
           <div
-            class="relative border-2 border-dashed border-slate-300 rounded-xl hover:bg-slate-50 hover:border-brand-300 transition-colors flex flex-col items-center justify-center cursor-pointer overflow-hidden aspect-square group"
+            class="relative border-2 border-dashed border-slate-300 rounded-xl hover:bg-slate-100 hover:border-brand-300 transition-colors flex flex-col items-center justify-center cursor-pointer overflow-hidden aspect-square group"
             (click)="addInput.click()" (keydown.enter)="addInput.click()" tabindex="0" role="button">
             @if (ctrl.value) {
             <img [src]="ctrl.value" alt="Gambar Tambahan Preview" class="absolute inset-0 w-full h-full object-cover">
@@ -94,7 +94,7 @@
 
           @if (additionalImagesControl.controls.length === 0) {
           <div
-            class="col-span-full border-2 border-dashed border-slate-200 rounded-xl p-8 flex flex-col items-center justify-center text-slate-400 bg-slate-50/50">
+            class="col-span-full border-2 border-dashed border-slate-200 rounded-xl p-8 flex flex-col items-center justify-center text-slate-400 bg-slate-100/50">
             <app-icon name="images" size="32" class="mb-3 opacity-30"></app-icon>
             <p class="text-sm font-medium text-slate-500">Belum ada gambar tambahan</p>
           </div>

@@ -10,7 +10,7 @@
   --color-primary-50: #fff7f2;
   --color-accent-600: #B61919;
 
-  --bg-slate-50: #f8fafc;
+  --bg-slate-100: #f8fafc;
   --border-slate-100: #f1f5f9;
   --border-slate-200: #e2e8f0;
   --text-slate-400: #94a3b8;
@@ -30,7 +30,7 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-slate-50);
+  background-color: var(--bg-slate-100);
   color: var(--text-slate-800);
   min-height: 100vh;
   display: flex;
@@ -236,11 +236,11 @@ button {
   background-color: var(--color-primary-700);
 }
 
-.bg-slate-50 {
+.bg-slate-100 {
   background-color: #f8fafc;
 }
 
-.bg-slate-50:hover {
+.bg-slate-100:hover {
   background-color: #f1f5f9;
 }
 

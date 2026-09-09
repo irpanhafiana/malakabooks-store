@@ -10,7 +10,7 @@
     [attr.aria-label]="'Detail produk ' + prod.title"
     class="block grow cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-xl">
     <!-- Image Container -->
-    <div class="w-full bg-slate-50 overflow-hidden mb-3 relative flex items-center justify-center aspect-square rounded-xl">
+    <div class="w-full bg-slate-100 overflow-hidden mb-3 relative flex items-center justify-center aspect-square rounded-xl">
       @if (prod.coverImage && !imageError()) {
       <img [ngSrc]="prod.coverImage" [alt]="prod.title" (error)="onImageError()" fill class="w-full h-full object-contain" />
       } @else {

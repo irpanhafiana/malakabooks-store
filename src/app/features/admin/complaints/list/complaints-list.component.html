@@ -34,7 +34,7 @@
 
     <ng-container table-rows>
       @for (c of pagination.paged(); track c.id) {
-      <tr class="hover:bg-slate-50/30 text-xs">
+      <tr class="hover:bg-slate-100/30 text-xs">
         <td class="px-5 py-4 font-mono text-slate-500 text-[10px]">{{ c.userId }}</td>
         <td class="px-5 py-4 font-bold text-slate-800 max-w-45">
           <p class="truncate">{{ c.subject }}</p>
@@ -59,7 +59,7 @@
       </tr>
       }
     </ng-container>
-    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-100/50 text-xs text-slate-500 font-medium">
       Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
     </div>
   </app-table>

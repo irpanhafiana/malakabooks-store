@@ -14,7 +14,7 @@
       <div
         class="card-product flex-row! bg-white border border-slate-200/70 rounded-2xl shadow-xs hover:shadow-md hover:border-slate-300 transition-all group flex overflow-hidden">
         <!-- Thumbnail Image -->
-        <div class="aspect-square w-28 sm:w-32 shrink-0 bg-slate-50 overflow-hidden relative cursor-pointer"
+        <div class="aspect-square w-28 sm:w-32 shrink-0 bg-slate-100 overflow-hidden relative cursor-pointer"
           (click)="productStore.setSelectedProductId(item.product.id)" (keydown.enter)="productStore.setSelectedProductId(item.product.id)" tabindex="0" role="button" aria-label="Lihat detail produk">
           <img [src]="item.product.coverImage" [alt]="item.product.title" loading="lazy" width="130" height="130"
             class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform" />

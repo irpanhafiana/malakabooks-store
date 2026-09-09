@@ -24,7 +24,7 @@ export class AdminButtonComponent {
       primary: 'bg-linear-to-br from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white focus:ring-primary-500 border border-transparent shadow-sm hover:shadow-md',
       secondary: 'bg-slate-100 hover:bg-slate-200 text-slate-700 focus:ring-slate-300 border border-transparent',
       danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500 border border-transparent ',
-      outline: 'bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 focus:ring-slate-300 ',
+      outline: 'bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 focus:ring-slate-300 ',
       ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 focus:ring-slate-200 border border-transparent'
     };
 

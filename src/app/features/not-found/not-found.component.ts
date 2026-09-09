@@ -7,7 +7,7 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-[75vh] flex items-center justify-center px-4 py-16 bg-slate-50/50">
+    <div class="min-h-[75vh] flex items-center justify-center px-4 py-16 bg-slate-100/50">
       <div class="max-w-md w-full text-center space-y-6">
         <!-- Visual Illustration/Icon Container -->
         <div class="relative inline-flex items-center justify-center w-28 h-28 rounded-full bg-primary-50 text-primary-600 shadow-inner">
@@ -48,4 +48,4 @@ import { RouterLink } from '@angular/router';
     </div>
   `
 })
-export class NotFoundComponent {}
+export class NotFoundComponent { }

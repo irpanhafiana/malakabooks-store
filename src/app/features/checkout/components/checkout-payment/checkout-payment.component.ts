@@ -18,7 +18,7 @@ import { InputComponent } from '../../../../shared/ui/input/input.component';
       <app-radio [options]="paymentOptions()" [control]="paymentControl()" direction="col"></app-radio>
 
       @if (isCreditCardSelected()) {
-        <div class="mt-4 p-4 border border-slate-100 bg-slate-50/50 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="mt-4 p-4 border border-slate-100 bg-slate-100/50 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="sm:col-span-3">
             <app-input label="Nomor Kartu" placeholder="xxxx xxxx xxxx 4321" [control]="cardNumControl()"></app-input>
           </div>

@@ -8,11 +8,11 @@
       <p class="text-xs text-slate-500 mb-6 leading-relaxed">Thank you for your purchase. We have received your order and are preparing it for shipment.</p>
 
       @if (orderStore.loading()) {
-        <div class="flex flex-col gap-4 bg-slate-50 rounded-2xl p-4 mb-8">
+        <div class="flex flex-col gap-4 bg-slate-100 rounded-2xl p-4 mb-8">
           <app-skeleton type="table-row" [count]="3"></app-skeleton>
         </div>
       } @else if (orderStore.currentOrder(); as order) {
-        <div class="bg-slate-50 rounded-2xl p-4 text-left text-xs text-slate-600 flex flex-col gap-3.5 mb-8">
+        <div class="bg-slate-100 rounded-2xl p-4 text-left text-xs text-slate-600 flex flex-col gap-3.5 mb-8">
           <div class="flex justify-between">
             <span class="font-semibold text-slate-400">Order ID</span>
             <strong class="font-bold text-slate-800">#{{ order.id }}</strong>

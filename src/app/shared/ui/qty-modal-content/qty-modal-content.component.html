@@ -18,7 +18,7 @@
   }
   }
 
-  <div class="flex items-center justify-center py-6 bg-slate-50/50 rounded-2xl mb-4 border border-slate-100/60">
+  <div class="flex items-center justify-center py-6 bg-slate-100/50 rounded-2xl mb-4 border border-slate-100/60">
     <app-quantity-selector [quantity]="productStore.qtyQuantity()" (quantityChange)="onQtyChange($event)"
       [stock]="productStore.activeProduct()?.stock || 0" variant="md"></app-quantity-selector>
   </div>

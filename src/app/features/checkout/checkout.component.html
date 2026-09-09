@@ -63,7 +63,7 @@
       <div class="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1">
         @for (item of cartStore.items(); track item.product.id) {
         <div class="flex items-center gap-3 text-xs leading-tight">
-          <div class="h-10 w-8 bg-slate-50 rounded overflow-hidden shrink-0 border border-slate-100 relative">
+          <div class="h-10 w-8 bg-slate-100 rounded overflow-hidden shrink-0 border border-slate-100 relative">
             <img [src]="item.product.coverImage" [alt]="item.product.title" loading="lazy" width="32" height="40" class="object-cover w-full h-full" />
           </div>
           <div class="grow min-w-0">

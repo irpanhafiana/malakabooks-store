@@ -1,5 +1,5 @@
 <div
-  class="px-0 lg:px-4 pb-4 pt-0 h-full lg:h-auto flex flex-col overflow-y-auto lg:overflow-visible no-scrollbar bg-slate-50/30">
+  class="px-0 lg:px-4 pb-4 pt-0 h-full lg:h-auto flex flex-col overflow-y-auto lg:overflow-visible no-scrollbar bg-slate-100/30">
   <div class="flex flex-col gap-4 w-full mx-auto py-2">
 
     @if (orderStore.loading()) {
@@ -48,7 +48,7 @@
       [routerLink]="(order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled') ? ['/detail-shipment', order.id] : null"
       [class.cursor-pointer]="order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled'"
       [class.hover:border-primary-300]="order.trackingNumber && order.status !== 'pending' && order.status !== 'cancelled'"
-      class="bg-white border border-slate-200/80 p-4 sm:p-5 rounded-2xl shadow-xs flex flex-col gap-4 transition-all hover:bg-slate-50/30">
+      class="bg-white border border-slate-200/80 p-4 sm:p-5 rounded-2xl shadow-xs flex flex-col gap-4 transition-all hover:bg-slate-100/30">
 
       <!-- Order Header -->
       <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
@@ -71,11 +71,11 @@
         @for (item of order.items; track item.product.id) {
         <div class="flex items-center gap-4 text-xs">
           <div
-            class="relative h-16 w-14 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden shrink-0 flex items-center justify-center">
+            class="relative h-16 w-14 bg-slate-100 border border-slate-100 rounded-xl overflow-hidden shrink-0 flex items-center justify-center">
             <i class="bx bx-book-open text-2xl text-slate-300"></i>
             @if (item.product.coverImage) {
             <img [src]="item.product.coverImage" [alt]="item.product.title" loading="lazy" width="56" height="64"
-              class="absolute inset-0 object-cover w-full h-full bg-slate-50"
+              class="absolute inset-0 object-cover w-full h-full bg-slate-100"
               (error)="$any($event.target).style.display='none'" />
             }
           </div>
@@ -157,11 +157,11 @@
   <div class="flex flex-col gap-4 text-left p-4">
     <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
       <div
-        class="relative w-12 h-16 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+        class="relative w-12 h-16 bg-slate-100 rounded-lg border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
         <i class="bx bx-book-open text-xl text-slate-300"></i>
         @if (selectedProduct()?.coverImage) {
         <img [src]="selectedProduct()?.coverImage" [alt]="selectedProduct()?.title"
-          class="absolute inset-0 w-full h-full object-cover bg-slate-50"
+          class="absolute inset-0 w-full h-full object-cover bg-slate-100"
           (error)="$any($event.target).style.display='none'">
         }
       </div>
@@ -199,7 +199,7 @@
         </div>
         }
         <label
-          class="w-20 h-20 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors">
+          class="w-20 h-20 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-100 transition-colors">
           <i class="bx bx-plus text-2xl"></i>
           <span class="text-xs mt-1 font-semibold">Tambah</span>
           <input type="file" accept="image/*" class="hidden" (change)="onImageSelected($event)">

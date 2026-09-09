@@ -36,7 +36,7 @@
 
     <ng-container table-rows>
       @for (payment of pagination.paged(); track payment.id) {
-      <tr class="hover:bg-slate-50/50 transition-colors">
+      <tr class="hover:bg-slate-100/50 transition-colors">
         <td class="px-5 py-4 font-bold text-slate-800 text-xs">
           {{ payment.name }}
         </td>
@@ -74,7 +74,7 @@
       }
     </ng-container>
 
-    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-50/50 text-xs text-slate-500 font-medium">
+    <div table-footer class="px-5 py-3 border-t border-slate-100 bg-slate-100/50 text-xs text-slate-500 font-medium">
       Menampilkan {{ pagination.paged().length }} dari {{ pagination.totalItems() }} data
     </div>
   </app-table>
