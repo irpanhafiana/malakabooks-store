@@ -964,81 +964,125 @@
 <!-- ========================================================================= -->
 <div class="flex flex-col w-full px-4 pt-3 pb-28 gap-5 bg-slate-100">
 
-  <!-- 1. APP HERO SPOTLIGHT CARD -->
-  <section
-    class="relative overflow-hidden rounded-3xl bg-linear-to-br from-slate-900 via-slate-950 to-red-950 text-white p-5 shadow-xl border border-slate-800">
-    <!-- Ambient Glow -->
-    <div class="absolute -right-12 -top-12 w-48 h-48 bg-rose-600/25 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-sky-600/20 rounded-full blur-3xl pointer-events-none"></div>
+  <!-- 1. APP HERO SPOTLIGHT (Clean Desktop-Style, No Card Wrapper, Subtle Architectural Patterns) -->
+  <section class="relative overflow-hidden -mx-4 px-4 pt-4 pb-6 flex flex-col gap-5">
+    <!-- Subtle Architectural Dot Pattern Background -->
+    <div class="absolute inset-0 pointer-events-none opacity-40"
+      style="background-image: radial-gradient(#94a3b8 1.2px, transparent 1.2px); background-size: 20px 20px;">
+    </div>
+
+    <!-- Soft Ambient Dual Glows -->
+    <div class="absolute -top-10 -right-10 w-44 h-44 bg-rose-500/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
+    <div class="absolute top-1/2 -left-10 w-44 h-44 bg-sky-500/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+    <!-- Accent Dot Matrix Clusters -->
+    <div class="absolute top-2 right-2 w-24 h-24 opacity-35 pointer-events-none -z-10"
+      style="background-image: radial-gradient(#f43f5e 1.5px, transparent 1.5px); background-size: 12px 12px;">
+    </div>
+    <div class="absolute bottom-12 left-1 w-20 h-20 opacity-30 pointer-events-none -z-10"
+      style="background-image: radial-gradient(#0284c7 1.5px, transparent 1.5px); background-size: 12px 12px;">
+    </div>
 
     <div class="relative z-10 flex flex-col gap-4">
-      <!-- Tag / Badge -->
-      <div class="flex items-center gap-2">
+      <!-- Tag / Badge (Clean, White Pill) -->
+      <div class="flex items-center">
         <span
-          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-xs font-bold border border-white/10">
-          <i class="bx bxs-star text-amber-400"></i>
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs text-slate-700 text-xs font-semibold border border-slate-200/80 shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
           <span>Official Masterpiece Release</span>
         </span>
       </div>
 
-      <!-- Headline -->
-      <div>
-        <h1 class="font-display font-extrabold text-2xl text-white tracking-tight leading-snug">
-          Tingkatkan Nalar & Kuasai Seni Memilih.
+      <!-- Headline & Subtitle (Clean Slate Typography matching Desktop) -->
+      <div class="flex flex-col gap-2">
+        <h1 class="font-display font-extrabold text-2xl xs:text-[28px] text-slate-950 tracking-tight leading-[1.2]">
+          Tingkatkan nalar & kuasai seni mengambil keputusan hidup.
         </h1>
-        <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
-          Dua buku panduan berpikir jernih dan kalkulasi hidup oleh Abigail Limuria, Cania Citta, dan Ferry Irwandi.
+        <p class="text-xs xs:text-sm text-slate-600 leading-relaxed font-normal">
+          Bukan sekadar buku motivasi klise. Pelajari instrumen berpikir logis dan kalkulasi hidup dalam dua karya
+          masterpiece: <strong class="text-slate-900 font-semibold">"Makanya, Mikir!"</strong> oleh Abigail Limuria & Cania Citta serta <strong class="text-slate-900 font-semibold">"Prinsipil Ekonomi"</strong> oleh Ferry Irwandi.
         </p>
       </div>
 
-      <!-- Dual Overlapping Books Showcase -->
-      <div class="flex items-center justify-center py-3 relative">
-        <!-- Book 1: Makanya, Mikir! -->
-        <div role="button" tabindex="0" (click)="buyDirect('mikir')" (keyup.enter)="buyDirect('mikir')"
-          class="relative w-32 aspect-[3/4.2] rounded-xl overflow-hidden -rotate-6 shadow-2xl border-2 border-white/20 active:scale-95 transition-transform cursor-pointer bg-white shrink-0 z-10">
-          <img src="/images/books/makanya-mikir.jpg" alt="Makanya Mikir" class="w-full h-full object-cover" />
-          <span
-            class="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-md bg-rose-600 text-white text-[9px] font-bold shadow-xs">
-            Logika
-          </span>
+      <!-- Books Container Platform with Overlapping Showcase & Floating Badges -->
+      <div class="relative w-full flex items-center justify-center py-5 my-1">
+        <!-- Dot Pattern Accent behind books -->
+        <div class="absolute -bottom-2 left-6 w-24 h-24 opacity-40 pointer-events-none -z-10"
+          style="background-image: radial-gradient(#f43f5e 2px, transparent 2px); background-size: 14px 14px;">
         </div>
 
-        <!-- Book 2: Prinsipil Ekonomi -->
+        <!-- Floating Badge 1: 100% Jahit Benang (Top Left) -->
+        <div
+          class="absolute -top-1 left-0 xs:left-3 bg-white/95 backdrop-blur-xs rounded-xl p-2 shadow-lg border border-slate-200/80 flex items-center gap-2 z-30">
+          <div class="w-7 h-7 rounded-lg bg-[#163658] text-white flex items-center justify-center text-sm shadow-2xs">
+            <i class="bx bx-check-shield"></i>
+          </div>
+          <div class="leading-tight">
+            <p class="text-[11px] font-bold text-slate-900">100% Jahit Benang</p>
+            <p class="text-[9px] text-slate-500">Buka Rebah 180°</p>
+          </div>
+        </div>
+
+        <!-- Book 1: Makanya, Mikir! (Left overlapping book) -->
+        <div role="button" tabindex="0" (click)="buyDirect('mikir')" (keyup.enter)="buyDirect('mikir')"
+          class="relative block text-left w-32 xs:w-36 aspect-[3/4.2] rounded-xl overflow-hidden -rotate-6 shadow-xl border border-slate-200/60 focus:outline-none focus:ring-4 focus:ring-[#163658] transition-all duration-300 z-10 cursor-pointer bg-white shrink-0 active:scale-95">
+          <img src="/images/books/makanya-mikir.jpg" alt="Cover Buku Makanya Mikir" class="w-full h-full object-cover" />
+        </div>
+
+        <!-- Book 2: Prinsipil Ekonomi (Right overlapping book) -->
         <div role="button" tabindex="0" (click)="buyDirect('ekonomi')" (keyup.enter)="buyDirect('ekonomi')"
-          class="relative w-32 aspect-[3/4.2] rounded-xl overflow-hidden -ml-10 mt-6 rotate-6 shadow-2xl border-2 border-white/20 active:scale-95 transition-transform cursor-pointer bg-white shrink-0 z-20">
-          <img src="/images/books/prinsipil-ekonomi.jpg" alt="Prinsipil Ekonomi" class="w-full h-full object-cover" />
-          <span
-            class="absolute bottom-1.5 right-1.5 px-2 py-0.5 rounded-md bg-sky-600 text-white text-[9px] font-bold shadow-xs">
-            Ekonomi
-          </span>
+          class="relative block text-left w-32 xs:w-36 aspect-[3/4.2] rounded-xl overflow-hidden -ml-10 xs:-ml-12 mt-6 rotate-6 shadow-2xl border border-slate-200/60 focus:outline-none transition-all duration-300 z-20 cursor-pointer shrink-0 active:scale-95">
+          <img src="/images/books/prinsipil-ekonomi.jpg" alt="Cover Buku Prinsipil Ekonomi" class="w-full h-full object-cover" />
+        </div>
+
+        <!-- Floating Badge 2: Ekstra Karton Sudut (Bottom Right) -->
+        <div
+          class="absolute -bottom-1 right-0 xs:right-3 bg-white/95 backdrop-blur-xs text-slate-900 rounded-xl p-2 shadow-lg border border-slate-200/80 flex items-center gap-2 z-30">
+          <div class="w-7 h-7 rounded-lg bg-[#163658] text-white flex items-center justify-center text-sm shadow-2xs">
+            <i class="bx bx-package"></i>
+          </div>
+          <div class="leading-tight">
+            <p class="text-[11px] font-bold text-slate-950">Ekstra Karton</p>
+            <p class="text-[9px] text-slate-500">Garansi Tiba Mulus</p>
+          </div>
         </div>
       </div>
 
       <!-- CTA Buttons Row -->
-      <div class="flex items-center gap-2.5 pt-1">
+      <div class="flex flex-col xs:flex-row items-stretch gap-2.5 pt-1 w-full">
         <button type="button" (click)="buyDirect('bundle')"
-          class="flex-1 py-3 px-4 rounded-xl bg-[#163658] hover:bg-[#163658] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-lg shadow-[#163658]/30 cursor-pointer">
+          class="flex-1 py-3.5 px-5 rounded-full bg-[#163658] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider inline-flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md shadow-[#163658]/20 cursor-pointer">
           <i class="bx bx-package text-base"></i>
-          <span>Beli Bundling Hemat</span>
+          <span>Beli Bundling Sekarang!</span>
+          <i class="bx bx-chevron-right text-lg"></i>
         </button>
         <a routerLink="/product"
-          class="py-3 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs text-center border border-white/10 active:scale-95 transition-transform cursor-pointer">
-          Katalog
+          class="py-3.5 px-5 rounded-full bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs text-center border border-slate-200/80 shadow-2xs active:scale-95 transition-all cursor-pointer">
+          Katalog Buku
         </a>
       </div>
 
-      <!-- Guarantee Badges Strip -->
-      <div
-        class="flex items-center justify-between pt-2 border-t border-white/10 text-[10px] text-slate-300 font-medium">
-        <span class="flex items-center gap-1">
-          <i class="bx bx-check-shield text-emerald-400 text-xs"></i> 100% Jahit Benang
-        </span>
-        <span class="flex items-center gap-1">
-          <i class="bx bx-box text-amber-400 text-xs"></i> Ekstra Karton Sudut
-        </span>
-        <span class="flex items-center gap-1">
-          <i class="bx bx-badge-check text-sky-400 text-xs"></i> 35.000+ Eksemplar
-        </span>
+      <!-- Social Proof Avatar Stack & Metric (Matching Desktop) -->
+      <div class="flex items-center gap-3 pt-3 border-t border-slate-200/80 w-full">
+        <div class="flex -space-x-2 overflow-hidden shrink-0">
+          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
+            src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80"
+            alt="Pembaca 1" />
+          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
+            src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80"
+            alt="Pembaca 2" />
+          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
+            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
+            alt="Pembaca 3" />
+          <div
+            class="inline-flex h-8 w-8 items-center justify-center rounded-full ring-2 ring-white bg-[#163658] text-white text-[11px] font-bold font-mono">
+            +35k
+          </div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <span class="font-display font-extrabold text-slate-900 text-xs xs:text-sm block leading-snug">35.000+ Eksemplar Beredar</span>
+          <span class="text-[11px] text-slate-500 block leading-tight">Membuka wawasan pembaca kritis di Indonesia</span>
+        </div>
       </div>
     </div>
   </section>
