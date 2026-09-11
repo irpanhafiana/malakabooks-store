@@ -71,8 +71,14 @@ export const routes: Routes = [
         data: { preload: true }
       },
       {
+        path: 'malakabooks',
+        loadComponent: () => import('./features/malakabooks/malakabooks.component').then(c => c.MalakabooksComponent),
+        data: { preload: true }
+      },
+      {
         path: 'mardika-kopi',
-        loadComponent: () => import('./features/mardika-kopi/mardika-kopi.component').then(c => c.MardikaKopiComponent)
+        redirectTo: '',
+        pathMatch: 'full'
       }
     ]
   },

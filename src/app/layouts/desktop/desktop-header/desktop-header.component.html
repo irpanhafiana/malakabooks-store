@@ -6,8 +6,8 @@
       <!-- Logo -->
       <a routerLink="/" (click)="resetFilters()" class="flex items-center gap-2.5 text-slate-700 select-none group">
         <div
-          class="w-14 h-14 rounded-md bg-[#163658] flex items-center justify-center p-2 shrink-0 transition-transform group-hover:scale-105">
-          <img src="/malaka-books.svg" alt="Malakabooks Logo" class="h-full w-auto object-contain" />
+          class="w-full h-20 rounded-md flex items-center justify-center shrink-0 transition-transform group-hover:scale-105">
+          <img src="/logo-mardika.png" alt="Malakabooks Logo" class="h-full w-auto object-contain" />
         </div>
         <!-- <div class="flex flex-col">
           <span class="font-display font-black text-xl tracking-tight text-slate-900 leading-none">Malakabooks</span>
@@ -20,13 +20,10 @@
       <a routerLink="/" routerLinkActive="text-slate-700 font-bold bg-slate-100"
         [routerLinkActiveOptions]="{exact: true}" (click)="resetFilters()"
         class="px-4 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors">Beranda</a>
+      <a routerLink="/malakabooks" routerLinkActive="text-slate-700 font-bold bg-slate-100" (click)="resetFilters()"
+        class="px-4 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors">Malaka Book</a>
       <a routerLink="/product" routerLinkActive="text-slate-700 font-bold bg-slate-100" (click)="resetFilters()"
-        class="px-4 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors">Koleksi Buku</a>
-      <a href="https://malakabooks.id" target="_blank" rel="noopener noreferrer"
-        class="px-4 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors inline-flex items-center gap-1 text-slate-500">
-        <span>malakabooks.id</span>
-        <i class="bx bx-link-external text-xs text-slate-400"></i>
-      </a>
+        class="px-4 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors">Produk</a>
     </nav>
 
     <!-- Right: Actions -->
@@ -54,7 +51,7 @@
       </a>
       } @else {
       <a [href]="loginUrl"
-        class="px-6 py-2.5 rounded-full text-base font-bold text-white bg-[#163658] hover:bg-slate-800 transition-colors uppercase tracking-wider inline-flex items-center gap-2">
+        class="px-6 py-3 rounded-full text-base font-bold text-white bg-[#c10007] hover:bg-red-800 transition-colors uppercase tracking-wider inline-flex items-center gap-2">
         <span>Masuk</span>
         <i class="bx bx-log-in-circle text-xl"></i>
       </a>

@@ -179,7 +179,7 @@ export class ShippingLabelService {
   <!-- Header -->
   <div class="head">
     <div class="brand">
-      <div class="icon-box"><img src="/malaka-books.svg" alt="Logo"></div>
+      <div class="icon-box"><img src="/logo-mardika.png" alt="Logo"></div>
       <div class="text">
         <span class="name">Malaka Books</span>
         <span class="tagline">Jendela Literasi Bangsa</span>
