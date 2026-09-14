@@ -6,7 +6,46 @@
     <router-outlet></router-outlet>
   </main>
 
-  <app-desktop-footer></app-desktop-footer>} @else {
+  <app-desktop-footer></app-desktop-footer>
+
+  <app-modal [isOpen]="modalHandler.isDetailOpen()"
+    (isOpenChange)="modalHandler.closeProductDetails()" title="Detail Produk" maxWidth="max-w-4xl" [noScroll]="true"
+    [hasFooter]="false" zIndex="z-[150]">
+    <app-product-detail [productId]="modalHandler.selectedDetailId()"></app-product-detail>
+  </app-modal>
+
+  <app-modal [isOpen]="productStore.isQtyModalOpen()" (isOpenChange)="modalHandler.closeQty()" title="Pilihan Pembelian"
+    maxWidth="max-w-md" zIndex="z-[160]">
+    <app-qty-modal-content #qtyDesktop (confirmed)="modalHandler.closeQty(true)"></app-qty-modal-content>
+    <div modal-footer class="flex items-center justify-between gap-4">
+      @if ((productStore.activeProduct()?.stock || 0) > 0) {
+      <div class="flex flex-col">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+          Total Harga
+          @if (productStore.isQtyLookupLoading()) {
+          <i class="bx bx-loader-alt animate-spin text-primary-500"></i>
+          }
+        </span>
+        <app-price [value]="(productStore.qtyLookedUpPrice() || 0) * productStore.qtyQuantity()" size="lg"
+          class="text-slate-800"></app-price>
+      </div>
+      <app-button (click)="qtyDesktop.confirmAddToCart()" variant="primary" size="lg"
+        class="grow max-w-40 flex items-center justify-end" [disabled]="productStore.isQtyLookupLoading()">
+        @if (!authStore.isLoggedIn()) {
+        Login untuk Membeli
+        } @else {
+        {{ productStore.qtyAction() === 'buy' ? 'Beli Sekarang' : 'Konfirmasi' }}
+        }
+      </app-button>
+      } @else {
+      <div class="w-full py-3 bg-slate-100 rounded-xl text-center">
+        <span class="text-sm font-bold text-slate-500">Stok produk ini sedang habis (Stok 0)</span>
+      </div>
+      }
+    </div>
+  </app-modal>
+
+  } @else {
   <!-- MOBILE SHELL -->
   <div class="h-dvh w-full bg-slate-100 flex justify-center overflow-hidden inner-root"
     style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">

@@ -12,6 +12,7 @@ import { ProductModalHandler } from '../product-modal-handler.service';
 import { ProductStore } from '../../store/product.store';
 import { AuthStore } from '../../store/auth.store';
 import { BottomSheetComponent } from '../../shared/ui/bottom-sheet/bottom-sheet.component';
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { ProductDetailComponent } from '../../features/product/product-detail/product-detail.component';
 import { QtyModalContentComponent } from '../../shared/ui/qty-modal-content/qty-modal-content.component';
 import { PriceComponent } from '../../shared/ui/price/price.component';
@@ -20,7 +21,7 @@ import { ButtonComponent } from '../../shared/ui/button/button.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-inner-page-layout',
   standalone: true,
-  imports: [RouterOutlet, DesktopHeaderComponent, DesktopFooterComponent, BottomSheetComponent, ProductDetailComponent, QtyModalContentComponent, PriceComponent, ButtonComponent],
+  imports: [RouterOutlet, DesktopHeaderComponent, DesktopFooterComponent, BottomSheetComponent, ModalComponent, ProductDetailComponent, QtyModalContentComponent, PriceComponent, ButtonComponent],
   templateUrl: './inner-page-layout.component.html',
   styleUrl: './inner-page-layout.component.css'
 })

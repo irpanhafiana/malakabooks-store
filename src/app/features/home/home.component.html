@@ -1133,8 +1133,8 @@
 
         <!-- Floating Badge 1: 100% Specialty -->
         <div
-          class="absolute -top-1 left-0 xs:left-3 bg-white/95 backdrop-blur-xs rounded-xl p-2 shadow-lg border border-slate-200/80 flex items-center gap-2 z-30">
-          <div class="w-7 h-7 rounded-lg bg-amber-600 text-white flex items-center justify-center text-sm shadow-2xs">
+          class="absolute -top-1 left-0 xs:left-3 bg-white rounded-2xl p-2 shadow-xl border border-slate-100 flex items-center gap-2 z-30">
+          <div class="w-7 h-7 rounded-xl bg-amber-600 text-white flex items-center justify-center text-sm shadow-xs">
             <i class="bx bxs-award"></i>
           </div>
           <div class="leading-tight">
@@ -1148,9 +1148,9 @@
           class="relative block text-left w-32 xs:w-36 aspect-[3/4.2] rounded-2xl overflow-hidden -rotate-6 shadow-xl border border-amber-900/20 transition-all duration-300 z-10 cursor-pointer bg-stone-900 shrink-0 active:scale-95">
           <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"
             alt="Signature Blend" class="w-full h-full object-cover" />
-          <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent"></div>
+          <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
           <span
-            class="absolute bottom-2 left-2 text-2xs font-bold text-white bg-amber-600 px-1.5 py-0.5 rounded">Signature</span>
+            class="absolute bottom-2 left-2 text-2xs font-bold text-white bg-amber-600 px-1.5 py-0.5 rounded-md shadow-xs">Signature</span>
         </div>
 
         <!-- Pouch 2: Arabica Gayo -->
@@ -1158,16 +1158,17 @@
           class="relative block text-left w-32 xs:w-36 aspect-[3/4.2] rounded-2xl overflow-hidden -ml-10 xs:-ml-12 mt-6 rotate-6 shadow-2xl border border-red-900/20 transition-all duration-300 z-20 cursor-pointer bg-stone-900 shrink-0 active:scale-95">
           <img src="https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=800&q=80"
             alt="Arabica Gayo" class="w-full h-full object-cover" />
-          <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent"></div>
-          <span class="absolute bottom-2 left-2 text-2xs font-bold text-white bg-red-600 px-1.5 py-0.5 rounded">Gayo
+          <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
+          <span
+            class="absolute bottom-2 left-2 text-2xs font-bold text-white bg-red-600 px-1.5 py-0.5 rounded-md shadow-xs">Gayo
             V60</span>
         </div>
 
         <!-- Floating Badge 2: Fresh Roast -->
         <div
-          class="absolute -bottom-1 right-0 xs:right-3 bg-white/95 backdrop-blur-xs text-slate-900 rounded-xl p-2 shadow-lg border border-slate-200/80 flex items-center gap-2 z-30">
+          class="absolute -bottom-1 right-0 xs:right-3 bg-white text-slate-900 rounded-2xl p-2 shadow-xl border border-slate-100 flex items-center gap-2 z-30">
           <div
-            class="w-7 h-7 rounded-lg bg-stone-900 text-amber-400 flex items-center justify-center text-sm shadow-2xs">
+            class="w-7 h-7 rounded-xl bg-stone-900 text-amber-400 flex items-center justify-center text-sm shadow-xs">
             <i class="bx bx-flame"></i>
           </div>
           <div class="leading-tight">
@@ -1180,7 +1181,7 @@
       <!-- CTA Buttons Row -->
       <div class="flex flex-col xs:flex-row items-stretch gap-2.5 pt-1 w-full">
         <button type="button" (click)="buyDirect('bundle')"
-          class="flex-1 py-3.5 px-5 rounded-full bg-red-700 hover:bg-red-800 text-white font-bold text-xs uppercase tracking-wider inline-flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md shadow-red-700/20 cursor-pointer">
+          class="flex-1 py-3.5 px-5 rounded-full bg-red-700 hover:bg-red-800 text-white font-bold text-xs uppercase tracking-wider inline-flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer">
           <i class="bx bx-shopping-bag text-base"></i>
           <span>Beli Kopi Sekarang!</span>
           <i class="bx bx-chevron-right text-lg"></i>
@@ -1211,7 +1212,7 @@
         <div class="flex-1 min-w-0">
           <span class="font-display font-extrabold text-slate-900 text-xs xs:text-sm block leading-snug">15.000+ Cangkir
             Diseduh</span>
-          <span class="text-[11px] text-slate-500 block leading-tight">Menemani sesi membaca & dialektika
+          <span class="text-[11px] text-slate-600 block leading-tight">Menemani sesi membaca & dialektika
             pemikiran</span>
         </div>
       </div>
@@ -1431,9 +1432,8 @@
     </div>
 
     <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-1 snap-x snap-mandatory">
-      <div
-        class="snap-start shrink-0 w-64 bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex flex-col gap-2">
-        <div class="w-9 h-9 rounded-xl bg-amber-600 text-white flex items-center justify-center text-lg">
+      <div class="snap-start shrink-0 w-64 bg-white rounded-3xl p-4 flex flex-col gap-2">
+        <div class="w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center text-lg shadow-xs">
           <i class="bx bxs-badge-check"></i>
         </div>
         <div>
@@ -1446,9 +1446,9 @@
         </div>
       </div>
 
-      <div
-        class="snap-start shrink-0 w-64 bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex flex-col gap-2">
-        <div class="w-9 h-9 rounded-xl bg-stone-900 text-amber-400 flex items-center justify-center text-lg">
+      <div class="snap-start shrink-0 w-64 bg-white rounded-3xl p-4 flex flex-col gap-2">
+        <div
+          class="w-10 h-10 rounded-full bg-stone-900 text-amber-400 flex items-center justify-center text-lg shadow-xs">
           <i class="bx bx-flame"></i>
         </div>
         <div>
@@ -1459,9 +1459,9 @@
         </div>
       </div>
 
-      <div
-        class="snap-start shrink-0 w-64 bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex flex-col gap-2">
-        <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg">
+      <div class="snap-start shrink-0 w-64 bg-white rounded-3xl p-4 flex flex-col gap-2">
+        <div
+          class="w-10 h-10 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center text-lg shadow-xs">
           <i class="bx bx-package"></i>
         </div>
         <div>
@@ -1496,30 +1496,31 @@
       @for (kopi of mardikaKopiCards(); track kopi.title; let idx = $index) {
       <div
         class="snap-start shrink-0 w-52 bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs flex flex-col justify-between">
-        <div class="relative w-full aspect-4/3 bg-stone-900 overflow-hidden">
+        <div class="relative w-full aspect-4/3 bg-slate-100 overflow-hidden">
           <img [src]="kopi.image" [alt]="kopi.title" class="w-full h-full object-cover" />
           <span
-            class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-red-700 text-white text-[9px] font-bold shadow-xs">
+            class="absolute top-2 left-2 px-2 py-0.5 rounded-lg bg-red-700 text-white text-[9px] font-bold uppercase tracking-wider shadow-xs">
             {{ kopi.tag }}
           </span>
         </div>
         <div class="p-3 flex flex-col gap-1.5 flex-1 justify-between">
           <div>
-            <h4 class="font-display font-bold text-xs text-slate-900 line-clamp-1">
+            <h4 class="font-display font-bold text-xs text-slate-950 line-clamp-1">
               {{ kopi.title }}
             </h4>
             <p class="text-2xs text-slate-400 line-clamp-1">
               {{ kopi.subtag }}
             </p>
-            <span class="font-display font-extrabold text-xs text-red-700 mt-1 block">{{ kopi.price }}</span>
+            <span class="font-display font-black text-xs text-slate-900 mt-1 block">{{ kopi.price }}</span>
           </div>
           <button type="button" (click)="
                                     buyDirect(
                                         idx === 0 ? 'signature' : idx === 1 ? 'gayo' : 'bundle'
                                     )
                                 "
-            class="w-full py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] font-bold text-center block mt-1 transition-colors cursor-pointer">
-            Pesan Kopi
+            class="w-full py-2 rounded-xl bg-slate-900 hover:bg-red-700 text-white text-[11px] font-bold text-center inline-flex items-center justify-center gap-1.5 mt-1 active:scale-95 transition-colors cursor-pointer">
+            <i class="bx bx-shopping-bag text-sm"></i>
+            <span>Pesan Kopi</span>
           </button>
         </div>
       </div>
@@ -1528,78 +1529,125 @@
   </section>
 
   <!-- 9. TESTIMONI PENIKMAT KOPI (Mobile) -->
-  <section class="flex flex-col gap-2">
-    <div class="flex items-center justify-between px-1">
-      <h2 class="font-display font-extrabold text-base text-slate-900">
-        Kata Penikmat Kopi
-      </h2>
+  <section class="rounded-3xl bg-slate-900 text-white p-4.5 relative overflow-hidden shadow-lg flex flex-col gap-3.5">
+    <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-red-600/15 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="flex items-center justify-between relative z-10">
+      <div>
+        <span class="text-2xs font-bold uppercase tracking-widest text-amber-400 block">
+          ULASAN PENIKMAT KOPI
+        </span>
+        <h2 class="font-display font-extrabold text-sm xs:text-base text-white mt-0.5">
+          Kata Penikmat Kopi
+        </h2>
+      </div>
       <div class="flex items-center gap-1.5">
         <button type="button" (click)="prevTestimonial()" aria-label="Sebelumnya"
-          class="w-7 h-7 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 active:scale-95 transition-transform shadow-2xs">
+          class="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-stone-200 border border-slate-700 flex items-center justify-center active:scale-95 transition-all shadow-xs cursor-pointer">
           <i class="bx bx-chevron-left text-base"></i>
         </button>
         <button type="button" (click)="nextTestimonial()" aria-label="Selanjutnya"
-          class="w-7 h-7 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 active:scale-95 transition-transform shadow-2xs">
+          class="w-7 h-7 rounded-full bg-red-700 hover:bg-red-800 text-white border border-red-800 flex items-center justify-center active:scale-95 transition-all shadow-md cursor-pointer">
           <i class="bx bx-chevron-right text-base"></i>
         </button>
       </div>
     </div>
 
-    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex flex-col gap-3">
-      <div class="flex items-center gap-3">
+    <div class="relative z-10 flex flex-col gap-3">
+      <p class="text-xs text-stone-300 italic leading-relaxed font-serif">
+        &ldquo;{{ currentTestimonial().quote }}&rdquo;
+      </p>
+      <div class="pt-3 border-t border-slate-800 flex items-center gap-3">
         <img [src]="currentTestimonial().photoUrl" [alt]="currentTestimonial().name"
-          class="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-2xs" />
+          class="w-10 h-10 rounded-full object-cover border-2 border-stone-700/60 shadow-md" />
         <div class="flex flex-col">
-          <h4 class="font-display font-bold text-xs text-slate-900">
+          <h4 class="font-display font-bold text-xs text-white">
             {{ currentTestimonial().name }}
           </h4>
-          <span class="text-2xs text-slate-400">{{ currentTestimonial().role }} •
+          <span class="text-2xs text-stone-400">{{ currentTestimonial().role }} •
             {{ currentTestimonial().company }}</span>
         </div>
       </div>
-      <p class="text-xs text-slate-600 italic leading-relaxed font-serif">
-        &ldquo;{{ currentTestimonial().quote }}&rdquo;
-      </p>
     </div>
   </section>
 
   <!-- 10. FAQ (Mobile Accordion) -->
   <section class="flex flex-col gap-2 pt-2">
     <div class="px-1">
-      <h2 class="font-display font-extrabold text-base text-slate-900">
-        Tanya Jawab (FAQ)
+      <span class="text-2xs font-bold uppercase tracking-widest text-amber-700 block">FAQ</span>
+      <h2 class="font-display font-extrabold text-base text-slate-950 mt-0.5">
+        Pertanyaan yang Sering Diajukan
       </h2>
-      <p class="text-[11px] text-slate-500">
-        Pertanyaan umum seputar seduh & pengiriman kopi.
+      <p class="text-[11px] text-slate-600 mt-0.5">
+        Segala hal yang perlu Anda ketahui tentang pemesanan, tingkat gilingan, dan garansi kesegaran kopi.
       </p>
     </div>
 
-    <div class="flex flex-col gap-2">
-      <div class="bg-white rounded-xl border border-slate-200/80 p-3 shadow-xs">
+    <div class="flex flex-col gap-2.5 mt-1">
+      <!-- FAQ 1 -->
+      <div class="bg-white rounded-2xl overflow-hidden">
         <button type="button" (click)="toggleFaq(1)"
-          class="w-full text-left font-bold text-xs text-slate-900 flex justify-between items-center cursor-pointer">
+          class="w-full text-left font-display font-bold text-xs text-slate-900 flex justify-between items-center p-3.5 hover:bg-slate-50 transition-colors cursor-pointer">
           <span>Bisa pilih bentuk gilingan (grind size)?</span>
-          <i class="bx bx-chevron-down text-base"></i>
+          <i class="bx text-base transition-transform duration-300" [class.bx-chevron-down]="openFaqIndex() !== 1"
+            [class.bx-chevron-up]="openFaqIndex() === 1"></i>
         </button>
         @if (openFaqIndex() === 1) {
-        <p class="text-[11px] text-slate-600 mt-2 pt-2 border-t border-slate-100 leading-relaxed">
-          Bisa! Tersedia Biji Utuh, Giling Kasar (Cold Brew), Giling Medium (V60),
-          dan Giling Halus (Espresso/Tubruk).
-        </p>
+        <div class="px-3.5 pb-3.5 text-[11px] text-slate-600 border-t border-slate-100 pt-2.5 leading-relaxed">
+          Tentu saja! Anda bisa memilih dalam bentuk Biji Kopi Utuh (Whole Beans), Giling Kasar (Cold Brew/French
+          Press), Giling Medium (V60/Aeropress), atau Giling Halus (Espresso/Tubruk). Cukup tentukan opsi saat memilih
+          produk.
+        </div>
         }
       </div>
 
-      <div class="bg-white rounded-xl border border-slate-200/80 p-3 shadow-xs">
+      <!-- FAQ 2 -->
+      <div class="bg-white rounded-2xl overflow-hidden">
         <button type="button" (click)="toggleFaq(2)"
-          class="w-full text-left font-bold text-xs text-slate-900 flex justify-between items-center cursor-pointer">
+          class="w-full text-left font-display font-bold text-xs text-slate-900 flex justify-between items-center p-3.5 hover:bg-slate-50 transition-colors cursor-pointer">
           <span>Berapa lama umur roasting kopi?</span>
-          <i class="bx bx-chevron-down text-base"></i>
+          <i class="bx text-base transition-transform duration-300" [class.bx-chevron-down]="openFaqIndex() !== 2"
+            [class.bx-chevron-up]="openFaqIndex() === 2"></i>
         </button>
         @if (openFaqIndex() === 2) {
-        <p class="text-[11px] text-slate-600 mt-2 pt-2 border-t border-slate-100 leading-relaxed">
-          Kopi selalu berumur sangrai maksimal 7–14 hari (fresh roasted) untuk
-          fase degassing cita rasa optimal.
-        </p>
+        <div class="px-3.5 pb-3.5 text-[11px] text-slate-600 border-t border-slate-100 pt-2.5 leading-relaxed">
+          Mardika Kopi menerapkan sistem sangrai batch berkala (*fresh roasted*). Kopi yang dikirimkan selalu berusia
+          roasting 7 hingga 14 hari—usia ideal setelah melewati periode degassing agar aroma dan cita rasa berada pada
+          titik puncak kesempurnaan.
+        </div>
+        }
+      </div>
+
+      <!-- FAQ 3 -->
+      <div class="bg-white rounded-2xl overflow-hidden">
+        <button type="button" (click)="toggleFaq(3)"
+          class="w-full text-left font-display font-bold text-xs text-slate-900 flex justify-between items-center p-3.5 hover:bg-slate-50 transition-colors cursor-pointer">
+          <span>Berapa rasio seduh ideal yang direkomendasikan?</span>
+          <i class="bx text-base transition-transform duration-300" [class.bx-chevron-down]="openFaqIndex() !== 3"
+            [class.bx-chevron-up]="openFaqIndex() === 3"></i>
+        </button>
+        @if (openFaqIndex() === 3) {
+        <div class="px-3.5 pb-3.5 text-[11px] text-slate-600 border-t border-slate-100 pt-2.5 leading-relaxed">
+          Untuk filter brew (V60), kami menyarankan rasio 1:15 atau 1:16 dengan suhu air 90-93°C. Untuk Signature Blend
+          metode tubruk atau es kopi susu, gunakan rasio 1:10 hingga 1:12 agar bodi dan crema kopi tetap pekat dan
+          seimbang dengan manisnya susu.
+        </div>
+        }
+      </div>
+
+      <!-- FAQ 4 -->
+      <div class="bg-white rounded-2xl overflow-hidden">
+        <button type="button" (click)="toggleFaq(4)"
+          class="w-full text-left font-display font-bold text-xs text-slate-900 flex justify-between items-center p-3.5 hover:bg-slate-50 transition-colors cursor-pointer">
+          <span>Bagaimana jika kemasan rusak saat proses pengiriman?</span>
+          <i class="bx text-base transition-transform duration-300" [class.bx-chevron-down]="openFaqIndex() !== 4"
+            [class.bx-chevron-up]="openFaqIndex() === 4"></i>
+        </button>
+        @if (openFaqIndex() === 4) {
+        <div class="px-3.5 pb-3.5 text-[11px] text-slate-600 border-t border-slate-100 pt-2.5 leading-relaxed">
+          Seluruh paket kami kemas dengan kardus pelindung ganda dan bubble wrap tebal. Jika ada kemasan robek atau
+          bocor akibat ekspedisi, kami memberikan garansi 100% kirim ulang paket baru tanpa dipungut biaya sepeser pun.
+        </div>
         }
       </div>
     </div>
