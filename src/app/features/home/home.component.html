@@ -1106,21 +1106,15 @@
     </div>
 
     <div class="relative z-10 flex flex-col gap-3.5">
-      <!-- Tag / Badge -->
-      <div class="flex items-center">
-        <span
-          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs text-amber-900 text-xs font-semibold border border-amber-200/80 shadow-2xs">
-          <span class="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></span>
-          <span>Mardika Kopi Artisan Roastery</span>
-        </span>
-      </div>
+
 
       <!-- Headline -->
       <div class="flex flex-col gap-1.5">
-        <h1 class="font-display font-extrabold text-2xl xs:text-[28px] text-slate-950 tracking-tight leading-[1.2]">
+        <h1
+          class="text-center font-display font-extrabold text-2xl xs:text-[28px] text-slate-950 tracking-tight leading-[1.2]">
           Nalar tetap jernih, diskusi tetap mengalir dengan kopi artisan.
         </h1>
-        <p class="text-xs xs:text-sm text-slate-700 leading-relaxed font-normal">
+        <p class="text-center text-xs xs:text-sm text-slate-700 leading-relaxed font-normal">
           Bukan sekadar kafein instan. Biji kopi specialty disangrai segar dari Aceh
           Gayo, Temanggung, dan Flores untuk menjaga fokus berpikir.
         </p>
@@ -1128,11 +1122,7 @@
 
       <!-- Coffee Pouch Platform with Floating Badges -->
       <div class="relative w-full flex items-center justify-center py-4 my-1">
-        <!-- Dot Pattern Accent -->
-        <div class="absolute -bottom-2 left-6 w-24 h-24 opacity-40 pointer-events-none -z-10" style="
-                            background-image: radial-gradient(#d97706 2px, transparent 2px);
-                            background-size: 14px 14px;
-                        "></div>
+
 
         <!-- Floating Badge 1: 100% Specialty -->
         <div
@@ -1148,7 +1138,7 @@
 
         <!-- Pouch 1: Signature Blend -->
         <div role="button" tabindex="0" (click)="buyDirect('signature')"
-          class="relative block text-left w-32 xs:w-36 aspect-[3/4.2] rounded-2xl overflow-hidden -rotate-6 shadow-xl border border-amber-900/20 transition-all duration-300 z-10 cursor-pointer bg-stone-900 shrink-0 active:scale-95">
+          class="relative block text-left w-32 xs:w-36 aspect-[3/4.2] rounded-2xl overflow-hidden -rotate-6 z-10 cursor-pointer shrink-0 active:scale-95">
           <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"
             alt="Signature Blend" class="w-full h-full object-cover" />
           <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -1158,7 +1148,7 @@
 
         <!-- Pouch 2: Arabica Gayo -->
         <div role="button" tabindex="0" (click)="buyDirect('gayo')"
-          class="relative block text-left w-32 xs:w-36 aspect-[3/4.2] rounded-2xl overflow-hidden -ml-10 xs:-ml-12 mt-6 rotate-6 shadow-2xl border border-red-900/20 transition-all duration-300 z-20 cursor-pointer bg-stone-900 shrink-0 active:scale-95">
+          class="relative block text-left w-32 xs:w-36 aspect-[3/4.2] rounded-2xl overflow-hidden -ml-10 xs:-ml-12 mt-6 rotate-6  z-20 cursor-pointer  shrink-0 active:scale-95">
           <img src="https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=800&q=80"
             alt="Arabica Gayo" class="w-full h-full object-cover" />
           <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -1189,14 +1179,10 @@
           <span>Beli Kopi Sekarang!</span>
           <i class="bx bx-chevron-right text-lg"></i>
         </button>
-        <a href="#bedah-kopi"
-          class="py-3.5 px-5 rounded-full bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs text-center border border-slate-200/80 shadow-2xs active:scale-95 transition-all cursor-pointer">
-          Eksplorasi Rasa
-        </a>
       </div>
 
       <!-- Social Proof Avatar Stack -->
-      <div class="flex items-center gap-3 pt-3 border-t border-slate-200/80 w-full">
+      <div class="flex items-center gap-3 pt-3 w-full">
         <div class="flex -space-x-2 overflow-hidden shrink-0">
           <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
             src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
@@ -1222,83 +1208,103 @@
     </div>
   </section>
 
-  <!-- 2. QUICK ACTION SHORTCUTS (3 PILAR PRODUK) -->
-  <section class="grid grid-cols-3 gap-2 py-1">
-    <button type="button" (click)="buyDirect('signature')"
-      class="flex flex-col items-center gap-1.5 p-2.5 bg-white rounded-2xl border border-slate-200/70 shadow-xs active:scale-95 transition-all text-center cursor-pointer">
-      <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-xl shadow-xs">
-        <i class="bx bxs-coffee-bean"></i>
-      </div>
-      <span class="text-[11px] font-bold text-slate-800 leading-tight">Biji Kopi</span>
-    </button>
-
-    <button type="button" (click)="buyDirect('drip')"
-      class="flex flex-col items-center gap-1.5 p-2.5 bg-white rounded-2xl border border-slate-200/70 shadow-xs active:scale-95 transition-all text-center cursor-pointer">
-      <div class="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-xl shadow-xs">
-        <i class="bx bx-filter-alt"></i>
-      </div>
-      <span class="text-[11px] font-bold text-slate-800 leading-tight">Kopi Drips</span>
-    </button>
-
-    <button type="button" (click)="buyDirect('beverage')"
-      class="flex flex-col items-center gap-1.5 p-2.5 bg-white rounded-2xl border border-slate-200/70 shadow-xs active:scale-95 transition-all text-center cursor-pointer">
-      <div
-        class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl shadow-xs">
-        <i class="bx bx-coffee-togo"></i>
-      </div>
-      <span class="text-[11px] font-bold text-slate-800 leading-tight">Beverages</span>
-    </button>
-  </section>
-
   <!-- 3. PILAR 1: BIJI KOPI ARTISAN -->
+  <!-- 3. PILAR PRODUK (Horizontal Snap) -->
   <section class="flex flex-col gap-2.5">
     <div class="flex items-center justify-between px-1">
       <div class="flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-amber-600"></span>
-        <h2 class="font-display font-extrabold text-base text-slate-900">
-          1. Biji Kopi Artisan
-        </h2>
-      </div>
-      <span class="text-[11px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-100">
-        ★ 4.9 (Fresh Roasted)
-      </span>
-    </div>
-
-    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
-      <!-- Coffee Thumbnail -->
-      <div role="button" tabindex="0" (click)="buyDirect('signature')"
-        class="w-24 aspect-[3/4.2] rounded-xl overflow-hidden bg-stone-900 shrink-0 shadow-sm border border-slate-100 relative cursor-pointer active:scale-95 transition-transform">
-        <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"
-          alt="Biji Kopi Signature Blend" class="w-full h-full object-cover" />
-      </div>
-
-      <!-- Info & Actions -->
-      <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
         <div>
-          <span class="text-2xs font-bold text-amber-700 uppercase tracking-wider block">WHOLE BEAN & GROUND</span>
-          <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
-            Mardika Signature Blend (250g)
-          </h3>
-          <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
-            Notes cokelat karamel, bodi bulat tebal, aftertaste manis panjang,
-            lembut di lambung.
+          <h2 class="font-display font-extrabold text-base text-slate-900">
+            1. Biji Kopi Artisan
+            Pilar Produk Mardika
+          </h2>
+          <p class="text-[11px] text-slate-500">
+            Tiga lini unggulan seduhan kopi nusantara.
           </p>
-          <span class="text-2xs text-slate-400 font-medium block mt-1">Arabica & Fine Robusta Pilihan</span>
         </div>
-
-        <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
-          <div class="flex flex-col">
-            <span class="text-2xs text-slate-400 line-through">Rp 55.000</span>
-            <span class="font-display font-extrabold text-sm text-slate-900">Rp 45.000</span>
-          </div>
-
-          <button type="button" (click)="buyDirect('signature')"
-            class="px-4 py-2 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
-            Pesan Biji Kopi
-          </button>
-        </div>
+        <span
+          class="text-[11px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-100">
+          ★ 4.9 (Fresh Roasted)
+        </span>
       </div>
-    </div>
+
+      <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
+        <!-- Coffee Thumbnail -->
+        <div role="button" tabindex="0" (click)="buyDirect('signature')"
+          class="w-24 aspect-[3/4.2] rounded-xl overflow-hidden bg-stone-900 shrink-0 shadow-sm border border-slate-100 relative cursor-pointer active:scale-95 transition-transform">
+          <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"
+            alt="Biji Kopi Signature Blend" class="w-full h-full object-cover" />
+        </div>
+
+        <!-- Info & Actions -->
+        <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
+          <div>
+            <span class="text-2xs font-bold text-amber-700 uppercase tracking-wider block">WHOLE BEAN & GROUND</span>
+            <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
+              Mardika Signature Blend (250g)
+            </h3>
+            <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
+              Notes cokelat karamel, bodi bulat tebal, aftertaste manis panjang,
+              lembut di lambung.
+            </p>
+            <span class="text-2xs text-slate-400 font-medium block mt-1">Arabica & Fine Robusta Pilihan</span>
+            <div class="flex gap-3 overflow-x-auto no-scrollbar py-1 snap-x snap-mandatory">
+
+              <!-- Card 1: Biji Kopi Artisan -->
+              <div
+                class="snap-start shrink-0 w-[88vw] bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
+                <!-- Coffee Thumbnail -->
+                <div role="button" tabindex="0" (click)="buyDirect('signature')"
+                  class="w-24 aspect-[3/4.2] rounded-xl overflow-hidden bg-stone-900 shrink-0 shadow-sm border border-slate-100 relative cursor-pointer active:scale-95 transition-transform">
+                  <img
+                    src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"
+                    alt="Biji Kopi Signature Blend" class="w-full h-full object-cover" />
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
+                  <div class="flex flex-col">
+                    <span class="text-2xs text-slate-400 line-through">Rp 55.000</span>
+                    <span class="font-display font-extrabold text-sm text-slate-900">Rp 45.000</span>
+                    <!-- Info & Actions -->
+                    <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
+                      <div>
+                        <span
+                          class="text-2xs font-bold text-amber-700 uppercase tracking-wider block flex items-center justify-between">
+                          WHOLE BEAN & GROUND
+                          <span
+                            class="text-[9px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-100">★
+                            4.9</span>
+                        </span>
+                        <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
+                          Mardika Signature Blend (250g)
+                        </h3>
+                        <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
+                          Notes cokelat karamel, bodi bulat tebal, aftertaste manis panjang,
+                          lembut di lambung.
+                        </p>
+                        <span class="text-2xs text-slate-400 font-medium block mt-1">Arabica & Fine Robusta
+                          Pilihan</span>
+                      </div>
+
+                      <button type="button" (click)="buyDirect('signature')"
+                        class="px-4 py-2 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
+                        Pesan Biji Kopi
+                      </button>
+                      <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
+                        <div class="flex flex-col">
+                          <span class="text-2xs text-slate-400 line-through">Rp 55.000</span>
+                          <span class="font-display font-extrabold text-sm text-slate-900">Rp 45.000</span>
+                        </div>
+
+                        <button type="button" (click)="buyDirect('signature')"
+                          class="px-4 py-2 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
+                          Pesan Biji Kopi
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
   </section>
 
   <!-- 4. PILAR 2: KOPI DRIP PRAKTIS -->
@@ -1314,8 +1320,9 @@
         ★ 5.0 (Single-Serve)
       </span>
     </div>
-
-    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
+    <!-- Card 2: Kopi Drip Bag -->
+    <div
+      class="snap-start shrink-0 w-[88vw] bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
       <!-- Drip Bag Thumbnail -->
       <div role="button" tabindex="0" (click)="buyDirect('drip')"
         class="w-24 aspect-[3/4.2] rounded-xl overflow-hidden bg-stone-900 shrink-0 shadow-sm border border-slate-100 relative cursor-pointer active:scale-95 transition-transform">
@@ -1323,33 +1330,69 @@
           alt="Drip Bag Coffee Box" class="w-full h-full object-cover" />
       </div>
 
-      <!-- Info & Actions -->
-      <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
-        <div>
-          <span class="text-2xs font-bold text-red-700 uppercase tracking-wider block">FILTER ON-THE-GO</span>
-          <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
-            Drip Bag Coffee Box (5 Sachet)
-          </h3>
-          <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
-            Seduhan kopi filter artisan praktis tanpa alat khusus. Cukup kaitkan di
-            cangkir & tuang air panas.
-          </p>
-          <span class="text-2xs text-slate-400 font-medium block mt-1">Nitrogen-flushed kedap udara</span>
+      <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
+        <!-- Drip Bag Thumbnail -->
+        <div role="button" tabindex="0" (click)="buyDirect('drip')"
+          class="w-24 aspect-[3/4.2] rounded-xl overflow-hidden bg-stone-900 shrink-0 shadow-sm border border-slate-100 relative cursor-pointer active:scale-95 transition-transform">
+          <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80"
+            alt="Drip Bag Coffee Box" class="w-full h-full object-cover" />
         </div>
-
-        <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
-          <div class="flex flex-col">
-            <span class="text-2xs text-slate-400 line-through">Rp 55.000</span>
-            <span class="font-display font-extrabold text-sm text-slate-900">Rp 48.000</span>
+        <!-- Info & Actions -->
+        <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
+          <div>
+            <span
+              class="text-2xs font-bold text-red-700 uppercase tracking-wider block flex items-center justify-between">
+              FILTER ON-THE-GO
+              <span
+                class="text-[9px] font-bold text-red-700 bg-red-50 px-1.5 py-0.5 rounded-full border border-red-100">★
+                5.0</span>
+            </span>
+            <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
+              Drip Bag Coffee Box (5 Sachet)
+            </h3>
+            <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
+              Seduhan kopi filter artisan praktis tanpa alat khusus. Cukup kaitkan di
+              cangkir & tuang air panas.
+            </p>
+            <span class="text-2xs text-slate-400 font-medium block mt-1">Nitrogen-flushed kedap udara</span>
           </div>
 
-          <button type="button" (click)="buyDirect('drip')"
-            class="px-4 py-2 rounded-xl bg-red-700 hover:bg-red-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
-            Pesan Drip Bag
-          </button>
-        </div>
-      </div>
-    </div>
+          <!-- Info & Actions -->
+          <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
+            <div>
+              <span class="text-2xs font-bold text-red-700 uppercase tracking-wider block">FILTER ON-THE-GO</span>
+              <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
+                Drip Bag Coffee Box (5 Sachet)
+              </h3>
+              <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
+                Seduhan kopi filter artisan praktis tanpa alat khusus. Cukup kaitkan di
+                cangkir & tuang air panas.
+              </p>
+              <span class="text-2xs text-slate-400 font-medium block mt-1">Nitrogen-flushed kedap udara</span>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
+              <div class="flex flex-col">
+                <span class="text-2xs text-slate-400 line-through">Rp 55.000</span>
+                <span class="font-display font-extrabold text-sm text-slate-900">Rp 48.000</span>
+              </div>
+
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
+                <div class="flex flex-col">
+                  <span class="text-2xs text-slate-400 line-through">Rp 55.000</span>
+                  <span class="font-display font-extrabold text-sm text-slate-900">Rp 48.000</span>
+                  <button type="button" (click)="buyDirect('drip')"
+                    class="px-4 py-2 rounded-xl bg-red-700 hover:bg-red-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
+                    Pesan Drip Bag
+                  </button>
+                </div>
+
+                <button type="button" (click)="buyDirect('drip')"
+                  class="px-4 py-2 rounded-xl bg-red-700 hover:bg-red-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
+                  Pesan Drip Bag
+                </button>
+              </div>
+            </div>
+          </div>
   </section>
 
   <!-- 5. PILAR 3: BEVERAGES (KOPI JADI / SIAP MINUM) -->
@@ -1366,8 +1409,9 @@
         ★ 4.9 (Cold Brew 16h)
       </span>
     </div>
-
-    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
+    <!-- Card 3: Beverages Siap Minum -->
+    <div
+      class="snap-start shrink-0 w-[88vw] bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
       <!-- Beverage Thumbnail -->
       <div role="button" tabindex="0" (click)="buyDirect('beverage')"
         class="w-24 aspect-[3/4.2] rounded-xl overflow-hidden bg-stone-900 shrink-0 shadow-sm border border-slate-100 relative cursor-pointer active:scale-95 transition-transform">
@@ -1375,34 +1419,71 @@
           alt="Cold Brew Concentrate" class="w-full h-full object-cover" />
       </div>
 
-      <!-- Info & Actions -->
-      <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
-        <div>
-          <span class="text-2xs font-bold text-emerald-700 uppercase tracking-wider block">READY TO DRINK
-            500ML</span>
-          <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
-            Cold Brew Concentrate (500ml)
-          </h3>
-          <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
-            Ekstraksi dingin 16 jam ekstra lembut di lambung. Tinggal tuang es batu,
-            segar & fokus instan.
-          </p>
-          <span class="text-2xs text-slate-400 font-medium block mt-1">Konsentrat Kopi Segar Murni</span>
+      <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex gap-3.5 items-start">
+        <!-- Beverage Thumbnail -->
+        <div role="button" tabindex="0" (click)="buyDirect('beverage')"
+          class="w-24 aspect-[3/4.2] rounded-xl overflow-hidden bg-stone-900 shrink-0 shadow-sm border border-slate-100 relative cursor-pointer active:scale-95 transition-transform">
+          <img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80"
+            alt="Cold Brew Concentrate" class="w-full h-full object-cover" />
         </div>
-
-        <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
-          <div class="flex flex-col">
-            <span class="text-2xs text-slate-400 line-through">Rp 65.000</span>
-            <span class="font-display font-extrabold text-sm text-slate-900">Rp 55.000</span>
+        <!-- Info & Actions -->
+        <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
+          <div>
+            <span
+              class="text-2xs font-bold text-emerald-700 uppercase tracking-wider block flex items-center justify-between">
+              READY TO DRINK 500ML
+              <span
+                class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-100">★
+                4.9</span>
+            </span>
+            <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
+              Cold Brew Concentrate (500ml)
+            </h3>
+            <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
+              Ekstraksi dingin 16 jam ekstra lembut di lambung. Tinggal tuang es batu,
+              segar & fokus instan.
+            </p>
+            <span class="text-2xs text-slate-400 font-medium block mt-1">Konsentrat Kopi Segar Murni</span>
           </div>
 
-          <button type="button" (click)="buyDirect('beverage')"
-            class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
-            Pesan Beverage
-          </button>
-        </div>
-      </div>
-    </div>
+          <!-- Info & Actions -->
+          <div class="flex flex-col flex-1 min-w-0 justify-between gap-2">
+            <div>
+              <span class="text-2xs font-bold text-emerald-700 uppercase tracking-wider block">READY TO DRINK
+                500ML</span>
+              <h3 class="font-display font-bold text-sm text-slate-900 leading-snug line-clamp-2 mt-0.5">
+                Cold Brew Concentrate (500ml)
+              </h3>
+              <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
+                Ekstraksi dingin 16 jam ekstra lembut di lambung. Tinggal tuang es batu,
+                segar & fokus instan.
+              </p>
+              <span class="text-2xs text-slate-400 font-medium block mt-1">Konsentrat Kopi Segar Murni</span>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
+              <div class="flex flex-col">
+                <span class="text-2xs text-slate-400 line-through">Rp 65.000</span>
+                <span class="font-display font-extrabold text-sm text-slate-900">Rp 55.000</span>
+              </div>
+
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
+                <div class="flex flex-col">
+                  <span class="text-2xs text-slate-400 line-through">Rp 65.000</span>
+                  <span class="font-display font-extrabold text-sm text-slate-900">Rp 55.000</span>
+                  <button type="button" (click)="buyDirect('beverage')"
+                    class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
+                    Pesan Beverage
+                  </button>
+                </div>
+
+                <button type="button" (click)="buyDirect('beverage')"
+                  class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs active:scale-95 transition-transform cursor-pointer">
+                  Pesan Beverage
+                </button>
+              </div>
+            </div>
+
+          </div>
   </section>
 
   <!-- 5. PROMO BANNER BUNDLING CARD -->
