@@ -37,8 +37,7 @@ import { ScreenService } from '../../core/services/screen.service';
     ModalComponent
   ],
   templateUrl: './complaint.component.html',
-  styleUrl: './complaint.component.css'
-})
+  })
 export class ComplaintComponent implements OnInit {
   protected readonly screen = inject(ScreenService);
   private readonly fb = inject(FormBuilder);

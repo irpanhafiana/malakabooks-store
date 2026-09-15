@@ -12,8 +12,7 @@ import { buildCsv, downloadCsv } from '../../../shared/util/csv.util';
   standalone: true,
   imports: [AdminButtonComponent, IconComponent],
   templateUrl: './reports.component.html',
-  styleUrl: './reports.component.css'
-})
+  })
 export class ReportsComponent {
   private readonly orderApi = inject(OrderApiService);
   private readonly productApi = inject(ProductApiService);

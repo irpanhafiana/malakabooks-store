@@ -49,8 +49,7 @@ interface MenuSection {
     ComplaintComponent
   ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
-})
+  })
 export class ProfileComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
   protected readonly orderStore = inject(OrderStore);

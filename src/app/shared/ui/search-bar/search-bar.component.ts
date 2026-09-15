@@ -11,8 +11,7 @@ import { IconComponent } from '../icon/icon.component';
   standalone: true,
   imports: [FormsModule, IconComponent],
   templateUrl: './search-bar.component.html',
-  styleUrl: './search-bar.component.css'
-})
+  })
 export class SearchBarComponent implements OnInit {
   readonly placeholder = input<string>('Search books, stationery...');
   readonly value = input<string>('');

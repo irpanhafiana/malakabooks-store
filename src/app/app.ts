@@ -38,6 +38,9 @@ export class App implements OnInit {
         const newUrl = window.location.pathname;
         window.history.replaceState({}, '', newUrl);
       }
+
+
     }
   }
 }
+

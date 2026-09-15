@@ -34,8 +34,7 @@ import { QtyModalContentComponent } from '../../../shared/ui/qty-modal-content/q
     NgTemplateOutlet
   ],
   templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css'
-})
+  })
 export class ProductListComponent implements OnInit {
   protected readonly screen = inject(ScreenService);
   protected readonly productStore = inject(ProductStore);

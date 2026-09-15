@@ -8,8 +8,7 @@ import { BadgeComponent } from '../badge/badge.component';
   standalone: true,
   imports: [CommonModule, BadgeComponent],
   templateUrl: './status-badge.component.html',
-  styleUrl: './status-badge.component.css'
-})
+  })
 export class StatusBadgeComponent {
   readonly status = input.required<string>();
   readonly type = input<'order' | 'complaint'>('order');

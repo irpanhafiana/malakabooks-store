@@ -7,8 +7,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './radio.component.html',
-  styleUrl: './radio.component.css'
-})
+  })
 export class RadioComponent {
   readonly control = input.required<FormControl>();
   readonly options = input.required<{ value: string | number | boolean | unknown; label: string }[]>();

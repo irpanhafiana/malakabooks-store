@@ -8,8 +8,7 @@ import { lockBodyScroll, unlockBodyScroll } from '../../util/body-scroll-lock.ut
   standalone: true,
   imports: [IconComponent],
   templateUrl: './modal.component.html',
-  styleUrl: './modal.component.css'
-})
+  })
 export class ModalComponent implements OnInit, OnDestroy {
   readonly isOpen = model<boolean>(false);
   readonly title = input<string>('');

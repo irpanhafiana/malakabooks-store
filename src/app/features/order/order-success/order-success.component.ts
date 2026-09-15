@@ -13,8 +13,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
   standalone: true,
   imports: [RouterLink, PriceComponent, IconComponent, ButtonComponent, SkeletonComponent],
   templateUrl: './order-success.component.html',
-  styleUrl: './order-success.component.css'
-})
+  })
 export class OrderSuccessComponent implements OnInit {
   protected readonly orderStore = inject(OrderStore);
   private readonly route = inject(ActivatedRoute);

@@ -14,8 +14,7 @@ import { LoggerService } from '../../../core/services/logger.service';
   standalone: true,
   imports: [CommonModule, RouterLink, IconComponent, SkeletonComponent, DatePipe],
   templateUrl: './detail-shipment.component.html',
-  styleUrl: './detail-shipment.component.css'
-})
+  })
 export class DetailShipmentComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly orderApi = inject(OrderApiService);

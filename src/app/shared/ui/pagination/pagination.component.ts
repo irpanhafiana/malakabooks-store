@@ -7,8 +7,7 @@ import { IconComponent } from '../icon/icon.component';
   standalone: true,
   imports: [IconComponent],
   templateUrl: './pagination.component.html',
-  styleUrl: './pagination.component.css'
-})
+  })
 export class PaginationComponent {
   readonly currentPage = input<number>(1);
   readonly totalPages = input<number>(1);

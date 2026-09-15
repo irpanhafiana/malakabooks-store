@@ -5,8 +5,7 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
   selector: 'app-badge',
   standalone: true,
   templateUrl: './badge.component.html',
-  styleUrl: './badge.component.css'
-})
+  })
 export class BadgeComponent {
   readonly variant = input<'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'danger' | 'info'>('secondary');
   readonly size = input<'sm' | 'md'>('md');

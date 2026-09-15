@@ -5,8 +5,7 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
   selector: 'app-skeleton',
   standalone: true,
   templateUrl: './skeleton.component.html',
-  styleUrl: './skeleton.component.css'
-})
+  })
 export class SkeletonComponent {
   readonly type = input<'text' | 'avatar' | 'card' | 'table-row' | 'horizontal-card'>('text');
   readonly count = input<number>(1);

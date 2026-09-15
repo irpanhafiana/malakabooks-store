@@ -37,8 +37,7 @@ import { CheckoutPaymentComponent } from './components/checkout-payment/checkout
     CheckoutPaymentComponent
   ],
   templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.css'
-})
+  })
 export class CheckoutComponent implements OnInit {
   protected readonly authStore = inject(AuthStore);
   protected readonly cartStore = inject(CartStore);

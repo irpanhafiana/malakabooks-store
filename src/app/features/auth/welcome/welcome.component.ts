@@ -8,6 +8,5 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
   standalone: true,
   imports: [RouterLink, ButtonComponent],
   templateUrl: './welcome.component.html',
-  styleUrl: './welcome.component.css'
-})
+  })
 export class WelcomeComponent {}

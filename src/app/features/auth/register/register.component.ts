@@ -11,8 +11,7 @@ import { InputComponent } from '../../../shared/ui/input/input.component';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
-})
+  })
 export class RegisterComponent {
   private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);

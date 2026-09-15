@@ -10,7 +10,7 @@ import { getBffLoginUrl } from '../../../core/auth/login-url.util';
   standalone: true,
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './desktop-header.component.html',
-  styleUrl: './desktop-header.component.css',
+  
   host: {
     'class': 'block h-20 w-full z-50'
   }

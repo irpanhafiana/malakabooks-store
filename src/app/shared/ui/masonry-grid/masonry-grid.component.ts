@@ -7,8 +7,7 @@ import { NgTemplateOutlet } from '@angular/common';
   standalone: true,
   imports: [NgTemplateOutlet],
   templateUrl: './masonry-grid.component.html',
-  styleUrl: './masonry-grid.component.css'
-})
+  })
 export class MasonryGridComponent {
   items = input<unknown[]>([]);
 

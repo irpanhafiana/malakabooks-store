@@ -23,8 +23,7 @@ import { ButtonComponent } from '../../shared/ui/button/button.component';
   standalone: true,
   imports: [RouterOutlet, DesktopHeaderComponent, DesktopFooterComponent, BottomSheetComponent, ModalComponent, ProductDetailComponent, QtyModalContentComponent, PriceComponent, ButtonComponent],
   templateUrl: './inner-page-layout.component.html',
-  styleUrl: './inner-page-layout.component.css'
-})
+  })
 export class InnerPageLayoutComponent {
   protected readonly alertService = inject(AlertService);
   protected readonly screen = inject(ScreenService);

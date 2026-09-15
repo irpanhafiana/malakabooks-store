@@ -11,8 +11,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, InputComponent, ButtonComponent],
   templateUrl: './forgot-password.component.html',
-  styleUrl: './forgot-password.component.css'
-})
+  })
 export class ForgotPasswordComponent {
   private readonly authStore = inject(AuthStore);
 

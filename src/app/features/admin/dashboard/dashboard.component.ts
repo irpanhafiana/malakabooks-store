@@ -14,8 +14,7 @@ import { AdminButtonComponent } from '../../../shared/ui/admin-button/admin-butt
   standalone: true,
   imports: [RouterLink, PriceComponent, IconComponent, StatusBadgeComponent, DatePipe, CurrencyPipe, AdminButtonComponent],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
-})
+  })
 export class DashboardComponent implements OnInit {
   private readonly dashboardApi = inject(DashboardApiService);
 

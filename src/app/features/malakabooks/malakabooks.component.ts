@@ -12,6 +12,7 @@ import { ScreenService } from '../../core/services/screen.service';
 import { PromotionBannerStore } from '../../store/promotion-banner.store';
 import { AuthorStore } from '../../store/author.store';
 import { FormsModule } from '@angular/forms';
+import { AosDirective } from '../../shared/directives/aos.directive';
 
 export interface Testimonial {
   name: string;
@@ -44,7 +45,7 @@ export interface KopiCard {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-malakabooks',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, AosDirective],
   templateUrl: './malakabooks.component.html'
 })
 export class MalakabooksComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -686,3 +687,4 @@ export class MalakabooksComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isAuthorSheetOpen.set(false);
   }
 }
+

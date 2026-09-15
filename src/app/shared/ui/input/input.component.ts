@@ -8,8 +8,7 @@ import { IconComponent } from '../icon/icon.component';
   standalone: true,
   imports: [ReactiveFormsModule, IconComponent],
   templateUrl: './input.component.html',
-  styleUrl: './input.component.css'
-})
+  })
 export class InputComponent {
   readonly control = input<FormControl>(new FormControl());
   readonly id = input<string>('input-' + Math.random().toString(36).substring(2, 9));

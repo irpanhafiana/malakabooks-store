@@ -7,8 +7,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './textarea.component.html',
-  styleUrl: './textarea.component.css'
-})
+  })
 export class TextareaComponent {
   readonly control = input.required<FormControl>();
   readonly id = input<string>('textarea-' + Math.random().toString(36).substring(2, 9));

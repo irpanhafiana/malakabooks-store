@@ -32,8 +32,7 @@ import { AlertService } from '../../../core/services/alert.service';
     DatePipe
   ],
   templateUrl: './mardika-kopi-detail.component.html',
-  styleUrl: './mardika-kopi-detail.component.css'
-})
+  })
 export class MardikaKopiDetailComponent implements OnInit {
   readonly productId = input<string | null>(null);
   readonly closed = output<void>();

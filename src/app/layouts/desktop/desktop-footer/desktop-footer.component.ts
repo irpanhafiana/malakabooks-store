@@ -6,8 +6,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './desktop-footer.component.html',
-  styleUrl: './desktop-footer.component.css'
-})
+  })
 export class DesktopFooterComponent {
   currentYear = new Date().getFullYear();
 }

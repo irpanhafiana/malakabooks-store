@@ -12,8 +12,7 @@ import { QuantitySelectorComponent } from '../quantity-selector/quantity-selecto
   standalone: true,
   imports: [QuantitySelectorComponent],
   templateUrl: './qty-modal-content.component.html',
-  styleUrl: './qty-modal-content.component.css'
-})
+  })
 export class QtyModalContentComponent {
   protected readonly authStore = inject(AuthStore);
   protected readonly cartStore = inject(CartStore);

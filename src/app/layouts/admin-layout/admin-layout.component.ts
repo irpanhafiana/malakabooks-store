@@ -13,8 +13,7 @@ import { OrderStore } from '../../store/order.store';
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, IconComponent],
   templateUrl: './admin-layout.component.html',
-  styleUrl: './admin-layout.component.css'
-})
+  })
 export class AdminLayoutComponent {
   protected readonly authStore = inject(AuthStore);
   protected readonly orderStore = inject(OrderStore);

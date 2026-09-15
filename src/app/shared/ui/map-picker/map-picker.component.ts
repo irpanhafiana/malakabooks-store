@@ -7,8 +7,7 @@ import { LoggerService } from '../../../core/services/logger.service';
   selector: 'app-map-picker',
   standalone: true,
   templateUrl: './map-picker.component.html',
-  styleUrl: './map-picker.component.css'
-})
+  })
 export class MapPickerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
 

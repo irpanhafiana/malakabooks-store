@@ -32,8 +32,7 @@ import {
   standalone: true,
   imports: [DatePipe, NgClass, TableComponent, PriceComponent, PaginationComponent, SpinnerComponent, StatusBadgeComponent, IconComponent, DrawerComponent, AdminButtonComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './orders-list.component.html',
-  styleUrl: './orders-list.component.css'
-})
+  })
 export class OrdersListComponent implements OnInit {
   protected readonly orderStore = inject(OrderStore);
   private readonly alertService = inject(AlertService);

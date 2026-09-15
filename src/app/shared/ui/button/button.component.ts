@@ -5,8 +5,7 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
   selector: 'app-button',
   standalone: true,
   templateUrl: './button.component.html',
-  styleUrl: './button.component.css'
-})
+  })
 export class ButtonComponent {
   readonly variant = input<'primary' | 'secondary' | 'accent' | 'danger' | 'ghost' | 'outline'>('primary');
   readonly size = input<'sm' | 'md' | 'lg'>('md');

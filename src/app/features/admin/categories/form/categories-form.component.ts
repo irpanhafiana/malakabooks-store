@@ -11,8 +11,7 @@ import { AlertService } from '../../../../core/services/alert.service';
   standalone: true,
   imports: [ReactiveFormsModule, AdminInputComponent],
   templateUrl: './categories-form.component.html',
-  styleUrl: './categories-form.component.css'
-})
+  })
 export class CategoriesFormComponent {
   readonly category = input<Category | null>(null);
   readonly formCancel = output<void>();

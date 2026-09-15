@@ -8,8 +8,7 @@ import { IconComponent } from '../icon/icon.component';
   standalone: true,
   imports: [CommonModule, IconComponent],
   templateUrl: './quantity-selector.component.html',
-  styleUrl: './quantity-selector.component.css'
-})
+  })
 export class QuantitySelectorComponent {
   readonly quantity = model.required<number>();
   readonly min = input<number>(1);

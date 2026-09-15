@@ -32,8 +32,7 @@ import { AlertService } from '../../../core/services/alert.service';
     DatePipe
   ],
   templateUrl: './product-detail.component.html',
-  styleUrl: './product-detail.component.css'
-})
+  })
 export class ProductDetailComponent implements OnInit {
   readonly productId = input<string | null>(null);
 

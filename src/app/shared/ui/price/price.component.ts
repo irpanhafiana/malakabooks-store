@@ -6,8 +6,7 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
   standalone: true,
   imports: [],
   templateUrl: './price.component.html',
-  styleUrl: './price.component.css'
-})
+  })
 export class PriceComponent {
   readonly value = input.required<number>();
   readonly currencyCode = input<string>('USD');

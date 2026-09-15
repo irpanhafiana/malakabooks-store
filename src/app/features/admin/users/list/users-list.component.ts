@@ -19,8 +19,7 @@ import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-in
   standalone: true,
   imports: [TableComponent, BadgeComponent, AdminButtonComponent, DatePipe, UpperCasePipe, PaginationComponent, SpinnerComponent, IconComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './users-list.component.html',
-  styleUrl: './users-list.component.css'
-})
+  })
 export class UsersListComponent implements OnInit {
   protected readonly userStore = inject(UserStore);
   private readonly alertService = inject(AlertService);

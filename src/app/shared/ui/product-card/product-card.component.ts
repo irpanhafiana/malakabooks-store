@@ -13,8 +13,7 @@ import { PriceComponent } from '../price/price.component';
   imports: [NgOptimizedImage, IconComponent, PriceComponent],
 
   templateUrl: './product-card.component.html',
-  styleUrl: './product-card.component.css'
-})
+  })
 export class ProductCardComponent {
   private readonly productStore = inject(ProductStore);
   protected readonly authStore = inject(AuthStore);

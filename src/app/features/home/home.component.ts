@@ -30,6 +30,8 @@ import { LoggerService } from '../../core/services/logger.service';
 import { resolveImageUrl } from '../../shared/util/image.util';
 import { isAdminSession } from '../../core/auth/session.util';
 import { SeoService } from '../../core/services/seo.service';
+import { AosDirective } from '../../shared/directives/aos.directive';
+
 
 export interface KopiTestimonial {
     name: string;
@@ -59,6 +61,7 @@ export interface KopiShowcaseCard {
         BottomSheetComponent,
         ModalComponent,
         MardikaKopiDetailComponent,
+        AosDirective,
     ],
     templateUrl: './home.component.html',
 })
@@ -439,6 +442,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this.bannerStore.loadActiveBanners();
         this.loadKopiItems();
+        
     }
 
     async loadKopiItems() {
@@ -643,3 +647,5 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 }
+
+

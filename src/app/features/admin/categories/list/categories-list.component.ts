@@ -19,8 +19,7 @@ import { AdminSearchInputComponent } from '../../../../shared/ui/admin-search-in
   standalone: true,
   imports: [TableComponent, ModalComponent, AdminButtonComponent, IconComponent, PaginationComponent, CategoriesFormComponent, SpinnerComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './categories-list.component.html',
-  styleUrl: './categories-list.component.css'
-})
+  })
 export class CategoriesListComponent implements OnInit {
   protected readonly productStore = inject(ProductStore);
   private readonly alertService = inject(AlertService);

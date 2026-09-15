@@ -38,8 +38,7 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
     EmptyStateComponent
   ],
   templateUrl: './my-addresses.component.html',
-  styleUrl: './my-addresses.component.css'
-})
+  })
 export class MyAddressesComponent implements OnInit {
   protected readonly screen = inject(ScreenService);
   protected readonly authStore = inject(AuthStore);

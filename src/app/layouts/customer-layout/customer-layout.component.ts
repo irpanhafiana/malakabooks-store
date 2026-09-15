@@ -27,8 +27,7 @@ import { getBffLoginUrl } from '../../core/auth/login-url.util';
     standalone: true,
     imports: [RouterOutlet, RouterLink, RouterLinkActive, SearchBarComponent, ProductDetailComponent, BottomSheetComponent, ModalComponent, QtyModalContentComponent,  DesktopHeaderComponent, DesktopFooterComponent, PriceComponent, ButtonComponent],
     templateUrl: './customer-layout.component.html',
-    styleUrl: './customer-layout.component.css'
-})
+    })
 export class CustomerLayoutComponent {
     protected readonly authStore = inject(AuthStore);
     protected readonly loginUrl = getBffLoginUrl('/');

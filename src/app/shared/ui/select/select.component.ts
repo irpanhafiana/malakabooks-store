@@ -7,8 +7,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './select.component.html',
-  styleUrl: './select.component.css'
-})
+  })
 export class SelectComponent {
   readonly control = input.required<FormControl>();
   readonly options = input.required<{ value: string | number | boolean | unknown; label: string }[]>();
