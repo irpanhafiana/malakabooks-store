@@ -7,7 +7,7 @@ import { IconComponent } from '../icon/icon.component';
   standalone: true,
   imports: [IconComponent],
   templateUrl: './pagination.component.html',
-  })
+})
 export class PaginationComponent {
   readonly currentPage = input<number>(1);
   readonly totalPages = input<number>(1);
@@ -48,7 +48,7 @@ export class PaginationComponent {
     const base = 'h-9 w-9 flex items-center justify-center text-sm font-semibold rounded-xl  cursor-pointer active:scale-95 border';
     const active = page === this.currentPage()
       ? 'bg-primary-600 border-primary-600 text-white shadow-sm'
-      : 'bg-white border-slate-100 text-slate-600 hover:bg-slate-100 hover:text-slate-800';
+      : 'bg-white border-slate-100 text-slate-700 hover:bg-slate-100 hover:text-slate-800';
     return `${base} ${active}`;
   }
 

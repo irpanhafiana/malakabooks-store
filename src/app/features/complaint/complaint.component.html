@@ -43,7 +43,7 @@
           <app-status-badge [status]="c.status" type="complaint"></app-status-badge>
         </div>
 
-        <p class="text-slate-600 line-clamp-2 text-sm">{{ c.description }}</p>
+        <p class="text-slate-700 line-clamp-2 text-sm">{{ c.description }}</p>
 
         @if (c.messages && c.messages.length > 0) {
         <p class="text-primary-600 font-bold text-xs mt-1 flex items-center gap-1"><i
@@ -94,7 +94,8 @@
           @if ((complaint.additionalImages?.length ?? 0) > 0) {
           <div class="flex flex-wrap gap-2 mt-2">
             @for (img of complaint.additionalImages; track img.no) {
-            <img [src]="img.image" (click)="openImagePreview(img.image)" (keydown.enter)="openImagePreview(img.image)" tabindex="0" role="button" alt="Foto Komplain Tambahan"
+            <img [src]="img.image" (click)="openImagePreview(img.image)" (keydown.enter)="openImagePreview(img.image)"
+              tabindex="0" role="button" alt="Foto Komplain Tambahan"
               class="w-16 h-16 object-cover rounded-lg border border-primary-400 cursor-pointer hover:opacity-80 transition-opacity">
             }
           </div>
@@ -122,7 +123,8 @@
           @if ((msg.additionalImages?.length ?? 0) > 0) {
           <div class="flex flex-wrap gap-2 mt-2">
             @for (img of msg.additionalImages; track img.no) {
-            <img [src]="img.image" (click)="openImagePreview(img.image)" (keydown.enter)="openImagePreview(img.image)" tabindex="0" role="button" alt="Foto Balasan Tambahan"
+            <img [src]="img.image" (click)="openImagePreview(img.image)" (keydown.enter)="openImagePreview(img.image)"
+              tabindex="0" role="button" alt="Foto Balasan Tambahan"
               class="w-16 h-16 object-cover rounded-lg border cursor-pointer hover:opacity-80 transition-opacity"
               [class.border-primary-400]="msg.senderType === 'customer'"
               [class.border-slate-200]="msg.senderType === 'admin'">
@@ -145,7 +147,8 @@
       <div class="mb-2 flex flex-wrap gap-2">
         @for (img of replyImages(); track img.no; let i = $index) {
         <div class="relative w-14 h-14 group">
-          <img [src]="img.image" alt="Pratinjau Balasan Gambar" class="w-14 h-14 object-cover rounded-lg border border-slate-200">
+          <img [src]="img.image" alt="Pratinjau Balasan Gambar"
+            class="w-14 h-14 object-cover rounded-lg border border-slate-200">
           <button type="button" (click)="removeReplyImage(i)"
             class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs shadow-xs hover:bg-rose-600">
             ×
@@ -176,7 +179,8 @@
     [hasFooter]="false">
     @if (previewImage()) {
     <div class="flex items-center justify-center">
-      <img [src]="previewImage()" class="max-w-full h-auto max-h-[60vh] object-contain rounded-lg" alt="Pratinjau Gambar Komplain Full">
+      <img [src]="previewImage()" class="max-w-full h-auto max-h-[60vh] object-contain rounded-lg"
+        alt="Pratinjau Gambar Komplain Full">
     </div>
     }
   </app-modal>

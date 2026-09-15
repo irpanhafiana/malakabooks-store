@@ -41,7 +41,7 @@
           <p class="text-[10px] text-slate-400 mt-0.5 truncate">{{ c.description }}</p>
         </td>
         <td class="px-5 py-4 font-mono text-slate-500 text-[10px]">{{ c.orderId }}</td>
-        <td class="px-5 py-4 text-slate-600">{{ c.createdAt | date:'shortDate' }}</td>
+        <td class="px-5 py-4 text-slate-700">{{ c.createdAt | date:'shortDate' }}</td>
         <td class="px-5 py-4">
           <app-status-badge [status]="c.status" type="complaint"></app-status-badge>
         </td>
@@ -73,18 +73,14 @@
 
 <!-- Respond Modal -->
 <app-modal [(isOpen)]="isModalOpen" title="Tindak Lanjut Komplain">
-  <app-complaints-form #complaintsForm [complaint]="selected()" (formCancel)="closeModal()" (save)="closeModal()"></app-complaints-form>
+  <app-complaints-form #complaintsForm [complaint]="selected()" (formCancel)="closeModal()"
+    (save)="closeModal()"></app-complaints-form>
   <div modal-footer class="flex justify-end gap-3 w-full">
     <app-admin-button type="button" variant="outline" class="flex-1" (click)="closeModal()">
       Batal
     </app-admin-button>
-    <app-admin-button
-      type="button"
-      class="flex-1"
-      (click)="complaintsForm.submitRespond()"
-      [disabled]="complaintsForm.respondForm.invalid"
-      [loading]="complaintsForm.submitting()"
-    >
+    <app-admin-button type="button" class="flex-1" (click)="complaintsForm.submitRespond()"
+      [disabled]="complaintsForm.respondForm.invalid" [loading]="complaintsForm.submitting()">
       Simpan Respons
     </app-admin-button>
   </div>

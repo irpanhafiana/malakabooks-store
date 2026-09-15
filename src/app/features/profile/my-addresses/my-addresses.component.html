@@ -33,7 +33,7 @@
             }
           </strong>
           <span class="text-slate-500 font-medium">{{ addr.phone }}</span>
-          <span class="text-slate-600 font-semibold text-xs mt-0.5">{{ addr.street }}{{ addr.district ? ', ' +
+          <span class="text-slate-700 font-semibold text-xs mt-0.5">{{ addr.street }}{{ addr.district ? ', ' +
             addr.district : '' }},
             {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}</span>
         </div>
@@ -55,11 +55,8 @@
         </div>
       </div>
       } @empty {
-      <app-empty-state
-        icon="map"
-        title="Belum Ada Alamat"
-        description="Belum ada alamat pengiriman tersimpan. Silakan tambahkan alamat baru."
-        actionText="Tambah Alamat"
+      <app-empty-state icon="map" title="Belum Ada Alamat"
+        description="Belum ada alamat pengiriman tersimpan. Silakan tambahkan alamat baru." actionText="Tambah Alamat"
         (actionClick)="addNewAddress()">
       </app-empty-state>
       }

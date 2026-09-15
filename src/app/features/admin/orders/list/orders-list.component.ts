@@ -32,7 +32,7 @@ import {
   standalone: true,
   imports: [DatePipe, NgClass, TableComponent, PriceComponent, PaginationComponent, SpinnerComponent, StatusBadgeComponent, IconComponent, DrawerComponent, AdminButtonComponent, TooltipDirective, AdminSearchInputComponent],
   templateUrl: './orders-list.component.html',
-  })
+})
 export class OrdersListComponent implements OnInit {
   protected readonly orderStore = inject(OrderStore);
   private readonly alertService = inject(AlertService);
@@ -266,7 +266,7 @@ export class OrdersListComponent implements OnInit {
     if (s.includes('transit') || s.includes('kirim') || s.includes('jalan')) return 'bg-blue-50 text-blue-600 border-blue-100';
     if (s.includes('pickup') || s.includes('kurir') || s.includes('proses')) return 'bg-amber-50 text-amber-600 border-amber-100';
     if (s.includes('fail') || s.includes('gagal') || s.includes('cancel')) return 'bg-rose-50 text-rose-600 border-rose-100';
-    return 'bg-slate-100 text-slate-600 border-slate-100';
+    return 'bg-slate-100 text-slate-700 border-slate-100';
   }
 
   protected drEntries(obj: unknown): { key: string; val: string }[] {

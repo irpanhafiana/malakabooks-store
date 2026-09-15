@@ -54,7 +54,7 @@ import { LoggerService } from '../../../core/services/logger.service';
               <app-icon name="upload" size="18"></app-icon>
             </div>
             <div class="text-center">
-              <p class="text-xs font-semibold text-slate-600 group-hover:text-primary-600 transition-colors">Klik untuk mengunggah gambar</p>
+              <p class="text-xs font-semibold text-slate-700 group-hover:text-primary-600 transition-colors">Klik untuk mengunggah gambar</p>
               <p class="text-[10px] text-slate-400">PNG, JPG, WEBP hingga {{ maxSizeMb() }}MB</p>
             </div>
           </div>

@@ -5,7 +5,7 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
   selector: 'app-button',
   standalone: true,
   templateUrl: './button.component.html',
-  })
+})
 export class ButtonComponent {
   readonly variant = input<'primary' | 'secondary' | 'accent' | 'danger' | 'ghost' | 'outline'>('primary');
   readonly size = input<'sm' | 'md' | 'lg'>('md');
@@ -26,7 +26,7 @@ export class ButtonComponent {
       accent: 'bg-accent-600 hover:bg-accent-700 text-white shadow-md shadow-accent-600/10 focus:ring-accent-500 border border-transparent',
       danger: 'bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/10 focus:ring-rose-500 border border-transparent',
       outline: 'bg-transparent border border-slate-200 hover:bg-slate-100 text-slate-700 focus:ring-slate-400',
-      ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 focus:ring-slate-300 border border-transparent'
+      ghost: 'bg-transparent text-slate-700 hover:bg-slate-100 focus:ring-slate-300 border border-transparent'
     };
 
     const sizes = {

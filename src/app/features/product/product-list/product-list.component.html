@@ -1,19 +1,19 @@
 <div class="h-full overflow-y-auto px-4 lg:px-0 pb-28 pt-1 flex flex-col gap-6">
   <!-- Search Bar & Filter Button (Mobile Only Sticky Header) -->
-  <div class="lg:hidden sticky top-0 z-30 -mx-4 px-4 bg-slate-100 flex items-center gap-3 h-14 shrink-0 border-b border-slate-200/60">
+  <div
+    class="lg:hidden sticky top-0 z-30 -mx-4 px-4 bg-slate-100 flex items-center gap-3 h-14 shrink-0 border-b border-slate-200/60">
     <button type="button" (click)="goBack()"
       class="p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer active:scale-95 flex items-center justify-center border-0 shrink-0"
       aria-label="Kembali">
       <i class="bx bx-left-arrow-alt text-2xl"></i>
     </button>
     <div class="flex-1">
-      <app-search-bar [placeholder]="'Cari judul buku, penulis, ISBN...'" [value]="productStore.searchQuery()" [autofocus]="false"
-        (searchSubmit)="onSearchSubmit($event)"></app-search-bar>
+      <app-search-bar [placeholder]="'Cari judul buku, penulis, ISBN...'" [value]="productStore.searchQuery()"
+        [autofocus]="false" (searchSubmit)="onSearchSubmit($event)"></app-search-bar>
     </div>
     <button type="button" (click)="openFilters()"
       class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary-600 cursor-pointer active:scale-95 flex items-center justify-center border-0 bg-transparent shrink-0 transition-colors"
-      [class.text-primary-600]="productStore.sortBy() !== 'featured'"
-      aria-label="Filter & Urutkan">
+      [class.text-primary-600]="productStore.sortBy() !== 'featured'" aria-label="Filter & Urutkan">
       <i class="bx bx-slider-alt text-xl"></i>
     </button>
   </div>
@@ -26,7 +26,8 @@
         <span class="text-primary-600 text-xs font-bold uppercase tracking-wider block mb-1">Eksplorasi Judul</span>
         <h1 class="font-display font-extrabold text-slate-900 text-xl lg:text-3xl flex items-center gap-3">
           <span>Katalog Buku Terlengkap</span>
-          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary-50 text-primary-600 border border-primary-200/60">
+          <span
+            class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary-50 text-primary-600 border border-primary-200/60">
             {{ productStore.filteredProducts().length }} Judul
           </span>
         </h1>
@@ -37,8 +38,8 @@
 
       <div class="hidden lg:flex items-center gap-3">
         <div class="w-72">
-          <app-search-bar [placeholder]="'Cari judul, penulis, ISBN...'" [value]="productStore.searchQuery()" [autofocus]="false"
-            (searchSubmit)="onSearchSubmit($event)"></app-search-bar>
+          <app-search-bar [placeholder]="'Cari judul, penulis, ISBN...'" [value]="productStore.searchQuery()"
+            [autofocus]="false" (searchSubmit)="onSearchSubmit($event)"></app-search-bar>
         </div>
         <button type="button" (click)="openFilters()"
           class="flex items-center gap-2 px-4 py-2.5 border border-slate-200 bg-white rounded-xl text-slate-700 hover:text-primary-600 hover:bg-slate-100 cursor-pointer active:scale-95 text-xs font-bold shadow-xs transition-all shrink-0"
@@ -69,17 +70,21 @@
 
     <!-- Active Filter Status Indicator if filtered -->
     @if (productStore.searchQuery() || productStore.selectedCategoryId() || productStore.sortBy() !== 'featured') {
-    <div class="flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-xs text-slate-600">
+    <div
+      class="flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-xs text-slate-700">
       <div class="flex items-center gap-2 flex-wrap">
         <span class="font-bold text-slate-700">Filter Aktif:</span>
         @if (activeCategoryName()) {
-          <span class="px-2 py-0.5 rounded bg-white font-semibold text-slate-800 border border-slate-200">Kategori: {{ activeCategoryName() }}</span>
+        <span class="px-2 py-0.5 rounded bg-white font-semibold text-slate-800 border border-slate-200">Kategori: {{
+          activeCategoryName() }}</span>
         }
         @if (productStore.searchQuery()) {
-          <span class="px-2 py-0.5 rounded bg-white font-semibold text-slate-800 border border-slate-200">&ldquo;{{ productStore.searchQuery() }}&rdquo;</span>
+        <span class="px-2 py-0.5 rounded bg-white font-semibold text-slate-800 border border-slate-200">&ldquo;{{
+          productStore.searchQuery() }}&rdquo;</span>
         }
       </div>
-      <button type="button" (click)="resetAllFilters()" class="text-primary-600 font-bold hover:underline cursor-pointer">
+      <button type="button" (click)="resetAllFilters()"
+        class="text-primary-600 font-bold hover:underline cursor-pointer">
         Reset
       </button>
     </div>
@@ -100,7 +105,8 @@
   <div class="p-12 text-center bg-white rounded-2xl border border-slate-200/80 text-slate-500">
     <i class="bx bx-book-open text-4xl text-slate-300 mb-2 block"></i>
     <p class="font-bold text-slate-700">Belum ada buku yang cocok</p>
-    <p class="text-xs text-slate-400 mt-1 mb-4">Kami tidak menemukan buku yang cocok dengan pencarian atau kategori ini.</p>
+    <p class="text-xs text-slate-400 mt-1 mb-4">Kami tidak menemukan buku yang cocok dengan pencarian atau kategori ini.
+    </p>
     <button type="button" (click)="resetAllFilters()"
       class="px-5 py-2.5 rounded-xl bg-primary-600 text-white text-xs font-bold hover:bg-primary-700 transition-colors cursor-pointer">
       Reset Semua Filter
@@ -109,8 +115,8 @@
   } @else {
   <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
     @for (prod of productStore.filteredProducts(); track prod.id) {
-      <app-product-card [product]="prod" [size]="screen.isDesktop() ? 'md' : 'sm'"
-        (addToCart)="onAddToCart($event)"></app-product-card>
+    <app-product-card [product]="prod" [size]="screen.isDesktop() ? 'md' : 'sm'"
+      (addToCart)="onAddToCart($event)"></app-product-card>
     }
   </div>
   }
@@ -130,14 +136,16 @@
 
 <!-- Quantity / Add To Cart (Desktop Modal) -->
 @if (screen.isDesktop()) {
-<app-modal [isOpen]="productStore.isQtyModalOpen()" (isOpenChange)="closeQtyModal()" title="Pilih Jumlah Produk" maxWidth="max-w-md">
+<app-modal [isOpen]="productStore.isQtyModalOpen()" (isOpenChange)="closeQtyModal()" title="Pilih Jumlah Produk"
+  maxWidth="max-w-md">
   <app-qty-modal-content #qtyDesktop (confirmed)="closeQtyModal()"></app-qty-modal-content>
   <div slot="footer" class="flex items-center justify-between gap-4 w-full">
     @if ((productStore.activeProduct()?.stock || 0) > 0) {
     <div class="flex flex-col">
       <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Total Harga</span>
       <span class="text-lg font-black text-slate-900 font-mono">
-        Rp {{ ((productStore.qtyLookedUpPrice() || (productStore.activeProduct()?.price || 0)) * productStore.qtyQuantity()) | number:'1.0-0' }}
+        Rp {{ ((productStore.qtyLookedUpPrice() || (productStore.activeProduct()?.price || 0)) *
+        productStore.qtyQuantity()) | number:'1.0-0' }}
       </span>
     </div>
     <button type="button" (click)="qtyDesktop.confirmAddToCart()"
@@ -162,7 +170,8 @@
         }
       </span>
       <span class="text-lg font-black text-slate-900 font-mono">
-        Rp {{ ((productStore.qtyLookedUpPrice() || (productStore.activeProduct()?.price || 0)) * productStore.qtyQuantity()) | number:'1.0-0' }}
+        Rp {{ ((productStore.qtyLookedUpPrice() || (productStore.activeProduct()?.price || 0)) *
+        productStore.qtyQuantity()) | number:'1.0-0' }}
       </span>
     </div>
     <button type="button" (click)="qtyMobile.confirmAddToCart()"

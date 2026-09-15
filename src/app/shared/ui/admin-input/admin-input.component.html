@@ -17,16 +17,18 @@
       [inputMode]="formatNumber() ? 'numeric' : 'text'" [placeholder]="placeholder()" [formControl]="control()"
       [class]="inputClass()" [readOnly]="readonly()" (focus)="onFocus()" (blur)="onBlur()" (input)="onInput()" />
     @if (type() === 'password') {
-      <button type="button" (click)="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
-        <app-icon [name]="showPassword() ? 'eye-off' : 'eye'" size="16"></app-icon>
-      </button>
+    <button type="button" (click)="togglePassword()"
+      class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700 cursor-pointer">
+      <app-icon [name]="showPassword() ? 'eye-off' : 'eye'" size="16"></app-icon>
+    </button>
     }
   </div>
   @if (control().invalid && (control().dirty || control().touched)) {
   <span class="text-red-500 text-xs mt-1 block">
     @if (control().errors?.['required']) { {{ label() || 'Kolom ini' }} wajib diisi. }
     @else if (control().errors?.['email']) { Format email tidak valid. }
-    @else if (control().errors?.['minlength']) { Minimal {{ control().errors?.['minlength']?.requiredLength }} karakter. }
+    @else if (control().errors?.['minlength']) { Minimal {{ control().errors?.['minlength']?.requiredLength }} karakter.
+    }
     @else { Input tidak valid. }
   </span>
   }

@@ -3,7 +3,8 @@
   <!-- Top Action bar & Search -->
   <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
     <div class="w-full sm:w-72">
-      <app-admin-search-input placeholder="Cari Stok Gudang ..." [value]="searchQuery()" (valueChange)="onSearch($event)" />
+      <app-admin-search-input placeholder="Cari Stok Gudang ..." [value]="searchQuery()"
+        (valueChange)="onSearch($event)" />
     </div>
 
     <div class="flex flex-row gap-2 justify-end items-center">
@@ -45,7 +46,7 @@
         <td class="px-5 py-4 text-xs font-semibold text-slate-700">
           {{ itemMap().get(stock.itemId) || '-' }}
         </td>
-        <td class="px-5 py-4 text-xs font-semibold text-slate-600">
+        <td class="px-5 py-4 text-xs font-semibold text-slate-700">
           {{ stock.quantityOnHand }}
         </td>
         <td class="px-5 py-4 text-xs text-rose-500 font-semibold">
@@ -53,7 +54,7 @@
         </td>
         <td class="px-5 py-4 text-xs font-semibold text-slate-500">
           <code
-            class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-100 text-slate-600 font-mono">{{ stock.baseUomCode }}</code>
+            class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-100 text-slate-700 font-mono">{{ stock.baseUomCode }}</code>
         </td>
         <td class="px-5 py-4 text-right">
           <div class="flex justify-end gap-1.5">
@@ -91,7 +92,8 @@
     </app-stocks-form>
     <div modal-footer class="flex justify-end gap-3 w-full">
       <app-admin-button (click)="closeModal()" type="button" variant="outline" size="sm">Batal</app-admin-button>
-      <app-admin-button (click)="stockForm.onSubmitForm()" [disabled]="stockForm.formGroup.invalid" type="button" variant="primary" size="sm">
+      <app-admin-button (click)="stockForm.onSubmitForm()" [disabled]="stockForm.formGroup.invalid" type="button"
+        variant="primary" size="sm">
         Simpan
       </app-admin-button>
     </div>

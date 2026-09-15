@@ -22,7 +22,7 @@ import { RouterLink } from '@angular/router';
           <h1 class="font-serif text-3xl font-bold text-slate-900 sm:text-4xl">
             Halaman Tidak Ditemukan
           </h1>
-          <p class="text-sm text-slate-600 leading-relaxed max-w-sm mx-auto">
+          <p class="text-sm text-slate-700 leading-relaxed max-w-sm mx-auto">
             Maaf, halaman yang Anda cari tidak tersedia, telah dihapus, atau alamat URL yang dimasukkan salah.
           </p>
         </div>

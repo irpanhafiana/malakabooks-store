@@ -14,7 +14,7 @@ import { IconComponent } from '../icon/icon.component';
         [placeholder]="placeholder()"
         [value]="value()"
         (input)="onInput($event)"
-        class="w-full pl-10 pr-4 py-2 bg-slate-100 focus:bg-white border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-600"
+        class="w-full pl-10 pr-4 py-2 bg-slate-100 focus:bg-white border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-700"
       >
     </div>
   `

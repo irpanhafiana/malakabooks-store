@@ -2,17 +2,15 @@
 <div class="card-product group relative">
 
   <!-- Clickable details container -->
-  <div 
-    (click)="viewProductDetails()" 
-    (keydown)="onKeydown($event)"
-    role="button" 
-    tabindex="0" 
+  <div (click)="viewProductDetails()" (keydown)="onKeydown($event)" role="button" tabindex="0"
     [attr.aria-label]="'Detail produk ' + prod.title"
     class="block grow cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-xl">
     <!-- Image Container -->
-    <div class="w-full bg-slate-100 overflow-hidden mb-3 relative flex items-center justify-center aspect-square rounded-xl">
+    <div
+      class="w-full bg-slate-100 overflow-hidden mb-3 relative flex items-center justify-center aspect-square rounded-xl">
       @if (prod.coverImage && !imageError()) {
-      <img [ngSrc]="prod.coverImage" [alt]="prod.title" (error)="onImageError()" fill class="w-full h-full object-contain" />
+      <img [ngSrc]="prod.coverImage" [alt]="prod.title" (error)="onImageError()" fill
+        class="w-full h-full object-contain" />
       } @else {
       <div
         class="w-full h-full flex items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-300">
@@ -25,7 +23,8 @@
     <!-- Meta info, Title & Ratings Wrapper -->
     <div class="flex flex-col pb-2">
       <!-- Meta info -->
-      <span [class]="'font-semibold text-slate-600 uppercase tracking-wide block mb-1 line-clamp-2 ' + (size() === 'md' ? 'text-[11px]' : 'text-[10px]')">{{
+      <span
+        [class]="'font-semibold text-slate-700 uppercase tracking-wide block mb-1 line-clamp-2 ' + (size() === 'md' ? 'text-[11px]' : 'text-[10px]')">{{
         prod.authorNames }}</span>
 
       <!-- Title -->
@@ -36,50 +35,55 @@
       <!-- Price -->
       <div class="flex flex-col mt-1 w-full">
         @if (authStore.isLoggedIn()) {
-          @if (prod.compareAtPrice && prod.compareAtPrice! > prod.price) {
-          <div class="flex justify-between items-center w-full gap-2">
-            <!-- Left: Prices (harga coret on top, harga asli/jual below) -->
-            <div class="flex flex-col items-start gap-1">
-              <span [class]="'text-slate-500 line-through font-medium leading-none ' + (size() === 'md' ? 'text-[11px]' : 'text-[10px]')">
-                Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }}
-              </span>
-              <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'" [customClass]="'text-primary-600 font-bold leading-none ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
-            </div>
-            <!-- Right: Discount Badge -->
-            <span class="text-[9px] font-extrabold text-rose-600 bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded-sm shrink-0">
-              -{{ Math.round(((prod.compareAtPrice! - prod.price) / prod.compareAtPrice!) * 100) }}%
+        @if (prod.compareAtPrice && prod.compareAtPrice! > prod.price) {
+        <div class="flex justify-between items-center w-full gap-2">
+          <!-- Left: Prices (harga coret on top, harga asli/jual below) -->
+          <div class="flex flex-col items-start gap-1">
+            <span
+              [class]="'text-slate-500 line-through font-medium leading-none ' + (size() === 'md' ? 'text-[11px]' : 'text-[10px]')">
+              Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }}
             </span>
+            <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'"
+              [customClass]="'text-primary-600 font-bold leading-none ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
           </div>
-          } @else {
-          <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'" [customClass]="'text-primary-600 font-bold ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
-          }
+          <!-- Right: Discount Badge -->
+          <span
+            class="text-[9px] font-extrabold text-rose-600 bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded-sm shrink-0">
+            -{{ Math.round(((prod.compareAtPrice! - prod.price) / prod.compareAtPrice!) * 100) }}%
+          </span>
+        </div>
         } @else {
-          <!-- Tamu / Belum Login: Tampilkan harga mahal, beri info diskon member jika ada -->
-          <div class="flex flex-col items-start gap-1 w-full">
-            <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'" [customClass]="'text-primary-600 font-bold ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
-            @if (prod.compareAtPrice && prod.compareAtPrice! < prod.price) {
-            <div class="flex items-center gap-1 text-[9px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded-sm">
-              <i class="bx bxs-key text-[10px]"></i>
-              <span>Member: Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }}</span>
-            </div>
-            }
-          </div>
+        <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'"
+          [customClass]="'text-primary-600 font-bold ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
+        }
+        } @else {
+        <!-- Tamu / Belum Login: Tampilkan harga mahal, beri info diskon member jika ada -->
+        <div class="flex flex-col items-start gap-1 w-full">
+          <app-price [value]="prod.price" [size]="size() === 'md' ? 'lg' : 'md'"
+            [customClass]="'text-primary-600 font-bold ' + (size() === 'md' ? 'text-lg' : 'text-base')"></app-price>
+          @if (prod.compareAtPrice && prod.compareAtPrice! < prod.price) { <div
+            class="flex items-center gap-1 text-[9px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded-sm">
+            <i class="bx bxs-key text-[10px]"></i>
+            <span>Member: Rp{{ Math.round(prod.compareAtPrice!).toLocaleString('id-ID') }}</span>
+        </div>
         }
       </div>
+      }
     </div>
   </div>
+</div>
 
-  <!-- Rating and Sold Row -->
-  <div class="flex items-center justify-between py-2 border-t border-slate-50">
-    <!-- Ratings Badge -->
-    <div class="flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-100">
-      <app-icon name="star" size="10" class="text-amber-500 fill-amber-500"></app-icon>
-      <span class="text-[10px] font-bold text-amber-700">{{ prod.rating ?? prod.averageRating }}</span>
-    </div>
-
-    <!-- Total Sold -->
-    <span class="text-[10px] text-slate-500 font-medium">
-      {{ prod.quantitySold ?? 0 }} Terjual
-    </span>
+<!-- Rating and Sold Row -->
+<div class="flex items-center justify-between py-2 border-t border-slate-50">
+  <!-- Ratings Badge -->
+  <div class="flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-100">
+    <app-icon name="star" size="10" class="text-amber-500 fill-amber-500"></app-icon>
+    <span class="text-[10px] font-bold text-amber-700">{{ prod.rating ?? prod.averageRating }}</span>
   </div>
+
+  <!-- Total Sold -->
+  <span class="text-[10px] text-slate-500 font-medium">
+    {{ prod.quantitySold ?? 0 }} Terjual
+  </span>
+</div>
 </div>

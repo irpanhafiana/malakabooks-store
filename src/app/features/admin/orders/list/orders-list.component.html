@@ -63,7 +63,7 @@
           </div>
         </td>
         <td class="px-5 py-4">{{ order.orderDate | date: 'mediumDate' }}</td>
-        <td class="px-5 py-4 font-semibold text-slate-600">{{ order.items.length }} item</td>
+        <td class="px-5 py-4 font-semibold text-slate-700">{{ order.items.length }} item</td>
         <td class="px-5 py-4 font-bold text-slate-800">
           <app-price [value]="order.total" size="sm"></app-price>
         </td>

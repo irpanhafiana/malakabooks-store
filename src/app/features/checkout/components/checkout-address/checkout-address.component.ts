@@ -46,7 +46,7 @@ import { MapPickerComponent } from '../../../../shared/ui/map-picker/map-picker.
                     }
                   </strong>
                   <span class="text-slate-500 mt-1">{{ addr.phone }}</span>
-                  <span class="text-slate-600 font-semibold">
+                  <span class="text-slate-700 font-semibold">
                     {{ addr.street }}{{ addr.district ? ', ' + addr.district : '' }}, {{ addr.city }}, {{ addr.province }}, {{ addr.postalCode }}
                   </span>
                 </div>

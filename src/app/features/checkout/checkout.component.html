@@ -15,41 +15,24 @@
     <div class="flex flex-col gap-2 lg:flex-[2]">
 
       <!-- Step 1: Shipping Address -->
-      <app-checkout-address
-        [savedAddresses]="savedAddresses()"
-        [selectedAddressId]="selectedAddressId()"
-        [showForm]="showAddressForm()"
-        [addressForm]="addressForm"
-        [provinceOptions]="provinceOptions()"
-        [cityOptions]="cityOptions()"
-        [districtOptions]="districtOptions()"
-        [selectedLat]="selectedLat()"
-        [selectedLng]="selectedLng()"
-        (selectAddress)="selectAddress($event)"
-        (addNewAddress)="addNewAddress()"
-        (cancelForm)="cancelAddressForm()"
-        (saveForm)="saveAddressForm()"
+      <app-checkout-address [savedAddresses]="savedAddresses()" [selectedAddressId]="selectedAddressId()"
+        [showForm]="showAddressForm()" [addressForm]="addressForm" [provinceOptions]="provinceOptions()"
+        [cityOptions]="cityOptions()" [districtOptions]="districtOptions()" [selectedLat]="selectedLat()"
+        [selectedLng]="selectedLng()" (selectAddress)="selectAddress($event)" (addNewAddress)="addNewAddress()"
+        (cancelForm)="cancelAddressForm()" (saveForm)="saveAddressForm()"
         (locationSelected)="onMapLocationSelected($event)">
       </app-checkout-address>
 
       <!-- Step 2: Shipping Courier & Service -->
-      <app-checkout-shipping
-        [courierControl]="courierControl"
-        [courierServiceControl]="courierServiceControl"
-        [courierOptions]="courierOptions()"
-        [courierServiceOptions]="courierServiceOptions()"
-        [courierServicesLength]="courierServices().length"
-        [shippingLoading]="shippingLoading()">
+      <app-checkout-shipping [courierControl]="courierControl" [courierServiceControl]="courierServiceControl"
+        [courierOptions]="courierOptions()" [courierServiceOptions]="courierServiceOptions()"
+        [courierServicesLength]="courierServices().length" [shippingLoading]="shippingLoading()">
       </app-checkout-shipping>
 
       <!-- Step 3: Payment Method -->
-      <app-checkout-payment
-        [paymentControl]="paymentControl"
-        [paymentOptions]="paymentOptions()"
-        [isCreditCardSelected]="isCreditCardSelected()"
-        [cardNumControl]="cardNumControl"
-        [cardExpiryControl]="cardExpiryControl"
-        [cardCvcControl]="cardCvcControl">
+      <app-checkout-payment [paymentControl]="paymentControl" [paymentOptions]="paymentOptions()"
+        [isCreditCardSelected]="isCreditCardSelected()" [cardNumControl]="cardNumControl"
+        [cardExpiryControl]="cardExpiryControl" [cardCvcControl]="cardCvcControl">
       </app-checkout-payment>
 
     </div>
@@ -64,7 +47,8 @@
         @for (item of cartStore.items(); track item.product.id) {
         <div class="flex items-center gap-3 text-xs leading-tight">
           <div class="h-10 w-8 bg-slate-100 rounded overflow-hidden shrink-0 border border-slate-100 relative">
-            <img [src]="item.product.coverImage" [alt]="item.product.title" loading="lazy" width="32" height="40" class="object-cover w-full h-full" />
+            <img [src]="item.product.coverImage" [alt]="item.product.title" loading="lazy" width="32" height="40"
+              class="object-cover w-full h-full" />
           </div>
           <div class="grow min-w-0">
             <h4 class="font-bold text-slate-800 line-clamp-2">{{ item.product.title }}</h4>
@@ -91,7 +75,7 @@
         }
 
         @if (paymentFee() > 0) {
-        <div class="flex justify-between text-slate-600">
+        <div class="flex justify-between text-slate-700">
           <span>Biaya Layanan</span>
           <app-price [value]="paymentFee()" [bold]="false" size="sm"></app-price>
         </div>

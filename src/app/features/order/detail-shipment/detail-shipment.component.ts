@@ -14,7 +14,7 @@ import { LoggerService } from '../../../core/services/logger.service';
   standalone: true,
   imports: [CommonModule, RouterLink, IconComponent, SkeletonComponent, DatePipe],
   templateUrl: './detail-shipment.component.html',
-  })
+})
 export class DetailShipmentComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly orderApi = inject(OrderApiService);
@@ -159,7 +159,7 @@ export class DetailShipmentComponent implements OnInit {
     if (s.includes('fail') || s.includes('gagal') || s.includes('retur') || s.includes('cancel')) {
       return 'bg-rose-50 text-rose-600 border-rose-100';
     }
-    return 'bg-slate-100 text-slate-600 border-slate-100';
+    return 'bg-slate-100 text-slate-700 border-slate-100';
   }
 
   copyToClipboard(text: string) {

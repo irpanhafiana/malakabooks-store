@@ -12,7 +12,7 @@
     </a>
     <button type="button" (click)="toggleSidebar()" aria-label="Toggle navigation menu"
       [attr.aria-expanded]="isSidebarOpen()"
-      class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-100 text-slate-600 cursor-pointer">
+      class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-100 text-slate-700 cursor-pointer">
       <app-icon name="menu" size="20"></app-icon>
     </button>
   </header>
@@ -41,7 +41,7 @@
           (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <app-icon name="dashboard" size="20"
-            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
           <span>Dashboard</span>
         </a>
 
@@ -52,7 +52,7 @@
           class="flex items-center justify-between px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <div class="flex items-center gap-3">
             <app-icon name="shopping-bag" size="20"
-              class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+              class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
             <span>Pesanan</span>
           </div>
           @if (unshippedOrdersCount() > 0) {
@@ -69,7 +69,7 @@
           (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <app-icon name="message-square" size="20"
-            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
           <span>Complaints</span>
         </a>
 
@@ -79,7 +79,7 @@
           (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <app-icon name="credit-card" size="20"
-            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
           <span>Mutasi Stok</span>
         </a>
 
@@ -89,7 +89,7 @@
           (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <app-icon name="map-pin" size="20"
-            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
           <span>Alamat Pengiriman</span>
         </a>
 
@@ -99,11 +99,11 @@
             class="flex items-center justify-between w-full px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
             <div class="flex items-center gap-3">
               <app-icon name="folder" size="20"
-                class="text-slate-400 group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Master Data</span>
             </div>
             <app-icon [name]="isMasterDataOpen() ? 'chevron-down' : 'chevron-right'" size="16"
-              class="text-slate-400 group-hover:text-slate-600 transition-colors"></app-icon>
+              class="text-slate-400 group-hover:text-slate-700 transition-colors"></app-icon>
           </button>
 
           <!-- Accordion Menu Items -->
@@ -114,7 +114,7 @@
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Items</span>
             </a>
 
@@ -124,7 +124,7 @@
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Kategori</span>
             </a>
 
@@ -134,7 +134,7 @@
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Grup UoM</span>
             </a>
 
@@ -144,7 +144,7 @@
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Gudang</span>
             </a>
 
@@ -158,7 +158,7 @@
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Stok</span>
             </a>
             -->
@@ -169,7 +169,7 @@
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Harga</span>
             </a>
 
@@ -179,7 +179,7 @@
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Promosi</span>
             </a>
 
@@ -189,7 +189,7 @@
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Penulis</span>
             </a>
 
@@ -199,7 +199,7 @@
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Mtd Pembayaran</span>
             </a>
 
@@ -209,7 +209,7 @@
               (click)="closeSidebar()"
               class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
               <app-icon name="minus" size="18"
-                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+                class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
               <span>Data Pelanggan</span>
             </a>
           </div>
@@ -221,7 +221,7 @@
           (click)="closeSidebar()"
           class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
           <app-icon name="bar-chart" size="20"
-            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-600 transition-colors"></app-icon>
+            class="text-slate-400 group-[.active-link]:text-white group-hover:text-slate-700 transition-colors"></app-icon>
           <span>Laporan</span>
         </a>
       </nav>
@@ -234,14 +234,14 @@
       <!-- Storefront Link -->
       <a routerLink="/" (click)="closeSidebar()"
         class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-        <app-icon name="home" size="20" class="text-slate-400 group-hover:text-slate-600"></app-icon>
+        <app-icon name="home" size="20" class="text-slate-400 group-hover:text-slate-700"></app-icon>
         <span>Storefront</span>
       </a>
 
       <!-- Settings Link -->
       <!-- <a routerLink="/admin" (click)="closeSidebar()"
         class="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-[14px] text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 cursor-pointer group">
-        <app-icon name="cog" size="20" class="text-slate-400 group-hover:text-slate-600"></app-icon>
+        <app-icon name="cog" size="20" class="text-slate-400 group-hover:text-slate-700"></app-icon>
         <span>Settings</span>
       </a> -->
 

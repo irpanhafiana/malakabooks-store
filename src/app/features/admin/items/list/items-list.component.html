@@ -3,7 +3,8 @@
   <!-- Top Action bar & Search -->
   <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
     <div class="w-full sm:w-72">
-      <app-admin-search-input placeholder="Cari nama produk disini" [value]="searchQuery()" (valueChange)="onSearch($event)" />
+      <app-admin-search-input placeholder="Cari nama produk disini" [value]="searchQuery()"
+        (valueChange)="onSearch($event)" />
     </div>
 
     <div class="flex flex-row gap-2 justify-end items-center">
@@ -51,7 +52,7 @@
         <td class="px-5 py-4 text-xs text-slate-500">{{ uomMap().get(item.uomGroupId || '') || '-' }}</td>
         <td class="px-5 py-4 text-xs font-semibold text-slate-500">
           <code
-            class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-100 text-slate-600 font-mono">{{ item.baseUomCode }}</code>
+            class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-100 text-slate-700 font-mono">{{ item.baseUomCode }}</code>
         </td>
         <td class="px-5 py-4 text-xs">
           @if (item.isActive) {

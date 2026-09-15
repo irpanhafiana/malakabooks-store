@@ -15,7 +15,7 @@ export class AlertService {
       title: 'text-sm font-extrabold text-slate-800 font-display tracking-tight mb-2',
       htmlContainer: 'text-xs text-slate-500 mb-4 font-medium',
       confirmButton: 'px-5 py-2.5 text-xs font-bold text-white bg-primary-600 hover:bg-primary-700 active:scale-95 transition-all rounded-xl cursor-pointer mr-2.5 outline-none',
-      cancelButton: 'px-5 py-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 active:scale-95 transition-all border border-slate-200 rounded-xl cursor-pointer outline-none'
+      cancelButton: 'px-5 py-2.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-95 transition-all border border-slate-200 rounded-xl cursor-pointer outline-none'
     }
   };
 
@@ -35,7 +35,7 @@ export class AlertService {
   success(titleOrText: string, text = '') {
     const finalTitle = text ? titleOrText : 'Berhasil';
     const finalText = text ? text : titleOrText;
-    
+
     Swal.fire({
       ...this.swalConfig,
       title: finalTitle,
@@ -48,7 +48,7 @@ export class AlertService {
   error(titleOrText: string, text = '') {
     const finalTitle = text ? titleOrText : 'Gagal';
     const finalText = text ? text : titleOrText;
-    
+
     Swal.fire({
       ...this.swalConfig,
       title: finalTitle,
@@ -61,7 +61,7 @@ export class AlertService {
   info(titleOrText: string, text = '') {
     const finalTitle = text ? titleOrText : 'Informasi';
     const finalText = text ? text : titleOrText;
-    
+
     Swal.fire({
       ...this.swalConfig,
       title: finalTitle,
@@ -74,7 +74,7 @@ export class AlertService {
   warning(titleOrText: string, text = '') {
     const finalTitle = text ? titleOrText : 'Peringatan';
     const finalText = text ? text : titleOrText;
-    
+
     Swal.fire({
       ...this.swalConfig,
       title: finalTitle,
