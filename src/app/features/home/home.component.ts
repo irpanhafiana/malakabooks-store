@@ -31,6 +31,8 @@ import { resolveImageUrl } from '../../shared/util/image.util';
 import { isAdminSession } from '../../core/auth/session.util';
 import { SeoService } from '../../core/services/seo.service';
 import { AosDirective } from '../../shared/directives/aos.directive';
+import { ProductCardComponent } from '../../shared/ui/product-card/product-card.component';
+import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 
 
 export interface KopiTestimonial {
@@ -62,6 +64,8 @@ export interface KopiShowcaseCard {
         ModalComponent,
         MardikaKopiDetailComponent,
         AosDirective,
+        ProductCardComponent,
+        SkeletonComponent,
     ],
     templateUrl: './home.component.html',
 })
@@ -647,5 +651,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 }
+
 
 
